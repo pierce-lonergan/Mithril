@@ -1,0 +1,11 @@
+# Content hashes in experiments/ and the ledger are computed over file bytes, so line
+# endings must not depend on the checkout platform.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.xz binary
+*.gz binary
+*.zip binary
+*.obj binary
+*.o binary
+*.exe binary
