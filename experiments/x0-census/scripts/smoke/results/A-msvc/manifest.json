@@ -1,0 +1,494 @@
+[
+ {
+  "object": "/mnt/d/mithril/x0/smoke/A-msvc/smoke.obj",
+  "label": "A-msvc",
+  "sha256": "85a2cd4006e1029a977f1d1c4f14e689c6f27f31f1376910c4e5d6da8a41d253",
+  "size": 5272,
+  "format": "coff",
+  "kind": "rel",
+  "code_sections": [
+   {
+    "index": 3,
+    "name": ".text$mn",
+    "size": 278,
+    "file_offset": 1187,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 0,
+     "checksum": 4107409250
+    },
+    "n_relocs": 0
+   },
+   {
+    "index": 4,
+    "name": ".text$mn",
+    "size": 60,
+    "file_offset": 1465,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 0,
+     "checksum": 2776224021
+    },
+    "n_relocs": 0
+   },
+   {
+    "index": 5,
+    "name": ".text$mn",
+    "size": 154,
+    "file_offset": 1525,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 0,
+     "checksum": 765396337
+    },
+    "n_relocs": 0
+   },
+   {
+    "index": 6,
+    "name": ".text$mn",
+    "size": 67,
+    "file_offset": 1679,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 0,
+     "checksum": 1970133483
+    },
+    "n_relocs": 3
+   },
+   {
+    "index": 7,
+    "name": ".text$mn",
+    "size": 9,
+    "file_offset": 1776,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 0,
+     "checksum": 2294631892
+    },
+    "n_relocs": 0
+   },
+   {
+    "index": 8,
+    "name": ".text$mn",
+    "size": 49,
+    "file_offset": 1785,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 0,
+     "checksum": 3608563835
+    },
+    "n_relocs": 3
+   },
+   {
+    "index": 9,
+    "name": ".text$mn",
+    "size": 292,
+    "file_offset": 1864,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 0,
+     "checksum": 981734327
+    },
+    "n_relocs": 32
+   }
+  ],
+  "functions": [
+   {
+    "id": 0,
+    "name": "smoke_avx2_dot",
+    "aliases": [],
+    "bind": [
+     "external"
+    ],
+    "section": 3,
+    "section_name": ".text$mn",
+    "comdat": true,
+    "start": 0,
+    "end": 278,
+    "size": 278,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 278,
+      "file_offset": 1187
+     }
+    ],
+    "data_ranges": [],
+    "relocs": []
+   },
+   {
+    "id": 1,
+    "name": "smoke_avx512_addmul",
+    "aliases": [],
+    "bind": [
+     "external"
+    ],
+    "section": 4,
+    "section_name": ".text$mn",
+    "comdat": true,
+    "start": 0,
+    "end": 60,
+    "size": 60,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 60,
+      "file_offset": 1465
+     }
+    ],
+    "data_ranges": [],
+    "relocs": []
+   },
+   {
+    "id": 2,
+    "name": "smoke_avx512_masked",
+    "aliases": [],
+    "bind": [
+     "external"
+    ],
+    "section": 5,
+    "section_name": ".text$mn",
+    "comdat": true,
+    "start": 0,
+    "end": 154,
+    "size": 154,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 154,
+      "file_offset": 1525
+     }
+    ],
+    "data_ranges": [],
+    "relocs": []
+   },
+   {
+    "id": 3,
+    "name": "smoke_call_helper",
+    "aliases": [],
+    "bind": [
+     "external"
+    ],
+    "section": 6,
+    "section_name": ".text$mn",
+    "comdat": true,
+    "start": 0,
+    "end": 67,
+    "size": 67,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 67,
+      "file_offset": 1679
+     }
+    ],
+    "data_ranges": [],
+    "relocs": [
+     {
+      "offset": 24,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 29,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 42,
+      "type": "REL32",
+      "width": 4
+     }
+    ]
+   },
+   {
+    "id": 4,
+    "name": "smoke_contract_probe",
+    "aliases": [],
+    "bind": [
+     "external"
+    ],
+    "section": 7,
+    "section_name": ".text$mn",
+    "comdat": true,
+    "start": 0,
+    "end": 9,
+    "size": 9,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 9,
+      "file_offset": 1776
+     }
+    ],
+    "data_ranges": [],
+    "relocs": []
+   },
+   {
+    "id": 5,
+    "name": "smoke_sqrt_helper",
+    "aliases": [],
+    "bind": [
+     "static"
+    ],
+    "section": 8,
+    "section_name": ".text$mn",
+    "comdat": true,
+    "start": 0,
+    "end": 49,
+    "size": 49,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 49,
+      "file_offset": 1785
+     }
+    ],
+    "data_ranges": [],
+    "relocs": [
+     {
+      "offset": 22,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 32,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 40,
+      "type": "REL32",
+      "width": 4
+     }
+    ]
+   },
+   {
+    "id": 6,
+    "name": "smoke_switch",
+    "aliases": [],
+    "bind": [
+     "external"
+    ],
+    "section": 9,
+    "section_name": ".text$mn",
+    "comdat": true,
+    "start": 0,
+    "end": 292,
+    "size": 292,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 252,
+      "file_offset": 1864
+     }
+    ],
+    "data_ranges": [
+     {
+      "start": 252,
+      "end": 292,
+      "kind": "reloc_table"
+     }
+    ],
+    "relocs": [
+     {
+      "offset": 18,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 25,
+      "type": "ADDR32NB",
+      "width": 4
+     },
+     {
+      "offset": 40,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 46,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 57,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 63,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 74,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 80,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 92,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 98,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 113,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 119,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 130,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 136,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 147,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 153,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 165,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 171,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 195,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 201,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 233,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 239,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 252,
+      "type": "ADDR32NB",
+      "width": 4
+     },
+     {
+      "offset": 256,
+      "type": "ADDR32NB",
+      "width": 4
+     },
+     {
+      "offset": 260,
+      "type": "ADDR32NB",
+      "width": 4
+     },
+     {
+      "offset": 264,
+      "type": "ADDR32NB",
+      "width": 4
+     },
+     {
+      "offset": 268,
+      "type": "ADDR32NB",
+      "width": 4
+     },
+     {
+      "offset": 272,
+      "type": "ADDR32NB",
+      "width": 4
+     },
+     {
+      "offset": 276,
+      "type": "ADDR32NB",
+      "width": 4
+     },
+     {
+      "offset": 280,
+      "type": "ADDR32NB",
+      "width": 4
+     },
+     {
+      "offset": 284,
+      "type": "ADDR32NB",
+      "width": 4
+     },
+     {
+      "offset": 288,
+      "type": "ADDR32NB",
+      "width": 4
+     }
+    ]
+   }
+  ],
+  "gaps": [],
+  "warnings": [],
+  "crosscheck": {
+   "tool": "/mnt/d/mithril/tools/llvm-linux-23.1.3/bin/llvm-readobj",
+   "functions_readobj": 7,
+   "functions_x0obj": 7,
+   "mismatches": []
+  }
+ }
+]

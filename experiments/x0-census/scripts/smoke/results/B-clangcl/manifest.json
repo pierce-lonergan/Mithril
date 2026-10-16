@@ -1,0 +1,433 @@
+[
+ {
+  "object": "/mnt/d/mithril/x0/smoke/B-clangcl/smoke.obj",
+  "label": "B-clangcl",
+  "sha256": "517419a8c0401c8d08c49d568cf31a05baee818320df3395f9e871dadc0409c5",
+  "size": 3448,
+  "format": "coff",
+  "kind": "rel",
+  "code_sections": [
+   {
+    "index": 4,
+    "name": ".text",
+    "size": 59,
+    "file_offset": 820,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 4,
+     "checksum": 3769117366
+    },
+    "n_relocs": 0
+   },
+   {
+    "index": 5,
+    "name": ".text",
+    "size": 105,
+    "file_offset": 879,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 5,
+     "checksum": 3001963178
+    },
+    "n_relocs": 0
+   },
+   {
+    "index": 6,
+    "name": ".text",
+    "size": 191,
+    "file_offset": 984,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 6,
+     "checksum": 3454790726
+    },
+    "n_relocs": 0
+   },
+   {
+    "index": 7,
+    "name": ".text",
+    "size": 6,
+    "file_offset": 1175,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 7,
+     "checksum": 652627917
+    },
+    "n_relocs": 0
+   },
+   {
+    "index": 8,
+    "name": ".text",
+    "size": 239,
+    "file_offset": 1181,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 8,
+     "checksum": 1940296798
+    },
+    "n_relocs": 21
+   },
+   {
+    "index": 10,
+    "name": ".text",
+    "size": 63,
+    "file_offset": 1774,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 10,
+     "checksum": 3332767200
+    },
+    "n_relocs": 3
+   },
+   {
+    "index": 12,
+    "name": ".text",
+    "size": 50,
+    "file_offset": 1887,
+    "align": 16,
+    "comdat": {
+     "selection": "nodup",
+     "associated_section": 12,
+     "checksum": 1289249372
+    },
+    "n_relocs": 3
+   }
+  ],
+  "functions": [
+   {
+    "id": 0,
+    "name": "smoke_avx512_addmul",
+    "aliases": [],
+    "bind": [
+     "external"
+    ],
+    "section": 4,
+    "section_name": ".text",
+    "comdat": true,
+    "start": 0,
+    "end": 59,
+    "size": 59,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 59,
+      "file_offset": 820
+     }
+    ],
+    "data_ranges": [],
+    "relocs": []
+   },
+   {
+    "id": 1,
+    "name": "smoke_avx512_masked",
+    "aliases": [],
+    "bind": [
+     "external"
+    ],
+    "section": 5,
+    "section_name": ".text",
+    "comdat": true,
+    "start": 0,
+    "end": 105,
+    "size": 105,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 105,
+      "file_offset": 879
+     }
+    ],
+    "data_ranges": [],
+    "relocs": []
+   },
+   {
+    "id": 2,
+    "name": "smoke_avx2_dot",
+    "aliases": [],
+    "bind": [
+     "external"
+    ],
+    "section": 6,
+    "section_name": ".text",
+    "comdat": true,
+    "start": 0,
+    "end": 191,
+    "size": 191,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 191,
+      "file_offset": 984
+     }
+    ],
+    "data_ranges": [],
+    "relocs": []
+   },
+   {
+    "id": 3,
+    "name": "smoke_contract_probe",
+    "aliases": [],
+    "bind": [
+     "external"
+    ],
+    "section": 7,
+    "section_name": ".text",
+    "comdat": true,
+    "start": 0,
+    "end": 6,
+    "size": 6,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 6,
+      "file_offset": 1175
+     }
+    ],
+    "data_ranges": [],
+    "relocs": []
+   },
+   {
+    "id": 4,
+    "name": "smoke_switch",
+    "aliases": [],
+    "bind": [
+     "external"
+    ],
+    "section": 8,
+    "section_name": ".text",
+    "comdat": true,
+    "start": 0,
+    "end": 239,
+    "size": 239,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 239,
+      "file_offset": 1181
+     }
+    ],
+    "data_ranges": [],
+    "relocs": [
+     {
+      "offset": 14,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 32,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 38,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 48,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 54,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 92,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 98,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 108,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 114,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 124,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 130,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 140,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 146,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 156,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 162,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 171,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 177,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 186,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 192,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 228,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 234,
+      "type": "REL32",
+      "width": 4
+     }
+    ]
+   },
+   {
+    "id": 5,
+    "name": "smoke_call_helper",
+    "aliases": [],
+    "bind": [
+     "external"
+    ],
+    "section": 10,
+    "section_name": ".text",
+    "comdat": true,
+    "start": 0,
+    "end": 63,
+    "size": 63,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 63,
+      "file_offset": 1774
+     }
+    ],
+    "data_ranges": [],
+    "relocs": [
+     {
+      "offset": 21,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 33,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 38,
+      "type": "REL32",
+      "width": 4
+     }
+    ]
+   },
+   {
+    "id": 6,
+    "name": "smoke_sqrt_helper",
+    "aliases": [],
+    "bind": [
+     "static"
+    ],
+    "section": 12,
+    "section_name": ".text",
+    "comdat": true,
+    "start": 0,
+    "end": 50,
+    "size": 50,
+    "size_source": "section_end",
+    "symbol_size": null,
+    "trailing_int3": 0,
+    "code_ranges": [
+     {
+      "start": 0,
+      "end": 50,
+      "file_offset": 1887
+     }
+    ],
+    "data_ranges": [],
+    "relocs": [
+     {
+      "offset": 22,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 33,
+      "type": "REL32",
+      "width": 4
+     },
+     {
+      "offset": 41,
+      "type": "REL32",
+      "width": 4
+     }
+    ]
+   }
+  ],
+  "gaps": [],
+  "warnings": [],
+  "crosscheck": {
+   "tool": "/mnt/d/mithril/tools/llvm-linux-23.1.3/bin/llvm-readobj",
+   "functions_readobj": 7,
+   "functions_x0obj": 7,
+   "mismatches": []
+  }
+ }
+]

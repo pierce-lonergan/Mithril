@@ -1,0 +1,13 @@
+SHA256 d6c83076c575bc00b823522ac974bda66d0af05d6ddc30e739c12385cf32c6cc  cmake-4.4.3-linux-x86_64.tar.gz
+SHA256 1726140f0b13bf99e4ad4e89389d5aed758e1658ebfe1ed4aa2c2b32dde839f5  cmake-4.4.3-SHA-256.txt
+SHA256 ef0c8639a28e5d85ddbed2b625e556225d54be3b7092807fdb48475fd24ed031  cmake-4.4.3-SHA-256.txt.asc
+SHA256 aa00e8536082a5dac61372decaee67e982bac013164e7d3f0ebebc86c85efb4b  cmake-signing-key-CBA23971357C2E6590D9EFD3EC8FEF3A7BFB4EDA.asc
+d6c83076c575bc00b823522ac974bda66d0af05d6ddc30e739c12385cf32c6cc  cmake-4.4.3-linux-x86_64.tar.gz
+gpg: Signature made Tue Aug 25 11:41:37 2026 EDT
+gpg:                using RSA key C6C265324BBEBDC350B513D02D2CEF1034921684
+gpg: Good signature from "Brad King" [unknown]
+gpg:                 aka "Brad King <brad.king@kitware.com>" [unknown]
+gpg: WARNING: This key is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+Primary key fingerprint: CBA2 3971 357C 2E65 90D9  EFD3 EC8F EF3A 7BFB 4EDA
+     Subkey fingerprint: C6C2 6532 4BBE BDC3 50B5  13D0 2D2C EF10 3492 1684

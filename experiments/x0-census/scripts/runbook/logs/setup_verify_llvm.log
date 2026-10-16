@@ -1,0 +1,52 @@
+SHA256 9ee6a2192fbb30c776415af529927f76ca6b5d1d55699bb1315f9878e610b5b8  clang+llvm-23.1.3-x86_64-pc-windows-msvc.tar.xz
+SHA256 ca9fe385a5d9e2d88132dc0e23a00e9f87f38fa75f67207b5e457d208e71d013  LLVM-23.1.3-Linux-X64.tar.xz
+SHA256 f38bd19b7f2d22cafa755841e6ce9375b9a2e6d41f7b974e4953d6b084839001  release-keys.asc
+SHA256 802811b09426a123b282147889bb0a19bfc641abe9a22e9fe5df9646e179409d  clang+llvm-23.1.3-x86_64-pc-windows-msvc.tar.xz.sig
+SHA256 0dda2b64d7c856831dfc818eea0d15b0a8df02e7a9d77c880a49891f00691091  LLVM-23.1.3-Linux-X64.tar.xz.sig
+SHA256 1803cbaab25bbd7be33feea6f6d78ee6a723f74a2d2453bc6299fec91709301c  clang+llvm-23.1.3-x86_64-pc-windows-msvc.tar.xz.jsonl
+SHA256 5026a782bfc3c46691c203ee56ce4c26d2853d8f571df2ef16f2524ae7678a2f  LLVM-23.1.3-Linux-X64.tar.xz.jsonl
+gpg (GnuPG) 2.4.5-unknown
+libgcrypt 1.9.4-unknown
+--- import
+gpg: key 44F2485E45D59042: "Tobias Hieta <tobias@hieta.se>" not changed
+gpg: key A2C794A986419D8A: "Tom Stellard <tstellar@redhat.com>" not changed
+gpg: key 0FC3042E345AD05D: "Hans Wennborg <hans@chromium.org>" not changed
+gpg: key 2FFC629D3F563BDC: "Muhammad Omair Javaid (LLVM Release Signing Key) <omair.javaid@linaro.org>" not changed
+gpg: key 3E83BABF4A4F9E85: "Cullen Rhodes <cullen.rhodes@arm.com>" not changed
+gpg: key 316C56D064CACBA5: "Douglas Yung <douglas.yung@sony.com>" not changed
+gpg: Total number processed: 6
+gpg:              unchanged: 6
+--- verify win
+gpg: Signature made Tue Oct  6 09:46:58 2026 EDT
+gpg:                using RSA key D574BD5D1D0E98895E3BF90044F2485E45D59042
+gpg: Good signature from "Tobias Hieta <tobias@hieta.se>" [unknown]
+gpg: Signature notation: manu=2,2.5+1.12,0,3
+gpg: WARNING: This key is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+Primary key fingerprint: D574 BD5D 1D0E 9889 5E3B  F900 44F2 485E 45D5 9042
+--- verify linux
+gpg: Signature made Tue Oct  6 09:47:04 2026 EDT
+gpg:                using RSA key D574BD5D1D0E98895E3BF90044F2485E45D59042
+gpg: Good signature from "Tobias Hieta <tobias@hieta.se>" [unknown]
+gpg: Signature notation: manu=2,2.5+1.12,0,3
+gpg: WARNING: This key is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+Primary key fingerprint: D574 BD5D 1D0E 9889 5E3B  F900 44F2 485E 45D5 9042
+--- gh attestation
+gh version 2.101.0 (2026-09-15)
+gh rc=0
+gh rc=0
+rc=0 clang+llvm-23.1.3-x86_64-pc-windows-msvc.tar.xz
+stderr: 
+json len: 14373
+subject: [{"name":"LLVM-23.1.3-win64.msi","digest":{"sha256":"5153f848ac87553118340f16f8d3cd4351d729bcba6e4785c6a4a9af29676de9"}},{"name":"clang+llvm-23.1.3-x86_64-pc-windows-msvc.tar.xz","digest":{"sha256":"9ee6a2192fbb30c776415af529927f76ca6b5d1d55699bb1315f9878e610b5b8"}},{"name":"clang+llvm-23.1.3-x86_64-pc-windows-msvc.tar.zst","digest":{"sha256":"7e69dc07a4536b79ff24a651a2611990bf8eaab17ea560f1092707c4f31ba01d"}}]
+signerWorkflow: https://github.com/llvm/llvm-project/.github/workflows/release-binaries.yml@refs/tags/llvmorg-23.1.3
+sourceRepo: https://github.com/llvm/llvm-project ref refs/tags/llvmorg-23.1.3
+rc=0 LLVM-23.1.3-Linux-X64.tar.xz
+stderr: 
+json len: 13968
+subject: [{"name":"LLVM-23.1.3-Linux-X64.tar.xz","digest":{"sha256":"ca9fe385a5d9e2d88132dc0e23a00e9f87f38fa75f67207b5e457d208e71d013"}},{"name":"LLVM-23.1.3-Linux-X64.tar.zst","digest":{"sha256":"14d2f701eb68fb799001bdea6231048f3990690fa2f406d563555ff8f744daba"}}]
+signerWorkflow: https://github.com/llvm/llvm-project/.github/workflows/release-binaries.yml@refs/tags/llvmorg-23.1.3
+sourceRepo: https://github.com/llvm/llvm-project ref refs/tags/llvmorg-23.1.3
+
+(log truncated here: the remaining lines listed the gh config/cache directories, not verification output)

@@ -1,0 +1,98 @@
+[
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\hearth_core.dir\\engine\\src\\pool.c.obj /FdCMakeFiles\\hearth_core.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\src\\pool.c",
+  "file": "D:/mithril/src/hearth/engine/src/pool.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/pool.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\hearth_core.dir\\engine\\src\\quant.c.obj /FdCMakeFiles\\hearth_core.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\src\\quant.c",
+  "file": "D:/mithril/src/hearth/engine/src/quant.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/quant.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\hearth_core.dir\\engine\\src\\modelfile.c.obj /FdCMakeFiles\\hearth_core.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\src\\modelfile.c",
+  "file": "D:/mithril/src/hearth/engine/src/modelfile.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/modelfile.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\hearth_core.dir\\engine\\src\\store.c.obj /FdCMakeFiles\\hearth_core.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\src\\store.c",
+  "file": "D:/mithril/src/hearth/engine/src/store.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/store.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\hearth_core.dir\\engine\\src\\model.c.obj /FdCMakeFiles\\hearth_core.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\src\\model.c",
+  "file": "D:/mithril/src/hearth/engine/src/model.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/model.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\hearth_core.dir\\engine\\src\\api.c.obj /FdCMakeFiles\\hearth_core.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\src\\api.c",
+  "file": "D:/mithril/src/hearth/engine/src/api.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/api.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\hearth_core.dir\\engine\\src\\platform_win.c.obj /FdCMakeFiles\\hearth_core.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\src\\platform_win.c",
+  "file": "D:/mithril/src/hearth/engine/src/platform_win.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/platform_win.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /arch:AVX2 /FoCMakeFiles\\hearth_core.dir\\engine\\src\\quant_avx2.c.obj /FdCMakeFiles\\hearth_core.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\src\\quant_avx2.c",
+  "file": "D:/mithril/src/hearth/engine/src/quant_avx2.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/quant_avx2.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /arch:AVX512 /FoCMakeFiles\\hearth_core.dir\\engine\\src\\quant_avx512.c.obj /FdCMakeFiles\\hearth_core.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\src\\quant_avx512.c",
+  "file": "D:/mithril/src/hearth/engine/src/quant_avx512.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/quant_avx512.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\hearth-bench.dir\\engine\\tools\\hearth_bench.c.obj /FdCMakeFiles\\hearth-bench.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\tools\\hearth_bench.c",
+  "file": "D:/mithril/src/hearth/engine/tools/hearth_bench.c",
+  "output": "CMakeFiles/hearth-bench.dir/engine/tools/hearth_bench.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\test_model.dir\\engine\\tests\\test_model.c.obj /FdCMakeFiles\\test_model.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\tests\\test_model.c",
+  "file": "D:/mithril/src/hearth/engine/tests/test_model.c",
+  "output": "CMakeFiles/test_model.dir/engine/tests/test_model.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\test_modelfile.dir\\engine\\tests\\test_modelfile.c.obj /FdCMakeFiles\\test_modelfile.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\tests\\test_modelfile.c",
+  "file": "D:/mithril/src/hearth/engine/tests/test_modelfile.c",
+  "output": "CMakeFiles/test_modelfile.dir/engine/tests/test_modelfile.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\test_platform.dir\\engine\\tests\\test_platform.c.obj /FdCMakeFiles\\test_platform.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\tests\\test_platform.c",
+  "file": "D:/mithril/src/hearth/engine/tests/test_platform.c",
+  "output": "CMakeFiles/test_platform.dir/engine/tests/test_platform.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\test_pool.dir\\engine\\tests\\test_pool.c.obj /FdCMakeFiles\\test_pool.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\tests\\test_pool.c",
+  "file": "D:/mithril/src/hearth/engine/tests/test_pool.c",
+  "output": "CMakeFiles/test_pool.dir/engine/tests/test_pool.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\test_quant.dir\\engine\\tests\\test_quant.c.obj /FdCMakeFiles\\test_quant.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\tests\\test_quant.c",
+  "file": "D:/mithril/src/hearth/engine/tests/test_quant.c",
+  "output": "CMakeFiles/test_quant.dir/engine/tests/test_quant.c.obj"
+},
+{
+  "directory": "D:/mithril/x0/cfg/A-msvc",
+  "command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe\"  /nologo -D_CRT_SECURE_NO_WARNINGS -ID:\\mithril\\src\\hearth\\engine\\include -ID:\\mithril\\src\\hearth\\engine\\src /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG -std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /FoCMakeFiles\\test_store.dir\\engine\\tests\\test_store.c.obj /FdCMakeFiles\\test_store.dir\\ /FS -c D:\\mithril\\src\\hearth\\engine\\tests\\test_store.c",
+  "file": "D:/mithril/src/hearth/engine/tests/test_store.c",
+  "output": "CMakeFiles/test_store.dir/engine/tests/test_store.c.obj"
+}
+]

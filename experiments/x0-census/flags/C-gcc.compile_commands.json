@@ -1,0 +1,98 @@
+[
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc -DHEARTH_BUILD_DLL -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -fPIC -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/hearth_core.dir/engine/src/pool.c.o -c /mnt/d/mithril/src/hearth/engine/src/pool.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/src/pool.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/pool.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc -DHEARTH_BUILD_DLL -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -fPIC -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/hearth_core.dir/engine/src/quant.c.o -c /mnt/d/mithril/src/hearth/engine/src/quant.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/src/quant.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/quant.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc -DHEARTH_BUILD_DLL -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -fPIC -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/hearth_core.dir/engine/src/modelfile.c.o -c /mnt/d/mithril/src/hearth/engine/src/modelfile.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/src/modelfile.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/modelfile.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc -DHEARTH_BUILD_DLL -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -fPIC -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/hearth_core.dir/engine/src/store.c.o -c /mnt/d/mithril/src/hearth/engine/src/store.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/src/store.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/store.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc -DHEARTH_BUILD_DLL -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -fPIC -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/hearth_core.dir/engine/src/model.c.o -c /mnt/d/mithril/src/hearth/engine/src/model.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/src/model.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/model.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc -DHEARTH_BUILD_DLL -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -fPIC -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/hearth_core.dir/engine/src/api.c.o -c /mnt/d/mithril/src/hearth/engine/src/api.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/src/api.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/api.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc -DHEARTH_BUILD_DLL -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -fPIC -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/hearth_core.dir/engine/src/platform_posix.c.o -c /mnt/d/mithril/src/hearth/engine/src/platform_posix.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/src/platform_posix.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/platform_posix.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc -DHEARTH_BUILD_DLL -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -fPIC -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -mavx2 -mfma -mf16c -o CMakeFiles/hearth_core.dir/engine/src/quant_avx2.c.o -c /mnt/d/mithril/src/hearth/engine/src/quant_avx2.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/src/quant_avx2.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/quant_avx2.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc -DHEARTH_BUILD_DLL -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -fPIC -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -mavx512f -mavx512bw -mavx512vl -mavx512vnni -mavx2 -mfma -mf16c -o CMakeFiles/hearth_core.dir/engine/src/quant_avx512.c.o -c /mnt/d/mithril/src/hearth/engine/src/quant_avx512.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/src/quant_avx512.c",
+  "output": "CMakeFiles/hearth_core.dir/engine/src/quant_avx512.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc  -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/hearth-bench.dir/engine/tools/hearth_bench.c.o -c /mnt/d/mithril/src/hearth/engine/tools/hearth_bench.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/tools/hearth_bench.c",
+  "output": "CMakeFiles/hearth-bench.dir/engine/tools/hearth_bench.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc  -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/test_model.dir/engine/tests/test_model.c.o -c /mnt/d/mithril/src/hearth/engine/tests/test_model.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/tests/test_model.c",
+  "output": "CMakeFiles/test_model.dir/engine/tests/test_model.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc  -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/test_modelfile.dir/engine/tests/test_modelfile.c.o -c /mnt/d/mithril/src/hearth/engine/tests/test_modelfile.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/tests/test_modelfile.c",
+  "output": "CMakeFiles/test_modelfile.dir/engine/tests/test_modelfile.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc  -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/test_platform.dir/engine/tests/test_platform.c.o -c /mnt/d/mithril/src/hearth/engine/tests/test_platform.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/tests/test_platform.c",
+  "output": "CMakeFiles/test_platform.dir/engine/tests/test_platform.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc  -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/test_pool.dir/engine/tests/test_pool.c.o -c /mnt/d/mithril/src/hearth/engine/tests/test_pool.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/tests/test_pool.c",
+  "output": "CMakeFiles/test_pool.dir/engine/tests/test_pool.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc  -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/test_quant.dir/engine/tests/test_quant.c.o -c /mnt/d/mithril/src/hearth/engine/tests/test_quant.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/tests/test_quant.c",
+  "output": "CMakeFiles/test_quant.dir/engine/tests/test_quant.c.o"
+},
+{
+  "directory": "/mnt/d/mithril/x0/cfg/C-gcc",
+  "command": "/usr/bin/gcc  -I/mnt/d/mithril/src/hearth/engine/include -I/mnt/d/mithril/src/hearth/engine/src -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -o CMakeFiles/test_store.dir/engine/tests/test_store.c.o -c /mnt/d/mithril/src/hearth/engine/tests/test_store.c",
+  "file": "/mnt/d/mithril/src/hearth/engine/tests/test_store.c",
+  "output": "CMakeFiles/test_store.dir/engine/tests/test_store.c.o"
+}
+]

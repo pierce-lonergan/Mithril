@@ -1,0 +1,13 @@
+D:\mithril\x0\smoke\A-msvc\smoke.obj: coff, 7 code sections, 7 functions, 0 gaps, 0 warnings, crosscheck mismatches 0
+A-msvc_WIN_DECODE_RC=0
+D:\mithril\x0\smoke\A-msvc\decode vs D:\mithril\x0\smoke\A-msvc\decode_win: functions identical=True (7), instructions identical=True (215/215)
+D:\mithril\x0\smoke\B-clangcl\smoke.obj: coff, 7 code sections, 7 functions, 0 gaps, 0 warnings, crosscheck mismatches 0
+B-clangcl_WIN_DECODE_RC=0
+D:\mithril\x0\smoke\B-clangcl\decode vs D:\mithril\x0\smoke\B-clangcl\decode_win: functions identical=True (7), instructions identical=True (174/174)
+D:\mithril\x0\smoke\C-gcc\smoke.o: elf64, 2 code sections, 8 functions, 6 gaps, 0 warnings, crosscheck mismatches 0
+C-gcc_WIN_DECODE_RC=0
+D:\mithril\x0\smoke\C-gcc\decode vs D:\mithril\x0\smoke\C-gcc\decode_win: functions identical=True (8), instructions identical=True (309/309)
+D:\mithril\x0\smoke\D-clang\smoke.o: elf64, 1 code sections, 7 functions, 6 gaps, 0 warnings, crosscheck mismatches 0
+D-clang_WIN_DECODE_RC=0
+D:\mithril\x0\smoke\D-clang\decode vs D:\mithril\x0\smoke\D-clang\decode_win: functions identical=True (7), instructions identical=True (191/191)
+DONE

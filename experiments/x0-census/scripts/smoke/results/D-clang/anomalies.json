@@ -1,0 +1,74 @@
+[
+ {
+  "severity": "info",
+  "kind": "padding_gap",
+  "object": "/mnt/d/mithril/x0/smoke/D-clang/smoke.o",
+  "section": ".text",
+  "range": [
+   59,
+   64
+  ],
+  "n_insts": 1,
+  "n_nonpadding": 0
+ },
+ {
+  "severity": "info",
+  "kind": "padding_gap",
+  "object": "/mnt/d/mithril/x0/smoke/D-clang/smoke.o",
+  "section": ".text",
+  "range": [
+   166,
+   176
+  ],
+  "n_insts": 1,
+  "n_nonpadding": 0
+ },
+ {
+  "severity": "info",
+  "kind": "padding_gap",
+  "object": "/mnt/d/mithril/x0/smoke/D-clang/smoke.o",
+  "section": ".text",
+  "range": [
+   363,
+   368
+  ],
+  "n_insts": 1,
+  "n_nonpadding": 0
+ },
+ {
+  "severity": "info",
+  "kind": "padding_gap",
+  "object": "/mnt/d/mithril/x0/smoke/D-clang/smoke.o",
+  "section": ".text",
+  "range": [
+   377,
+   384
+  ],
+  "n_insts": 1,
+  "n_nonpadding": 0
+ },
+ {
+  "severity": "info",
+  "kind": "padding_gap",
+  "object": "/mnt/d/mithril/x0/smoke/D-clang/smoke.o",
+  "section": ".text",
+  "range": [
+   613,
+   624
+  ],
+  "n_insts": 1,
+  "n_nonpadding": 0
+ },
+ {
+  "severity": "info",
+  "kind": "padding_gap",
+  "object": "/mnt/d/mithril/x0/smoke/D-clang/smoke.o",
+  "section": ".text",
+  "range": [
+   667,
+   672
+  ],
+  "n_insts": 1,
+  "n_nonpadding": 0
+ }
+]

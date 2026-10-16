@@ -1,0 +1,1452 @@
+[
+ {
+  "label": "C-gcc",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "function": "smoke_sqrt_helper",
+  "aliases": [],
+  "section": ".text",
+  "start": 0,
+  "end": 39,
+  "size_source": "symbol_size",
+  "n_insts": 11,
+  "tuples": [
+   {
+    "iclass": "CALL_NEAR",
+    "iform": "CALL_NEAR_RELBRd",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "FIXED_BASE0",
+     "MPX_PREFIX_ABLE",
+     "SCALABLE",
+     "STACKPUSH0"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "JNBE",
+    "iform": "JNBE_RELBRb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "POP",
+    "iform": "POP_GPRv_58",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "FIXED_BASE0",
+     "SCALABLE",
+     "STACKPOP0"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "PUSH",
+    "iform": "PUSH_GPRv_50",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "FIXED_BASE0",
+     "SCALABLE",
+     "STACKPUSH0"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "RET_NEAR",
+    "iform": "RET_NEAR",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "FIXED_BASE0",
+     "MPX_PREFIX_ABLE",
+     "SCALABLE",
+     "STACKPOP0"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "VMULSS",
+    "iform": "VMULSS_XMMdq_XMMdq_MEMd",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "MXCSR",
+     "SIMD_SCALAR"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "VSQRTSS",
+    "iform": "VSQRTSS_XMMdq_XMMdq_XMMd",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "MXCSR",
+     "SIMD_SCALAR"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VUCOMISS",
+    "iform": "VUCOMISS_XMMdq_XMMd",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "MXCSR",
+     "SIMD_SCALAR"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VXORPS",
+    "iform": "VXORPS_XMMdq_XMMdq_XMMdq",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [],
+    "count": 1
+   }
+  ]
+ },
+ {
+  "label": "C-gcc",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "function": "smoke_avx512_addmul",
+  "aliases": [],
+  "section": ".text",
+  "start": 48,
+  "end": 109,
+  "size_source": "symbol_size",
+  "n_insts": 14,
+  "tuples": [
+   {
+    "iclass": "ADD",
+    "iform": "ADD_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "CMP",
+    "iform": "CMP_GPRv_GPRv_39",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "CMP",
+    "iform": "CMP_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "ENDBR64",
+    "iform": "ENDBR64",
+    "extension": "CET",
+    "isa_set": "CET",
+    "attributes": [],
+    "count": 1
+   },
+   {
+    "iclass": "JBE",
+    "iform": "JBE_RELBRb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "JNB",
+    "iform": "JNB_RELBRb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "MOV",
+    "iform": "MOV_GPRv_IMMv",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "NOP",
+    "iform": "NOP_90",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "NOP"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "RET_NEAR",
+    "iform": "RET_NEAR",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "FIXED_BASE0",
+     "MPX_PREFIX_ABLE",
+     "SCALABLE",
+     "STACKPOP0"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VADDPS",
+    "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_512",
+    "attributes": [
+     "BROADCAST_ENABLED",
+     "DISP8_FULL",
+     "MASKOP_EVEX",
+     "MEMORY_FAULT_SUPPRESSION",
+     "MXCSR"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VMOVUPS",
+    "iform": "VMOVUPS_MEMf32_MASKmskw_ZMMf32_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_512",
+    "attributes": [
+     "DISP8_FULLMEM",
+     "MASKOP_EVEX",
+     "MEMORY_FAULT_SUPPRESSION"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VMOVUPS",
+    "iform": "VMOVUPS_ZMMf32_MASKmskw_MEMf32_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_512",
+    "attributes": [
+     "DISP8_FULLMEM",
+     "MASKOP_EVEX",
+     "MEMORY_FAULT_SUPPRESSION"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VMULPS",
+    "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_512",
+    "attributes": [
+     "BROADCAST_ENABLED",
+     "DISP8_FULL",
+     "MASKOP_EVEX",
+     "MEMORY_FAULT_SUPPRESSION",
+     "MXCSR"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VZEROUPPER",
+    "iform": "VZEROUPPER",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "NOTSX",
+     "XMM_STATE_W"
+    ],
+    "count": 1
+   }
+  ]
+ },
+ {
+  "label": "C-gcc",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "function": "smoke_avx512_masked",
+  "aliases": [],
+  "section": ".text",
+  "start": 112,
+  "end": 244,
+  "size_source": "symbol_size",
+  "n_insts": 32,
+  "tuples": [
+   {
+    "iclass": "ADD",
+    "iform": "ADD_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "AND",
+    "iform": "AND_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "CMP",
+    "iform": "CMP_GPRv_GPRv_39",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "CMP",
+    "iform": "CMP_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "ENDBR64",
+    "iform": "ENDBR64",
+    "extension": "CET",
+    "isa_set": "CET",
+    "attributes": [],
+    "count": 1
+   },
+   {
+    "iclass": "JBE",
+    "iform": "JBE_RELBRb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "JMP",
+    "iform": "JMP_RELBRb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [],
+    "count": 1
+   },
+   {
+    "iclass": "JNB",
+    "iform": "JNB_RELBRb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "KMOVW",
+    "iform": "KMOVW_MASKmskw_GPR32u32_AVX512",
+    "extension": "AVX512VEX",
+    "isa_set": "AVX512F_KOPW",
+    "attributes": [
+     "KMASK"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "LEA",
+    "iform": "LEA_GPRv_AGEN",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "MOV",
+    "iform": "MOV_GPRv_IMMv",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "NOP",
+    "iform": "NOP_90",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "NOP"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "RET_NEAR",
+    "iform": "RET_NEAR",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "FIXED_BASE0",
+     "MPX_PREFIX_ABLE",
+     "SCALABLE",
+     "STACKPOP0"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "SHL",
+    "iform": "SHL_GPRv_CL_D3r4",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "SHL",
+    "iform": "SHL_GPRv_IMMb_C1r4",
+    "extension": "BASE",
+    "isa_set": "I186",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "SUB",
+    "iform": "SUB_GPRv_GPRv_29",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VMOVAPS",
+    "iform": "VMOVAPS_ZMMf32_MASKmskw_ZMMf32_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_512",
+    "attributes": [
+     "MASKOP_EVEX"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VMOVUPS",
+    "iform": "VMOVUPS_MEMf32_MASKmskw_ZMMf32_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_512",
+    "attributes": [
+     "DISP8_FULLMEM",
+     "MASKOP_EVEX",
+     "MEMORY_FAULT_SUPPRESSION"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "VMOVUPS",
+    "iform": "VMOVUPS_ZMMf32_MASKmskw_MEMf32_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_512",
+    "attributes": [
+     "DISP8_FULLMEM",
+     "MASKOP_EVEX",
+     "MEMORY_FAULT_SUPPRESSION"
+    ],
+    "count": 3
+   },
+   {
+    "iclass": "VMULPS",
+    "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_512",
+    "attributes": [
+     "BROADCAST_ENABLED",
+     "DISP8_FULL",
+     "MASKOP_EVEX",
+     "MEMORY_FAULT_SUPPRESSION",
+     "MXCSR"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VMULPS",
+    "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_512",
+    "attributes": [
+     "MASKOP_EVEX",
+     "MXCSR"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VZEROUPPER",
+    "iform": "VZEROUPPER",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "NOTSX",
+     "XMM_STATE_W"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "XOR",
+    "iform": "XOR_GPRv_GPRv_31",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   }
+  ]
+ },
+ {
+  "label": "C-gcc",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "function": "smoke_avx2_dot",
+  "aliases": [],
+  "section": ".text",
+  "start": 256,
+  "end": 947,
+  "size_source": "symbol_size",
+  "n_insts": 156,
+  "tuples": [
+   {
+    "iclass": "ADD",
+    "iform": "ADD_GPRv_GPRv_01",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 3
+   },
+   {
+    "iclass": "ADD",
+    "iform": "ADD_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 4
+   },
+   {
+    "iclass": "AND",
+    "iform": "AND_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 4
+   },
+   {
+    "iclass": "CMP",
+    "iform": "CMP_GPRv_GPRv_39",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 9
+   },
+   {
+    "iclass": "CMP",
+    "iform": "CMP_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 3
+   },
+   {
+    "iclass": "ENDBR64",
+    "iform": "ENDBR64",
+    "extension": "CET",
+    "isa_set": "CET",
+    "attributes": [],
+    "count": 1
+   },
+   {
+    "iclass": "JBE",
+    "iform": "JBE_RELBRb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "JBE",
+    "iform": "JBE_RELBRd",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "JMP",
+    "iform": "JMP_RELBRd",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "JNB",
+    "iform": "JNB_RELBRb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 6
+   },
+   {
+    "iclass": "JNB",
+    "iform": "JNB_RELBRd",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "JNZ",
+    "iform": "JNZ_RELBRd",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "JZ",
+    "iform": "JZ_RELBRd",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "LEA",
+    "iform": "LEA_GPRv_AGEN",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 12
+   },
+   {
+    "iclass": "MOV",
+    "iform": "MOV_GPRv_GPRv_89",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 6
+   },
+   {
+    "iclass": "MOV",
+    "iform": "MOV_GPRv_IMMv",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "NOP",
+    "iform": "NOP_MEMv_0F1F",
+    "extension": "BASE",
+    "isa_set": "FAT_NOP",
+    "attributes": [
+     "NOP",
+     "SCALABLE"
+    ],
+    "count": 3
+   },
+   {
+    "iclass": "RET_NEAR",
+    "iform": "RET_NEAR",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "FIXED_BASE0",
+     "MPX_PREFIX_ABLE",
+     "SCALABLE",
+     "STACKPOP0"
+    ],
+    "count": 3
+   },
+   {
+    "iclass": "SHL",
+    "iform": "SHL_GPRv_IMMb_C1r4",
+    "extension": "BASE",
+    "isa_set": "I186",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "SHR",
+    "iform": "SHR_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I186",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "SUB",
+    "iform": "SUB_GPRv_GPRv_29",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "TEST",
+    "iform": "TEST_GPR8_IMMb_F6r0",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "BYTEOP"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "TEST",
+    "iform": "TEST_GPRv_GPRv",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VADDPS",
+    "iform": "VADDPS_XMMdq_XMMdq_XMMdq",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "MXCSR"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VADDSS",
+    "iform": "VADDSS_XMMdq_XMMdq_XMMd",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "MXCSR",
+     "SIMD_SCALAR"
+    ],
+    "count": 31
+   },
+   {
+    "iclass": "VALIGND",
+    "iform": "VALIGND_YMMu32_MASKmskw_YMMu32_YMMu32_IMM8_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_256",
+    "attributes": [
+     "MASKOP_EVEX"
+    ],
+    "count": 9
+   },
+   {
+    "iclass": "VEXTRACTF128",
+    "iform": "VEXTRACTF128_XMMdq_YMMqq_IMMb",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [],
+    "count": 1
+   },
+   {
+    "iclass": "VEXTRACTF32X4",
+    "iform": "VEXTRACTF32X4_XMMf32_MASKmskw_YMMf32_IMM8_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_256",
+    "attributes": [
+     "MASKOP_EVEX"
+    ],
+    "count": 3
+   },
+   {
+    "iclass": "VEXTRACTI64X4",
+    "iform": "VEXTRACTI64X4_YMMu64_MASKmskw_ZMMu64_IMM8_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_512",
+    "attributes": [
+     "MASKOP_EVEX"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VFMADD231PS",
+    "iform": "VFMADD231PS_YMMqq_YMMqq_MEMqq",
+    "extension": "FMA",
+    "isa_set": "FMA",
+    "attributes": [
+     "MXCSR"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VHADDPS",
+    "iform": "VHADDPS_XMMdq_XMMdq_XMMdq",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "MXCSR"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "VMOVAPS",
+    "iform": "VMOVAPS_XMMdq_XMMdq_28",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "REQUIRES_ALIGNMENT"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VMOVSS",
+    "iform": "VMOVSS_XMMdq_MEMd",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "SIMD_SCALAR"
+    ],
+    "count": 7
+   },
+   {
+    "iclass": "VMOVUPS",
+    "iform": "VMOVUPS_YMMqq_MEMqq",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [],
+    "count": 2
+   },
+   {
+    "iclass": "VMOVUPS",
+    "iform": "VMOVUPS_ZMMf32_MASKmskw_MEMf32_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_512",
+    "attributes": [
+     "DISP8_FULLMEM",
+     "MASKOP_EVEX",
+     "MEMORY_FAULT_SUPPRESSION"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VMULPS",
+    "iform": "VMULPS_YMMqq_YMMqq_MEMqq",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "MXCSR"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VMULPS",
+    "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+    "extension": "AVX512EVEX",
+    "isa_set": "AVX512F_512",
+    "attributes": [
+     "BROADCAST_ENABLED",
+     "DISP8_FULL",
+     "MASKOP_EVEX",
+     "MEMORY_FAULT_SUPPRESSION",
+     "MXCSR"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VMULSS",
+    "iform": "VMULSS_XMMdq_XMMdq_MEMd",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "MXCSR",
+     "SIMD_SCALAR"
+    ],
+    "count": 7
+   },
+   {
+    "iclass": "VSHUFPS",
+    "iform": "VSHUFPS_XMMdq_XMMdq_XMMdq_IMMb",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [],
+    "count": 6
+   },
+   {
+    "iclass": "VUNPCKHPS",
+    "iform": "VUNPCKHPS_XMMdq_XMMdq_XMMdq",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [],
+    "count": 3
+   },
+   {
+    "iclass": "VXORPS",
+    "iform": "VXORPS_XMMdq_XMMdq_XMMdq",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [],
+    "count": 2
+   },
+   {
+    "iclass": "VZEROUPPER",
+    "iform": "VZEROUPPER",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "NOTSX",
+     "XMM_STATE_W"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "XOR",
+    "iform": "XOR_GPRv_GPRv_31",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 3
+   }
+  ]
+ },
+ {
+  "label": "C-gcc",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "function": "smoke_contract_probe",
+  "aliases": [],
+  "section": ".text",
+  "start": 960,
+  "end": 973,
+  "size_source": "symbol_size",
+  "n_insts": 4,
+  "tuples": [
+   {
+    "iclass": "ENDBR64",
+    "iform": "ENDBR64",
+    "extension": "CET",
+    "isa_set": "CET",
+    "attributes": [],
+    "count": 1
+   },
+   {
+    "iclass": "RET_NEAR",
+    "iform": "RET_NEAR",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "FIXED_BASE0",
+     "MPX_PREFIX_ABLE",
+     "SCALABLE",
+     "STACKPOP0"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VADDSS",
+    "iform": "VADDSS_XMMdq_XMMdq_XMMd",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "MXCSR",
+     "SIMD_SCALAR"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VMULSS",
+    "iform": "VMULSS_XMMdq_XMMdq_XMMd",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "MXCSR",
+     "SIMD_SCALAR"
+    ],
+    "count": 1
+   }
+  ]
+ },
+ {
+  "label": "C-gcc",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "function": "smoke_switch",
+  "aliases": [],
+  "section": ".text",
+  "start": 976,
+  "end": 1249,
+  "size_source": "symbol_size",
+  "n_insts": 70,
+  "tuples": [
+   {
+    "iclass": "ADD",
+    "iform": "ADD_GPRv_GPRv_01",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "ADD",
+    "iform": "ADD_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "CDQ",
+    "iform": "CDQ",
+    "extension": "BASE",
+    "isa_set": "I386",
+    "attributes": [],
+    "count": 1
+   },
+   {
+    "iclass": "CMP",
+    "iform": "CMP_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "ENDBR64",
+    "iform": "ENDBR64",
+    "extension": "CET",
+    "isa_set": "CET",
+    "attributes": [],
+    "count": 1
+   },
+   {
+    "iclass": "IMUL",
+    "iform": "IMUL_GPRv_GPRv",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "IMUL",
+    "iform": "IMUL_GPRv_GPRv_IMMz",
+    "extension": "BASE",
+    "isa_set": "I186",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "JMP",
+    "iform": "JMP_GPRv",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "INDIRECT_BRANCH",
+     "MPX_PREFIX_ABLE",
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "JMP",
+    "iform": "JMP_RELBRb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [],
+    "count": 5
+   },
+   {
+    "iclass": "JMP",
+    "iform": "JMP_RELBRd",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 4
+   },
+   {
+    "iclass": "JNBE",
+    "iform": "JNBE_RELBRd",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "MPX_PREFIX_ABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "LEA",
+    "iform": "LEA_GPRv_AGEN",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 4
+   },
+   {
+    "iclass": "MOV",
+    "iform": "MOV_GPRv_GPRv_89",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "MOV",
+    "iform": "MOV_GPRv_MEMv",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 11
+   },
+   {
+    "iclass": "MOV",
+    "iform": "MOV_MEMv_GPRv",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "HLE_REL_ABLE",
+     "SCALABLE"
+    ],
+    "count": 10
+   },
+   {
+    "iclass": "MOVSXD",
+    "iform": "MOVSXD_GPR64_MEMd",
+    "extension": "LONGMODE",
+    "isa_set": "LONGMODE",
+    "attributes": [],
+    "count": 1
+   },
+   {
+    "iclass": "MOVSXD",
+    "iform": "MOVSXD_GPRv_GPRz",
+    "extension": "LONGMODE",
+    "isa_set": "LONGMODE",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "NOP",
+    "iform": "NOP_90",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "NOP"
+    ],
+    "count": 3
+   },
+   {
+    "iclass": "NOP",
+    "iform": "NOP_MEMv_0F1F",
+    "extension": "BASE",
+    "isa_set": "FAT_NOP",
+    "attributes": [
+     "NOP",
+     "SCALABLE"
+    ],
+    "count": 6
+   },
+   {
+    "iclass": "NOT",
+    "iform": "NOT_GPRv",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "RET_NEAR",
+    "iform": "RET_NEAR",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "FIXED_BASE0",
+     "MPX_PREFIX_ABLE",
+     "SCALABLE",
+     "STACKPOP0"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "SAR",
+    "iform": "SAR_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I186",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 3
+   },
+   {
+    "iclass": "SAR",
+    "iform": "SAR_GPRv_ONE",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "IMPLICIT_ONE",
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "SHL",
+    "iform": "SHL_GPRv_IMMb_C1r4",
+    "extension": "BASE",
+    "isa_set": "I186",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "SUB",
+    "iform": "SUB_GPRv_GPRv_29",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 3
+   },
+   {
+    "iclass": "SUB",
+    "iform": "SUB_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "XOR",
+    "iform": "XOR_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   }
+  ]
+ },
+ {
+  "label": "C-gcc",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "function": "smoke_call_helper",
+  "aliases": [],
+  "section": ".text",
+  "start": 1264,
+  "end": 1319,
+  "size_source": "symbol_size",
+  "n_insts": 11,
+  "tuples": [
+   {
+    "iclass": "ADD",
+    "iform": "ADD_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "CALL_NEAR",
+    "iform": "CALL_NEAR_RELBRd",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "FIXED_BASE0",
+     "MPX_PREFIX_ABLE",
+     "SCALABLE",
+     "STACKPUSH0"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "ENDBR64",
+    "iform": "ENDBR64",
+    "extension": "CET",
+    "isa_set": "CET",
+    "attributes": [],
+    "count": 1
+   },
+   {
+    "iclass": "RET_NEAR",
+    "iform": "RET_NEAR",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "FIXED_BASE0",
+     "MPX_PREFIX_ABLE",
+     "SCALABLE",
+     "STACKPOP0"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "SUB",
+    "iform": "SUB_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "VADDSS",
+    "iform": "VADDSS_XMMdq_XMMdq_MEMd",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "MXCSR",
+     "SIMD_SCALAR"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "VMOVSS",
+    "iform": "VMOVSS_MEMd_XMMd",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "SIMD_SCALAR"
+    ],
+    "count": 2
+   },
+   {
+    "iclass": "VMOVSS",
+    "iform": "VMOVSS_XMMdq_MEMd",
+    "extension": "AVX",
+    "isa_set": "AVX",
+    "attributes": [
+     "SIMD_SCALAR"
+    ],
+    "count": 1
+   }
+  ]
+ },
+ {
+  "label": "C-gcc",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "function": "smoke_switch.cold",
+  "aliases": [],
+  "section": ".text.unlikely",
+  "start": 0,
+  "end": 4,
+  "size_source": "symbol_size",
+  "n_insts": 2,
+  "tuples": [
+   {
+    "iclass": "OR",
+    "iform": "OR_GPRv_IMMb",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "SCALABLE"
+    ],
+    "count": 1
+   },
+   {
+    "iclass": "RET_NEAR",
+    "iform": "RET_NEAR",
+    "extension": "BASE",
+    "isa_set": "I86",
+    "attributes": [
+     "FIXED_BASE0",
+     "MPX_PREFIX_ABLE",
+     "SCALABLE",
+     "STACKPOP0"
+    ],
+    "count": 1
+   }
+  ]
+ }
+]

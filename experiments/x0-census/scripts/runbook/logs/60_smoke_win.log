@@ -1,0 +1,35 @@
+==== A-msvc: smoke.c with the flags of quant_avx512.c
+smoke.c
+{"directory": "D:/mithril/x0/cfg/A-msvc", "argv": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "-std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/FS", "/c", "/FoD:\\mithril\\x0\\smoke\\A-msvc\\smoke.obj", "D:\\mithril\\x0\\scripts\\smoke\\smoke.c"]}
+A-msvc_SMOKE_RC=0
+==== A-msvc: VNNI probe (_mm512_dpbusd_epi32) with the flags of quant_avx512.c
+vnni_probe.c
+{"directory": "D:/mithril/x0/cfg/A-msvc", "argv": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "-std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/FS", "/c", "/FoD:\\mithril\\x0\\smoke\\probe\\vnni_A-msvc.obj", "D:\\mithril\\x0\\scripts\\runbook\\probes\\vnni_probe.c"]}
+A-msvc_VNNI_RC=0
+==== A-msvc: C11 atomics probe with the flags of quant.c
+atomic_probe.c
+{"directory": "D:/mithril/x0/cfg/A-msvc", "argv": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "-std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/FS", "/c", "/FoD:\\mithril\\x0\\smoke\\probe\\atomic_A-msvc.obj", "D:\\mithril\\x0\\scripts\\runbook\\probes\\atomic_probe.c"]}
+A-msvc_ATOMIC_RC=0
+==== B-clangcl: smoke.c with the flags of quant_avx512.c
+clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]
+{"directory": "D:/mithril/x0/cfg/B-clangcl", "argv": ["D:\\mithril\\tools\\llvm-win-23.1.3\\bin\\clang-cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "/std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/c", "/FoD:\\mithril\\x0\\smoke\\B-clangcl\\smoke.obj", "D:\\mithril\\x0\\scripts\\smoke\\smoke.c"]}
+B-clangcl_SMOKE_RC=0
+==== B-clangcl: VNNI probe (_mm512_dpbusd_epi32) with the flags of quant_avx512.c
+clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]
+D:\mithril\x0\scripts\runbook\probes\vnni_probe.c(2,64): error: always_inline function '_mm512_dpbusd_epi32' requires target feature 'avx512vnni', but would be inlined into function 'vnni_probe' that is compiled without support for 'avx512vnni'
+    2 | __m512i vnni_probe(__m512i acc, __m512i a, __m512i b) { return _mm512_dpbusd_epi32(acc, a, b); }
+      |                                                                ^
+1 error generated.
+{"directory": "D:/mithril/x0/cfg/B-clangcl", "argv": ["D:\\mithril\\tools\\llvm-win-23.1.3\\bin\\clang-cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "/std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/c", "/FoD:\\mithril\\x0\\smoke\\probe\\vnni_B-clangcl.obj", "D:\\mithril\\x0\\scripts\\runbook\\probes\\vnni_probe.c"]}
+B-clangcl_VNNI_RC=1
+==== B-clangcl: C11 atomics probe with the flags of quant.c
+clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]
+{"directory": "D:/mithril/x0/cfg/B-clangcl", "argv": ["D:\\mithril\\tools\\llvm-win-23.1.3\\bin\\clang-cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "/std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/c", "/FoD:\\mithril\\x0\\smoke\\probe\\atomic_B-clangcl.obj", "D:\\mithril\\x0\\scripts\\runbook\\probes\\atomic_probe.c"]}
+B-clangcl_ATOMIC_RC=0
+==== clang-cl /arch:AVX512 plus -mavx512vnni (possible fix for B, not Hearth's flags)
+VNNI_B_PLUS_RC=0
+==== cl without /experimental:c11atomics (expected to fail)
+atomic_probe.c
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\vcruntime_c11_stdatomic.h(12): fatal error C1189: #error:  "C atomic support is not enabled"
+ATOMIC_A_NOEXP_RC=2
+DONE

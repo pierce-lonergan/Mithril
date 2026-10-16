@@ -1,0 +1,19 @@
+[
+ {
+  "severity": "info",
+  "kind": "data_in_code_excluded",
+  "object": "/mnt/d/mithril/x0/smoke/A-msvc/smoke.obj",
+  "function": "smoke_switch",
+  "range": [
+   252,
+   292
+  ]
+ },
+ {
+  "severity": "info",
+  "kind": "trailing_padding_instructions",
+  "object": "/mnt/d/mithril/x0/smoke/A-msvc/smoke.obj",
+  "function": "smoke_switch",
+  "count": 1
+ }
+]

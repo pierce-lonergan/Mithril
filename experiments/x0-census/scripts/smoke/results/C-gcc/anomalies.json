@@ -1,0 +1,74 @@
+[
+ {
+  "severity": "info",
+  "kind": "padding_gap",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "section": ".text",
+  "range": [
+   39,
+   48
+  ],
+  "n_insts": 1,
+  "n_nonpadding": 0
+ },
+ {
+  "severity": "info",
+  "kind": "padding_gap",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "section": ".text",
+  "range": [
+   109,
+   112
+  ],
+  "n_insts": 1,
+  "n_nonpadding": 0
+ },
+ {
+  "severity": "info",
+  "kind": "padding_gap",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "section": ".text",
+  "range": [
+   244,
+   256
+  ],
+  "n_insts": 2,
+  "n_nonpadding": 0
+ },
+ {
+  "severity": "info",
+  "kind": "padding_gap",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "section": ".text",
+  "range": [
+   947,
+   960
+  ],
+  "n_insts": 2,
+  "n_nonpadding": 0
+ },
+ {
+  "severity": "info",
+  "kind": "padding_gap",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "section": ".text",
+  "range": [
+   973,
+   976
+  ],
+  "n_insts": 1,
+  "n_nonpadding": 0
+ },
+ {
+  "severity": "info",
+  "kind": "padding_gap",
+  "object": "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o",
+  "section": ".text",
+  "range": [
+   1249,
+   1264
+  ],
+  "n_insts": 2,
+  "n_nonpadding": 0
+ }
+]

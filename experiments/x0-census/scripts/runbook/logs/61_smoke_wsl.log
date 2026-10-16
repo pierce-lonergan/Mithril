@@ -1,0 +1,32 @@
+==== C-gcc: smoke.c with the flags of quant_avx512.c
+{"directory": "/mnt/d/mithril/x0/cfg/C-gcc", "argv": ["/usr/bin/gcc", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-mavx512f", "-mavx512bw", "-mavx512vl", "-mavx512vnni", "-mavx2", "-mfma", "-mf16c", "-c", "-o", "/mnt/d/mithril/x0/smoke/C-gcc/smoke.o", "/mnt/d/mithril/x0/scripts/smoke/smoke.c"]}
+C-gcc_SMOKE_RC=0
+==== D-clang: smoke.c with the flags of quant_avx512.c
+{"directory": "/mnt/d/mithril/x0/cfg/D-clang", "argv": ["/mnt/d/mithril/tools/llvm-linux-23.1.3/bin/clang", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-mavx512f", "-mavx512bw", "-mavx512vl", "-mavx512vnni", "-mavx2", "-mfma", "-mf16c", "-c", "-o", "/mnt/d/mithril/x0/smoke/D-clang/smoke.o", "/mnt/d/mithril/x0/scripts/smoke/smoke.c"]}
+D-clang_SMOKE_RC=0
+==== A-msvc: extract
+/mnt/d/mithril/x0/smoke/A-msvc/smoke.obj: coff, 7 code sections, 7 functions, 0 gaps, 0 warnings, crosscheck mismatches 0
+A-msvc_EXTRACT_RC=0
+A-msvc_DECODE_RC=0
+A-msvc 7 functions 214 instructions ['-64', '-cet'] {'info:data_in_code_excluded': 1, 'info:trailing_padding_instructions': 1}
+==== B-clangcl: extract
+/mnt/d/mithril/x0/smoke/B-clangcl/smoke.obj: coff, 7 code sections, 7 functions, 0 gaps, 0 warnings, crosscheck mismatches 0
+B-clangcl_EXTRACT_RC=0
+B-clangcl_DECODE_RC=0
+B-clangcl 7 functions 174 instructions ['-64', '-cet'] {}
+==== C-gcc: extract
+/mnt/d/mithril/x0/smoke/C-gcc/smoke.o: elf64, 2 code sections, 8 functions, 6 gaps, 0 warnings, crosscheck mismatches 0
+C-gcc_EXTRACT_RC=0
+C-gcc_DECODE_RC=0
+C-gcc 8 functions 300 instructions ['-64', '-cet'] {'info:padding_gap': 6}
+==== D-clang: extract
+/mnt/d/mithril/x0/smoke/D-clang/smoke.o: elf64, 1 code sections, 7 functions, 6 gaps, 0 warnings, crosscheck mismatches 0
+D-clang_EXTRACT_RC=0
+D-clang_DECODE_RC=0
+D-clang 7 functions 185 instructions ['-64', '-cet'] {'info:padding_gap': 6}
+==== negative test (manifests corrupted on purpose; decode must exit 1 with errors)
+A-msvc_NEG_RC=1 (expect 1)
+A-msvc NEG {'error:objdump_boundary_mismatch': 1, 'error:xed_exit': 1, 'info:data_in_code_excluded': 1, 'info:trailing_padding_instructions': 1}
+C-gcc_NEG_RC=1 (expect 1)
+C-gcc NEG {'error:coverage_mismatch': 1, 'error:objdump_boundary_mismatch': 1, 'error:undecodable': 1, 'info:padding_gap': 6}
+DONE
