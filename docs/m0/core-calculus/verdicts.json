@@ -1,0 +1,1739 @@
+{
+ "schema": "mithril.m0.core-calculus.verdicts/v0-draft",
+ "status": "DRAFT, with docs/m0/core-calculus.md; revised 2026-10-16 after the first same-family review (note section 17)",
+ "calculus": "MCore v0.1 (docs/m0/core-calculus.md)",
+ "prelude": "derivations.md#p-the-canonical-prelude",
+ "pinned": {
+  "mithril_commit": "ec46300926d4efa4e36fb022a19ea0285fde1c96",
+  "hearth_commit": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220"
+ },
+ "hash_rule": "SHA-256 of the body of a fenced ```mith block: the lines strictly between the opening fence line and the closing ``` line, joined with LF, plus one final LF; no other normalisation",
+ "measured": {
+  "tag": "[M]",
+  "by": "CC track agent (Claude), scratch script outside the repository",
+  "date": "2026-10-16",
+  "files_scanned": [
+   "README.md",
+   "docs/ARCHITECTURE.md",
+   "docs/ROADMAP.md",
+   "docs/architecture/01-language.md",
+   "docs/architecture/02-compute.md",
+   "docs/architecture/03-trust.md",
+   "docs/architecture/04-toolchain.md",
+   "docs/architecture/05-agent-protocol.md",
+   "docs/architecture/06-forge.md",
+   "docs/architecture/07-hearth-port.md"
+  ],
+  "blocks_found": 45,
+  "distinct_hashes": 35
+ },
+ "agreement_rule": "for every canonical and derived item, whatever its scope, and every negative item with gate_item true: mithi, run on the prelude plus the snippet, gives the expected verdict, and for a reject its primary code equals the expected code. For an item with scope x1 or x1-front-end the expected verdict is 'verdict' (an item with conditional true is judged with the prelude supplying its conditions). For an item outside X1 scope the expected verdict is 'x1_expected' (a reject with E-OUT-OF-SCOPE-<KW>, note sections 0.3 and 12, Owner question Q10); 'verdict' then records the calculus verdict, which becomes the expected verdict when the construct enters scope. The primary code is the first emitted code in the precedence order of note section 5.16; codes in 'also' are secondary. A rejection with E-X1-NOTYET-* is a disagreement (note section 12, Q9). Facts, including 'sig', are secondary and reported. The first draft compared X1-scope items only, which loosened ROADMAP section 3.2 (review item R2-19).",
+ "items": [
+  {
+   "id": "D-C1",
+   "title": "format BlockQ4",
+   "canonical": true,
+   "snippet": {
+    "sha256": "5db323b4af93942911bb28d9aa77d77c1665b8d6bee334f5a5251e4d46daf3ec",
+    "occurrences": [
+     {
+      "file": "docs/ARCHITECTURE.md",
+      "start_line": 456,
+      "end_line": 462
+     },
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 291,
+      "end_line": 297
+     },
+     {
+      "file": "docs/architecture/02-compute.md",
+      "start_line": 344,
+      "end_line": 350
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [],
+   "facts": {
+    "Nib64o8::elem": {
+     "kind": "format-accessor",
+     "row": [],
+     "may_trap": false,
+     "ctx": "exact",
+     "output": "i32 in [-8,7]",
+     "sig": "fn(&Nib64o8, usize) -> i32"
+    }
+   },
+   "rules": [
+    "fmt",
+    "kcall",
+    "T2"
+   ],
+   "derivation": "derivations.md#d-c1-format-blockq4",
+   "conditional": false
+  },
+  {
+   "id": "D-C2",
+   "title": "q4_row_dot and q4_matvec",
+   "canonical": true,
+   "snippet": {
+    "sha256": "d091a2e613220315d25f277750dc63a12305bb91acfcbbaea0ca75e9535abdea",
+    "occurrences": [
+     {
+      "file": "docs/ARCHITECTURE.md",
+      "start_line": 469,
+      "end_line": 492
+     },
+     {
+      "file": "docs/architecture/02-compute.md",
+      "start_line": 104,
+      "end_line": 127
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "prelude: Matrix fields and invariant blocks.len() == rows * blocks_per_row (F-3)"
+   ],
+   "requires_rules": [
+    "T-Cover (F-1), with premise 0 (F-37)",
+    "T-Jump for the loop guards (F-30)"
+   ],
+   "facts": {
+    "q4_row_dot": {
+     "kind": "kernel",
+     "row": [],
+     "may_trap": false,
+     "ctx": "exact",
+     "output": "f32 (exact, cross_device if inputs are, nu=canon); deps {w,a}",
+     "sig": "kernel fn(&[BlockQ4], &[ActQ8]) -> f32"
+    },
+    "q4_matvec": {
+     "kind": "kernel",
+     "row": [],
+     "may_trap": false,
+     "ctx": "exact",
+     "output": "&mut y: strong update, (exact, cross_device if inputs are, nu=canon); deps {w,a}",
+     "sig": "kernel fn(&Matrix<BlockQ4>, &[ActQ8], &mut [f32]) -> ()"
+    }
+   },
+   "rules": [
+    "T-Fn",
+    "k",
+    "T-Loop",
+    "T-Jump",
+    "T-Assert",
+    "T-Prim",
+    "T-Call",
+    "T-Proj",
+    "T-Par",
+    "T-Cover",
+    "T2-unroll"
+   ],
+   "derivation": "derivations.md#d-c2-q4_row_dot-and-q4_matvec",
+   "conditional": true
+  },
+  {
+   "id": "D-C3",
+   "title": "schedule q4_matvec_avx512",
+   "canonical": true,
+   "snippet": {
+    "sha256": "96901256fa8cf920e54e1d0eac489aaae67c8f56214cdb55e866b4f134539f99",
+    "occurrences": [
+     {
+      "file": "docs/ARCHITECTURE.md",
+      "start_line": 499,
+      "end_line": 505
+     }
+    ]
+   },
+   "scope": "x1-front-end",
+   "verdict": "accept",
+   "conditions": [
+    "target catalogue features (prelude)"
+   ],
+   "requires_rules": [
+    "schedule name resolution: own scope first, then unique in inlined kernel callees (F-2)"
+   ],
+   "facts": {
+    "q4_matvec_avx512": {
+     "kind": "schedule",
+     "licences": {
+      "tile r by 16": "exact",
+      "vectorize j using vpdpbusd": "int_assoc",
+      "keep_order acc": "exact",
+      "prefetch w ahead 2 blocks": "timing-only"
+     }
+    }
+   },
+   "rules": [
+    "sch"
+   ],
+   "derivation": "derivations.md#d-c3-schedule-q4_matvec_avx512",
+   "note": "front-end judgement only; soundness is T1 on the object at M2",
+   "conditional": true
+  },
+  {
+   "id": "D-C4",
+   "title": "policy fn pick_victim",
+   "canonical": true,
+   "snippet": {
+    "sha256": "36cc4697c6eba3789903caa8049d40093890e31a1c7ab987c222316034c74147",
+    "occurrences": [
+     {
+      "file": "docs/ARCHITECTURE.md",
+      "start_line": 512,
+      "end_line": 523
+     },
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 1080,
+      "end_line": 1091
+     },
+     {
+      "file": "docs/architecture/02-compute.md",
+      "start_line": 715,
+      "end_line": 726
+     },
+     {
+      "file": "docs/architecture/03-trust.md",
+      "start_line": 513,
+      "end_line": 524
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "prelude: SlotView and Tick are #[view], Copy and payload-free (Tick's #[view] added after review item R2-21)",
+    "prelude: Hint<T>, <[T]>::len"
+   ],
+   "facts": {
+    "pick_victim": {
+     "kind": "policy",
+     "row": [],
+     "may_trap": true,
+     "ctx": "timing_only",
+     "output": "Hint<SlotId> @ shared grade (schedule_dependent)",
+     "trap_sites": [
+      "ovf(sub) at now.0 - s.last_use.0"
+     ],
+     "sig": "policy fn(&[SlotView], Tick) -> Hint<SlotId>"
+    }
+   },
+   "rules": [
+    "to",
+    "T-Loop",
+    "T-Proj",
+    "T-Assert",
+    "T-If"
+   ],
+   "derivation": "derivations.md#d-c4-policy-fn-pick_victim",
+   "conditional": true
+  },
+  {
+   "id": "D-C5",
+   "title": "read_slab and acquire",
+   "canonical": true,
+   "snippet": {
+    "sha256": "38b13b20c0fa73dbc084000dede930770e06d2219141b152a9131f1ab2cff5b9",
+    "occurrences": [
+     {
+      "file": "docs/ARCHITECTURE.md",
+      "start_line": 529,
+      "end_line": 542
+     },
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 612,
+      "end_line": 625
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "acquire is in module store, which is granted declare_deterministic (01 section 11)",
+    "evidence golden::scheduling_independence present (X1 fixture, hash-pinned task input) with subject store::acquire, whose entire body is the det block (F-33); the first prelude's glob subject store::* is withdrawn",
+    "prelude signature of Store::acquire_inner: uses { io, spawn, nondet }, may_trap false"
+   ],
+   "facts": {
+    "read_slab": {
+     "kind": "fn",
+     "row": [
+      "io"
+     ],
+     "may_trap": false,
+     "ctx": "default",
+     "output": "Result<(), IoError>; &mut buf content depends on {file, off}",
+     "sig": "fn(&BlobFile, Aligned<u64, 4096>, &mut SlabBuf) -> Result<(), IoError> uses { io }"
+    },
+    "acquire": {
+     "kind": "fn",
+     "row": [
+      "io",
+      "spawn"
+     ],
+     "may_trap": false,
+     "ctx": "default",
+     "output": "Result<Frozen<SlabBuf>, IoError> @ (exact, cross_device if inputs are, B={golden::scheduling_independence})",
+     "sig": "fn(&Store, ExpertId) -> Result<Frozen<SlabBuf>, IoError> uses { io, spawn }"
+    }
+   },
+   "rules": [
+    "T-Fn",
+    "T-Proj",
+    "T-Call",
+    "T-Det"
+   ],
+   "derivation": "derivations.md#d-c5-read_slab-and-acquire",
+   "conditional": true,
+   "requires_rules": [
+    "T-Det with the result's schedule component recomputed from the free inputs (F-32)",
+    "E-DET-RESULT (F-34)"
+   ]
+  },
+  {
+   "id": "D-C6",
+   "title": "spec q4_matvec_claims",
+   "canonical": true,
+   "snippet": {
+    "sha256": "e0aea59febaf2aa4947977e8d8582a4cc4c70838acab8cc7fd5330b7845ba057",
+    "occurrences": [
+     {
+      "file": "docs/ARCHITECTURE.md",
+      "start_line": 549,
+      "end_line": 555
+     },
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 877,
+      "end_line": 883
+     },
+     {
+      "file": "docs/architecture/03-trust.md",
+      "start_line": 76,
+      "end_line": 82
+     }
+    ]
+   },
+   "scope": "x1-front-end",
+   "verdict": "accept",
+   "conditions": [
+    "schedule q4_matvec_avx2 exists (prelude stub)",
+    "seam namespace hearth_c_ref declared (prelude)"
+   ],
+   "facts": {},
+   "rules": [
+    "spec"
+   ],
+   "derivation": "derivations.md#d-c6-spec-q4_matvec_claims",
+   "conditional": true
+  },
+  {
+   "id": "D-C7",
+   "title": "Quantity and typed hole",
+   "canonical": true,
+   "snippet": {
+    "sha256": "15ff8fa9afbfddc2d3902d9b6d4e6d357dbc930f72dfc71087adb792d3d3d12b",
+    "occurrences": [
+     {
+      "file": "docs/ARCHITECTURE.md",
+      "start_line": 561,
+      "end_line": 565
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "checked as the body of prelude fn snippet_c7(profile: &MachineProfile)"
+   ],
+   "facts": {
+    "snippet_c7": {
+     "kind": "fn",
+     "row": [],
+     "may_trap": true,
+     "ctx": "default",
+     "trap_sites": [
+      "hole(eviction_score)"
+     ],
+     "sig": "fn(&MachineProfile) -> ()  [bw: Quantity<GBps, Measured>; score: unconstrained hole type]"
+    }
+   },
+   "rules": [
+    "T-Let",
+    "T-Copy",
+    "T-Hole",
+    "J12"
+   ],
+   "derivation": "derivations.md#d-c7-quantity-and-a-typed-hole",
+   "conditional": true
+  },
+  {
+   "id": "D-C8",
+   "title": "README taste (q4_row_dot, pick_victim)",
+   "canonical": true,
+   "snippet": {
+    "sha256": "4f4bc27e56fa507162b630696fea46a4333d5b580683ed4eaa8cadf1b75a3fa5",
+    "occurrences": [
+     {
+      "file": "README.md",
+      "start_line": 54,
+      "end_line": 80
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "as D-C2 for q4_row_dot (prelude ActQ8; BlockQ4 from D-C1)",
+    "as D-C4 for pick_victim"
+   ],
+   "facts": {
+    "q4_row_dot": {
+     "kind": "kernel",
+     "row": [],
+     "may_trap": false,
+     "ctx": "exact",
+     "sig": "kernel fn(&[BlockQ4], &[ActQ8]) -> f32"
+    },
+    "pick_victim": {
+     "kind": "policy",
+     "row": [],
+     "may_trap": true,
+     "ctx": "timing_only",
+     "sig": "policy fn(&[SlotView], Tick) -> Hint<SlotId>"
+    }
+   },
+   "rules": [
+    "as D-C2 and D-C4"
+   ],
+   "derivation": "derivations.md#d-c8-readme-a-taste",
+   "note": "comment-equal to ARCHITECTURE's q4_row_dot and pick_victim [M]",
+   "conditional": true
+  },
+  {
+   "id": "D-D01",
+   "title": "trait Dequant, first_value",
+   "snippet": {
+    "sha256": "69dab4ebdb91c1d47f71c2b1d2fb3212f78b8e6be54756bb2077013337968e72",
+    "occurrences": [
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 276,
+      "end_line": 284
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [],
+   "facts": {
+    "first_value": {
+     "kind": "fn",
+     "row": [],
+     "may_trap": true,
+     "ctx": "default",
+     "output": "f32 nu=raw; may_trap conservative for the generic definition",
+     "sig": "fn<B: Dequant>(&B) -> f32"
+    }
+   },
+   "rules": [
+    "J12",
+    "T-Call"
+   ],
+   "derivation": "derivations.md#d-d01-trait-dequant-first_value",
+   "conditional": false
+  },
+  {
+   "id": "D-D02",
+   "title": "Matrix::row",
+   "snippet": {
+    "sha256": "ec3ce489251878ad0200ed973bf6ab4b9212ea0e322155ee6ff4b5ceb79e0666",
+    "occurrences": [
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 363,
+      "end_line": 376
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "Matrix fields rows, blocks_per_row, blocks and the invariant (F-3)"
+   ],
+   "facts": {
+    "Matrix::row": {
+     "kind": "proj(self, ref)",
+     "row": [],
+     "may_trap": false,
+     "ctx": "exact-when-called-from-kernels",
+     "kcall": true,
+     "sig": "fn<B>(&Matrix<B>, usize) -> &[B]  (projection on self)"
+    }
+   },
+   "rules": [
+    "T-Ret(a)",
+    "T-Proj",
+    "T2-nonlinear"
+   ],
+   "derivation": "derivations.md#d-d02-matrixrow",
+   "conditional": true
+  },
+  {
+   "id": "D-D03",
+   "title": "q4_matvec (01 copy)",
+   "snippet": {
+    "sha256": "bfad207b9986220dba9eb2065f8ab2b0c7af8afb5f67793b564fc3f8b7690ca0",
+    "occurrences": [
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 387,
+      "end_line": 393
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "as D-C2"
+   ],
+   "facts": {},
+   "rules": [
+    "as D-C2"
+   ],
+   "derivation": "derivations.md#d-c2-q4_row_dot-and-q4_matvec",
+   "conditional": true
+  },
+  {
+   "id": "D-D04",
+   "title": "hottest",
+   "snippet": {
+    "sha256": "5a6b6593f660791c41cf67af83ff4e3a8841f4674ade7ed643c64427d639d9ad",
+    "occurrences": [
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 443,
+      "end_line": 456
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "prelude: SlotView",
+    "prelude: <[T]>::iter, Iterator::filter, Iterator::max_by_key and Option::map with their transfers (note section 5.7)"
+   ],
+   "facts": {
+    "hottest": {
+     "kind": "fn",
+     "row": [],
+     "may_trap": true,
+     "ctx": "default",
+     "output": "Option<SlotId> (not Local)",
+     "sig": "fn(&[SlotView], &[u32]) -> Option<SlotId>"
+    }
+   },
+   "rules": [
+    "T-CloL",
+    "closure-exception",
+    "T-Ret(b)"
+   ],
+   "derivation": "derivations.md#d-d04-hottest",
+   "conditional": true
+  },
+  {
+   "id": "D-D05",
+   "title": "Lease, expert_step",
+   "snippet": {
+    "sha256": "f732e79cba68e08faa6bf3d5a17325be253c618b0e283c77d4d68a26e56b0a0e",
+    "occurrences": [
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 488,
+      "end_line": 502
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "prelude: Store::lease, Store::release, Frozen::bytes, ffn_q4"
+   ],
+   "facts": {
+    "expert_step": {
+     "kind": "fn",
+     "row": [
+      "io",
+      "spawn"
+     ],
+     "may_trap": false,
+     "ctx": "default",
+     "sig": "fn(&Store, ExpertId, &[f32], &mut [f32]) -> Result<(), IoError> uses { io, spawn }"
+    },
+    "Lease::bytes": {
+     "kind": "proj(self, ref)",
+     "row": [],
+     "may_trap": false,
+     "ctx": "default",
+     "sig": "fn(&Lease) -> &[u8]  (projection on self)"
+    }
+   },
+   "rules": [
+    "K-Lin",
+    "T-Lin",
+    "T-Match",
+    "T-Proj"
+   ],
+   "derivation": "derivations.md#d-d05-lease-and-expert_step",
+   "conditional": true
+  },
+  {
+   "id": "D-D06",
+   "title": "note_use",
+   "snippet": {
+    "sha256": "2339f24db5f062a04ec4ad40a1d75fbd9f292a6f510abbf386409d32cff65b37",
+    "occurrences": [
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 536,
+      "end_line": 543
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "prelude: Mutex<T>::with_lock with its transfer (note section 5.7)",
+    "prelude: StoreState::touch, ExpertKey"
+   ],
+   "facts": {
+    "note_use": {
+     "kind": "fn",
+     "row": [
+      "nondet"
+     ],
+     "may_trap": false,
+     "ctx": "default",
+     "sig": "fn(&Mutex<StoreState>, ExpertKey) -> () uses { nondet }"
+    }
+   },
+   "rules": [
+    "T-CloL",
+    "closure-exception",
+    "T-Call"
+   ],
+   "derivation": "derivations.md#d-d06-note_use",
+   "conditional": true
+  },
+  {
+   "id": "D-D07",
+   "title": "q4_row_dot (01 copy)",
+   "snippet": {
+    "sha256": "9f5d0d3a825d500c9e18b43ab39f6149b1187a50c60a71cb369dfe252918e73a",
+    "occurrences": [
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 787,
+      "end_line": 802
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "prelude: ActQ8 with its #[range] and invariant; BlockQ4 from D-C1"
+   ],
+   "facts": {},
+   "rules": [
+    "as D-C2"
+   ],
+   "derivation": "derivations.md#d-c2-q4_row_dot-and-q4_matvec",
+   "conditional": true
+  },
+  {
+   "id": "D-D08",
+   "title": "ActQ8, block_index",
+   "snippet": {
+    "sha256": "e0863a0f49005d277afe73e47304f7b42a438ec6053e068307fd90cc8237b4d2",
+    "occurrences": [
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 835,
+      "end_line": 842
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [],
+   "facts": {
+    "block_index": {
+     "kind": "fn",
+     "row": [],
+     "may_trap": false,
+     "ctx": "default",
+     "output": "u32 < 32768",
+     "sig": "fn(u32 in 0..=511, u32 in 0..=63) -> u32"
+    }
+   },
+   "rules": [
+    "contracts (F-14)",
+    "T2"
+   ],
+   "derivation": "derivations.md#d-d08-actq8-and-block_index",
+   "conditional": false
+  },
+  {
+   "id": "D-D09",
+   "title": "check_entries",
+   "snippet": {
+    "sha256": "15bc3324a0e2b1aab0190f9fb11b90732933146534b4e3e2355aa4fb0620ba2c",
+    "occurrences": [
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 1032,
+      "end_line": 1039
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "prelude: ExpertEntry, FormatError, u64::checked_add, Option::ok_or, From<T> for T"
+   ],
+   "facts": {
+    "check_entries": {
+     "kind": "fn",
+     "row": [],
+     "may_trap": false,
+     "ctx": "default",
+     "output": "Result<(), FormatError>; lowest failing index wins",
+     "sig": "fn(&[ExpertEntry], u64) -> Result<(), FormatError>"
+    }
+   },
+   "rules": [
+    "T-Par",
+    "T-Match",
+    "E-Par-Join",
+    "Lemma B"
+   ],
+   "derivation": "derivations.md#d-d09-check_entries",
+   "conditional": true
+  },
+  {
+   "id": "D-D10",
+   "title": "MXFP4 format (02)",
+   "snippet": {
+    "sha256": "1c59bb1c367400b340acb19fe4f89e26b0da68b17ef12fb734f8bc3ee04f5046",
+    "occurrences": [
+     {
+      "file": "docs/architecture/02-compute.md",
+      "start_line": 385,
+      "end_line": 391
+     }
+    ]
+   },
+   "scope": "out:later",
+   "verdict": "out-of-scope",
+   "conditions": [
+    "needs canon.v1.1"
+   ],
+   "facts": {},
+   "rules": [
+    "fmt (structure only)"
+   ],
+   "derivation": "derivations.md#d-d10-and-d-d23-mxfp4-formats",
+   "conditional": true,
+   "x1_expected": {
+    "verdict": "reject",
+    "code": "E-OUT-OF-SCOPE-E8M0",
+    "note": "expected mithi verdict at the X1 checker precondition (note section 0.3, section 12, Q10); 'verdict' is the calculus verdict"
+   }
+  },
+  {
+   "id": "D-D11",
+   "title": "q4_matmul and schedule q4_matmul_avx512",
+   "snippet": {
+    "sha256": "aeb299b84bdc4dff7b41a99aea6fb3a2efc0f311e15505d2d14e1193308180d2",
+    "occurrences": [
+     {
+      "file": "docs/architecture/02-compute.md",
+      "start_line": 514,
+      "end_line": 531
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "prelude: IndexMut<usize> for Matrix<f32> with a declared footprint (F-25), discharged statically at its definition (E-FOOTPRINT, F-45)",
+    "prelude: Matrix::cols() == blocks_per_row()",
+    "provisional rule Proj-Split (note section 5.9, F-45); without it the inner par is E-PAR-DISJOINT and note P-19 proposes a hoist to 02's owner"
+   ],
+   "requires_rules": [
+    "T-Cover (nested)",
+    "footprints (F-25)"
+   ],
+   "facts": {
+    "q4_matmul": {
+     "kind": "kernel",
+     "row": [],
+     "may_trap": false,
+     "ctx": "exact",
+     "sig": "kernel fn(&Matrix<BlockQ4>, &Matrix<ActQ8>, &mut Matrix<f32>) -> ()"
+    }
+   },
+   "rules": [
+    "Proj-Split",
+    "T-Cover",
+    "T-Par",
+    "T-Par (nested)",
+    "sch"
+   ],
+   "derivation": "derivations.md#d-d11-q4_matmul-and-schedule-q4_matmul_avx512",
+   "conditional": true
+  },
+  {
+   "id": "D-D12",
+   "title": "flow moe_ffn",
+   "snippet": {
+    "sha256": "d65baa996b4828a77c01be1e68fcbd692fbeb9f35091d66b2309a3386d7a2f4c",
+    "occurrences": [
+     {
+      "file": "docs/architecture/02-compute.md",
+      "start_line": 665,
+      "end_line": 672
+     }
+    ]
+   },
+   "scope": "out:M4-M5",
+   "verdict": "accept",
+   "conditional": true,
+   "conditions": [
+    "DeclareDeterministic granted to moe_ffn's module (F-18)",
+    "an allocation rule (F-15, C-ALLOC)",
+    "map_on_arrival is a scoped std API returning an owned collection",
+    "evidence whose subject is this det block's anchor (F-33); golden::scheduling_independence covers only store::acquire"
+   ],
+   "facts": {},
+   "rules": [
+    "T-Det",
+    "T-CloL"
+   ],
+   "derivation": "derivations.md#d-d12-flow-moe_ffn",
+   "x1_expected": {
+    "verdict": "reject",
+    "code": "E-OUT-OF-SCOPE-FLOW",
+    "note": "expected mithi verdict at the X1 checker precondition (note section 0.3, section 12, Q10); 'verdict' is the calculus verdict"
+   }
+  },
+  {
+   "id": "D-D13",
+   "title": "store ExpertStore",
+   "snippet": {
+    "sha256": "7d54bbbe49164e0b17a2d17f24f86a685ea11076bd3100e787859cccd1a2d137",
+    "occurrences": [
+     {
+      "file": "docs/architecture/02-compute.md",
+      "start_line": 744,
+      "end_line": 750
+     }
+    ]
+   },
+   "scope": "out:M4",
+   "verdict": "accept",
+   "conditional": true,
+   "conditions": [
+    "fallback lru satisfies F-tot",
+    "validate evictable is trap-free and the core satisfies P-ind (F-47)",
+    "the port reserves a stack region of at least S(pick_victim) (S-tot, F-48)",
+    "the store core satisfies A-ind (F-49)",
+    "next_layer declared"
+   ],
+   "facts": {},
+   "rules": [
+    "store (sketch)"
+   ],
+   "derivation": "derivations.md#d-d13-store-expertstore",
+   "x1_expected": {
+    "verdict": "reject",
+    "code": "E-OUT-OF-SCOPE-STORE",
+    "note": "expected mithi verdict at the X1 checker precondition (note section 0.3, section 12, Q10); 'verdict' is the calculus verdict"
+   }
+  },
+  {
+   "id": "D-D14",
+   "title": "read_slab (02 copy)",
+   "snippet": {
+    "sha256": "646242d0806f9e7c4da0cc7dd9bfcb9e23d483c83e411bafcb6d64c96f9f09e6",
+    "occurrences": [
+     {
+      "file": "docs/architecture/02-compute.md",
+      "start_line": 942,
+      "end_line": 947
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "prelude: BlobFile::read_at, SlabBuf::bytes_mut, Aligned, IoError"
+   ],
+   "facts": {},
+   "rules": [
+    "as D-C5"
+   ],
+   "derivation": "derivations.md#d-d14-and-d-d15-copies",
+   "conditional": true
+  },
+  {
+   "id": "D-D15",
+   "title": "acquire (03 copy)",
+   "snippet": {
+    "sha256": "c47e32d89effcca6c1edb5848d72637bbb6ad5a0fefe760e998f94e437f5b379",
+    "occurrences": [
+     {
+      "file": "docs/architecture/03-trust.md",
+      "start_line": 277,
+      "end_line": 283
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "as D-C5"
+   ],
+   "facts": {},
+   "rules": [
+    "as D-C5"
+   ],
+   "derivation": "derivations.md#d-d14-and-d-d15-copies",
+   "conditional": true
+  },
+  {
+   "id": "D-D16",
+   "title": "value_sum with a hole",
+   "snippet": {
+    "sha256": "6daa0e6dff14f010595744fc95a675b77dd30078fdedab1fc61a96ec9e61578c",
+    "occurrences": [
+     {
+      "file": "docs/architecture/04-toolchain.md",
+      "start_line": 397,
+      "end_line": 402
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [],
+   "facts": {
+    "value_sum": {
+     "kind": "fn",
+     "row": [],
+     "may_trap": true,
+     "ctx": "default",
+     "trap_sites": [
+      "hole(value_sum)",
+      "contract_ovf at call sites"
+     ],
+     "sig": "fn(&mut [f32], &[f32], &[f32], usize, usize, usize) -> ()"
+    }
+   },
+   "rules": [
+    "T-Hole",
+    "contracts (F-14)"
+   ],
+   "derivation": "derivations.md#d-d16-value_sum-with-a-hole",
+   "conditional": false
+  },
+  {
+   "id": "D-D17",
+   "title": "KvRow, decayed, tick",
+   "snippet": {
+    "sha256": "e487eb7a827bba64d599aabe0403b324e3baf106a9259efb572290f19cfb9362",
+    "occurrences": [
+     {
+      "file": "docs/architecture/04-toolchain.md",
+      "start_line": 449,
+      "end_line": 458
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [],
+   "facts": {
+    "tick": {
+     "kind": "fn",
+     "row": [],
+     "may_trap": true,
+     "ctx": "default",
+     "sig": "fn(&mut [KvRow], usize) -> ()"
+    },
+    "decayed": {
+     "kind": "fn",
+     "row": [],
+     "may_trap": true,
+     "ctx": "default",
+     "sig": "fn(&KvRow, f32) -> KvRow"
+    }
+   },
+   "rules": [
+    "T-Assign",
+    "T-Proj"
+   ],
+   "derivation": "derivations.md#d-d17-kvrow-decayed-tick",
+   "note": "the hot-path hidden-copy rule (04 §6.5) is a lowering rule outside MCore and may reject tick",
+   "conditional": false
+  },
+  {
+   "id": "D-D18",
+   "title": "open_slots",
+   "snippet": {
+    "sha256": "dea88ccac3b2a46a313a32b55d5b698338b4f38624e8a5e67994c01c9e94bbd0",
+    "occurrences": [
+     {
+      "file": "docs/architecture/04-toolchain.md",
+      "start_line": 818,
+      "end_line": 826
+     }
+    ]
+   },
+   "scope": "out:M5",
+   "verdict": "accept",
+   "conditional": true,
+   "conditions": [
+    "Arena signatures (derivation)",
+    "exhausting the LargePages reservation is the environment fault oom(LargePages) under C-OOM (F-49)"
+   ],
+   "facts": {
+    "open_slots": {
+     "kind": "fn",
+     "row": [
+      "alloc(LargePages)"
+     ],
+     "may_trap": false,
+     "ctx": "default",
+     "sig": "fn(&MemCap, u32, Aligned<u64, 4096>) -> Result<Slots, AllocError> uses { alloc(LargePages) }"
+    }
+   },
+   "rules": [
+    "T-Lin",
+    "T-Match"
+   ],
+   "derivation": "derivations.md#d-d18-open_slots",
+   "x1_expected": {
+    "verdict": "reject",
+    "code": "E-OUT-OF-SCOPE-MEMCAP",
+    "note": "expected mithi verdict at the X1 checker precondition (note section 0.3, section 12, Q10); 'verdict' is the calculus verdict"
+   }
+  },
+  {
+   "id": "D-D19",
+   "title": "evolve slot store_evict",
+   "snippet": {
+    "sha256": "b6e66be4931f847c5ec811f70efff9b83a67ce8bd7ae9b500ff78897ae46963f",
+    "occurrences": [
+     {
+      "file": "docs/architecture/06-forge.md",
+      "start_line": 179,
+      "end_line": 188
+     }
+    ]
+   },
+   "scope": "out:M4",
+   "verdict": "out-of-scope",
+   "conditions": [],
+   "facts": {},
+   "rules": [
+    "store/slot (sketch)"
+   ],
+   "derivation": "derivations.md#d-d19-evolve-slot-store_evict",
+   "conditional": false,
+   "x1_expected": {
+    "verdict": "reject",
+    "code": "E-OUT-OF-SCOPE-EVOLVE",
+    "note": "expected mithi verdict at the X1 checker precondition (note section 0.3, section 12, Q10); 'verdict' is the calculus verdict"
+   }
+  },
+  {
+   "id": "D-D20",
+   "title": "spec s5_forward_claims",
+   "snippet": {
+    "sha256": "c4e7aa7dd5e376c9bf0f399018401671021777c8b29c145d3274676fdcd276fa",
+    "occurrences": [
+     {
+      "file": "docs/architecture/07-hearth-port.md",
+      "start_line": 220,
+      "end_line": 227
+     }
+    ]
+   },
+   "scope": "x1-front-end",
+   "verdict": "accept",
+   "conditions": [
+    "prelude stubs: forward_token, seam hearth_c_ref::forward_token",
+    "OP-16: claim subjects in the target's closure"
+   ],
+   "facts": {},
+   "rules": [
+    "spec"
+   ],
+   "derivation": "derivations.md#d-d20-spec-s5_forward_claims",
+   "conditional": true
+  },
+  {
+   "id": "D-D21",
+   "title": "kernel fn softmax",
+   "snippet": {
+    "sha256": "f891be467105e3527eb27b93b940165d7739c9c9bd050544ddbc19e6da674e03",
+    "occurrences": [
+     {
+      "file": "docs/architecture/07-hearth-port.md",
+      "start_line": 287,
+      "end_line": 303
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "prelude: canon_v1::expf, canon::sum16, canon::nan (transcendental choice provisional, pending D0-2)"
+   ],
+   "requires_rules": [
+    "T-Cover (F-1)"
+   ],
+   "facts": {
+    "softmax": {
+     "kind": "kernel",
+     "row": [],
+     "may_trap": false,
+     "ctx": "exact",
+     "output": "&mut x: nu=canon after the last covering loop",
+     "sig": "kernel fn(&mut [f32]) -> ()"
+    }
+   },
+   "rules": [
+    "k",
+    "T-Cover",
+    "T-Loop"
+   ],
+   "derivation": "derivations.md#d-d21-kernel-fn-softmax",
+   "note": "which transcendental softmax uses is provisional, pending D0-2; the calculus only requires it be named",
+   "conditional": true
+  },
+  {
+   "id": "D-D22",
+   "title": "heat_into",
+   "snippet": {
+    "sha256": "fe26ec2da4c6fc532a1d973509c853f2e57a2567477b2c0dd40b60e868b6b604",
+    "occurrences": [
+     {
+      "file": "docs/architecture/07-hearth-port.md",
+      "start_line": 457,
+      "end_line": 465
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "prelude: Store.state visible in module store; StoreState.count_f"
+   ],
+   "facts": {
+    "heat_into": {
+     "kind": "fn",
+     "row": [
+      "nondet"
+     ],
+     "may_trap": true,
+     "ctx": "default",
+     "output": "&mut out @ shared grade (schedule_dependent)",
+     "sig": "fn(&Store, &mut [f32]) -> () uses { nondet }"
+    }
+   },
+   "rules": [
+    "T-CloL",
+    "T-Call (wr transfer)"
+   ],
+   "derivation": "derivations.md#d-d22-heat_into",
+   "conditional": true
+  },
+  {
+   "id": "D-D23",
+   "title": "MXFP4 format (07 copy)",
+   "snippet": {
+    "sha256": "2ca91205066fa92c7ca3e0facfd880b1f08556b63e615c03e0c93f097c53b74f",
+    "occurrences": [
+     {
+      "file": "docs/architecture/07-hearth-port.md",
+      "start_line": 885,
+      "end_line": 891
+     }
+    ]
+   },
+   "scope": "out:later",
+   "verdict": "out-of-scope",
+   "conditions": [
+    "needs canon.v1.1"
+   ],
+   "facts": {},
+   "rules": [],
+   "derivation": "derivations.md#d-d10-and-d-d23-mxfp4-formats",
+   "conditional": true,
+   "x1_expected": {
+    "verdict": "reject",
+    "code": "E-OUT-OF-SCOPE-E8M0",
+    "note": "expected mithi verdict at the X1 checker precondition (note section 0.3, section 12, Q10); 'verdict' is the calculus verdict"
+   }
+  },
+  {
+   "id": "D-D24",
+   "title": "spec q4_matvec_claims (ROADMAP copy, indented)",
+   "snippet": {
+    "sha256": "c57e441bae825fc29aa0adfbcb5b5afecd63f820a7fca75afbdc7f50a3bc9eba",
+    "occurrences": [
+     {
+      "file": "docs/ROADMAP.md",
+      "start_line": 65,
+      "end_line": 71
+     }
+    ]
+   },
+   "scope": "x1-front-end",
+   "verdict": "accept",
+   "conditions": [
+    "as D-C6"
+   ],
+   "facts": {},
+   "rules": [
+    "as D-C6"
+   ],
+   "derivation": "derivations.md#d-d24-to-d-d27-copies",
+   "conditional": true
+  },
+  {
+   "id": "D-D25",
+   "title": "typed hole (01 copy)",
+   "snippet": {
+    "sha256": "33ecc757128adf51f17436e4e62a5fe58a3a5307a4690e6937088b503e99ebd9",
+    "occurrences": [
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 220,
+      "end_line": 220
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "checked inside a prelude fn body"
+   ],
+   "facts": {},
+   "rules": [
+    "T-Hole"
+   ],
+   "derivation": "derivations.md#d-d24-to-d-d27-copies",
+   "conditional": true
+  },
+  {
+   "id": "D-D26",
+   "title": "Quantity (01/02 copy)",
+   "snippet": {
+    "sha256": "371b1cd074fcc4a119339c935e9efd4c961a3340e42f8cffbb264cecf9ffaa56",
+    "occurrences": [
+     {
+      "file": "docs/architecture/01-language.md",
+      "start_line": 306,
+      "end_line": 308
+     },
+     {
+      "file": "docs/architecture/02-compute.md",
+      "start_line": 840,
+      "end_line": 842
+     }
+    ]
+   },
+   "scope": "x1",
+   "verdict": "accept",
+   "conditions": [
+    "checked inside a prelude fn body"
+   ],
+   "facts": {},
+   "rules": [
+    "T-Let"
+   ],
+   "derivation": "derivations.md#d-d24-to-d-d27-copies",
+   "conditional": true
+  },
+  {
+   "id": "D-D27",
+   "title": "schedule q4_matvec_avx512 (02 copy)",
+   "snippet": {
+    "sha256": "b9c51b0c61557f820ec776fbea335a3ea9fa8ed984a9e2c24f4ba5eddbd2f7c0",
+    "occurrences": [
+     {
+      "file": "docs/architecture/02-compute.md",
+      "start_line": 452,
+      "end_line": 458
+     }
+    ]
+   },
+   "scope": "x1-front-end",
+   "verdict": "accept",
+   "conditions": [
+    "as D-C3"
+   ],
+   "facts": {},
+   "rules": [
+    "as D-C3"
+   ],
+   "derivation": "derivations.md#d-d24-to-d-d27-copies",
+   "conditional": true
+  }
+ ],
+ "negative_items": [
+  {
+   "id": "N-01",
+   "parent": "D-D01",
+   "text": "fn first_dyn(b: &dyn Dequant) -> f32 { … }",
+   "verdict": "reject",
+   "code": "E-DYN",
+   "gate_item": true,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-02",
+   "parent": "D-D02",
+   "text": "struct RowCache { last: &[BlockQ4] }",
+   "verdict": "reject",
+   "code": "E-REF-FIELD",
+   "gate_item": true,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-03",
+   "parent": "D-D02",
+   "text": "fn pick(a: &[f32], b: &[f32]) -> &[f32]",
+   "verdict": "reject",
+   "code": "E-REF-ESCAPE",
+   "gate_item": true,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-04",
+   "parent": "D-D04",
+   "text": "fn live(slots: &[SlotView]) -> impl Iterator<Item = &SlotView> { slots.iter().filter(|s| s.refs > 0) }",
+   "verdict": "reject",
+   "code": "E-LOCAL-RETURN",
+   "gate_item": true,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-05",
+   "parent": "D-D05",
+   "text": "expert_step with `store.release(lease);` deleted",
+   "verdict": "reject",
+   "code": "E-LINEAR-DROP",
+   "gate_item": true,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-06",
+   "parent": "D-D06",
+   "text": "fn heat_view(st: &Mutex<StoreState>) -> &[u32] { st.with_lock(|s| &s.heat) }",
+   "verdict": "reject",
+   "code": "E-REF-ESCAPE",
+   "gate_item": true,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-07",
+   "parent": "D-C2",
+   "text": "the outline's q4_matvec requiring only y.len() == w.rows() (ARCHITECTURE §5.3 reviewer note)",
+   "verdict": "reject",
+   "code": "E-KERNEL-OBLIGATION",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-08",
+   "parent": "D-C7",
+   "text": "let bw: Quantity<GBps, Simulated> = profile.dram_read_all_core;",
+   "verdict": "reject",
+   "code": "E-TYPE",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-09",
+   "parent": "D-C4",
+   "text": "pick_victim with `let t = Instant::now();`",
+   "verdict": "reject",
+   "code": "E-FF-CLOCK",
+   "also": [
+    "E-TO-ROW"
+   ],
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-10",
+   "parent": "D-C2",
+   "text": "q4_row_dot accumulating with xs.iter().sum::<f32>()",
+   "verdict": "reject",
+   "code": "E-FF-SUM",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-11",
+   "source": "review 2026-10-16, R1-1",
+   "text": "#[grade(exact, cross_device)] fn count(st: &Mutex<u32>) -> u32 uses { nondet } { let n = st.with_lock(|s| *s); let mut c = 0u32; for _i in 0..n { c = c + 1; } c }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-12",
+   "source": "review 2026-10-16, R1-2",
+   "text": "in module store, with a fixture whose subject is the block: #[grade(exact, cross_device)] fn leak(st: &Mutex<u32>) -> u32 uses { nondet } { let v = st.with_lock(|s| *s); deterministic(by: E) { v } }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-13",
+   "source": "review 2026-10-16, R1-3",
+   "text": "fn apply<F: Fn() -> u64>(f: F) -> u64 { f() } and #[grade(exact, cross_device)] fn stamp(c: &Clock) -> u64 uses { time, nondet } { apply(|| c.now_ns()) }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-14",
+   "source": "review 2026-10-16, R1-4, R2-3",
+   "text": "kernel fn k(x: &[f32], y: &mut [f32]) requires x.len() == y.len() { for i in 0..y.len() { y[i] = canon::nan(x[i]); if x[i] > 0.0 { break; } } }",
+   "verdict": "reject",
+   "code": "E-NAN-RAW-SINK",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-15",
+   "source": "review 2026-10-16, R1-5",
+   "text": "fn fill(y: &mut [u32], x: &[u32]) -> Result<(), E> { par for i in 0..y.len() { if x[i] == 0 { return Err(E) } y[i] = x[i]; } Ok(()) } and #[grade(exact, cross_device)] fn g(x: &[u32; 8]) -> u32 { let mut y = [0u32; 8]; let _ = fill(&mut y, x); y[7] }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-16",
+   "source": "review 2026-10-16, R1-6, R2-2",
+   "text": "#[grade(exact, cross_device)] fn f(v: &mut [u32], m: &Mutex<u32>) uses { nondet } { let i = m.with_lock(|s| *s) as usize % v.len(); let r = &mut v[i]; *r = 1; }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-17",
+   "source": "review 2026-10-16, R1-7",
+   "text": "fn helper<F: Fn(usize)>(n: usize, f: &F) { par for i in 0..n { f(i); } } called as helper(4, &|i| st.with_lock(|s| s.touch(k(i)))) from a uses { nondet } function",
+   "verdict": "reject",
+   "code": "E-PAR-EFFECT",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-18",
+   "source": "review 2026-10-16, R1-8",
+   "text": "fn apply<F: Fn(&[f32]) -> &[f32]>(f: F, t: &[f32]) -> &[f32] { f(t) } called as apply(|_x| &big[..], &t)",
+   "verdict": "reject",
+   "code": "E-REF-ESCAPE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-19",
+   "source": "review 2026-10-16, R1-9",
+   "text": "let l = store.lease(id)?; let c = move || l.bytes().len(); let _n = c(); Ok(()) (and the same without the call)",
+   "verdict": "reject",
+   "code": "E-LINEAR-DROP",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-20",
+   "source": "review 2026-10-16, R2-5",
+   "text": "expert_step with drop(lease); in place of store.release(lease);",
+   "verdict": "reject",
+   "code": "E-LINEAR-INSTANTIATE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-21",
+   "source": "review 2026-10-16, R1-11",
+   "text": "inside impl<B> Matrix<B>: fn f(m: &mut Matrix<BlockQ4>, a: &[ActQ8], y: &mut [f32]) { m.rows = m.rows + 1; q4_matvec(&*m, a, y); }",
+   "verdict": "accept",
+   "facts": {
+    "may_trap": true,
+    "trap_sites": [
+     "ovf(add) at m.rows + 1",
+     "inv(Matrix) before the call (publication point, F-43)",
+     "req(q4_matvec)"
+    ]
+   },
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-22",
+   "source": "review 2026-10-16, R1-12",
+   "text": "kernel fn k(y: &mut [u32], j0: usize) requires j0 < y.len() { let mut j = j0; if j < y.len() { j = j + 1; y[j] = 0; } }",
+   "verdict": "reject",
+   "code": "E-KERNEL-OBLIGATION",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-23",
+   "source": "review 2026-10-16, R1-13",
+   "text": "impl IndexMut<usize> for Matrix<f32> { fn index_mut(&mut self, t: usize) -> &mut [f32] ensures footprint(result) == self.blocks[t*bpr..(t+1)*bpr] { &mut self.blocks[0..self.blocks_per_row] } }",
+   "verdict": "reject",
+   "code": "E-FOOTPRINT",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-24",
+   "source": "review 2026-10-16, R2-1",
+   "text": "fn set(o: &mut Option<&u32>, d: &u32) { *o = Some(d); }",
+   "verdict": "reject",
+   "code": "E-LOCAL-MUT-STORE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-25",
+   "source": "review 2026-10-16, R2-1",
+   "text": "let a = 1; let mut outer = &a; { let y = 5; let mut inner = &y; std::mem::swap(&mut outer, &mut inner); } *outer",
+   "verdict": "reject",
+   "code": "E-BORROW-OUTLIVE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-26",
+   "source": "review 2026-10-16, R2-1",
+   "text": "let mut v: Vec<&u32> = Vec::new(); { let d = 1; v.push(&d); } v[0]",
+   "verdict": "reject",
+   "code": "E-BORROW-OUTLIVE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-27",
+   "source": "review 2026-10-16, R2-1",
+   "text": "let mut x = vec![1]; let r = { let c = || &x[0]; c() }; x.push(2); *r",
+   "verdict": "reject",
+   "code": "E-BORROW-CONFLICT",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-28",
+   "source": "review 2026-10-16, R2-4",
+   "text": "inside impl<B> Matrix<B>: fn shrink(m: &mut Matrix<BlockQ4>) { m.blocks.truncate(0); } (assuming Buf has truncate)",
+   "verdict": "accept",
+   "facts": {
+    "may_trap": true,
+    "trap_sites": [
+     "inv(Matrix) when the loan on m.blocks ends, and at exit (F-43)"
+    ]
+   },
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-29",
+   "source": "review 2026-10-16, R2-6",
+   "text": "#[grade(exact, cross_device)] fn n(st: &Mutex<u32>) -> u32 uses { nondet } { st.with_lock(|s| *s) }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-30",
+   "source": "review 2026-10-16, R2-6",
+   "text": "#[grade(exact, cross_device)] fn first_is_nan(x: f32) -> bool { let mut xs = [x - x, 1.0f32]; xs.sort_by(|p, q| p.total_cmp(q)); xs[0].is_nan() }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-31",
+   "source": "review 2026-10-16, R2-7",
+   "text": "#[grade(exact, cross_device)] fn g(m: &Mutex<bool>, out: &mut [u32]) uses { nondet } requires out.len() >= 1 { let mut c = 0u32; let mut it = (0..1).map(|_| { c += 1; 0 }); if m.with_lock(|s| *s) { it.next(); } drop(it); out[0] = c; }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-32",
+   "source": "review 2026-10-16, R2-8",
+   "text": "with a fixture whose subject is the block: let f = deterministic(by: E) { || (x.len(), clock.now_ns()) };",
+   "verdict": "reject",
+   "code": "E-DET-RESULT",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-33",
+   "source": "review 2026-10-16, R2-9",
+   "text": "in module store, StoreState with a u32 field counter: fn racy(&self) -> u32 uses { nondet } { deterministic(by: golden::scheduling_independence) { self.state.with_lock(|s| s.counter) } }",
+   "verdict": "reject",
+   "code": "E-DET-EVIDENCE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-34",
+   "source": "review 2026-10-16, R2-10",
+   "text": "with E covering the block: fn p(m: &Mutex<u32>, n: usize) -> Option<usize> uses { nondet } { par for i in 0..n { let k = deterministic(by: E) { m.with_lock(|c| { *c += 1; *c }) }; if k == 3 { return Some(i); } } None }",
+   "verdict": "reject",
+   "code": "E-PAR-EFFECT",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-35",
+   "source": "review 2026-10-16, R2-18",
+   "text": "schedule bad for q4_row_dot on x86_64(avx512f) { vectorize g; }",
+   "verdict": "reject",
+   "code": "E-SCHED-REASSOC",
+   "scope": "x1-front-end",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-36",
+   "source": "review 2026-10-16, R2-30",
+   "text": "kernel fn s(x: &[f32]) -> f32 { canon::nan(x.iter().fold(0.0, |a, b| a + b)) }",
+   "verdict": "reject",
+   "code": "E-FF-SUM",
+   "also": [
+    "E-KERNEL-CALL"
+   ],
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-37",
+   "source": "review 2026-10-16, R2-25",
+   "text": "fn addr_len(v: &[u32]) -> usize { let s = format!(\"{:p}\", &v[0]); s.len() }",
+   "verdict": "reject",
+   "code": "E-FF-ADDR",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-38",
+   "source": "review 2026-10-16, R1-18, R2-16",
+   "text": "at a port with a stack budget below 16 MiB: policy fn p(slots: &[SlotView], now: Tick) -> Hint<SlotId> { let scratch = [0u64; 1 << 21]; ... }",
+   "verdict": "reject",
+   "code": "E-TO-STACK",
+   "scope": "out:M4",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-39",
+   "source": "review 2026-10-16, R1-20",
+   "text": "trait Key { fn key(&self) -> u32; } impl Key for f32 { fn key(&self) -> u32 { (*self + 0.0).to_bits() } }",
+   "verdict": "reject",
+   "code": "E-IMPL-GRADE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  }
+ ],
+ "precedence": [
+  "1: E-OUT-OF-SCOPE-<KW>, J2 well-formedness, E-TYPE",
+  "2: class codes from cls and the Dc list (E-FF-*, E-AMBIENT-IO, E-MACRO, E-TRAIT-OFF)",
+  "3: rows and grants (E-ROW-UNDECLARED, E-GRANT-*, E-FP-ENV, E-DET-GRANT)",
+  "4: loans and linearity (E-BORROW-*, E-MOVE-*, E-LOCAL-*, E-REF-ESCAPE, E-LINEAR-*, E-FOOTPRINT)",
+  "5: par and the deterministic boundary (E-PAR-*, E-DET-POLICY, E-DET-EVIDENCE, E-DET-STALE, E-DET-RESULT)",
+  "6: grades and sinks (E-GRADE, E-NAN-RAW-SINK, E-IMPL-GRADE)",
+  "7: side judgements (E-KERNEL-*, E-TO-*, E-SCHED-*, E-CLAIM-*)",
+  "within a class: the first by source position"
+ ],
+ "review": {
+  "date": "2026-10-16",
+  "reviewers": [
+   {
+    "id": 1,
+    "family": "Claude (same family as author; independent context)",
+    "findings": 23,
+    "blocker": 6,
+    "major": 13,
+    "minor": 4,
+    "accepted": 23,
+    "rejected": 0
+   },
+   {
+    "id": 2,
+    "family": "Claude (same family as author; independent context)",
+    "findings": 30,
+    "blocker": 1,
+    "major": 18,
+    "minor": 11,
+    "accepted": 30,
+    "rejected": 0
+   }
+  ],
+  "log": "docs/m0/core-calculus.md#17-review-log-and-signature-block"
+ }
+}
