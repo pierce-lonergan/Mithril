@@ -1,0 +1,20 @@
+[package]
+name = "x4svc"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+publish = false
+description = "X4 measurement service v0: statistical core (e-processes, stationarity, scheduler, Quantity records) and the read-only quiet-machine profile verifier"
+
+# Standalone: not a member of the repository's root workspace. No dependencies (F0 hygiene).
+[workspace]
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "x4svc"
+path = "src/main.rs"
+
+[profile.release]
+overflow-checks = true
