@@ -11,3 +11,5 @@
 *.exe binary
 *.cmd text eol=crlf
 *.bat text eol=crlf
+# Measured results are content-addressed: store their bytes exactly.
+experiments/*/results/** -text
