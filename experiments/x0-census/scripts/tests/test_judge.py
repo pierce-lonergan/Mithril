@@ -77,7 +77,7 @@ class Base(unittest.TestCase):
                          "coverage": {"slot_resolved": True, "gaps": []},
                          "iforms": {f: 1 for f in iforms_per_variant}, "iclasses": {c: 1 for c in iclasses},
                          "p2_fma": 0, "p3": {"a1": [], "a2": [], "b": [], "c": [], "d2": []},
-                         "loops": [{"id": "L1", "tags": ["lockstep"]}]}
+                         "loops": [{"id": "L1", "tags": ["lockstep"]}], "attribution": "exact"}
                     if (t, s) == judge.CANARY:
                         v["p3"]["d1"] = "pass"
                     if cfg == "A-ninja":
@@ -86,10 +86,11 @@ class Base(unittest.TestCase):
                 for fl in judge.CENSUS_FILES:
                     builds.append({"config": cfg, "file": fl, "build_index": bi, "rc": 0, "compiler_ran": True,
                                    "compiler_sha256": dict(COMPILERS[cfg]), "argv_matches_frozen": True,
-                                   "errors": [], "includes": [], "ice": False})
+                                   "object_exists": True, "errors": [], "includes": [], "ice": False})
         rec = {k: self.pins[n] for n, k in judge.FROZEN.items()}
         rec["xml"] = XML_SHA
-        return {"record": {"id": "X0-census", "sha256": rec, "scripts_sha256": dict(self.pins["scripts"])},
+        return {"record": {"id": "X0-census", "sha256": rec, "scripts_sha256": dict(self.pins["scripts"]),
+                           "freeze_commit": "f" * 40},
                 "runs": [{"run_id": "r1", "kind": "census", "utc": "2026-10-30T12:00:00Z"}],
                 "configs": {c: {"p3a": {f: {"a1": [], "a2": []} for f in judge.CENSUS_FILES}} for c in judge.CHECKED},
                 "variants": variants, "builds": builds, "crossdecoder": {"disagreements": []},
@@ -102,7 +103,7 @@ class Base(unittest.TestCase):
     def fail_build(self, c, cfg, fl, **kw):
         for b in c["builds"]:
             if b["config"] == cfg and b["file"] == fl:
-                b.update(rc=1, **kw)
+                b.update(rc=1, object_exists=False, **kw)
         c["variants"] = [v for v in c["variants"] if not (v["config"] == cfg and v["file"] == fl)]
 
     @staticmethod
@@ -292,7 +293,7 @@ class TestJudge(Base):
     def test_v2_resolved_or_non_fp_disagreement_is_valid(self):
         c = self.clean()
         c["crossdecoder"]["disagreements"] += [
-            {"config": "A", "variant": "x", "xed_iclass": "VADDPS", "fp_sensitive": True, "resolution": "decoder bug, see note"},
+            {"config": "A", "variant": "x", "xed_iclass": "VADDPS", "fp_sensitive": True, "resolution": "amendment:X0-A1"},
             {"config": "A", "variant": "x", "xed_iclass": "MOV", "normalised": ["MOV"], "fp_sensitive": False,
              "resolution": None}]
         self.assertTrue(self.run_judge(c)["validity"]["v2"])
@@ -391,7 +392,7 @@ class TestJudge(Base):
 
     def test_classify_build(self):
         pin = COMPILERS["D"]
-        ok = {"rc": 0, "compiler_sha256": pin}
+        ok = {"rc": 0, "compiler_sha256": pin, "compiler_ran": True, "argv_matches_frozen": True, "object_exists": True}
         self.assertEqual(judge.classify_build([ok, ok], pin)[0], "ok")
         self.assertEqual(judge.classify_build([], pin)[0], "other")
         self.assertEqual(judge.classify_build([ok, ok], None)[0], "other")
@@ -582,3 +583,108 @@ class TestReview20261016(Base):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestReviewX0final(Base):
+    """Adversarial cases of the x0final review (reviewer 2, Claude, same family, independent context; scratch
+    adv_judge.py), each asserting what the revised record requires (x0final revision, 2026-10-17)."""
+
+    def _build(self, c, cfg, fl, bi=1):
+        return [b for b in c["builds"] if b["config"] == cfg and b["file"] == fl and b["build_index"] == bi][0]
+
+    def test_success_with_argv_differing_from_frozen_is_tooling(self):
+        c = self.clean()
+        self._build(c, "D", "quant.c").update(argv_matches_frozen=False)
+        v = self.run_judge(c)
+        self.assertEqual(v["outcomes"], ["tooling_failure"])
+        self.assertFalse(v["validity"]["v1"])
+
+    def test_success_without_compiler_run_or_object_is_tooling(self):
+        c = self.clean()
+        self._build(c, "A", "quant.c").update(compiler_ran=False, object_exists=False)
+        self.assertEqual(self.run_judge(c)["outcomes"], ["tooling_failure"])
+        c = self.clean()
+        self._build(c, "A", "quant.c", 2).update(object_exists=False)
+        self.assertEqual(self.run_judge(c)["outcomes"], ["tooling_failure"])
+
+    def test_unresolved_slot_needs_slot_gap(self):
+        c = self.clean()
+        self.variant(c, "C", "k_avx2", "matmul[F32]")["coverage"] = {
+            "slot_resolved": False, "gaps": [{"cause": "fp_trust_dep", "detail": "x"}]}
+        v = self.run_judge(c)
+        self.assertFalse(v["validity"]["v1"])
+        c = self.clean()
+        self.variant(c, "C", "k_avx2", "matmul[F32]")["coverage"] = {
+            "slot_resolved": False, "gaps": [{"cause": "table_or_slot_absent", "detail": "x"}]}
+        v = self.run_judge(c)
+        self.assertTrue(v["validity"]["v1"])
+
+    def test_free_text_resolution_is_unresolved(self):
+        c = self.clean()
+        c["crossdecoder"]["disagreements"].append({"config": "D", "variant": "k_avx2:matmul[F32]",
+                                                   "xed_iclass": "VADDPS", "normalised": ["VFMADD231PS"],
+                                                   "fp_sensitive": True, "resolution": "looks fine"})
+        v = self.run_judge(c)
+        self.assertFalse(v["validity"]["v2"])
+        c["crossdecoder"]["disagreements"][-1]["resolution"] = "amendment:X0-A1"
+        v = self.run_judge(c)
+        self.assertTrue(v["validity"]["v2"])
+        self.assertEqual(len(v["validity_detail"]["v2_resolved_by_amendment"]), 1)
+
+    def test_d2_entries_are_typed(self):
+        c = self.clean()
+        self.variant(c, "D", "k_avx2", "matmul[F32]")["p3"]["d2"] = ["mismatch"]
+        v = self.run_judge(c)
+        self.assertEqual(v["outcomes"], ["tooling_failure"])
+        self.assertIn("schema", v["validity_detail"])
+        c = self.clean()
+        self.variant(c, "D", "k_avx2", "matmul[F32]")["p3"]["d2"] = [{"site": "s", "result": "mismach"}]
+        self.assertIn("schema", self.run_judge(c)["validity_detail"])
+        c = self.clean()
+        self.variant(c, "D", "k_avx2", "matmul[F32]")["p3"]["c"] = "L1"
+        self.assertIn("schema", self.run_judge(c)["validity_detail"])
+
+    def test_run_dated_after_system_clock_is_schema_violation(self):
+        c = self.clean()
+        c["runs"][0]["utc"] = "2026-12-31T00:00:00Z"
+        d, basis = judge.evaluation_date(c, today=datetime.date(2026, 11, 1))
+        v = judge.judge(copy.deepcopy(c), self.cdir, d, root=self.root, date_basis=basis)
+        self.assertEqual(v["outcomes"], ["tooling_failure"])
+        self.assertIn("schema", v["validity_detail"])
+        self.assertFalse(v["conservative_resolution"])
+
+    def test_attribution_none_is_tooling(self):
+        c = self.clean()
+        for vv in c["variants"]:
+            if vv["config"] == "D" and vv["table"] == "k_avx512":
+                vv["attribution"] = "none"
+                vv["attribution_detail"] = "twin line table unusable"
+                vv["p3"]["d2"] = [{"site": "tree16", "result": "unchecked"}]
+        v = self.run_judge(c)
+        self.assertEqual(v["outcomes"], ["tooling_failure"])
+        self.assertTrue(any("twin attribution none" in (g["detail"] or "") for g in v["validity_detail"]["v1_tooling_gaps"]))
+        c = self.clean()
+        self.variant(c, "D", "k_avx512", "matmul[F32]")["attribution"] = "approximate"
+        self.assertEqual(self.run_judge(c)["outcomes"], ["pass"])
+
+    def test_p3a_with_error_is_not_evaluated(self):
+        c = self.clean()
+        c["configs"]["D"]["p3a"]["quant.c"] = {"a1": [], "a2": [], "error": "cc1 line missing: P3(a) not evaluated"}
+        v = self.run_judge(c)
+        self.assertFalse(v["validity"]["v1"])
+
+    def test_smoke_record_needs_no_freeze_commit_other_ids_fail_v4(self):
+        c = self.clean()
+        del c["record"]["freeze_commit"]
+        c["record"]["id"] = "X0-census-smoke"
+        self.assertTrue(self.run_judge(c)["validity"]["v4"])
+        c["record"]["id"] = "X0-census-mock"
+        self.assertFalse(self.run_judge(c)["validity"]["v4"])
+
+    def test_missing_freeze_commit_fails_v4(self):
+        c = self.clean()
+        del c["record"]["freeze_commit"]
+        v = self.run_judge(c)
+        self.assertFalse(v["validity"]["v4"])
+        c["record"]["freeze_commit"] = "HEAD"
+        self.assertFalse(self.run_judge(c)["validity"]["v4"])

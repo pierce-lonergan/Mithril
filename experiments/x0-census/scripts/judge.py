@@ -13,19 +13,26 @@ as a parameter only so that the unit tests can exercise both sides of the week-3
 Decision list, in this order (every state of census.json maps to exactly one verdict):
 
  S. Schema. census.json must have the Appendix C shape that this judge reads (record, runs, configs, variants,
-    builds, crossdecoder, rederivation; every variant and build record with config, build_index 1|2, ...).
-    A violation gives outcome tooling_failure with the violations listed; it cannot be resolved conservatively.
+    builds, crossdecoder, rederivation; every variant and build record with config, build_index 1|2, ...; x0final
+    revision: p3.c a list, p3.d2 a list of objects with result match|mismatch|unchecked; the latest census run not
+    dated after the system's UTC date). A violation gives outcome tooling_failure with the violations listed; it
+    cannot be resolved conservatively.
  0. Completeness. Each main-union configuration (A, B-cmake, C, D) and the cross-check A-ninja must list every
     dispatched variant of EXPECTED_VARIANTS for build_index 1 and 2 (§6), and every census file must have a build
     record for both builds; a variant record of an unexpected (table, slot) or a duplicate is a gap. Each present
     variant of a compiled file must carry a coverage block, a resolved slot (or a genuine gap explaining why
-    not) and a non-empty counted set (iforms). Each A-ninja variant must carry ab_compare (identical|differs)
+    not: x0final revision, only table_or_slot_absent or compile_failed), a non-empty counted set (iforms) and a twin
+    attribution of exact or approximate (x0final revision: none is a tooling gap). Each A-ninja variant must carry
+    ab_compare (identical|differs)
     with union_member == (ab_compare == differs). Each of these configurations must carry a P3(a) result
-    {a1: [...], a2: [...]} for every census file. Anything missing is a tooling-class gap `other` (V1); an A-ninja
+    {a1: [...], a2: [...]} without an error for every census file. Anything missing is a tooling-class gap `other`
+    (V1); an A-ninja
     variant with such a gap joins the union.
  1. Compile outcomes (from census.json "builds", decided here, not by the census script):
       every build      : compiler_sha256 must equal the Table 2.1 pin of its configuration
-                         (class/frozen_inputs.json "compilers"); otherwise tooling `other`;
+                         (class/frozen_inputs.json "compilers"), and (x0final revision) the pinned compiler ran
+                         (compiler_ran) with exactly the frozen argv (argv_matches_frozen), and an exit status 0
+                         has an object (object_exists); otherwise tooling `other`;
       genuine `compile_failed`  : rc != 0 in both builds, the pinned compiler ran with the frozen argv, and at
                                   least one error diagnostic is located (errors[].file) in a census file or in
                                   a header the build recorded as included (includes[]: /showIncludes or -H; the
@@ -40,11 +47,14 @@ Decision list, in this order (every state of census.json maps to exactly one ver
          variants with union_member true), and no configuration-level gap of step 0;
       V2 no unresolved cross-decoder disagreement in a main-union configuration (or A-ninja) that is FP-sensitive:
          census flag fp_sensitive, or either reading (xed_iclass, normalised objdump iclasses) FP-sensitive or
-         missing in fp_class.csv, recomputed here;
+         missing in fp_class.csv, recomputed here; only a resolution "amendment:<id>" resolves one (x0final
+         revision), and the resolved ones are listed;
       V3 the independent re-derivation is present and matches exactly;
       V4 the SHA-256 of every frozen input on disk (class files, xed_tables.tsv, the census scripts listed in
          frozen_inputs.json "scripts") equals both class/frozen_inputs.json and census.json's record, and the
-         compiler pins exist.
+         compiler pins exist; (x0final revision) a census record (record.id X0-census) carries the 40-hex freeze
+         commit that x0_driver.py init took from the clean checkout of the FROZEN record, and a record.id other
+         than X0-census or X0-census-smoke fails.
     If V fails and eval-date <= TOOLING_BOUND (2026-11-12, end of M0 week 3): outcome tooling_failure only.
     If V fails after the bound: V4 failure, a schema violation, a V3 failure because no re-derivation exists, or a
     V3 mismatch whose re-derivation figures are incomplete (u_all, p5_iclass and, for every union variant,
@@ -99,6 +109,10 @@ FILE_OF_TABLE = {"hx_kernels_scalar": "quant.c", "k_avx2": "quant_avx2.c", "k_av
 CENSUS_FILES = ("quant.c", "quant_avx2.c", "quant_avx512.c")
 TOOLING = {"both_decoders_fail", "range_mismatch", "unresolved_indirect", "other"}
 GENUINE = {"compile_failed", "table_or_slot_absent", "xed_gap", "fp_trust_dep"}
+SLOT_GAPS = {"compile_failed", "table_or_slot_absent"}       # the only causes that explain an unresolved slot
+RESOLUTION_RE = re.compile(r"^amendment:[A-Za-z0-9][A-Za-z0-9._-]*$")   # a cross-decoder resolution names an amendment
+D2_RESULTS = ("match", "mismatch", "unchecked")
+COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 TOOLING_BOUND = datetime.date(2026, 11, 12)    # record §8 [target]
 P5_LIMIT = 20                                 # ROADMAP §3.1 [target]
 T_FORMS_CAP = 105                             # record §4.5 [target]
@@ -166,6 +180,12 @@ def validate_schema(census):
             bad.append("variants[%d].coverage.gaps is not a list of objects" % i)
         if isinstance(v.get("loops"), list) and not _is_list_of_dicts(v["loops"]):
             bad.append("variants[%d].loops[] entries must be objects" % i)
+        q = v.get("p3")
+        if isinstance(q, dict):                   # x0final revision: the P3 lists judge.py reads are typed
+            if "c" in q and not isinstance(q["c"], list):
+                bad.append("variants[%d].p3.c is not a list" % i)
+            if "d2" in q and not (_is_list_of_dicts(q["d2"]) and all(s.get("result") in D2_RESULTS for s in q["d2"])):
+                bad.append("variants[%d].p3.d2 must be a list of objects with result in %s" % (i, "|".join(D2_RESULTS)))
     for i, b in enumerate(census["builds"]):
         if not isinstance(b, dict):
             bad.append("builds[%d] is not an object" % i)
@@ -207,12 +227,16 @@ def classify_build(builds, compiler_pin=None):
     for b in builds:
         if b.get("compiler_sha256") != compiler_pin:
             return "other", "compiler_sha256 differs from the Table 2.1 pin (or is not recorded)"
+    # x0final revision (review 2026-10-16/17): every build, successful or not, must have run the pinned compiler
+    # with exactly the frozen argv, and success needs an object (record §5 P1 "success")
+    for b in builds:
+        if b.get("compiler_ran") is not True or b.get("argv_matches_frozen") is not True:
+            return "other", "compiler did not run, or argv differs from the frozen one (build %s)" % b.get("build_index")
+        if b.get("rc") == 0 and b.get("object_exists") is not True:
+            return "other", "exit 0 without an object (build %s)" % b.get("build_index")
     failed = [b for b in builds if b.get("rc") != 0]
     if not failed:
         return "ok", None
-    for b in failed:
-        if not b.get("compiler_ran") or not b.get("argv_matches_frozen"):
-            return "other", "compiler did not run, or argv differs from the frozen one"
     ices = [b for b in failed if b.get("ice")]
     if ices:
         if len(ices) == len(builds) and len(builds) >= 2:
@@ -249,6 +273,10 @@ def judge(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_
 
     # ---- S: schema
     schema = validate_schema(census)
+    db = date_basis or {}
+    if db.get("latest_census_run_date") and db.get("system_utc_date") and             db["latest_census_run_date"] > db["system_utc_date"]:
+        schema.append("the latest census run (%s) is dated after the system's UTC date (%s)"
+                      % (db["latest_census_run_date"], db["system_utc_date"]))
     if schema:
         verdict["validity_detail"] = {"schema": schema}
         verdict["outcomes"] = ["tooling_failure"]
@@ -281,6 +309,17 @@ def judge(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_
             disk = sha256(p) if os.path.exists(p) else None
             if disk != h:
                 v4_detail.append({"input": rel, "disk": disk, "pinned": h})
+    # x0final revision: a census run is tied to the freeze commit (x0_driver.py init checks the clean checkout and
+    # the FROZEN status line at HEAD; x0_census.py copies the commit into record.freeze_commit)
+    if rec.get("id") == "X0-census":
+        if not (isinstance(rec.get("freeze_commit"), str) and COMMIT_RE.match(rec["freeze_commit"])):
+            v4_detail.append({"input": "record.freeze_commit", "census": rec.get("freeze_commit"),
+                              "detail": "no freeze commit: the census was not run from a clean checkout of the FROZEN record"})
+    elif rec.get("id") == "X0-census-smoke":
+        notes.append("smoke record (record.id X0-census-smoke, NON-Hearth): no freeze commit is required")
+    else:
+        v4_detail.append({"input": "record.id", "census": rec.get("id"),
+                          "detail": "record.id is neither X0-census nor X0-census-smoke"})
     cpins = pins.get("compilers") if isinstance(pins.get("compilers"), dict) else {}
     for cfg in CHECKED:
         if not isinstance(cpins.get(cfg), dict) or not cpins.get(cfg):
@@ -313,7 +352,9 @@ def judge(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_
                 st, det = "other", "build records for build_index %s, expected [1, 2]" % idx
             compile_state[(cfg, fl)] = (st, det)
             x = ((configs.get(cfg) or {}).get("p3a") or {}).get(fl)
-            if not (isinstance(x, dict) and isinstance(x.get("a1"), list) and isinstance(x.get("a2"), list)):
+            # x0final revision: a P3(a) result that carries an error was not evaluated, whatever its lists say
+            if not (isinstance(x, dict) and isinstance(x.get("a1"), list) and isinstance(x.get("a2"), list)
+                    and not x.get("error")):
                 config_gaps.append((cfg, "p3a:%s" % fl, "P3(a) not evaluated for %s/%s" % (cfg, fl)))
     seen = {}
     for v in variants:
@@ -348,10 +389,18 @@ def judge(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_
                     if not isinstance(cov, dict):
                         add_gap(v, "other", "coverage incomplete: no coverage block")
                     elif cov.get("slot_resolved") is not True:
-                        if not any(g.get("cause") in GENUINE for g in cov.get("gaps") or []):
-                            add_gap(v, "other", "coverage incomplete: slot unresolved without a genuine gap")
+                        # x0final revision: only table_or_slot_absent or compile_failed explains an unresolved slot
+                        if not any(g.get("cause") in SLOT_GAPS for g in cov.get("gaps") or []):
+                            add_gap(v, "other", "coverage incomplete: slot unresolved without a table_or_slot_absent "
+                                                "or compile_failed gap")
                     elif not v.get("iforms") or not v.get("iclasses"):
                         add_gap(v, "other", "coverage incomplete: empty counted set")
+                    # x0final revision (record §4.6): a twin whose attribution is none (twin build failed, line
+                    # table failed its self-checks) silently disables P3(c)'s own bounds and every d2 site, so it is
+                    # a tooling gap; 'approximate' stays as the record defines it
+                    if v.get("attribution") not in ("exact", "approximate"):
+                        add_gap(v, "other", "twin attribution %s: %s" % (v.get("attribution"),
+                                                                          v.get("attribution_detail") or "not recorded"))
                     if cfg == "A-ninja":
                         ab = v.get("ab_compare")
                         if ab not in ("identical", "differs") or bool(v.get("union_member")) != (ab == "differs"):
@@ -377,7 +426,10 @@ def judge(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_
     xd = [d for d in census["crossdecoder"].get("disagreements", []) if d.get("config") in CHECKED]
     # FP-sensitivity is recomputed here from fp_class.csv for both readings (missing iclass = FP-sensitive); the
     # census flag can only add to it
-    unresolved = [d for d in xd if not d.get("resolution") and
+    # x0final revision: only a resolution that names a post-data amendment ("amendment:<id>") resolves a
+    # disagreement; any other value counts as unresolved
+    resolved = [d for d in xd if isinstance(d.get("resolution"), str) and RESOLUTION_RE.match(d["resolution"])]
+    unresolved = [d for d in xd if d not in resolved and
                   (d.get("fp_sensitive") or fpc.get(d.get("xed_iclass"), True) or
                    any(fpc.get(x, True) for x in d.get("normalised") or []))]
     v2 = not unresolved
@@ -390,7 +442,8 @@ def judge(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_
                              "build_index": v.get("build_index"), "cause": g.get("cause"), "detail": g.get("detail")}
                             for v, g in tooling_gaps],
         "v1_config_gaps": [{"config": c, "item": k, "detail": d} for c, k, d in config_gaps],
-        "v2_unresolved": unresolved, "v3": rd.get("mismatches", []) if rd else "absent", "v4": v4_detail}
+        "v2_unresolved": unresolved, "v2_resolved_by_amendment": resolved,
+        "v3": rd.get("mismatches", []) if rd else "absent", "v4": v4_detail}
     verdict["tooling_runs"] = len({r.get("run_id") for r in census["runs"] if r.get("kind") == "census"})
     rcd = {}
     if not valid:

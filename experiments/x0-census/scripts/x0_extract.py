@@ -7,6 +7,9 @@ Usage (one configuration; each object is paired with the source file it was comp
       --index-names F32,F16,BF16,Q8,Q4,I32,U8 --expect-variants 18 --label A \
       --pair engine/src/quant.c=OBJ_quant --pair engine/src/quant_avx2.c=OBJ_avx2 \
       --pair engine/src/quant_avx512.c=OBJ_avx512 [--readobj llvm-readobj]
+  Arm P (record §3, the reduce probe; x0final): --functions NAME[,NAME...] instead of --struct/--struct-src makes each
+  named external-linkage function a variant (table "probe", slot = its name), found by its symbol; the probe is
+  not a dispatch table. --expect-variants defaults to the number of names times the number of pairs.
 
 Dispatched variants (§4.1). The dispatch tables are found in the SOURCE: every initialised object of type
 `[static] const <struct> NAME = { ... };`. The struct layout comes from the struct definition (supported field
@@ -371,13 +374,18 @@ def readobj_crosscheck(readobj, path, funcs, is_coff):
     return {"tool": readobj, "only_readobj": sorted(names - mine), "only_x0obj": sorted(mine - names)}
 
 
-def extract(pairs, struct_name, struct_src, index_names, label, readobj):
-    fields, ssize = parse_struct(open(struct_src, encoding="utf-8").read(), struct_name)
-    out = {"label": label, "struct": {"name": struct_name, "source": os.path.abspath(struct_src), "fields": fields,
-                                      "size": ssize}, "objects": [], "variants": [], "slot_name_warnings": []}
+def extract(pairs, struct_name, struct_src, index_names, label, readobj, functions=None):
+    if functions:
+        fields, ssize = [], 0
+        out = {"label": label, "struct": None, "functions_mode": list(functions), "objects": [], "variants": [],
+               "slot_name_warnings": []}
+    else:
+        fields, ssize = parse_struct(open(struct_src, encoding="utf-8").read(), struct_name)
+        out = {"label": label, "struct": {"name": struct_name, "source": os.path.abspath(struct_src), "fields": fields,
+                                          "size": ssize}, "objects": [], "variants": [], "slot_name_warnings": []}
     for src, objp in pairs:
         sbytes = open(src, "rb").read()
-        tables, accessors = parse_tables(sbytes.decode("utf-8"), struct_name)
+        tables, accessors = parse_tables(sbytes.decode("utf-8"), struct_name) if not functions else ({}, {})
         obj = x0obj.parse_object(objp)
         relocs = resolve_relocs(obj)
         funcs, pd, warnings = build_functions(obj, relocs)
@@ -427,6 +435,18 @@ def extract(pairs, struct_name, struct_src, index_names, label, readobj):
                         out["slot_name_warnings"].append("%s %s: initialiser %s, relocation resolves to %s" % (
                             tname, sl["slot"], sl["source_function"], srec["resolved"].get("function")))
             rec["tables"].append(trec)
+        for name in functions or []:
+            # arm P (record §3): each probe wrapper is an external-linkage function found by its symbol name
+            hits = [f for f in funcs if name in [f["name"]] + f["aliases"]]
+            if len(hits) == 1:
+                f = hits[0]
+                res = {"section": f["section"], "offset": f["start"], "function": f["name"], "function_id": f["id"]}
+                gap, det = None, None
+            else:
+                res, gap, det = None, "table_or_slot_absent", "symbol %s found %d times" % (name, len(hits))
+            out["variants"].append({"object_index": len(out["objects"]), "table": "probe", "slot": name,
+                                    "source_function": name, "resolved": res, "gap": gap, "detail": det,
+                                    "name_check": "match" if res else None})
         out["objects"].append(rec)
     return out
 
@@ -435,8 +455,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("-o", "--out", required=True)
     ap.add_argument("--pair", action="append", required=True, help="SOURCE.c=OBJECT")
-    ap.add_argument("--struct", required=True)
-    ap.add_argument("--struct-src", required=True)
+    ap.add_argument("--struct")
+    ap.add_argument("--struct-src")
+    ap.add_argument("--functions", help="arm P: comma-separated function names found by symbol (no dispatch table)")
     ap.add_argument("--index-names", default="", help="comma-separated names for array indices (e.g. F32,F16,...)")
     ap.add_argument("--expect-variants", type=int)
     ap.add_argument("--label")
@@ -444,10 +465,15 @@ def main():
     a = ap.parse_args()
     pairs = [tuple(p.split("=", 1)) for p in a.pair]
     names = [x for x in a.index_names.split(",") if x] or None
-    man = extract(pairs, a.struct, a.struct_src, names, a.label, a.readobj)
+    funcs = [x for x in (a.functions or "").split(",") if x]
+    if not funcs and not (a.struct and a.struct_src):
+        ap.error("--struct and --struct-src are required unless --functions is given")
+    man = extract(pairs, a.struct, a.struct_src, names, a.label, a.readobj, funcs)
     nvar = len(man["variants"])
     man["n_variants"] = nvar
     problems = []
+    if a.expect_variants is None and funcs:
+        a.expect_variants = len(funcs) * len(pairs)
     if a.expect_variants is not None and nvar != a.expect_variants:
         problems.append("found %d dispatched variants in the sources, expected %d" % (nvar, a.expect_variants))
     for o in man["objects"]:

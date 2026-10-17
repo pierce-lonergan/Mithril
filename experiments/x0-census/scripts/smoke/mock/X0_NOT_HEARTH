@@ -1,0 +1,6 @@
+X0 census MOCK (x0final, 2026-10-16; rewritten by the x0final revision, 2026-10-17). Its C sources are not Hearth code
+since that revision: the first version contained verbatim copies of Hearth b5d3f14 helpers (tree16, canon4, red8,
+hsum_i32, q_rint, the BF16 load), disclosed in record section 2. CMakeLists.txt mirrors Hearth's flag logic by design.
+x0_driver.py census mode refuses a source tree without the pinned Hearth blobs unless --mock is given AND this marker
+file is present, and every smoke run refuses a source that shares three consecutive non-trivial lines with a pinned
+Hearth file (class/hearth_shingles.json).

@@ -1,0 +1,746 @@
+{
+ "amber_a": {
+  "fp_sensitive_iclasses": [
+   "ADDPS",
+   "ADDSS",
+   "CVTDQ2PS",
+   "CVTSI2SS",
+   "CVTTPS2DQ",
+   "CVTTSS2SI",
+   "DIVSS",
+   "MAXSS",
+   "MULPS",
+   "MULSS",
+   "SUBSS",
+   "UCOMISS",
+   "VADDPS",
+   "VADDSS",
+   "VCMPPS",
+   "VCMPSS",
+   "VCVTDQ2PS",
+   "VCVTPH2PS",
+   "VCVTSI2SS",
+   "VCVTTPS2DQ",
+   "VCVTTSS2SI",
+   "VDIVSS",
+   "VFMADD132SS",
+   "VFMSUB132PS",
+   "VMAXPS",
+   "VMAXSS",
+   "VMULPS",
+   "VMULSS",
+   "VSUBPS",
+   "VSUBSS",
+   "VUCOMISS"
+  ],
+  "holds": true,
+  "p5_iclass": 31,
+  "p5_limit": 20,
+  "t_forms": 102,
+  "two_t_forms": 204,
+  "u_all": 326
+ },
+ "amber_b": [
+  {
+   "config": "A",
+   "p2": 0,
+   "p3": {
+    "a": {},
+    "b": [],
+    "c": [],
+    "d1": [],
+    "d2": [
+     "k_avx2:matmul[F32]",
+     "k_avx2:matmul[F16]",
+     "k_avx2:matmul[BF16]",
+     "k_avx2:matmul[F32]",
+     "k_avx2:matmul[F16]",
+     "k_avx2:matmul[BF16]"
+    ],
+    "rederivation": []
+   }
+  },
+  {
+   "config": "B-cmake",
+   "p2": 20,
+   "p3": {
+    "a": {
+     "quant.c": {
+      "a1": [
+       "a1_ffp_contract_on"
+      ],
+      "a2": []
+     },
+     "quant_avx2.c": {
+      "a1": [
+       "a1_ffp_contract_on"
+      ],
+      "a2": []
+     },
+     "quant_avx512.c": {
+      "a1": [
+       "a1_ffp_contract_on"
+      ],
+      "a2": []
+     }
+    },
+    "b": [],
+    "c": [],
+    "d1": [],
+    "d2": [
+     "k_avx2:matmul[F32]",
+     "k_avx2:matmul[F16]",
+     "k_avx2:matmul[BF16]",
+     "k_avx2:matmul[F32]",
+     "k_avx2:matmul[F16]",
+     "k_avx2:matmul[BF16]"
+    ],
+    "rederivation": []
+   }
+  },
+  {
+   "config": "C",
+   "p2": 0,
+   "p3": {
+    "a": {},
+    "b": [],
+    "c": [],
+    "d1": [],
+    "d2": [
+     "k_avx2:matmul[F32]",
+     "k_avx2:matmul[F16]",
+     "k_avx2:matmul[BF16]",
+     "k_avx2:matmul[F32]",
+     "k_avx2:matmul[F16]",
+     "k_avx2:matmul[BF16]"
+    ],
+    "rederivation": []
+   }
+  },
+  {
+   "config": "D",
+   "p2": 0,
+   "p3": {
+    "a": {},
+    "b": [],
+    "c": [],
+    "d1": [],
+    "d2": [
+     "k_avx2:matmul[F32]",
+     "k_avx2:matmul[F16]",
+     "k_avx2:matmul[BF16]",
+     "k_avx2:matmul[F32]",
+     "k_avx2:matmul[F16]",
+     "k_avx2:matmul[BF16]"
+    ],
+    "rederivation": []
+   }
+  }
+ ],
+ "amber_c": [
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx2:matmul[F32]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx2:matmul[F16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx2:matmul[BF16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx512:matmul[F32]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx512:matmul[F16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx512:matmul[BF16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_f16_to_f32",
+   "variant": "k_avx512:matmul[Q8]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_f16_to_f32",
+   "variant": "k_avx512:matmul[Q4]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx2:matmul[F32]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx2:matmul[F16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx2:matmul[BF16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx512:matmul[F32]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx512:matmul[F16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx512:matmul[BF16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_f16_to_f32",
+   "variant": "k_avx512:matmul[Q8]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "A",
+   "detail": "external call to hx_f16_to_f32",
+   "variant": "k_avx512:matmul[Q4]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx2:matmul[F32]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx2:matmul[F16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx2:matmul[BF16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx512:matmul[F32]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx512:matmul[F16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx512:matmul[BF16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_f16_to_f32",
+   "variant": "k_avx512:matmul[Q8]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_f16_to_f32",
+   "variant": "k_avx512:matmul[Q4]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx2:matmul[F32]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx2:matmul[F16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx2:matmul[BF16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx512:matmul[F32]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx512:matmul[F16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_row_bytes",
+   "variant": "k_avx512:matmul[BF16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_f16_to_f32",
+   "variant": "k_avx512:matmul[Q8]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "D",
+   "detail": "external call to hx_f16_to_f32",
+   "variant": "k_avx512:matmul[Q4]"
+  }
+ ],
+ "conservative_resolution": false,
+ "eval_date": "2026-10-17",
+ "eval_date_basis": {
+  "latest_census_run_date": "2026-10-17",
+  "system_utc_date": "2026-10-17"
+ },
+ "narrowing": null,
+ "non_gate": [
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx2:matmul[F32]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx2:matmul[F16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx2:matmul[BF16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx2:matmul[F32]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx2:matmul[F16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx2:matmul[BF16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx2:matmul[F32]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx2:matmul[F16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx2:matmul[BF16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx512:matmul[F32]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx512:matmul[F16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx512:matmul[BF16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_f16_to_f32",
+   "row": "N1",
+   "variant": "k_avx512:matmul[Q8]"
+  },
+  {
+   "build_index": 1,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_f16_to_f32",
+   "row": "N1",
+   "variant": "k_avx512:matmul[Q4]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx2:matmul[F32]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx2:matmul[F16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx2:matmul[BF16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx512:matmul[F32]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx512:matmul[F16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_row_bytes",
+   "row": "N1",
+   "variant": "k_avx512:matmul[BF16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_f16_to_f32",
+   "row": "N1",
+   "variant": "k_avx512:matmul[Q8]"
+  },
+  {
+   "build_index": 2,
+   "cause": "fp_trust_dep",
+   "cause_original": null,
+   "config": "C",
+   "detail": "external call to hx_f16_to_f32",
+   "row": "N1",
+   "variant": "k_avx512:matmul[Q4]"
+  },
+  {
+   "build_index": 1,
+   "cause": "compile_failed",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "D:\\mithril\\x0final-rev\\x0-census\\scripts\\smoke\\mock\\engine\\src\\quant_avx512.c:91",
+   "row": "N1",
+   "variant": "k_avx512:matmul[F32]"
+  },
+  {
+   "build_index": 1,
+   "cause": "compile_failed",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "D:\\mithril\\x0final-rev\\x0-census\\scripts\\smoke\\mock\\engine\\src\\quant_avx512.c:91",
+   "row": "N1",
+   "variant": "k_avx512:matmul[F16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "compile_failed",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "D:\\mithril\\x0final-rev\\x0-census\\scripts\\smoke\\mock\\engine\\src\\quant_avx512.c:91",
+   "row": "N1",
+   "variant": "k_avx512:matmul[BF16]"
+  },
+  {
+   "build_index": 1,
+   "cause": "compile_failed",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "D:\\mithril\\x0final-rev\\x0-census\\scripts\\smoke\\mock\\engine\\src\\quant_avx512.c:91",
+   "row": "N1",
+   "variant": "k_avx512:matmul[Q8]"
+  },
+  {
+   "build_index": 1,
+   "cause": "compile_failed",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "D:\\mithril\\x0final-rev\\x0-census\\scripts\\smoke\\mock\\engine\\src\\quant_avx512.c:91",
+   "row": "N1",
+   "variant": "k_avx512:matmul[Q4]"
+  },
+  {
+   "build_index": 1,
+   "cause": "compile_failed",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "D:\\mithril\\x0final-rev\\x0-census\\scripts\\smoke\\mock\\engine\\src\\quant_avx512.c:91",
+   "row": "N1",
+   "variant": "k_avx512:act_quantize_q8"
+  },
+  {
+   "build_index": 2,
+   "cause": "compile_failed",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "D:\\mithril\\x0final-rev\\x0-census\\scripts\\smoke\\mock\\engine\\src\\quant_avx512.c:91",
+   "row": "N1",
+   "variant": "k_avx512:matmul[F32]"
+  },
+  {
+   "build_index": 2,
+   "cause": "compile_failed",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "D:\\mithril\\x0final-rev\\x0-census\\scripts\\smoke\\mock\\engine\\src\\quant_avx512.c:91",
+   "row": "N1",
+   "variant": "k_avx512:matmul[F16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "compile_failed",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "D:\\mithril\\x0final-rev\\x0-census\\scripts\\smoke\\mock\\engine\\src\\quant_avx512.c:91",
+   "row": "N1",
+   "variant": "k_avx512:matmul[BF16]"
+  },
+  {
+   "build_index": 2,
+   "cause": "compile_failed",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "D:\\mithril\\x0final-rev\\x0-census\\scripts\\smoke\\mock\\engine\\src\\quant_avx512.c:91",
+   "row": "N1",
+   "variant": "k_avx512:matmul[Q8]"
+  },
+  {
+   "build_index": 2,
+   "cause": "compile_failed",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "D:\\mithril\\x0final-rev\\x0-census\\scripts\\smoke\\mock\\engine\\src\\quant_avx512.c:91",
+   "row": "N1",
+   "variant": "k_avx512:matmul[Q4]"
+  },
+  {
+   "build_index": 2,
+   "cause": "compile_failed",
+   "cause_original": null,
+   "config": "B-cmake",
+   "detail": "D:\\mithril\\x0final-rev\\x0-census\\scripts\\smoke\\mock\\engine\\src\\quant_avx512.c:91",
+   "row": "N1",
+   "variant": "k_avx512:act_quantize_q8"
+  },
+  {
+   "config": "B-cmake",
+   "detail": "D:\\mithril\\x0final-rev\\x0-census\\scripts\\smoke\\mock\\engine\\src\\quant_avx512.c:91",
+   "file": "quant_avx512.c",
+   "row": "N2"
+  }
+ ],
+ "notes": [
+  "NON-Hearth smoke run judged by judge_regression.py: {\"profile\": \"judge.py constants (Hearth shape)\"}",
+  "SYNTHETIC REDERIVATION: V3 forced true to exercise the rows; not a census result",
+  "smoke record (record.id X0-census-smoke, NON-Hearth): no freeze commit is required"
+ ],
+ "outcomes": [
+  "amber_a",
+  "amber_b",
+  "amber_c"
+ ],
+ "record": "X0-census",
+ "tooling_bound": "2026-11-12",
+ "tooling_runs": 0,
+ "validity": {
+  "v1": true,
+  "v2": true,
+  "v3": true,
+  "v4": true
+ },
+ "validity_detail": {
+  "v1_config_gaps": [],
+  "v1_tooling_gaps": [],
+  "v2_resolved_by_amendment": [],
+  "v2_unresolved": [],
+  "v3": [],
+  "v4": []
+ }
+}

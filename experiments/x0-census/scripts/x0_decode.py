@@ -353,7 +353,7 @@ class Obj:
     def relocs_in(self, sec, a, b):
         offs = self.roff.get(sec, [])
         i, j = bisect.bisect_left(offs, a), bisect.bisect_left(offs, b)
-        return self.relocs[sec][i:j]
+        return self.relocs.get(sec, [])[i:j]           # a section without relocations (x0final fix)
 
     def reloc_at(self, sec, off):
         offs = self.roff.get(sec, [])
@@ -974,6 +974,26 @@ class Descent:
                 if pi.get("iclass") == "CMP" and fam(r0) == ri and GPR_WIDTH.get(r0, 0) >= 32 and m is not None \
                         and m >= 0 and "MEM0" not in fl:
                     return (m + 1 if inclusive else m), {"bound": "cmp %#x; %s" % (m, jic.lower())}, None
+                w = GPR_WIDTH.get(r0, 0)
+                if pi.get("iclass") == "CMP" and fam(r0) == ri and w in (8, 16) and m is not None \
+                        and 0 <= m < (1 << w) and "MEM0" not in fl:
+                    # x0final-rev: a compare on the 8- or 16-bit register of the index family is a bound only when
+                    # the nearest definition of the family in the compare's block is a MOVZX from an operand of
+                    # that same width (GCC: movzbl (mem),%edx; cmpb $9,%dl; ja ...): every upper bit is then zero
+                    for q in self.back_chain(p):
+                        qi = self.reach[q]
+                        if ri not in written(qi):
+                            continue
+                        qf = qi.get("fields", {})
+                        src_w = {"GPR8": 8, "MEMb": 8, "GPR16": 16, "MEMw": 16}.get(qi.get("iform", "").rsplit("_", 1)[-1])
+                        if qi.get("iclass") == "MOVZX" and fam(qf.get("REG0")) == ri \
+                                and GPR_WIDTH.get(qf.get("REG0"), 0) >= 32 and src_w == w:
+                            return (m + 1 if inclusive else m), \
+                                {"bound": "movzx; cmp %s,%#x; %s" % (r0, m, jic.lower())}, None
+                        return None, {}, "flags for %s set by cmp %s,imm, but %s was last defined by %s, not a " \
+                                         "%d-bit MOVZX" % (jic, r0, ri, qi.get("iclass"), w)
+                    return None, {}, "flags for %s set by cmp %s,imm with no zero extension of %s in its block" \
+                                     % (jic, r0, ri)
                 return None, {}, "flags for %s set by %s, not cmp %s,imm" % (jic, pi.get("iclass"), ri)
             if ri in written(pi):
                 return None, {}, "index %s redefined between the compare and %s" % (ri, jic)

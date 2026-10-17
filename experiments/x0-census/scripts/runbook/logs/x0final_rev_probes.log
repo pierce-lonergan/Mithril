@@ -1,0 +1,88 @@
+# x0final revision (2026-10-17), desktop DESKTOP-8RS9J1J, 01:03-01:10 EDT (22:03-22:10 PDT). NON-Hearth inputs only.
+# (1) MSBuild probe: D:\mithril\x0final-rev\msb_probe (three one-line C files written for this probe; NOT Hearth)
+## src/CMakeLists.txt
+cmake_minimum_required(VERSION 3.20)
+project(msbprobe LANGUAGES C)
+# x0final-rev probe (NOT Hearth): does MSBuild compile later CL batches after one batch fails, and does
+# /t:ClCompile /p:SelectedFiles=<file> compile one file of the project?
+set(S ${CMAKE_CURRENT_SOURCE_DIR})
+set_source_files_properties(${S}/c_avx2.c PROPERTIES COMPILE_OPTIONS "/arch:AVX2")
+add_library(msbp OBJECT ${S}/a_bad.c ${S}/b_ok.c ${S}/c_avx2.c)
+target_compile_options(msbp PUBLIC /fp:precise)
+## src/a_bad.c
+int a_bad(int x) { return x +; }
+## src/b_ok.c
+int b_ok(int x) { return x * 2; }
+## src/c_avx2.c
+float c_avx2(float x) { return x * 3.0f; }
+## run.cmd
+@echo off
+setlocal
+set CUDA_VISIBLE_DEVICES=-1
+set TEMP=D:\mithril\jobs\x0final-rev\tmp
+set TMP=D:\mithril\jobs\x0final-rev\tmp
+if not exist %TEMP% mkdir %TEMP%
+call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat" >nul
+set R=D:\mithril\x0final-rev\msb_probe
+cd /d %R%
+if exist bld rmdir /s /q bld
+"C:\Program Files\CMake\bin\cmake.exe" -S %R%\src -B %R%\bld -G "Visual Studio 17 2022" -A x64 > cfg.log 2>&1
+echo CFG_RC=%ERRORLEVEL%
+"C:\Program Files\CMake\bin\cmake.exe" --build %R%\bld --config Release --target msbp -- /m:1 /nr:false /flp:LogFile=%R%\build.log;Verbosity=detailed /clp:Verbosity=minimal > build.out 2>&1
+echo BUILD_RC=%ERRORLEVEL%
+dir /s /b bld\*.obj
+msbuild %R%\bld\msbp.vcxproj /t:ClCompile /p:Configuration=Release /p:Platform=x64 /p:SelectedFiles=%R%\src\c_avx2.c /m:1 /nr:false /flp:LogFile=%R%\single.log;Verbosity=detailed /clp:Verbosity=minimal > single.out 2>&1
+echo SINGLE_RC=%ERRORLEVEL%
+dir /s /b bld\*.obj
+## run.cmd output (desktop console)
+CFG_RC=0
+BUILD_RC=1
+objects after the build: msbp.dir\Release\b_ok.obj (and CMake's CompilerId probe); no c_avx2.obj
+SINGLE_RC=0
+objects after the single-file ClCompile: b_ok.obj, c_avx2.obj
+## build.log (detailed), the CL task blocks
+2588:Task "CL"
+2593:  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /nologo /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /MD /fp:precise /Fo"msbp.dir\Release\\" /Fd"msbp.dir\Release\msbp.pdb" /external:W1 /TC /errorReport:queue "D:\mithril\x0final-rev\msb_probe\src\a_bad.c" "D:\mithril\x0final-rev\msb_probe\src\b_ok.c"
+2596:  a_bad.c
+2597:  b_ok.c
+2599:D:\mithril\x0final-rev\msb_probe\src\a_bad.c(1,30): error C2059: syntax error: ';' [D:\mithril\x0final-rev\msb_probe\bld\msbp.vcxproj]
+2601:Done executing task "CL" -- FAILED.
+2609:  D:\mithril\x0final-rev\msb_probe\src\a_bad.c(1,30): error C2059: syntax error: ';' [D:\mithril\x0final-rev\msb_probe\bld\msbp.vcxproj]
+## single.log (detailed), msbuild <vcxproj> /t:ClCompile /p:Configuration=Release /p:Platform=x64 /p:SelectedFiles=<abs path of c_avx2.c>
+2096:Task "CL"
+2100:  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\CL.exe /c /nologo /W1 /WX- /diagnostics:column /O2 /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /MD /arch:AVX2 /fp:precise /Fo"msbp.dir\Release\\" /Fd"msbp.dir\Release\msbp.pdb" /external:W1 /TC /errorReport:queue "D:\mithril\x0final-rev\msb_probe\src\c_avx2.c"
+2103:  c_avx2.c
+2104:Done executing task "CL".
+## dt.cmd (design-time lines, -t:GetClCommandLines, no compiler run)
+@echo off
+setlocal
+set CUDA_VISIBLE_DEVICES=-1
+set TEMP=D:\mithril\jobs\x0final-rev\tmp
+set TMP=D:\mithril\jobs\x0final-rev\tmp
+call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat" >nul
+set R=D:\mithril\x0final-rev\msb_probe
+msbuild %R%\bld\msbp.vcxproj -t:GetClCommandLines -p:Configuration=Release -p:Platform=x64 -p:DesignTimeBuild=true -p:BuildProjectReferences=false -m:1 -nologo -v:diag > %R%\getcl.diag.log 2>&1
+echo GETCL_RC=%ERRORLEVEL%
+C:\Python313\python.exe -I D:\mithril\x0final-rev\x0-census\scripts\runbook\design_time_lines.py %R%\getcl.diag.log %R%\dt_lines.txt
+type %R%\dt_lines.txt
+## dt_lines.txt (design_time_lines.py)
+cmd:   /c /W1 /WX- /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /MD /fp:precise /Fo"msbp.dir\Release\\" /external:W1 /TC /errorReport:queue
+files: D:\mithril\x0final-rev\msb_probe\src\a_bad.c;D:\mithril\x0final-rev\msb_probe\src\b_ok.c
+cmd:   /c /W1 /WX- /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D "CMAKE_INTDIR=\"Release\"" /MD /arch:AVX2 /fp:precise /Fo"msbp.dir\Release\\" /external:W1 /TC /errorReport:queue
+files: D:\mithril\x0final-rev\msb_probe\src\c_avx2.c
+## comparison (x0_build.design_time_compare): build line = design-time line + /nologo, /diagnostics:column, /O2, /Fd (plumbing), same order
+
+# (2) x0_decode.py (revised narrow-compare bound) on the x0final reviewer's NON-Hearth rvx.c objects, configuration C, build 1
+# inputs read in place: D:\mithril\review-x0final\runs\RX\C\b1\{rvx.c,rvx.c#scalar}\manifest.json; outputs D:\mithril\x0final-rev\rvx_C\b1
+# command (WSL keepalive VM): python3 -I x0-census/scripts/x0_decode.py MANIFEST -o OUT --xed /mnt/d/mithril/tools/xed-v2026.08.23/bin/xed --objdump /mnt/d/mithril/tools/llvm-linux-23.1.3/bin/llvm-objdump -j 2
+rvx.c: tooling_gaps 3 -> 2 (rc 1: the reviewer's other designed gaps remain)
+ rvx_table matmul[4] (rvx_vrp) old gaps [unresolved_indirect 'jump-table extent: flags for JNBE set by CMP, not cmp RDX,imm'] jump tables [] orphan bytes 117
+ rvx_table matmul[4] (rvx_vrp) new gaps [] jump tables [(10 entries, 'movzx; cmp DL,0x9; jnbe')] orphan bytes 0
+ the other 7 variants: gaps, jump tables, unreachable bytes and iform counts unchanged
+rvx.c#scalar: rvx_vrp old orphan bytes 112, unresolved_indirect; new 10 entries, 0 orphan bytes; the other 7 variants unchanged
+## measured comparison on the probe's own lines (x0_build.design_time_compare, x0final revision)
+build.log a_bad.c argv_matches_frozen True only_build ['/O2'] only_design_time [] console_only_removed ['/nologo', '/diagnostics:column'] same_order True
+build.log b_ok.c argv_matches_frozen True only_build ['/O2'] only_design_time [] console_only_removed ['/nologo', '/diagnostics:column'] same_order True
+build.log CL blocks [(['a_bad.c', 'b_ok.c'], True)]
+single.log c_avx2.c argv_matches_frozen True only_build ['/O2'] only_design_time [] console_only_removed ['/nologo', '/diagnostics:column'] same_order True
+single.log CL blocks [(['c_avx2.c'], False)]

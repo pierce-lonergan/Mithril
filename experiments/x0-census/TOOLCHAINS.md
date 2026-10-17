@@ -431,3 +431,33 @@ Post-review regression (x0prep reviser, 2026-10-16, 19:21 to 19:39 EDT, desktop;
 the same files with the A and B-cmake lines. It then ran extract, decode (twice, opposite work-list orders), loops and
 `smoke/check_smoke.py`: 168 variants, 0 deviations (`runbook/logs/x0prep_71b_*.log`, `x0prep_72_regression_check.log`,
 `smoke/results_regression.json`). New on D: only `D:\mithril\x0prep\reg\` and logs under `D:\mithril\jobs\x0prep\`.
+
+x0final (2026-10-16 22:48 to 2026-10-17 00:35 EDT, desktop) [M]: the census driver's end-to-end runs on NON-Hearth inputs,
+runbook steps 86 (configure-only captures of the census mock) and 88 (`runbook/88_x0final_smoke_runs.ps1`: the mock
+in census mode under A, A-ninja, B-cmake, C, D, the arm P and B-proxy runs, and the regression set in replay mode),
+plus probe jobs that compiled `smoke_dispatch.c` and `rv_tricky.c` with `/Z7` and `-g` to measure the CodeView and
+DWARF formats (logs `scripts/runbook/logs/x0final_*.log`; the final run of step 88 ran 00:26 to 00:35 EDT, earlier
+iterations of it were discarded after the script changes they prompted). Tools used: the pins of this section only (MSVC 19.44.35229, LLVM 23.1.3 Windows and Linux, GCC 13.3.0,
+CMake 4.4.3, Ninja 1.12.1, XED v2026.08.23), `llvm-readobj --codeview` and `llvm-dwarfdump` from the same LLVM. WSL ran
+only inside the keepalive VM that was already up. One compiler or MSBuild node at a time (`/m:1`), XED `-j 2`, no
+GPU. New on D: only `D:\mithril\x0final\` and `D:\mithril\jobs\x0final\`. No Hearth source was compiled and no Hearth
+object was decoded; the Hearth working tree and the WSL home objects were not touched. *Correction by the x0final
+revision (record §2):* no Hearth *file* was compiled, but the first census mock contained verbatim copies of Hearth
+helpers (`tree16`, `canon4`, `red8`, `hsum_i32`, `q_rint`, the BF16 load), which steps 88 compiled and analysed.
+
+x0final revision (2026-10-17 01:03 to about 01:55 EDT, i.e. 22:03 to 22:55 PDT, before the 23:00 PT quiet window,
+desktop) [M]: (1) a NON-Hearth Visual Studio probe project (`D:\mithril\x0final-rev\msb_probe`: three one-line C files,
+one with a syntax error, one with `/arch:AVX2`): configure, a failing build (MSBuild stopped after the failed CL
+batch), the single-file `ClCompile` fallback, and the design-time lines (`-t:GetClCommandLines`); (2) the revised
+`x0_decode.py` on the x0final reviewer's NON-Hearth `rvx.c` objects of configuration C (read in place under
+`D:\mithril\review-x0final\runs\RX`, outputs under `D:\mithril\x0final-rev\rvx_C`); (3) steps 86 and 88 with the
+revised scripts and the rewritten mock (`D:\mithril\x0final-rev\x0-census` sync copy, runs under
+`D:\mithril\x0final-rev\runs`), repeated after each script fix, the last time with the final scripts; (4) the
+single-file fallback end to end on a copy of the new mock with a broken `other.c` (`runs\RFmockerr`). Logs:
+`scripts/runbook/logs/x0final_rev_*.log`. Tools: the pins of this section only, plus `C:\Program Files\Git\cmd\git.exe`
+(present on the desktop; the census init step needs git for the freeze-commit check). WSL ran only inside the
+keepalive VM started at 18:08 EDT by x0prep (`wsl.exe -d Ubuntu --exec sleep 43200`, still running at 01:03 EDT).
+One compiler or MSBuild node at a time, XED `-j 2`, `CUDA_VISIBLE_DEVICES=-1`, no GPU. New on D: only
+`D:\mithril\x0final-rev\` and `D:\mithril\jobs\x0final-rev\`; read-only use of `D:\mithril\review-x0final\` (the
+reviewer's NON-Hearth objects). Nothing on C:, no system setting changed, no Hearth file compiled, no Hearth object
+decoded, the Hearth working tree and the WSL home objects not touched.

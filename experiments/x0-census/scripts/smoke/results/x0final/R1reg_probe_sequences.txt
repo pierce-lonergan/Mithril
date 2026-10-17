@@ -1,0 +1,31 @@
+# x0final: arm P (reduce probe) on the regression run R1 (runbook step 88), build 1: configuration, wrapper, lane pairing (track_tree16 against the halving tree), reason, emitted iclass sequence. Disclosed in record section 2.
+P.A x0_probe_reduce_add_ps unchecked an instruction outside the whitelist, or a source of unknown lanes VMOVUPS VEXTRACTF32X8 VADDPS VEXTRACTF128 VADDPS VPSRLDQ VADDPS VPSRLDQ VADDSS VZEROUPPER RET_NEAR
+P.A x0_probe_reduce_max_ps not_tracked the tracker follows FP ADD trees only VMOVUPS VEXTRACTF32X8 VMAXPS VEXTRACTF128 VMAXPS VPSRLDQ VMAXPS VPSRLDQ VMAXSS VZEROUPPER RET_NEAR
+P.A x0_probe_reduce_add_epi32 not_tracked the tracker follows FP ADD trees only VMOVDQU32 VEXTRACTI32X8 VPADDD VEXTRACTI128 VPADDD VPSRLDQ VPADDD VPSRLDQ VPADDD VMOVD VZEROUPPER RET_NEAR
+P.A x0_probe_reduce_add_ps_mem unchecked an instruction outside the whitelist, or a source of unknown lanes VMOVUPS VEXTRACTF32X8 VADDPS VEXTRACTF128 VADDPS VPSRLDQ VADDPS VPSRLDQ VADDSS VZEROUPPER RET_NEAR
+P.A x0_probe_reduce_max_ps_mem not_tracked the tracker follows FP ADD trees only VMOVUPS VEXTRACTF32X8 VMAXPS VEXTRACTF128 VMAXPS VPSRLDQ VMAXPS VPSRLDQ VMAXSS VZEROUPPER RET_NEAR
+P.A x0_probe_reduce_add_epi32_mem not_tracked the tracker follows FP ADD trees only VMOVDQU32 VEXTRACTI32X8 VPADDD VEXTRACTI128 VPADDD VPSRLDQ VPADDD VPSRLDQ VPADDD VMOVD VZEROUPPER RET_NEAR
+P.A-ninja x0_probe_reduce_add_ps unchecked an instruction outside the whitelist, or a source of unknown lanes VMOVUPS VEXTRACTF32X8 VADDPS VEXTRACTF128 VADDPS VPSRLDQ VADDPS VPSRLDQ VADDSS VZEROUPPER RET_NEAR
+P.A-ninja x0_probe_reduce_max_ps not_tracked the tracker follows FP ADD trees only VMOVUPS VEXTRACTF32X8 VMAXPS VEXTRACTF128 VMAXPS VPSRLDQ VMAXPS VPSRLDQ VMAXSS VZEROUPPER RET_NEAR
+P.A-ninja x0_probe_reduce_add_epi32 not_tracked the tracker follows FP ADD trees only VMOVDQU32 VEXTRACTI32X8 VPADDD VEXTRACTI128 VPADDD VPSRLDQ VPADDD VPSRLDQ VPADDD VMOVD VZEROUPPER RET_NEAR
+P.A-ninja x0_probe_reduce_add_ps_mem unchecked an instruction outside the whitelist, or a source of unknown lanes VMOVUPS VEXTRACTF32X8 VADDPS VEXTRACTF128 VADDPS VPSRLDQ VADDPS VPSRLDQ VADDSS VZEROUPPER RET_NEAR
+P.A-ninja x0_probe_reduce_max_ps_mem not_tracked the tracker follows FP ADD trees only VMOVUPS VEXTRACTF32X8 VMAXPS VEXTRACTF128 VMAXPS VPSRLDQ VMAXPS VPSRLDQ VMAXSS VZEROUPPER RET_NEAR
+P.A-ninja x0_probe_reduce_add_epi32_mem not_tracked the tracker follows FP ADD trees only VMOVDQU32 VEXTRACTI32X8 VPADDD VEXTRACTI128 VPADDD VPSRLDQ VPADDD VPSRLDQ VPADDD VMOVD VZEROUPPER RET_NEAR
+P.B-cmake x0_probe_reduce_add_ps unchecked an instruction outside the whitelist, or a source of unknown lanes VMOVAPS VADDPS VEXTRACTF128 VADDPS VSHUFPD VADDPS VMOVSHDUP VADDSS VZEROUPPER RET_NEAR
+P.B-cmake x0_probe_reduce_max_ps not_tracked the tracker follows FP ADD trees only VMOVAPS VMAXPS VEXTRACTF128 VMAXPS VSHUFPD VMAXPS VMOVSHDUP VMAXSS VZEROUPPER RET_NEAR
+P.B-cmake x0_probe_reduce_add_epi32 not_tracked the tracker follows FP ADD trees only VMOVDQA VPADDD VEXTRACTI128 VPADDD VPSHUFD VPADDD VPSHUFD VPADDD VMOVD VZEROUPPER RET_NEAR
+P.B-cmake x0_probe_reduce_add_ps_mem unchecked an instruction outside the whitelist, or a source of unknown lanes VMOVUPS VADDPS VEXTRACTF128 VADDPS VSHUFPD VADDPS VMOVSHDUP VADDSS VZEROUPPER RET_NEAR
+P.B-cmake x0_probe_reduce_max_ps_mem not_tracked the tracker follows FP ADD trees only VMOVUPS VMAXPS VEXTRACTF128 VMAXPS VSHUFPD VMAXPS VMOVSHDUP VMAXSS VZEROUPPER RET_NEAR
+P.B-cmake x0_probe_reduce_add_epi32_mem not_tracked the tracker follows FP ADD trees only VMOVDQU VPADDD VEXTRACTI128 VPADDD VPSHUFD VPADDD VPSHUFD VPADDD VMOVD VZEROUPPER RET_NEAR
+P.C x0_probe_reduce_add_ps match  ENDBR64 VEXTRACTF64X4 VADDPS VEXTRACTF128 VADDPS VPERMILPS VADDPS VMOVAPS VSHUFPS VADDSS RET_NEAR
+P.C x0_probe_reduce_max_ps not_tracked the tracker follows FP ADD trees only ENDBR64 VEXTRACTF64X4 VMAXPS VEXTRACTF128 VMAXPS VPERMILPS VMAXPS VPERMILPS VMAXPS RET_NEAR
+P.C x0_probe_reduce_add_epi32 not_tracked the tracker follows FP ADD trees only ENDBR64 VEXTRACTI64X4 VPADDD VEXTRACTI32X4 VPADDD VPSHUFD VPADDD VMOVDQA VPSHUFD VPADDD VMOVD RET_NEAR
+P.C x0_probe_reduce_add_ps_mem match  ENDBR64 VMOVUPS VEXTRACTF64X4 VADDPS VEXTRACTF128 VADDPS VPERMILPS VADDPS VMOVAPS VSHUFPS VADDSS VZEROUPPER RET_NEAR
+P.C x0_probe_reduce_max_ps_mem not_tracked the tracker follows FP ADD trees only ENDBR64 VMOVUPS VEXTRACTF64X4 VMAXPS VEXTRACTF128 VMAXPS VPERMILPS VMAXPS VPERMILPS VMAXPS VZEROUPPER RET_NEAR
+P.C x0_probe_reduce_add_epi32_mem not_tracked the tracker follows FP ADD trees only ENDBR64 VMOVDQU64 VEXTRACTI64X4 VPADDD VEXTRACTI32X4 VPADDD VPSHUFD VPADDD VMOVDQA VPSHUFD VPADDD VMOVD VZEROUPPER RET_NEAR
+P.D x0_probe_reduce_add_ps match  VEXTRACTF64X4 VADDPS VEXTRACTF128 VADDPS VSHUFPD VADDPS VMOVSHDUP VADDSS VZEROUPPER RET_NEAR
+P.D x0_probe_reduce_max_ps not_tracked the tracker follows FP ADD trees only VEXTRACTF64X4 VMAXPS VEXTRACTF128 VMAXPS VSHUFPD VMAXPS VMOVSHDUP VMAXSS VZEROUPPER RET_NEAR
+P.D x0_probe_reduce_add_epi32 not_tracked the tracker follows FP ADD trees only VEXTRACTI64X4 VPADDD VEXTRACTI128 VPADDD VPSHUFD VPADDD VPSHUFD VPADDD VMOVD VZEROUPPER RET_NEAR
+P.D x0_probe_reduce_add_ps_mem unchecked an instruction outside the whitelist, or a source of unknown lanes VMOVUPS VADDPS VEXTRACTF128 VADDPS VSHUFPD VADDPS VMOVSHDUP VADDSS VZEROUPPER RET_NEAR
+P.D x0_probe_reduce_max_ps_mem not_tracked the tracker follows FP ADD trees only VMOVUPS VMAXPS VEXTRACTF128 VMAXPS VSHUFPD VMAXPS VMOVSHDUP VMAXSS VZEROUPPER RET_NEAR
+P.D x0_probe_reduce_add_epi32_mem not_tracked the tracker follows FP ADD trees only VMOVDQU VPADDD VEXTRACTI128 VPADDD VPSHUFD VPADDD VPSHUFD VPADDD VMOVD VZEROUPPER RET_NEAR

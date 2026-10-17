@@ -1,0 +1,1771 @@
+{
+ "configs": {
+  "A": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 84
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c",
+     "ice": false,
+     "includes": 27,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c#scalar",
+     "ice": false,
+     "includes": 27,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c",
+     "ice": false,
+     "includes": 12,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c#scalar",
+     "ice": false,
+     "includes": 12,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c",
+     "ice": false,
+     "includes": 7,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c#scalar",
+     "ice": false,
+     "includes": 7,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c",
+     "ice": false,
+     "includes": 27,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c#scalar",
+     "ice": false,
+     "includes": 27,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c",
+     "ice": false,
+     "includes": 12,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c#scalar",
+     "ice": false,
+     "includes": 12,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c",
+     "ice": false,
+     "includes": 7,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c#scalar",
+     "ice": false,
+     "includes": 7,
+     "rc": 0
+    }
+   ],
+   "d1": {
+    "pass": 8
+   },
+   "d2": {},
+   "gaps": {
+    "fp_trust_dep": 44,
+    "unresolved_indirect": 44
+   },
+   "loop_attribution": {
+    "exact": 294
+   },
+   "loops_attributed_through_inline_frame": 16,
+   "nonzero_steps": [
+    "decode_b1_rv_tricky.c",
+    "decode_b1_rv_tricky.c#scalar",
+    "decode_b1_rv_tricky2.c",
+    "decode_b1_rv_tricky2.c#scalar",
+    "decode_b2_rv_tricky.c",
+    "decode_b2_rv_tricky.c#scalar",
+    "decode_b2_rv_tricky2.c",
+    "decode_b2_rv_tricky2.c#scalar"
+   ],
+   "not_computed_tags": {},
+   "p3a": {
+    "rv_tricky.c": {
+     "a1": [],
+     "a2": []
+    },
+    "rv_tricky.c#scalar": {
+     "a1": [],
+     "a2": []
+    },
+    "rv_tricky2.c": {
+     "a1": [],
+     "a2": []
+    },
+    "rv_tricky2.c#scalar": {
+     "a1": [],
+     "a2": []
+    },
+    "smoke_dispatch.c": {
+     "a1": [],
+     "a2": []
+    },
+    "smoke_dispatch.c#scalar": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {},
+   "repro_identical": {
+    "rv_tricky.c": true,
+    "rv_tricky.c#scalar": true,
+    "rv_tricky2.c": true,
+    "rv_tricky2.c#scalar": true,
+    "smoke_dispatch.c": true,
+    "smoke_dispatch.c#scalar": true
+   },
+   "tags": {
+    "lockstep": 130,
+    "rotated": 40,
+    "software-pipelined": 56,
+    "spilled": 48,
+    "unrolled-u": 68
+   },
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 160,
+   "variants": {
+    "b1": 42,
+    "b2": 42
+   }
+  },
+  "A-ninja": {
+   "ab_compare": {
+    "identical": 84
+   },
+   "ab_compare_files": {
+    "rv_tricky.c": true,
+    "rv_tricky.c#scalar": true,
+    "rv_tricky2.c": true,
+    "rv_tricky2.c#scalar": true,
+    "smoke_dispatch.c": true,
+    "smoke_dispatch.c#scalar": true
+   },
+   "attribution": {
+    "exact": 84
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c",
+     "ice": false,
+     "includes": 27,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c#scalar",
+     "ice": false,
+     "includes": 27,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c",
+     "ice": false,
+     "includes": 12,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c#scalar",
+     "ice": false,
+     "includes": 12,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c",
+     "ice": false,
+     "includes": 7,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c#scalar",
+     "ice": false,
+     "includes": 7,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c",
+     "ice": false,
+     "includes": 27,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c#scalar",
+     "ice": false,
+     "includes": 27,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c",
+     "ice": false,
+     "includes": 12,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c#scalar",
+     "ice": false,
+     "includes": 12,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c",
+     "ice": false,
+     "includes": 7,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c#scalar",
+     "ice": false,
+     "includes": 7,
+     "rc": 0
+    }
+   ],
+   "d1": {
+    "pass": 8
+   },
+   "d2": {},
+   "gaps": {
+    "fp_trust_dep": 44,
+    "unresolved_indirect": 44
+   },
+   "loop_attribution": {
+    "exact": 294
+   },
+   "loops_attributed_through_inline_frame": 16,
+   "nonzero_steps": [
+    "decode_b1_rv_tricky.c",
+    "decode_b1_rv_tricky.c#scalar",
+    "decode_b1_rv_tricky2.c",
+    "decode_b1_rv_tricky2.c#scalar",
+    "decode_b2_rv_tricky.c",
+    "decode_b2_rv_tricky.c#scalar",
+    "decode_b2_rv_tricky2.c",
+    "decode_b2_rv_tricky2.c#scalar"
+   ],
+   "not_computed_tags": {},
+   "p3a": {
+    "rv_tricky.c": {
+     "a1": [],
+     "a2": []
+    },
+    "rv_tricky.c#scalar": {
+     "a1": [],
+     "a2": []
+    },
+    "rv_tricky2.c": {
+     "a1": [],
+     "a2": []
+    },
+    "rv_tricky2.c#scalar": {
+     "a1": [],
+     "a2": []
+    },
+    "smoke_dispatch.c": {
+     "a1": [],
+     "a2": []
+    },
+    "smoke_dispatch.c#scalar": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {},
+   "repro_identical": {
+    "rv_tricky.c": true,
+    "rv_tricky.c#scalar": true,
+    "rv_tricky2.c": true,
+    "rv_tricky2.c#scalar": true,
+    "smoke_dispatch.c": true,
+    "smoke_dispatch.c#scalar": true
+   },
+   "tags": {
+    "lockstep": 130,
+    "rotated": 40,
+    "software-pipelined": 56,
+    "spilled": 48,
+    "unrolled-u": 68
+   },
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 160,
+   "variants": {
+    "b1": 42,
+    "b2": 42
+   }
+  },
+  "B-cmake": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 84
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c",
+     "ice": false,
+     "includes": 147,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c#scalar",
+     "ice": false,
+     "includes": 147,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c",
+     "ice": false,
+     "includes": 22,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c#scalar",
+     "ice": false,
+     "includes": 22,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c",
+     "ice": false,
+     "includes": 15,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c#scalar",
+     "ice": false,
+     "includes": 15,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c",
+     "ice": false,
+     "includes": 147,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c#scalar",
+     "ice": false,
+     "includes": 147,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c",
+     "ice": false,
+     "includes": 22,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c#scalar",
+     "ice": false,
+     "includes": 22,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c",
+     "ice": false,
+     "includes": 15,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c#scalar",
+     "ice": false,
+     "includes": 15,
+     "rc": 0
+    }
+   ],
+   "d1": {
+    "pass": 8
+   },
+   "d2": {},
+   "gaps": {
+    "fp_trust_dep": 44,
+    "unresolved_indirect": 44
+   },
+   "loop_attribution": {
+    "exact": 252
+   },
+   "loops_attributed_through_inline_frame": 0,
+   "nonzero_steps": [
+    "decode_b1_rv_tricky.c",
+    "decode_b1_rv_tricky.c#scalar",
+    "decode_b1_rv_tricky2.c",
+    "decode_b1_rv_tricky2.c#scalar",
+    "decode_b2_rv_tricky.c",
+    "decode_b2_rv_tricky.c#scalar",
+    "decode_b2_rv_tricky2.c",
+    "decode_b2_rv_tricky2.c#scalar"
+   ],
+   "not_computed_tags": {},
+   "p3a": {
+    "rv_tricky.c": {
+     "a1": [
+      "a1_ffp_contract_on"
+     ],
+     "a2": []
+    },
+    "rv_tricky.c#scalar": {
+     "a1": [
+      "a1_ffp_contract_on"
+     ],
+     "a2": []
+    },
+    "rv_tricky2.c": {
+     "a1": [
+      "a1_ffp_contract_on"
+     ],
+     "a2": []
+    },
+    "rv_tricky2.c#scalar": {
+     "a1": [
+      "a1_ffp_contract_on"
+     ],
+     "a2": []
+    },
+    "smoke_dispatch.c": {
+     "a1": [
+      "a1_ffp_contract_on"
+     ],
+     "a2": []
+    },
+    "smoke_dispatch.c#scalar": {
+     "a1": [
+      "a1_ffp_contract_on"
+     ],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [
+    [
+     "sd_table@smoke_dispatch.c",
+     "matmul[0]",
+     1,
+     [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ]
+    ],
+    [
+     "sd_table@smoke_dispatch.c",
+     "matmul[1]",
+     1,
+     [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ]
+    ],
+    [
+     "sd_table@smoke_dispatch.c",
+     "matmul[2]",
+     1,
+     [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ]
+    ],
+    [
+     "sd_table_global@smoke_dispatch.c",
+     "matmul[0]",
+     1,
+     [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ]
+    ],
+    [
+     "sd_table_global@smoke_dispatch.c",
+     "matmul[1]",
+     1,
+     [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ]
+    ],
+    [
+     "sd_table_global@smoke_dispatch.c",
+     "matmul[3]",
+     1,
+     [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ]
+    ],
+    [
+     "sd_table@smoke_dispatch.c",
+     "matmul[0]",
+     2,
+     [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ]
+    ],
+    [
+     "sd_table@smoke_dispatch.c",
+     "matmul[1]",
+     2,
+     [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ]
+    ],
+    [
+     "sd_table@smoke_dispatch.c",
+     "matmul[2]",
+     2,
+     [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ]
+    ],
+    [
+     "sd_table_global@smoke_dispatch.c",
+     "matmul[0]",
+     2,
+     [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ]
+    ],
+    [
+     "sd_table_global@smoke_dispatch.c",
+     "matmul[1]",
+     2,
+     [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ]
+    ],
+    [
+     "sd_table_global@smoke_dispatch.c",
+     "matmul[3]",
+     2,
+     [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ]
+    ]
+   ],
+   "probe": {},
+   "repro_identical": {
+    "rv_tricky.c": true,
+    "rv_tricky.c#scalar": true,
+    "rv_tricky2.c": true,
+    "rv_tricky2.c#scalar": true,
+    "smoke_dispatch.c": true,
+    "smoke_dispatch.c#scalar": true
+   },
+   "tags": {
+    "lockstep": 100,
+    "rotated": 32,
+    "software-pipelined": 60,
+    "spilled": 48,
+    "unrolled-u": 64
+   },
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 224,
+   "variants": {
+    "b1": 42,
+    "b2": 42
+   }
+  },
+  "C": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 84
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c",
+     "ice": false,
+     "includes": 160,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c#scalar",
+     "ice": false,
+     "includes": 160,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c",
+     "ice": false,
+     "includes": 52,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c#scalar",
+     "ice": false,
+     "includes": 52,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c",
+     "ice": false,
+     "includes": 19,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c#scalar",
+     "ice": false,
+     "includes": 19,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c",
+     "ice": false,
+     "includes": 160,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c#scalar",
+     "ice": false,
+     "includes": 160,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c",
+     "ice": false,
+     "includes": 52,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c#scalar",
+     "ice": false,
+     "includes": 52,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c",
+     "ice": false,
+     "includes": 19,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c#scalar",
+     "ice": false,
+     "includes": 19,
+     "rc": 0
+    }
+   ],
+   "d1": {
+    "pass": 8
+   },
+   "d2": {},
+   "gaps": {
+    "fp_trust_dep": 44,
+    "other": 4,
+    "unresolved_indirect": 44
+   },
+   "loop_attribution": {
+    "exact": 240
+   },
+   "loops_attributed_through_inline_frame": 12,
+   "nonzero_steps": [
+    "decode_b1_rv_tricky.c",
+    "decode_b1_rv_tricky.c#scalar",
+    "decode_b1_rv_tricky2.c",
+    "decode_b1_rv_tricky2.c#scalar",
+    "decode_b2_rv_tricky.c",
+    "decode_b2_rv_tricky.c#scalar",
+    "decode_b2_rv_tricky2.c",
+    "decode_b2_rv_tricky2.c#scalar"
+   ],
+   "not_computed_tags": {},
+   "p3a": {
+    "rv_tricky.c": {
+     "a1": [],
+     "a2": []
+    },
+    "rv_tricky.c#scalar": {
+     "a1": [],
+     "a2": []
+    },
+    "rv_tricky2.c": {
+     "a1": [],
+     "a2": []
+    },
+    "rv_tricky2.c#scalar": {
+     "a1": [],
+     "a2": []
+    },
+    "smoke_dispatch.c": {
+     "a1": [],
+     "a2": []
+    },
+    "smoke_dispatch.c#scalar": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {},
+   "repro_identical": {
+    "rv_tricky.c": true,
+    "rv_tricky.c#scalar": true,
+    "rv_tricky2.c": true,
+    "rv_tricky2.c#scalar": true,
+    "smoke_dispatch.c": true,
+    "smoke_dispatch.c#scalar": true
+   },
+   "tags": {
+    "lockstep": 66,
+    "peeled": 12,
+    "rotated": 46,
+    "software-pipelined": 64,
+    "spilled": 76,
+    "unrolled-u": 48
+   },
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 204,
+   "variants": {
+    "b1": 42,
+    "b2": 42
+   }
+  },
+  "D": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 84
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c",
+     "ice": false,
+     "includes": 186,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c#scalar",
+     "ice": false,
+     "includes": 186,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c",
+     "ice": false,
+     "includes": 58,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c#scalar",
+     "ice": false,
+     "includes": 58,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c",
+     "ice": false,
+     "includes": 27,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c#scalar",
+     "ice": false,
+     "includes": 27,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c",
+     "ice": false,
+     "includes": 186,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "smoke_dispatch.c#scalar",
+     "ice": false,
+     "includes": 186,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c",
+     "ice": false,
+     "includes": 58,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky.c#scalar",
+     "ice": false,
+     "includes": 58,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c",
+     "ice": false,
+     "includes": 27,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "rv_tricky2.c#scalar",
+     "ice": false,
+     "includes": 27,
+     "rc": 0
+    }
+   ],
+   "d1": {
+    "pass": 8
+   },
+   "d2": {},
+   "gaps": {
+    "fp_trust_dep": 44,
+    "other": 4,
+    "unresolved_indirect": 44
+   },
+   "loop_attribution": {
+    "exact": 284
+   },
+   "loops_attributed_through_inline_frame": 0,
+   "nonzero_steps": [
+    "decode_b1_rv_tricky.c",
+    "decode_b1_rv_tricky.c#scalar",
+    "decode_b1_rv_tricky2.c",
+    "decode_b1_rv_tricky2.c#scalar",
+    "decode_b2_rv_tricky.c",
+    "decode_b2_rv_tricky.c#scalar",
+    "decode_b2_rv_tricky2.c",
+    "decode_b2_rv_tricky2.c#scalar"
+   ],
+   "not_computed_tags": {},
+   "p3a": {
+    "rv_tricky.c": {
+     "a1": [],
+     "a2": []
+    },
+    "rv_tricky.c#scalar": {
+     "a1": [],
+     "a2": []
+    },
+    "rv_tricky2.c": {
+     "a1": [],
+     "a2": []
+    },
+    "rv_tricky2.c#scalar": {
+     "a1": [],
+     "a2": []
+    },
+    "smoke_dispatch.c": {
+     "a1": [],
+     "a2": []
+    },
+    "smoke_dispatch.c#scalar": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [
+    [
+     "sd_table@smoke_dispatch.c",
+     "matmul[0]",
+     1,
+     [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ]
+    ],
+    [
+     "sd_table@smoke_dispatch.c",
+     "matmul[1]",
+     1,
+     [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ]
+    ],
+    [
+     "sd_table@smoke_dispatch.c",
+     "matmul[2]",
+     1,
+     [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ]
+    ],
+    [
+     "sd_table_global@smoke_dispatch.c",
+     "matmul[0]",
+     1,
+     [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ]
+    ],
+    [
+     "sd_table_global@smoke_dispatch.c",
+     "matmul[1]",
+     1,
+     [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ]
+    ],
+    [
+     "sd_table_global@smoke_dispatch.c",
+     "matmul[3]",
+     1,
+     [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ]
+    ],
+    [
+     "sd_table@smoke_dispatch.c",
+     "matmul[0]",
+     2,
+     [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ]
+    ],
+    [
+     "sd_table@smoke_dispatch.c",
+     "matmul[1]",
+     2,
+     [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ]
+    ],
+    [
+     "sd_table@smoke_dispatch.c",
+     "matmul[2]",
+     2,
+     [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ]
+    ],
+    [
+     "sd_table_global@smoke_dispatch.c",
+     "matmul[0]",
+     2,
+     [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ]
+    ],
+    [
+     "sd_table_global@smoke_dispatch.c",
+     "matmul[1]",
+     2,
+     [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ]
+    ],
+    [
+     "sd_table_global@smoke_dispatch.c",
+     "matmul[3]",
+     2,
+     [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ]
+    ]
+   ],
+   "probe": {},
+   "repro_identical": {
+    "rv_tricky.c": true,
+    "rv_tricky.c#scalar": true,
+    "rv_tricky2.c": true,
+    "rv_tricky2.c#scalar": true,
+    "smoke_dispatch.c": true,
+    "smoke_dispatch.c#scalar": true
+   },
+   "tags": {
+    "lockstep": 104,
+    "rotated": 32,
+    "software-pipelined": 76,
+    "spilled": 48,
+    "unrolled-u": 80
+   },
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 223,
+   "variants": {
+    "b1": 42,
+    "b2": 42
+   }
+  },
+  "P.A": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 12
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 17,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 17,
+     "rc": 0
+    }
+   ],
+   "d1": {},
+   "d2": {},
+   "gaps": {},
+   "loop_attribution": {},
+   "loops_attributed_through_inline_frame": 0,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "reduce_probe.c": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {
+    "x0_probe_reduce_add_epi32_mem|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32_mem|b2": "not_tracked",
+    "x0_probe_reduce_add_epi32|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32|b2": "not_tracked",
+    "x0_probe_reduce_add_ps_mem|b1": "unchecked",
+    "x0_probe_reduce_add_ps_mem|b2": "unchecked",
+    "x0_probe_reduce_add_ps|b1": "unchecked",
+    "x0_probe_reduce_add_ps|b2": "unchecked",
+    "x0_probe_reduce_max_ps_mem|b1": "not_tracked",
+    "x0_probe_reduce_max_ps_mem|b2": "not_tracked",
+    "x0_probe_reduce_max_ps|b1": "not_tracked",
+    "x0_probe_reduce_max_ps|b2": "not_tracked"
+   },
+   "repro_identical": {
+    "reduce_probe.c": true
+   },
+   "tags": {},
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 18,
+   "variants": {
+    "b1": 6,
+    "b2": 6
+   }
+  },
+  "P.A-ninja": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 12
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 17,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 17,
+     "rc": 0
+    }
+   ],
+   "d1": {},
+   "d2": {},
+   "gaps": {},
+   "loop_attribution": {},
+   "loops_attributed_through_inline_frame": 0,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "reduce_probe.c": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {
+    "x0_probe_reduce_add_epi32_mem|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32_mem|b2": "not_tracked",
+    "x0_probe_reduce_add_epi32|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32|b2": "not_tracked",
+    "x0_probe_reduce_add_ps_mem|b1": "unchecked",
+    "x0_probe_reduce_add_ps_mem|b2": "unchecked",
+    "x0_probe_reduce_add_ps|b1": "unchecked",
+    "x0_probe_reduce_add_ps|b2": "unchecked",
+    "x0_probe_reduce_max_ps_mem|b1": "not_tracked",
+    "x0_probe_reduce_max_ps_mem|b2": "not_tracked",
+    "x0_probe_reduce_max_ps|b1": "not_tracked",
+    "x0_probe_reduce_max_ps|b2": "not_tracked"
+   },
+   "repro_identical": {
+    "reduce_probe.c": true
+   },
+   "tags": {},
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 18,
+   "variants": {
+    "b1": 6,
+    "b2": 6
+   }
+  },
+  "P.B-cmake": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 12
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 137,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 137,
+     "rc": 0
+    }
+   ],
+   "d1": {},
+   "d2": {},
+   "gaps": {},
+   "loop_attribution": {},
+   "loops_attributed_through_inline_frame": 0,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "reduce_probe.c": {
+     "a1": [
+      "a1_ffp_contract_on"
+     ],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {
+    "x0_probe_reduce_add_epi32_mem|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32_mem|b2": "not_tracked",
+    "x0_probe_reduce_add_epi32|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32|b2": "not_tracked",
+    "x0_probe_reduce_add_ps_mem|b1": "unchecked",
+    "x0_probe_reduce_add_ps_mem|b2": "unchecked",
+    "x0_probe_reduce_add_ps|b1": "unchecked",
+    "x0_probe_reduce_add_ps|b2": "unchecked",
+    "x0_probe_reduce_max_ps_mem|b1": "not_tracked",
+    "x0_probe_reduce_max_ps_mem|b2": "not_tracked",
+    "x0_probe_reduce_max_ps|b1": "not_tracked",
+    "x0_probe_reduce_max_ps|b2": "not_tracked"
+   },
+   "repro_identical": {
+    "reduce_probe.c": true
+   },
+   "tags": {},
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 20,
+   "variants": {
+    "b1": 6,
+    "b2": 6
+   }
+  },
+  "P.C": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 12
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 141,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 141,
+     "rc": 0
+    }
+   ],
+   "d1": {},
+   "d2": {},
+   "gaps": {},
+   "loop_attribution": {},
+   "loops_attributed_through_inline_frame": 0,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "reduce_probe.c": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {
+    "x0_probe_reduce_add_epi32_mem|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32_mem|b2": "not_tracked",
+    "x0_probe_reduce_add_epi32|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32|b2": "not_tracked",
+    "x0_probe_reduce_add_ps_mem|b1": "match",
+    "x0_probe_reduce_add_ps_mem|b2": "match",
+    "x0_probe_reduce_add_ps|b1": "match",
+    "x0_probe_reduce_add_ps|b2": "match",
+    "x0_probe_reduce_max_ps_mem|b1": "not_tracked",
+    "x0_probe_reduce_max_ps_mem|b2": "not_tracked",
+    "x0_probe_reduce_max_ps|b1": "not_tracked",
+    "x0_probe_reduce_max_ps|b2": "not_tracked"
+   },
+   "repro_identical": {
+    "reduce_probe.c": true
+   },
+   "tags": {},
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 22,
+   "variants": {
+    "b1": 6,
+    "b2": 6
+   }
+  },
+  "P.D": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 12
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 165,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 165,
+     "rc": 0
+    }
+   ],
+   "d1": {},
+   "d2": {},
+   "gaps": {},
+   "loop_attribution": {},
+   "loops_attributed_through_inline_frame": 0,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "reduce_probe.c": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {
+    "x0_probe_reduce_add_epi32_mem|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32_mem|b2": "not_tracked",
+    "x0_probe_reduce_add_epi32|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32|b2": "not_tracked",
+    "x0_probe_reduce_add_ps_mem|b1": "unchecked",
+    "x0_probe_reduce_add_ps_mem|b2": "unchecked",
+    "x0_probe_reduce_add_ps|b1": "match",
+    "x0_probe_reduce_add_ps|b2": "match",
+    "x0_probe_reduce_max_ps_mem|b1": "not_tracked",
+    "x0_probe_reduce_max_ps_mem|b2": "not_tracked",
+    "x0_probe_reduce_max_ps|b1": "not_tracked",
+    "x0_probe_reduce_max_ps|b2": "not_tracked"
+   },
+   "repro_identical": {
+    "reduce_probe.c": true
+   },
+   "tags": {},
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 23,
+   "variants": {
+    "b1": 6,
+    "b2": 6
+   }
+  }
+ },
+ "crossdecoder": {
+  "C|NOP|fp=False": 16,
+  "D|NOP|fp=False": 16
+ },
+ "metrics": {
+  "p2": {
+   "A": 0,
+   "B-cmake": 72,
+   "C": 0,
+   "D": 0
+  },
+  "p3": {
+   "A": {
+    "a_flagged_files": [],
+    "b": 0,
+    "c": 0,
+    "d1_not_pass": 0,
+    "d2_match": 0,
+    "d2_mismatch": 0,
+    "d2_unchecked": 0
+   },
+   "B-cmake": {
+    "a_flagged_files": [
+     "rv_tricky.c",
+     "rv_tricky.c#scalar",
+     "rv_tricky2.c",
+     "rv_tricky2.c#scalar",
+     "smoke_dispatch.c",
+     "smoke_dispatch.c#scalar"
+    ],
+    "b": 0,
+    "c": 12,
+    "d1_not_pass": 0,
+    "d2_match": 0,
+    "d2_mismatch": 0,
+    "d2_unchecked": 0
+   },
+   "C": {
+    "a_flagged_files": [],
+    "b": 0,
+    "c": 0,
+    "d1_not_pass": 0,
+    "d2_match": 0,
+    "d2_mismatch": 0,
+    "d2_unchecked": 0
+   },
+   "D": {
+    "a_flagged_files": [],
+    "b": 0,
+    "c": 12,
+    "d1_not_pass": 0,
+    "d2_match": 0,
+    "d2_mismatch": 0,
+    "d2_unchecked": 0
+   }
+  },
+  "p4_u_all": 342,
+  "p5_iclass": 36,
+  "secondary": {
+   "fp_environment_iclasses_in_counted_sets": [],
+   "p5_opclass": 15,
+   "proxy_fidelity": {},
+   "u_all_S": 228,
+   "u_all_simd": 0,
+   "u_all_simd_S": 0,
+   "u_release": 272
+  }
+ },
+ "note": "x0final runbook step 88: NON-Hearth inputs only; X0-census-smoke",
+ "record": {
+  "id": "X0-census-smoke",
+  "mock": false,
+  "profile": "regression"
+ },
+ "run_id": "smoke-20261017T043018Z",
+ "schema_violations": [],
+ "verdicts": {
+  "verdict.json": {
+   "amber_a": {
+    "holds": null,
+    "p5_iclass": null,
+    "two_t_forms": null,
+    "u_all": null
+   },
+   "amber_b": [],
+   "amber_c": 0,
+   "non_gate": [],
+   "notes": [],
+   "outcomes": [
+    "tooling_failure"
+   ],
+   "v1_config_gaps": 15,
+   "v1_tooling_gaps": 828,
+   "v4": [],
+   "validity": {
+    "v1": false,
+    "v2": true,
+    "v3": false,
+    "v4": true
+   }
+  },
+  "verdict_regression_profile.json": {
+   "amber_a": {
+    "holds": null,
+    "p5_iclass": null,
+    "two_t_forms": null,
+    "u_all": null
+   },
+   "amber_b": [],
+   "amber_c": 0,
+   "non_gate": [],
+   "notes": [
+    "NON-Hearth smoke run judged by judge_regression.py: {\"expected_variants\": 42, \"census_files\": [\"smoke_dispatch.c\", \"smoke_dispatch.c#scalar\", \"rv_tricky.c\", \"rv_tricky.c#scalar\", \"rv_tricky2.c\", \"rv_tricky2.c#scalar\"]}",
+    "SYNTHETIC REDERIVATION: V3 forced true to exercise the rows; not a census result"
+   ],
+   "outcomes": [
+    "tooling_failure"
+   ],
+   "v1_config_gaps": 0,
+   "v1_tooling_gaps": 184,
+   "v4": [],
+   "validity": {
+    "v1": false,
+    "v2": true,
+    "v3": true,
+    "v4": true
+   }
+  }
+ }
+}

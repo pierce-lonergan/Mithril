@@ -1,0 +1,48 @@
+{
+ "note": "x0final: the B-proxy arm (record section 3, secondary) as a census-file set for x0_driver.py replay mode: Hearth's three census files compiled with flags/prefreeze/B-proxy.argv.json (B-cmake's lines with /fp:precise and /arch:* removed and D's codegen flags added through /clang:), twice, plus the /Z7 twin; one extraction unit per file; x0_loops.py with Hearth's defaults. '@source/' is the run's source tree (Hearth for the census; the mock for the smoke test). Use: 80_census_win.cmd RUN B-proxy replay --set X0/scripts/runbook/bproxy_set.json",
+ "hearth_defaults": true,
+ "frozen_db": {
+  "B-proxy": "flags/prefreeze/B-proxy.argv.json"
+ },
+ "files": [
+  {
+   "id": "quant.c",
+   "source": "@source/engine/src/quant.c",
+   "as": "quant.c",
+   "struct": "hx_kernels",
+   "struct_src": "@source/engine/src/hx_quant.h",
+   "index_names": "F32,F16,BF16,Q8,Q4,I32,U8",
+   "expect_variants": 6,
+   "canary": "hx_kernels_scalar:act_quantize_q8",
+   "source_dirs": [
+    "@source/engine/include"
+   ]
+  },
+  {
+   "id": "quant_avx2.c",
+   "source": "@source/engine/src/quant_avx2.c",
+   "as": "quant_avx2.c",
+   "struct": "hx_kernels",
+   "struct_src": "@source/engine/src/hx_quant.h",
+   "index_names": "F32,F16,BF16,Q8,Q4,I32,U8",
+   "expect_variants": 6,
+   "canary": null,
+   "source_dirs": [
+    "@source/engine/include"
+   ]
+  },
+  {
+   "id": "quant_avx512.c",
+   "source": "@source/engine/src/quant_avx512.c",
+   "as": "quant_avx512.c",
+   "struct": "hx_kernels",
+   "struct_src": "@source/engine/src/hx_quant.h",
+   "index_names": "F32,F16,BF16,Q8,Q4,I32,U8",
+   "expect_variants": 6,
+   "canary": null,
+   "source_dirs": [
+    "@source/engine/include"
+   ]
+  }
+ ]
+}

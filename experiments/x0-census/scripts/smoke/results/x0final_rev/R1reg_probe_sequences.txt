@@ -1,0 +1,1 @@
+# x0final revision: arm P (reduce probe) on run R1reg (runbook step 88), build 1: configuration, wrapper, probe record (lane pairing, reason, emitted iclass sequence). Disclosed in record section 2.

@@ -1,0 +1,109 @@
+===== probe_twin_win.log (2026-10-16T22:49:48)
+smoke_dispatch.c
+{"directory": "D:/mithril/x0prep/cfg/A-ninja", "argv": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "-std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/FS", "/c", "/FoD:\\mithril\\x0final\\probe\\A\\sd.obj", "D:\\mithril\\x0final\\x0-census\\scripts\\smoke\\smoke_dispatch.c"]}
+A_RC=0
+smoke_dispatch.c
+{"directory": "D:/mithril/x0prep/cfg/A-ninja", "argv": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "-std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/FS", "/Z7", "/c", "/FoD:\\mithril\\x0final\\probe\\A\\sd_twin.obj", "D:\\mithril\\x0final\\x0-census\\scripts\\smoke\\smoke_dispatch.c"]}
+A_TWIN_RC=0
+cmd : clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' 
+[-Wunused-command-line-argument]
+At line:1 char:1
++ cmd /v:on /c D:\mithril\jobs\x0final\probe_twin_win.cmd > D:\mithril\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (clang-cl: warni...-line-argument]:String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+{"directory": "D:/mithril/x0prep/cfg/B-cmake", "argv": ["D:\\mithril\\tools\\llvm-win-23.1.3\\bin\\clang-cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "/std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/c", "/FoD:\\mithril\\x0final\\probe\\B\\sd.obj", "D:\\mithril\\x0final\\x0-census\\scripts\\smoke\\smoke_dispatch.c"]}
+B_RC=0
+clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' 
+[-Wunused-command-line-argument]
+{"directory": "D:/mithril/x0prep/cfg/B-cmake", "argv": ["D:\\mithril\\tools\\llvm-win-23.1.3\\bin\\clang-cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "/std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/Z7", "/c", "/FoD:\\mithril\\x0final\\probe\\B\\sd_twin.obj", "D:\\mithril\\x0final\\x0-census\\scripts\\smoke\\smoke_dispatch.c"]}
+B_TWIN_RC=0
+A_CV_RC=0
+B_CV_RC=0
+
+===== probe2_win.log (2026-10-16T22:50:50)
+done
+
+===== probe2_wsl.log (2026-10-16T22:50:59)
+{"directory": "/mnt/d/mithril/x0/cfg/C-gcc", "argv": ["/usr/bin/gcc", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-mavx512f", "-mavx512bw", "-mavx512vl", "-mavx512vnni", "-mavx2", "-mfma", "-mf16c", "-c", "-o", "/mnt/d/mithril/x0final/probe/C/sd.o", "/mnt/d/mithril/x0final/x0-census/scripts/smoke/smoke_dispatch.c"]}
+C_RC=0
+{"directory": "/mnt/d/mithril/x0/cfg/C-gcc", "argv": ["/usr/bin/gcc", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-mavx512f", "-mavx512bw", "-mavx512vl", "-mavx512vnni", "-mavx2", "-mfma", "-mf16c", "-g", "-c", "-o", "/mnt/d/mithril/x0final/probe/C/sd_twin.o", "/mnt/d/mithril/x0final/x0-census/scripts/smoke/smoke_dispatch.c"]}
+C_TWIN_RC=0
+{"directory": "/mnt/d/mithril/x0/cfg/C-gcc", "argv": ["/usr/bin/gcc", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-g", "-c", "-o", "/mnt/d/mithril/x0final/probe/C/rv_twin.o", "/mnt/d/mithril/x0final/x0-census/scripts/smoke/rv_tricky.c"]}
+C_RVTWIN_RC=0
+C_DD_RC=0
+/mnt/d/mithril/x0final/probe/C/sd.o /mnt/d/mithril/x0final/probe/C/sd_twin.o differ: byte 41, line 1
+C_CMP=1
+{"directory": "/mnt/d/mithril/x0/cfg/D-clang", "argv": ["/mnt/d/mithril/tools/llvm-linux-23.1.3/bin/clang", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-mavx512f", "-mavx512bw", "-mavx512vl", "-mavx512vnni", "-mavx2", "-mfma", "-mf16c", "-c", "-o", "/mnt/d/mithril/x0final/probe/D/sd.o", "/mnt/d/mithril/x0final/x0-census/scripts/smoke/smoke_dispatch.c"]}
+D_RC=0
+{"directory": "/mnt/d/mithril/x0/cfg/D-clang", "argv": ["/mnt/d/mithril/tools/llvm-linux-23.1.3/bin/clang", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-mavx512f", "-mavx512bw", "-mavx512vl", "-mavx512vnni", "-mavx2", "-mfma", "-mf16c", "-g", "-c", "-o", "/mnt/d/mithril/x0final/probe/D/sd_twin.o", "/mnt/d/mithril/x0final/x0-census/scripts/smoke/smoke_dispatch.c"]}
+D_TWIN_RC=0
+{"directory": "/mnt/d/mithril/x0/cfg/D-clang", "argv": ["/mnt/d/mithril/tools/llvm-linux-23.1.3/bin/clang", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-g", "-c", "-o", "/mnt/d/mithril/x0final/probe/D/rv_twin.o", "/mnt/d/mithril/x0final/x0-census/scripts/smoke/rv_tricky.c"]}
+D_RVTWIN_RC=0
+D_DD_RC=0
+/mnt/d/mithril/x0final/probe/D/sd.o /mnt/d/mithril/x0final/probe/D/sd_twin.o differ: byte 41, line 1
+D_CMP=1
+
+===== probe3_win.log (2026-10-16T23:02:30)
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- The C compiler identification is MSVC 19.44.35229.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (2.2s)
+-- Generating done (0.1s)
+-- Build files have been written to: D:/mithril/x0final/probe3/A-vs
+VS_CONFIGURE_RC=0
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule D:/mithril/x0final/mock/CMakeLists.txt
+  quant.c
+  quant_avx2.c
+  quant_avx512.c
+  x0mock_core.vcxproj -> D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\x0mock_core.lib
+VS_BUILD_RC=0
+D:\mithril\x0final\probe3\A-vs\CMakeFiles\4.4.3\CompilerIdC\Debug\CMakeCCompilerId.obj
+D:\mithril\x0final\probe3\A-vs\CMakeFiles\4.4.3\CompilerIdC\Debug\CompilerIdC.tlog
+D:\mithril\x0final\probe3\A-vs\CMakeFiles\4.4.3\CompilerIdC\Debug\CompilerIdC.tlog\CL.command.1.tlog
+D:\mithril\x0final\probe3\A-vs\CMakeFiles\4.4.3\CompilerIdC\Debug\CompilerIdC.tlog\Cl.items.tlog
+D:\mithril\x0final\probe3\A-vs\CMakeFiles\4.4.3\CompilerIdC\Debug\CompilerIdC.tlog\CL.read.1.tlog
+D:\mithril\x0final\probe3\A-vs\CMakeFiles\4.4.3\CompilerIdC\Debug\CompilerIdC.tlog\CL.write.1.tlog
+D:\mithril\x0final\probe3\A-vs\CMakeFiles\4.4.3\CompilerIdC\Debug\CompilerIdC.tlog\link.command.1.tlog
+D:\mithril\x0final\probe3\A-vs\CMakeFiles\4.4.3\CompilerIdC\Debug\CompilerIdC.tlog\link.read.1.tlog
+D:\mithril\x0final\probe3\A-vs\CMakeFiles\4.4.3\CompilerIdC\Debug\CompilerIdC.tlog\link.secondary.1.tlog
+D:\mithril\x0final\probe3\A-vs\CMakeFiles\4.4.3\CompilerIdC\Debug\CompilerIdC.tlog\link.write.1.tlog
+D:\mithril\x0final\probe3\A-vs\CMakeFiles\4.4.3\VCTargetsPath\x64\Debug\VCTargetsPath.tlog
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\quant.obj
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\quant_avx2.obj
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\quant_avx512.obj
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\x0mock_core.tlog
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\x0mock_core.tlog\CL.command.1.tlog
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\x0mock_core.tlog\Cl.items.tlog
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\x0mock_core.tlog\CL.read.1.tlog
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\x0mock_core.tlog\CL.write.1.tlog
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\x0mock_core.tlog\CustomBuild.command.1.tlog
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\x0mock_core.tlog\CustomBuild.read.1.tlog
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\x0mock_core.tlog\CustomBuild.write.1.tlog
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\x0mock_core.tlog\Lib-link.read.1.tlog
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\x0mock_core.tlog\Lib-link.write.1.tlog
+D:\mithril\x0final\probe3\A-vs\x0mock_core.dir\Release\x0mock_core.tlog\Lib.command.1.tlog
+D:\mithril\x0final\probe3\A-vs\x64\Release\ZERO_CHECK\ZERO_CHECK.tlog
+D:\mithril\x0final\probe3\A-vs\x64\Release\ZERO_CHECK\ZERO_CHECK.tlog\CustomBuild.command.1.tlog
+D:\mithril\x0final\probe3\A-vs\x64\Release\ZERO_CHECK\ZERO_CHECK.tlog\CustomBuild.read.1.tlog
+D:\mithril\x0final\probe3\A-vs\x64\Release\ZERO_CHECK\ZERO_CHECK.tlog\CustomBuild.write.1.tlog
+-- The C compiler identification is MSVC 19.44.35229.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (1.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: D:/mithril/x0final/probe3/A-ninja
+NINJA_CONFIGURE_RC=0
+

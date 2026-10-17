@@ -1,0 +1,353 @@
+===== R2_init.log (2026-10-17T00:26:41)
+{"run_id": "smoke-20261017T042641Z", "kind": "smoke", "profile": "hearth", "mock": true, "source_blobs_ok": false, "scripts_match_pins": true}
+
+===== R2_A.log (2026-10-17T00:26:56)
+START Sat 10/17/2026  0:26:42.15 RUN=D:\mithril\x0final\runs\R2mock CFG=A MODE=census MORE= --target x0mock_core --design-time D:\mithril\x0final\runs\mockfrozen\A-vs.design_time_cl_lines.txt
+[2026-10-17T04:26:43+00:00] configure:cfg1 rc=0
+[2026-10-17T04:26:44+00:00] build1 rc=0
+[2026-10-17T04:26:44+00:00] records1 rc=0
+[2026-10-17T04:26:46+00:00] configure:cfg2 rc=0
+[2026-10-17T04:26:47+00:00] build2 rc=0
+[2026-10-17T04:26:47+00:00] records2 rc=0
+[2026-10-17T04:26:47+00:00] twin_quant.c rc=0
+[2026-10-17T04:26:47+00:00] twin_quant_avx2.c rc=0
+[2026-10-17T04:26:47+00:00] twin_quant_avx512.c rc=0
+[2026-10-17T04:26:48+00:00] extract_b1_all rc=0
+[2026-10-17T04:26:51+00:00] decode_b1_all rc=0
+[2026-10-17T04:26:51+00:00] attr_b1_all_quant.c rc=0
+[2026-10-17T04:26:51+00:00] attr_b1_all_quant_avx2.c rc=0
+[2026-10-17T04:26:51+00:00] attr_b1_all_quant_avx512.c rc=0
+[2026-10-17T04:26:52+00:00] loops_b1_all rc=0
+[2026-10-17T04:26:52+00:00] extract_b2_all rc=0
+[2026-10-17T04:26:55+00:00] decode_b2_all rc=0
+[2026-10-17T04:26:55+00:00] attr_b2_all_quant.c rc=0
+[2026-10-17T04:26:55+00:00] attr_b2_all_quant_avx2.c rc=0
+[2026-10-17T04:26:56+00:00] attr_b2_all_quant_avx512.c rc=0
+[2026-10-17T04:26:56+00:00] loops_b2_all rc=0
+{"config": "A", "steps": 21, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026  0:26:56.65
+
+===== R2_A-ninja.log (2026-10-17T00:27:09)
+START Sat 10/17/2026  0:26:57.48 RUN=D:\mithril\x0final\runs\R2mock CFG=A-ninja MODE=census MORE= --target x0mock_core --frozen-db D:\mithril\x0final\runs\mockfrozen\A-ninja.compile_commands.json
+[2026-10-17T04:26:58+00:00] configure:cfg1 rc=0
+[2026-10-17T04:26:58+00:00] compile1_quant.c rc=0
+[2026-10-17T04:26:58+00:00] compile1_quant_avx2.c rc=0
+[2026-10-17T04:26:58+00:00] compile1_quant_avx512.c rc=0
+[2026-10-17T04:26:59+00:00] configure:cfg2 rc=0
+[2026-10-17T04:26:59+00:00] compile2_quant.c rc=0
+[2026-10-17T04:27:00+00:00] compile2_quant_avx2.c rc=0
+[2026-10-17T04:27:00+00:00] compile2_quant_avx512.c rc=0
+[2026-10-17T04:27:00+00:00] twin_quant.c rc=0
+[2026-10-17T04:27:00+00:00] twin_quant_avx2.c rc=0
+[2026-10-17T04:27:00+00:00] twin_quant_avx512.c rc=0
+[2026-10-17T04:27:00+00:00] extract_b1_all rc=0
+[2026-10-17T04:27:04+00:00] decode_b1_all rc=0
+[2026-10-17T04:27:04+00:00] attr_b1_all_quant.c rc=0
+[2026-10-17T04:27:04+00:00] attr_b1_all_quant_avx2.c rc=0
+[2026-10-17T04:27:04+00:00] attr_b1_all_quant_avx512.c rc=0
+[2026-10-17T04:27:04+00:00] loops_b1_all rc=0
+[2026-10-17T04:27:04+00:00] extract_b2_all rc=0
+[2026-10-17T04:27:08+00:00] decode_b2_all rc=0
+[2026-10-17T04:27:08+00:00] attr_b2_all_quant.c rc=0
+[2026-10-17T04:27:08+00:00] attr_b2_all_quant_avx2.c rc=0
+[2026-10-17T04:27:08+00:00] attr_b2_all_quant_avx512.c rc=0
+[2026-10-17T04:27:09+00:00] loops_b2_all rc=0
+{"config": "A-ninja", "steps": 25, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026  0:27:09.23
+
+===== R2_B-cmake.log (2026-10-17T00:27:26)
+START Sat 10/17/2026  0:27:10.06 RUN=D:\mithril\x0final\runs\R2mock CFG=B-cmake MODE=census MORE= --target x0mock_core --frozen-db D:\mithril\x0final\runs\mockfrozen\B-cmake.compile_commands.json
+[2026-10-17T04:27:10+00:00] configure:cfg1 rc=0
+[2026-10-17T04:27:11+00:00] compile1_quant.c rc=0
+[2026-10-17T04:27:11+00:00] compile1_quant_avx2.c rc=0
+[2026-10-17T04:27:11+00:00] compile1_quant_avx512.c rc=0
+[2026-10-17T04:27:12+00:00] configure:cfg2 rc=0
+[2026-10-17T04:27:12+00:00] compile2_quant.c rc=0
+[2026-10-17T04:27:12+00:00] compile2_quant_avx2.c rc=0
+[2026-10-17T04:27:13+00:00] compile2_quant_avx512.c rc=0
+[2026-10-17T04:27:13+00:00] twin_quant.c rc=0
+[2026-10-17T04:27:13+00:00] twin_quant_avx2.c rc=0
+[2026-10-17T04:27:13+00:00] cc1:quant.c rc=0
+[2026-10-17T04:27:13+00:00] cc1:quant_avx2.c rc=0
+[2026-10-17T04:27:13+00:00] cc1:quant_avx512.c rc=0
+[2026-10-17T04:27:14+00:00] extract_b1_all rc=0
+[2026-10-17T04:27:18+00:00] decode_b1_all rc=0
+[2026-10-17T04:27:18+00:00] attr_b1_all_quant.c rc=0
+[2026-10-17T04:27:19+00:00] attr_b1_all_quant_avx2.c rc=0
+[2026-10-17T04:27:19+00:00] loops_b1_all rc=0
+[2026-10-17T04:27:19+00:00] extract_b2_all rc=0
+[2026-10-17T04:27:25+00:00] decode_b2_all rc=0
+[2026-10-17T04:27:25+00:00] attr_b2_all_quant.c rc=0
+[2026-10-17T04:27:25+00:00] attr_b2_all_quant_avx2.c rc=0
+[2026-10-17T04:27:26+00:00] loops_b2_all rc=0
+{"config": "B-cmake", "steps": 25, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026  0:27:26.05
+
+===== R2_C.log (2026-10-17T00:28:06)
+START 2026-10-17T00:27:26-04:00 RUN=/mnt/d/mithril/x0final/runs/R2mock CFG=C MODE=census MORE=--target x0mock_core --frozen-db /mnt/d/mithril/x0final/runs/mockfrozen/C-gcc.compile_commands.json
+[2026-10-17T04:27:30+00:00] configure:cfg1 rc=0
+[2026-10-17T04:27:31+00:00] compile1_quant.c rc=0
+[2026-10-17T04:27:30+00:00] compile1_quant_avx2.c rc=0
+[2026-10-17T04:27:31+00:00] compile1_quant_avx512.c rc=0
+[2026-10-17T04:27:35+00:00] configure:cfg2 rc=0
+[2026-10-17T04:27:35+00:00] compile2_quant.c rc=0
+[2026-10-17T04:27:36+00:00] compile2_quant_avx2.c rc=0
+[2026-10-17T04:27:37+00:00] compile2_quant_avx512.c rc=0
+[2026-10-17T04:27:38+00:00] twin_quant.c rc=0
+[2026-10-17T04:27:38+00:00] twin_quant_avx2.c rc=0
+[2026-10-17T04:27:39+00:00] twin_quant_avx512.c rc=0
+[2026-10-17T04:27:39+00:00] gccq:quant.c rc=0
+[2026-10-17T04:27:39+00:00] gccq:quant_avx2.c rc=0
+[2026-10-17T04:27:39+00:00] gccq:quant_avx512.c rc=0
+[2026-10-17T04:27:39+00:00] extract_b1_all rc=0
+[2026-10-17T04:27:51+00:00] decode_b1_all rc=0
+[2026-10-17T04:27:52+00:00] attr_b1_all_quant.c rc=0
+[2026-10-17T04:27:52+00:00] attr_b1_all_quant_avx2.c rc=0
+[2026-10-17T04:27:52+00:00] attr_b1_all_quant_avx512.c rc=0
+[2026-10-17T04:27:53+00:00] loops_b1_all rc=0
+[2026-10-17T04:27:53+00:00] extract_b2_all rc=0
+[2026-10-17T04:28:03+00:00] decode_b2_all rc=0
+[2026-10-17T04:28:04+00:00] attr_b2_all_quant.c rc=0
+[2026-10-17T04:28:04+00:00] attr_b2_all_quant_avx2.c rc=0
+[2026-10-17T04:28:04+00:00] attr_b2_all_quant_avx512.c rc=0
+[2026-10-17T04:28:05+00:00] loops_b2_all rc=0
+{"config": "C", "steps": 28, "failed_steps": []}
+CONFIG_RC=0
+END 2026-10-17T00:28:05-04:00
+
+===== R2_D.log (2026-10-17T00:29:16)
+START 2026-10-17T00:28:05-04:00 RUN=/mnt/d/mithril/x0final/runs/R2mock CFG=D MODE=census MORE=--target x0mock_core --frozen-db /mnt/d/mithril/x0final/runs/mockfrozen/D-clang.compile_commands.json
+[2026-10-17T04:28:12+00:00] configure:cfg1 rc=0
+[2026-10-17T04:28:14+00:00] compile1_quant.c rc=0
+[2026-10-17T04:28:17+00:00] compile1_quant_avx2.c rc=0
+[2026-10-17T04:28:20+00:00] compile1_quant_avx512.c rc=0
+[2026-10-17T04:28:27+00:00] configure:cfg2 rc=0
+[2026-10-17T04:28:29+00:00] compile2_quant.c rc=0
+[2026-10-17T04:28:30+00:00] compile2_quant_avx2.c rc=0
+[2026-10-17T04:28:33+00:00] compile2_quant_avx512.c rc=0
+[2026-10-17T04:28:34+00:00] twin_quant.c rc=0
+[2026-10-17T04:28:36+00:00] twin_quant_avx2.c rc=0
+[2026-10-17T04:28:38+00:00] twin_quant_avx512.c rc=0
+[2026-10-17T04:28:38+00:00] cc1:quant.c rc=0
+[2026-10-17T04:28:39+00:00] cc1:quant_avx2.c rc=0
+[2026-10-17T04:28:39+00:00] cc1:quant_avx512.c rc=0
+[2026-10-17T04:28:40+00:00] extract_b1_all rc=0
+[2026-10-17T04:28:58+00:00] decode_b1_all rc=0
+[2026-10-17T04:28:58+00:00] attr_b1_all_quant.c rc=0
+[2026-10-17T04:28:58+00:00] attr_b1_all_quant_avx2.c rc=0
+[2026-10-17T04:28:58+00:00] attr_b1_all_quant_avx512.c rc=0
+[2026-10-17T04:28:59+00:00] loops_b1_all rc=0
+[2026-10-17T04:29:00+00:00] extract_b2_all rc=0
+[2026-10-17T04:29:14+00:00] decode_b2_all rc=0
+[2026-10-17T04:29:14+00:00] attr_b2_all_quant.c rc=0
+[2026-10-17T04:29:14+00:00] attr_b2_all_quant_avx2.c rc=0
+[2026-10-17T04:29:15+00:00] attr_b2_all_quant_avx512.c rc=0
+[2026-10-17T04:29:16+00:00] loops_b2_all rc=0
+{"config": "D", "steps": 28, "failed_steps": []}
+CONFIG_RC=0
+END 2026-10-17T00:29:16-04:00
+
+===== R2_P.A.log (2026-10-17T00:29:18)
+START Sat 10/17/2026  0:29:17.49 RUN=D:\mithril\x0final\runs\R2mock CFG=P.A MODE=probe MORE= --from-config A --from-file quant_avx512.c
+[2026-10-17T04:29:17+00:00] compile1_reduce_probe.c rc=0
+[2026-10-17T04:29:17+00:00] compile2_reduce_probe.c rc=0
+[2026-10-17T04:29:17+00:00] twin_reduce_probe.c rc=0
+[2026-10-17T04:29:18+00:00] extract_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:18+00:00] decode_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:18+00:00] attr_b1_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T04:29:18+00:00] loops_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:18+00:00] extract_b2_reduce_probe.c rc=0
+[2026-10-17T04:29:18+00:00] decode_b2_reduce_probe.c rc=0
+[2026-10-17T04:29:18+00:00] attr_b2_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T04:29:18+00:00] loops_b2_reduce_probe.c rc=0
+{"config": "P.A", "steps": 13, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026  0:29:18.77
+
+===== R2_P.A-ninja.log (2026-10-17T00:29:20)
+START Sat 10/17/2026  0:29:19.59 RUN=D:\mithril\x0final\runs\R2mock CFG=P.A-ninja MODE=probe MORE= --from-config A-ninja --from-file quant_avx512.c
+[2026-10-17T04:29:19+00:00] compile1_reduce_probe.c rc=0
+[2026-10-17T04:29:19+00:00] compile2_reduce_probe.c rc=0
+[2026-10-17T04:29:20+00:00] twin_reduce_probe.c rc=0
+[2026-10-17T04:29:20+00:00] extract_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:20+00:00] decode_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:20+00:00] attr_b1_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T04:29:20+00:00] loops_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:20+00:00] extract_b2_reduce_probe.c rc=0
+[2026-10-17T04:29:20+00:00] decode_b2_reduce_probe.c rc=0
+[2026-10-17T04:29:20+00:00] attr_b2_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T04:29:20+00:00] loops_b2_reduce_probe.c rc=0
+{"config": "P.A-ninja", "steps": 13, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026  0:29:20.89
+
+===== R2_P.B-cmake.log (2026-10-17T00:29:23)
+START Sat 10/17/2026  0:29:21.71 RUN=D:\mithril\x0final\runs\R2mock CFG=P.B-cmake MODE=probe MORE= --from-config B-cmake --from-file quant_avx512.c
+[2026-10-17T04:29:22+00:00] compile1_reduce_probe.c rc=0
+[2026-10-17T04:29:22+00:00] compile2_reduce_probe.c rc=0
+[2026-10-17T04:29:22+00:00] twin_reduce_probe.c rc=0
+[2026-10-17T04:29:22+00:00] cc1:reduce_probe.c rc=0
+[2026-10-17T04:29:22+00:00] extract_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:23+00:00] decode_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:23+00:00] attr_b1_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T04:29:23+00:00] loops_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:23+00:00] extract_b2_reduce_probe.c rc=0
+[2026-10-17T04:29:23+00:00] decode_b2_reduce_probe.c rc=0
+[2026-10-17T04:29:23+00:00] attr_b2_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T04:29:23+00:00] loops_b2_reduce_probe.c rc=0
+{"config": "P.B-cmake", "steps": 14, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026  0:29:23.55
+
+===== R2_P.C.log (2026-10-17T00:29:27)
+START 2026-10-17T00:29:23-04:00 RUN=/mnt/d/mithril/x0final/runs/R2mock CFG=P.C MODE=probe MORE=--from-config C --from-file quant_avx512.c
+[2026-10-17T04:29:24+00:00] compile1_reduce_probe.c rc=0
+[2026-10-17T04:29:25+00:00] compile2_reduce_probe.c rc=0
+[2026-10-17T04:29:26+00:00] twin_reduce_probe.c rc=0
+[2026-10-17T04:29:26+00:00] gccq:reduce_probe.c rc=0
+[2026-10-17T04:29:26+00:00] extract_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:26+00:00] decode_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:27+00:00] attr_b1_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T04:29:27+00:00] loops_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:27+00:00] extract_b2_reduce_probe.c rc=0
+[2026-10-17T04:29:27+00:00] decode_b2_reduce_probe.c rc=0
+[2026-10-17T04:29:28+00:00] attr_b2_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T04:29:28+00:00] loops_b2_reduce_probe.c rc=0
+{"config": "P.C", "steps": 14, "failed_steps": []}
+CONFIG_RC=0
+END 2026-10-17T00:29:28-04:00
+
+===== R2_P.D.log (2026-10-17T00:29:36)
+START 2026-10-17T00:29:28-04:00 RUN=/mnt/d/mithril/x0final/runs/R2mock CFG=P.D MODE=probe MORE=--from-config D --from-file quant_avx512.c
+[2026-10-17T04:29:30+00:00] compile1_reduce_probe.c rc=0
+[2026-10-17T04:29:31+00:00] compile2_reduce_probe.c rc=0
+[2026-10-17T04:29:33+00:00] twin_reduce_probe.c rc=0
+[2026-10-17T04:29:33+00:00] cc1:reduce_probe.c rc=0
+[2026-10-17T04:29:34+00:00] extract_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:34+00:00] decode_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:34+00:00] attr_b1_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T04:29:34+00:00] loops_b1_reduce_probe.c rc=0
+[2026-10-17T04:29:34+00:00] extract_b2_reduce_probe.c rc=0
+[2026-10-17T04:29:35+00:00] decode_b2_reduce_probe.c rc=0
+[2026-10-17T04:29:35+00:00] attr_b2_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T04:29:35+00:00] loops_b2_reduce_probe.c rc=0
+{"config": "P.D", "steps": 14, "failed_steps": []}
+CONFIG_RC=0
+END 2026-10-17T00:29:35-04:00
+
+===== R2_B-proxy.log (2026-10-17T00:30:17)
+START Sat 10/17/2026  0:29:37.50 RUN=D:\mithril\x0final\runs\R2mock CFG=B-proxy MODE=replay MORE= --set D:\mithril\x0final\x0-census\scripts\runbook\bproxy_set.json
+[2026-10-17T04:29:37+00:00] compile1_quant.c rc=0
+[2026-10-17T04:29:38+00:00] compile1_quant_avx2.c rc=0
+[2026-10-17T04:29:38+00:00] compile1_quant_avx512.c rc=0
+[2026-10-17T04:29:38+00:00] compile2_quant.c rc=0
+[2026-10-17T04:29:39+00:00] compile2_quant_avx2.c rc=0
+[2026-10-17T04:29:39+00:00] compile2_quant_avx512.c rc=0
+[2026-10-17T04:29:39+00:00] twin_quant.c rc=0
+[2026-10-17T04:29:40+00:00] twin_quant_avx2.c rc=0
+[2026-10-17T04:29:41+00:00] twin_quant_avx512.c rc=0
+[2026-10-17T04:29:41+00:00] cc1:quant.c rc=0
+[2026-10-17T04:29:41+00:00] cc1:quant_avx2.c rc=0
+[2026-10-17T04:29:42+00:00] cc1:quant_avx512.c rc=0
+[2026-10-17T04:29:42+00:00] extract_b1_quant.c rc=0
+[2026-10-17T04:29:50+00:00] decode_b1_quant.c rc=0
+[2026-10-17T04:29:50+00:00] attr_b1_quant.c_quant.c rc=0
+[2026-10-17T04:29:51+00:00] loops_b1_quant.c rc=0
+[2026-10-17T04:29:51+00:00] extract_b1_quant_avx2.c rc=0
+[2026-10-17T04:29:57+00:00] decode_b1_quant_avx2.c rc=0
+[2026-10-17T04:29:58+00:00] attr_b1_quant_avx2.c_quant_avx2.c rc=0
+[2026-10-17T04:29:58+00:00] loops_b1_quant_avx2.c rc=0
+[2026-10-17T04:29:59+00:00] extract_b1_quant_avx512.c rc=0
+[2026-10-17T04:30:05+00:00] decode_b1_quant_avx512.c rc=0
+[2026-10-17T04:30:07+00:00] attr_b1_quant_avx512.c_quant_avx512.c rc=0
+[2026-10-17T04:30:08+00:00] loops_b1_quant_avx512.c rc=0
+[2026-10-17T04:30:08+00:00] extract_b2_quant.c rc=0
+[2026-10-17T04:30:12+00:00] decode_b2_quant.c rc=0
+[2026-10-17T04:30:12+00:00] attr_b2_quant.c_quant.c rc=0
+[2026-10-17T04:30:12+00:00] loops_b2_quant.c rc=0
+[2026-10-17T04:30:12+00:00] extract_b2_quant_avx2.c rc=0
+[2026-10-17T04:30:15+00:00] decode_b2_quant_avx2.c rc=0
+[2026-10-17T04:30:15+00:00] attr_b2_quant_avx2.c_quant_avx2.c rc=0
+[2026-10-17T04:30:15+00:00] loops_b2_quant_avx2.c rc=0
+[2026-10-17T04:30:15+00:00] extract_b2_quant_avx512.c rc=0
+[2026-10-17T04:30:17+00:00] decode_b2_quant_avx512.c rc=0
+[2026-10-17T04:30:17+00:00] attr_b2_quant_avx512.c_quant_avx512.c rc=0
+[2026-10-17T04:30:17+00:00] loops_b2_quant_avx512.c rc=0
+{"config": "B-proxy", "steps": 38, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026  0:30:17.21
+
+===== R2_assemble.log (2026-10-17T00:30:17)
+{
+ "configs": [
+  "A",
+  "A-ninja",
+  "B-cmake",
+  "B-proxy",
+  "C",
+  "D",
+  "P.A",
+  "P.A-ninja",
+  "P.B-cmake",
+  "P.C",
+  "P.D"
+ ],
+ "variants": 264,
+ "builds": 46,
+ "disagreements": 0,
+ "p4_u_all": 316,
+ "p5_iclass": 29,
+ "schema_violations": []
+}
+{"outcomes": ["tooling_failure"], "validity": {"v1": true, "v2": true, "v3": false, "v4": true}, "eval_date": "2026-10-17", "conservative_resolution": false}
+x0_census.py rc=0
+judge.py rc=0
+ASSEMBLE_RC=0
+
+===== R2_judge_synth.log (2026-10-17T00:30:17)
+{
+ "outcomes": [
+  "amber_a",
+  "amber_b",
+  "amber_c"
+ ],
+ "validity": {
+  "v1": true,
+  "v2": true,
+  "v3": true,
+  "v4": true
+ },
+ "amber_b": [
+  "B-cmake"
+ ],
+ "amber_c": 32,
+ "non_gate": [
+  [
+   "N1",
+   "B-cmake"
+  ],
+  [
+   "N1",
+   "C"
+  ],
+  [
+   "N2",
+   "B-cmake"
+  ]
+ ],
+ "amber_a": {
+  "u_all": 316,
+  "p5_iclass": 29,
+  "holds": true
+ },
+ "v1_gaps": 0,
+ "v1_config_gaps": 0,
+ "v4": []
+}
+
+===== R2_summary.log (2026-10-17T00:34:39)
+{"configs": ["A", "A-ninja", "B-cmake", "B-proxy", "C", "D", "P.A", "P.A-ninja", "P.B-cmake", "P.C", "P.D"], "verdicts": {"verdict.json": ["tooling_failure"], "verdict_synthetic_rederivation.json": ["amber_a", "amber_b", "amber_c"]}}
+

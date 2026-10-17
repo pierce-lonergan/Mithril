@@ -1,0 +1,28 @@
+{
+ "note": "x0final (2026-10-16): the NON-Hearth regression set of runbook steps 71b/72, as a census-file set for x0_driver.py replay mode. Each file is compiled with the frozen command line of the Hearth file named in 'as' (A and A-ninja: the A-ninja capture, as in step 72; B-cmake; C; D). '#scalar' ids use quant.c's line. The reduce probe (arm P) runs as configurations P.<CFG> with the build-1 line of smoke_dispatch.c (= quant_avx512.c's line). Expected decode outcomes: tricky_expect.json (check_regression_run.py).",
+ "frozen_db": {
+  "A": "flags/prefreeze/A-ninja.compile_commands.json",
+  "A-ninja": "flags/prefreeze/A-ninja.compile_commands.json",
+  "B-cmake": "flags/prefreeze/B-cmake.compile_commands.json",
+  "C": "flags/C-gcc.compile_commands.json",
+  "D": "flags/D-clang.compile_commands.json"
+ },
+ "files": [
+  {"id": "smoke_dispatch.c", "source": "scripts/smoke/smoke_dispatch.c", "as": "quant_avx512.c", "struct": "sd_kernels",
+   "expect_variants": 12, "canary": "sd_table:act_quantize,sd_table_global:act_quantize",
+   "loop_table": "scripts/smoke/smoke_loop_table.csv", "helpers": "sd_tree16",
+   "variant_map": "sd_table:matmul[0]=sd.f32,sd_table:matmul[1]=sd.f16,sd_table:matmul[2]=sd.bf16,sd_table:matmul[3]=sd.q8,sd_table:matmul[4]=sd.q4,sd_table:act_quantize=sd.act,sd_table_global:matmul[0]=sd.f16,sd_table_global:matmul[1]=sd.f32,sd_table_global:matmul[2]=sd.q8,sd_table_global:matmul[3]=sd.bf16,sd_table_global:matmul[4]=sd.q4,sd_table_global:act_quantize=sd.act"},
+  {"id": "smoke_dispatch.c#scalar", "source": "scripts/smoke/smoke_dispatch.c", "as": "quant.c", "struct": "sd_kernels",
+   "expect_variants": 12, "canary": "sd_table:act_quantize,sd_table_global:act_quantize",
+   "loop_table": "scripts/smoke/smoke_loop_table.csv", "helpers": "sd_tree16",
+   "variant_map": "sd_table:matmul[0]=sd.f32,sd_table:matmul[1]=sd.f16,sd_table:matmul[2]=sd.bf16,sd_table:matmul[3]=sd.q8,sd_table:matmul[4]=sd.q4,sd_table:act_quantize=sd.act,sd_table_global:matmul[0]=sd.f16,sd_table_global:matmul[1]=sd.f32,sd_table_global:matmul[2]=sd.q8,sd_table_global:matmul[3]=sd.bf16,sd_table_global:matmul[4]=sd.q4,sd_table_global:act_quantize=sd.act"},
+  {"id": "rv_tricky.c", "source": "scripts/smoke/rv_tricky.c", "as": "quant_avx512.c", "struct": "rv_kernels",
+   "expect_variants": 6, "loop_table": "scripts/smoke/smoke_loop_table.csv"},
+  {"id": "rv_tricky.c#scalar", "source": "scripts/smoke/rv_tricky.c", "as": "quant.c", "struct": "rv_kernels",
+   "expect_variants": 6, "loop_table": "scripts/smoke/smoke_loop_table.csv"},
+  {"id": "rv_tricky2.c", "source": "scripts/smoke/rv_tricky2.c", "as": "quant_avx512.c", "struct": "rv_kernels",
+   "expect_variants": 3, "loop_table": "scripts/smoke/smoke_loop_table.csv"},
+  {"id": "rv_tricky2.c#scalar", "source": "scripts/smoke/rv_tricky2.c", "as": "quant.c", "struct": "rv_kernels",
+   "expect_variants": 3, "loop_table": "scripts/smoke/smoke_loop_table.csv"}
+ ]
+}

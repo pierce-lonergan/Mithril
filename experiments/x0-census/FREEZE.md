@@ -1,74 +1,97 @@
 # X0 freeze checklist
 
 Record: [`docs/m0/prereg/X0-census.md`](../../docs/m0/prereg/X0-census.md), status **DRAFT**. Prepared by the
-x0prep track on 2026-10-16 (Claude; laptop DESKTOP-F441IUK for authoring, desktop DESKTOP-8RS9J1J for the
-tool runs). This file is the long form of the record's Appendix D.
+x0prep track on 2026-10-16, completed by the x0final track on 2026-10-16/17 and revised by the x0final revision on
+2026-10-17 after the independent review of the x0final work (Claude; laptop DESKTOP-F441IUK for authoring, desktop
+DESKTOP-8RS9J1J for the tool runs). This file is the long form of the record's Appendix D.
 
-**Verdict of this checklist: NOT ready to freeze.** Eleven of the twelve items have their artefacts and hashes.
-The x0prep review of 2026-10-16 (record §12; Claude, same family, independent context) closed D5 and D6. One item
-and one review remain open:
-- **D11 is incomplete.**
-  - The `census.json` assembler is not written. It must also record the build fields `judge.py` now requires:
-    compiler hashes, structured errors, include lists, and `ab_compare` per A-ninja variant.
-  - The debug-info twin attribution of §4.6 is not implemented: DWARF via `llvm-dwarfdump`, CodeView via
-    `llvm-readobj --codeview`, and the twin identity check. So P3(c) runs unattributed (variant-wide bound), and
-    every P3(d2) site is `unchecked`.
-  - The peeled and interchanged tags are not computed. §4.7 handles that strictly for the narrowing.
-- **The reviser's post-review revisions are unreviewed.** These are the record's Appendix E rows marked
-  "post-review", the reworked `x0_decode.py`, `x0_extract.py` and `judge.py`, and the regression set. Like
-  every Appendix E change, they need an independent review (record §12) before freeze. So do the §4.7 unit
-  change and `loop_table.csv`, which the 2026-10-16 reviews did not cover.
+**Verdict of this checklist: every Appendix D item has its artefacts and hashes, and the independent review of the
+x0final work is done and handled (record §12: 14 findings, 14 accepted, one sub-point deferred, one fix changed in part). The record is ready
+for the lead engineer's freeze decision, with the open items below.** What remains before the freeze commit:
+1. **Lead engineer's decisions** (record §2, §8 E6, §12):
+   - the disclosure that the first census mock contained verbatim Hearth helpers, compiled and analysed before
+     freeze (d1 `pass`, 66/66 `tree16` sites `match`): whether P3(d1) and P3(d2) stay confirmatory or are reported as
+     indicated before freeze (provisional, pending D0-12; it goes to the Owner's sitting);
+   - whether the x0final revision's own changes (Appendix E rows "x0final revision") need another independent review
+     before freeze. Points for a reviewer: the data-operand and opmask precisions of §4.7 and the enclosing-loop rule
+     (each removes a false P3(c) flag of the reviewed rules measured on GCC output of the regression set); the shingle
+     guard's definition of a non-trivial line; the residual false-flag risk of the stricter source-loop rule (§4.7);
+   - the deferred sub-point: adding `rvx_vrp`-like code (narrow bound compare after MOVZX) to the regression set
+     (the fix itself is validated on the reviewer's NON-Hearth objects, `runbook/logs/x0final_rev_probes.log`).
+2. **The freeze commit**: the record's status line changed to FROZEN; `python -I scripts/runbook/pin_inputs.py`
+   (no differences) and the hash tables below recomputed. Nothing under `experiments/x0-census/scripts/` or `class/`
+   may change between this list and the freeze commit unless the record's Appendix D, `class/frozen_inputs.json` and
+   this file change with it.
+3. **Running the census** needs a clean git checkout of the freeze commit on the desktop and `X0` set to its
+   `experiments\x0-census` (below); the init step refuses anything else. Runs stay outside the quiet windows
+   (23:00-07:00 PT).
+4. **The Owner's signature** (D0-12): X0 is authorised for collection per the relayed chat answer, to be ratified at
+   the first weekly signing session (Sunday 2026-10-18; the packet is due Saturday night).
 
-No Hearth source was compiled and no Hearth object was decoded to produce anything listed here (record §2,
-statement D12). Hashes are SHA-256 of the file bytes in this working tree [M, x0prep, 2026-10-16]: LF line
-endings for every text file except `.cmd` files, which `.gitattributes` keeps as CRLF on every checkout, so the
-values are the same on Windows and Linux checkouts. Recompute them at freeze; they must not change between this
-list and the freeze commit except where a review changes a file (then the record's Appendix D and
-`class/frozen_inputs.json` change with it).
+No Hearth *file* was compiled and no Hearth object was decoded to produce anything listed here (record §2, statement
+D12). Hearth's own helper text was compiled inside the first census mock (record §2 disclosure); the mock was
+rewritten and a guard added. Hashes are SHA-256 of the file bytes in this working tree [M, x0final revision,
+2026-10-17]: LF line endings for every text file except `.cmd` files, which `.gitattributes` keeps as CRLF on every
+checkout, so the values are the same on Windows and Linux checkouts.
 
 ## Summary
 
 | # | Artefact | Path | Status | Missing |
 |---|---|---|---|---|
 | D1 | Toolchain pins, Table 2.1 | `TOOLCHAINS.md` §11; record Table 2.1 | done [M] | none |
-| D2 | Flag captures (configure-only; `-###`, `gcc -Q`) | `flags/prefreeze/`, `flags/C-gcc.*`, `flags/D-clang.*` | done [M] | A's exact build lines exist only once the census build runs (by design, §2); the design-time lines omit `/O2` |
-| D3 | Smoke-test logs, NON-Hearth only | `scripts/runbook/logs/` | done [M]; post-review regression (steps 71b, 72) added | none (the previous draft's Hearth compile smoke test was removed) |
-| D4 | B-proxy and H argv | `flags/prefreeze/B-proxy.argv.json`, `flags/prefreeze/README.md` | done | H uses `--shared` (record choice, review) |
-| D5 | `fp_class.csv` (+ `classify.py`, XED tables) | `class/`, `scripts/` | done [M]; reviewed 2026-10-16 (blind sample of 197 iclasses, 197/197 agree; `reason` column reworded in record §4.4, CSV unchanged) | none |
-| D6 | `B_iform.json`, `hand_map.csv`, stdarch commit, XML hash, values in §4.5 | `class/`, record §4.5 | done [M]; reviewed 2026-10-16 (independent re-derivation: identical) | none |
+| D2 | Flag captures (configure-only; `-###`, `gcc -Q`) | `flags/prefreeze/`, `flags/C-gcc.*`, `flags/D-clang.*` | done [M] | A's exact build lines exist only once the census build runs (by design, §2); the design-time lines omit `/O2`, which is the only difference A's check now tolerates |
+| D3 | Smoke-test logs, NON-Hearth only | `scripts/runbook/logs/`, `scripts/smoke/results/x0final/` (first mock, superseded), `scripts/smoke/results/x0final_rev/` | done [M]; the x0final revision re-ran steps 86 and 88 with the final scripts and the rewritten mock, plus the MSBuild and decoder probes and the fallback run | none |
+| D4 | B-proxy and H argv | `flags/prefreeze/B-proxy.argv.json`, `flags/prefreeze/README.md` | done; B-proxy runs through the driver (`runbook/bproxy_set.json`) | the H arms are argv only, not wired into the driver |
+| D5 | `fp_class.csv` (+ `classify.py`, XED tables) | `class/`, `scripts/` | done [M]; reviewed 2026-10-16 (197 iclasses) and again 2026-10-16/17 (945 iclasses, 0 disagreements) | none |
+| D6 | `B_iform.json`, `hand_map.csv`, stdarch commit, XML hash | `class/`, record §4.5 | done [M]; re-derived twice, identical | none |
 | D7 | `fp_flag_patterns.txt` | `class/` | done | none |
 | D8 | `objdump_norm.csv` | `class/` | done, validated on a NON-Hearth corpus [M] | none |
-| D9 | `loop_table.csv` | `class/` | done (62 loops, checked against the source) [M] | none |
-| D10 | Reduce probe (arm P) | `scripts/probes/reduce_probe.c` | done, syntax-checked under A, B-cmake, C, D [M] | none |
-| D11 | Scripts §4.2, §4.7, §8, tested only on smoke | `scripts/` | §4.1/§4.2 and §8 done, revised after the 2026-10-16 review and tested (56 judge tests; 24-object regression, 0 deviations); §4.7 partial | **census.json assembler; twin attribution (P3(c) exact bounds, P3(d2) site selection); peeled/interchanged tags; independent review of the post-review revisions**; the scripts' commit hash (the commit that adds them) |
-| D12 | Statement: no Hearth compile before freeze | record §2; `TOOLCHAINS.md` §11 | done [M] | interactive SSH commands of the tooling session are unlogged; that part rests on that track's account |
+| D9 | `loop_table.csv` | `class/` | done (62 loops) [M] | not reviewed row by row (record §12) |
+| D10 | Reduce probe (arm P) | `scripts/probes/reduce_probe.c` | done [M]; run end to end (disclosure, record §2) | none |
+| D11 | Scripts §4.2, §4.6, §4.7, §8, the assembler and the driver | `scripts/` | done [M]; reviewed 2026-10-16/17 and revised; 152 unit tests; end-to-end runs on NON-Hearth inputs with the final scripts | the scripts' commit hash (the commit that adds them); review of the revision's own changes (lead engineer's call) |
+| D12 | Statement: no Hearth compile before freeze | record §2; `TOOLCHAINS.md` §11 | done [M]; qualified by the mock disclosure (record §2, E6) | interactive SSH commands of the tooling session are unlogged; that part rests on that track's account |
 
-Also required before freeze, outside Appendix D: the record's status line changed to FROZEN in the freeze
-commit; the Owner's signature (D0-12; X0 is authorised for collection per the relayed chat answer, still to be
-ratified at the first weekly signing session).
+## Running the census after freeze
+
+`scripts/README.md`, section "Census pipeline (after freeze): the driver". On the desktop, outside a quiet window:
+clone the repository to D: and check out the freeze commit, set `X0` to that checkout's `experiments\x0-census`
+(steps 79-82 refuse an unset `X0`), then `runbook/79_census_init.cmd` (refuses unless the checkout is clean, the record
+reads FROZEN at HEAD, every pinned script matches and the Hearth blobs match; records HEAD as `freeze_commit`), one
+`80_census_win.cmd` / `81_census_wsl.sh` command per configuration (A, A-ninja, B-cmake, C, D; arm P as P.<CFG>;
+B-proxy with `runbook/bproxy_set.json`), then `82_census_assemble.cmd` (`census.json`, then `verdict.json`). Thread
+use: one compiler or MSBuild node at a time and XED `-j 2`; MSVC's back end may use extra threads within one compile
+[inference]. `judge.py` will say `tooling_failure` until the independent re-derivation (`rederive/PROCEDURE.md`) fills
+`census.json`'s `rederivation` block (V3).
 
 ## What was run, with results [M]
 
 | Run | Where | Result |
 |---|---|---|
 | `classify.py` (+ `--check`) | laptop | 1,995 iclasses, 624 FP-sensitive, 4 SDM-no/XED-yes (LDMXCSR, VLDMXCSR, STMXCSR, VSTMXCSR), 0 default-rule rows, 0 self-check problems; deterministic |
-| `baseline.py` (+ `--check`) | laptop | 130 intrinsics, 23 no single instruction, \|B_iform\| 102, \|B_mnem\| 74, T_forms 102, 105 XML form strings, 1 hand-mapped instruction, 0 problems; deterministic |
-| Unit tests `scripts/tests/` (80, after the 2026-10-16 review; 51 before) | laptop | all pass: `judge.py` decision list (56 tests on synthetic `census.json`, including every adversarial case of the review), P3(a) matcher on synthetic tokens and on the real pre-freeze captures (7), loop analysis, `track_tree16` and the d1 canary on synthetic instruction records (17) |
+| `baseline.py` (+ `--check`) | laptop | 130 intrinsics, 23 no single instruction, \|B_iform\| 102, \|B_mnem\| 74, T_forms 102, 105 XML form strings, 1 hand-mapped instruction, 0 problems; deterministic. Re-run by the x0final revision with reviewer 1's re-derivation script: the same counts, and the five pinned hashes match |
 | Step 68: `xed_tables.c` against pinned `xed.lib` | desktop | built and run, rc 0; 9,001 iforms, 1,995 iclasses, 11,018 decoder entries |
 | Step 69: instruction zoo + `norm_check.py` | desktop | 26,553 instructions, 982 XED iclasses (320 FP-sensitive), 0 iclass disagreements after the table, 1 boundary disagreement (linear sweep through MSVC jump-table data) |
-| Steps 70, 70b, 71: pins and flag captures | desktop (Windows; WSL with keepalive) | all configure runs rc 0; only CMake's own probe objects in the configure trees; `-###` and `gcc -Q` rc 0; smoke compiles rc 0; reduce-probe syntax checks rc 0 |
-| Step 72, first version (superseded): `x0_extract.py`, `x0_decode.py`, `x0_loops.py` on `smoke_dispatch.c` x 8 objects | desktop | 12/12 slots resolved by relocation in every object; 0 tooling gaps; 0 cross-decoder disagreements; `llvm-readobj` cross-check clean; d1 canary found in all 8; P3(c) flags clang's two-accumulator vectorisation of the smoke file's scalar `L[i & 15]` tail loop under B-cmake and D lines (smoke code, not investigated); negative test fails as required |
-| Steps 71b and 72 after the review: `smoke_dispatch.c`, `rv_tricky.c`, `rv_tricky2.c` x 8 command lines (24 objects, 168 variants), each decoded twice (lifo, fifo), checked by `smoke/check_smoke.py` against `smoke/tricky_expect.json` | desktop (WSL with the existing keepalive; Windows `-j 2`) | 0 deviations; lifo and fifo `variants.json` byte-identical for all 24 decodes; `smoke_dispatch.c` as before (12/12 slots, 6 designed `fp_trust_dep`, 0 tooling gaps, 0 cross-decoder disagreements, d1 pass in all 8) except \|U_iform\| of B and B-scalar (149 to 148, 121 to 120; INT3 after clang-cl's `/GS` failure call no longer reached); the adversarial functions give the expected outcome in every configuration (record §7); negative test fails as required |
+| Steps 70, 70b, 71: pins and flag captures | desktop | all configure runs rc 0; only CMake's own probe objects in the configure trees; `-###` and `gcc -Q` rc 0; smoke compiles rc 0; reduce-probe syntax checks rc 0 |
+| Steps 71b and 72 after the x0prep review | desktop | 24 objects, 168 variants, 0 deviations; lifo and fifo decodes byte-identical |
+| Unit tests `scripts/tests/` | laptop | 152 pass (66 `test_judge`, 7 `test_flags`, 17 `test_loops`, 27 `test_loops_x0final`, 14 `test_build`, 12 `test_twin`, 2 `test_census`, 7 `test_driver_guard`); among them the x0final reviewers' adversarial cases (judge: argv and object checks, slot gaps, `amendment:` resolutions, typed P3 lists, run dates, attribution none, freeze commit; loops: T1 to T6) |
+| x0final probes: `smoke_dispatch.c` and `rv_tricky.c` twins (`/Z7`, `-g`) | desktop | measured the CodeView annotation semantics and the DWARF section problem of relocatable objects (x0final) |
+| Step 88 of x0final with the FIRST mock (run `smoke-20261017T042641Z`, 00:26-00:35 EDT) | desktop | superseded; kept as the record of what was seen: the first mock contained verbatim Hearth helpers (record §2 disclosure); d1 `pass` everywhere, 66 `tree16` sites `match`, no P3(c) flag (`smoke/results/x0final/`, `runbook/logs/x0final_88_*.log`) |
+| x0final revision, MSBuild probe (NON-Hearth VS project) | desktop, 01:06-01:09 EDT | a failing CL batch stops MSBuild before the next CL task; `/t:ClCompile /p:SelectedFiles=<file>` compiles that one file with the same CL line; the build line equals the design-time line plus `/nologo`, `/diagnostics:column`, `/O2` and `/Fd`, in order (`runbook/logs/x0final_rev_probes.log`) |
+| x0final revision, decoder fix on the reviewer's NON-Hearth `rvx.c` (C, build 1) | desktop, 01:07 EDT | `rvx_vrp`: table resolved (10 entries, `movzx; cmp DL,0x9; jnbe`), orphan bytes 117 and 112 to 0, gap removed; the other 7 variants of each object unchanged |
+| x0final revision, step 88 R2: the REWRITTEN mock in census mode (A, A-ninja, B-cmake, C, D), arm P, B-proxy; `census.json`; `judge.py` | desktop, 01:49-01:52 EDT | run `smoke-20261017T054918Z`, `scripts_match_pins` true: 0 non-zero steps (B-cmake's genuine `quant_avx512.c` failures are in its build records, rc 1, both builds); every compiler pin and argv check holds (A: the exact `/O2` delta); builds 1 and 2 identical; A and A-ninja identical for all 36 variants; attribution exact for every variant and loop; d1 `pass` everywhere; d2 `match` on the AVX-512 `tree16` and `mismatch` on the AVX2 `tree16` (designed) in every configuration that compiles them; no P3(c) flag; P3(a1) on B-cmake; `census.json` schema check clean; `judge.py`: V1, V2, V4 true, V3 false: `tooling_failure`; with V3 forced (smoke only): `amber_a` (U_all 326 > 204, P5_iclass 31 > 20), `amber_b` (A, C, D: designed d2 mismatch; B-cmake: P3(a1), P2 = 20, d2), `amber_c` (32 genuine `fp_trust_dep`), N1 (B-cmake, C), N2 (B-cmake) |
+| x0final revision, step 88 R1: the regression set in replay mode, arm P; `census.json`; `judge.py`; `check_regression_run.py` | desktop, 01:52-01:56 EDT | run `smoke-20261017T055241Z`, `scripts_match_pins` true: `check_regression_run.py` 0 deviations over 60 decode outputs (420 variants); d1 `pass` everywhere; attribution exact everywhere; P3(c) flags the same 24 variants as the x0final run (B-cmake 12, D 12: Clang's two 16-lane partial results for `smoke_dispatch.c`'s tail sum, still 32 lanes, and its enclosing loops, now 16 lanes instead of 32), none under C; 32 cross-decoder disagreements, all NOP (`rv_overlap`); `judge.py`: `tooling_failure`; with the set's constants V1 fails on the 184 designed tooling gaps, V2 and V4 true |
+| x0final revision, the single-file fallback on a copy of the new mock with a broken `other.c` (configuration A only) | desktop, 01:56 EDT | MSBuild stopped after the failing `other.c`/`quant.c` batch in both builds; `quant_avx2.c` and `quant_avx512.c` compiled by the single-file `ClCompile` fallback (rc 0, objects present, `fallback` recorded); `quant.c` rc 0 with no error of its own; `argv_matches_frozen` false only through the copy's `-I` directory (`runbook/logs/x0final_rev_fallback.log`) |
 
-Not run: any Hearth compile or decode; the twin attribution (not written); a census.json end-to-end run
-(no assembler); the H arms and the B-proxy arm on any code (argv only); the reduce probe beyond syntax checks.
+The final runs' pinned scripts differ from the pins below in four files only, none in its code: `tests/test_driver_guard.py` (two tests added after the runs), the module docstrings of `x0_loops.py` and `x0_twin.py` (code identical, checked by comparing the parsed modules without their docstrings) and the text of `smoke/mock/X0_NOT_HEARTH` (the driver checks only that it exists) [M, x0final revision, laptop, 2026-10-17]. The desktop was not used after 01:57 EDT (the quiet window began at 02:00 EDT).
+
+Not run: any Hearth compile or decode; the H arms.
 
 ## Hashes per item
 
 ### D1
 | File | SHA-256 |
 |---|---|
-| `experiments/x0-census/TOOLCHAINS.md` | `e403759021e50f7e720b885c72b307cd49b854debbec4348d75af3e60bb0d7d6` |
+| `experiments/x0-census/TOOLCHAINS.md` | `7ebc0cc7d162ba385d8bae645dae3491ab36744437b8d0a48cd4f7a8fa20e2ec` |
 
 ### D2
 | File | SHA-256 |
@@ -103,18 +126,41 @@ Not run: any Hearth compile or decode; the twin attribution (not written); a cen
 | `experiments/x0-census/scripts/runbook/logs/60_smoke_win.log` | `b1c24329c5f646f23fa30bbeae2eb0a6ab8aad7a8b8b3a08acd64790333974ef` |
 | `experiments/x0-census/scripts/runbook/logs/61_smoke_wsl.log` | `06ae7c358e533683355a13f7d2a372d7483d0be7713f88aabd76368bdbec43bc` |
 | `experiments/x0-census/scripts/runbook/logs/62_smoke_decode_win.log` | `31f9474789c503973c8cd403a62324723a135a6b1c630b6e917e807197d4c29d` |
-| `experiments/x0-census/scripts/runbook/logs/x0prep_xed_tables.log` | `041939c6baac010aae67af07f74adddfa3e7fc74295e6ad6f78abc03be579424` |
-| `experiments/x0-census/scripts/runbook/logs/x0prep_zoo.log` | `0528832924f7e4ff1d5f10cf983efa162ddeeafc700a923ec023bc36d891538d` |
-| `experiments/x0-census/scripts/runbook/logs/x0prep_norm2.log` | `da0e33f722bc85fbfaa79e576a168117f73fbdf2363b86b2c89d0e2f22f4c58e` |
+| `experiments/x0-census/scripts/runbook/logs/x0final_86_mock_prefreeze.log` | `f62d01ae14f3d741cac0e9186c8a52a86f69501dd807e6cf91834ab654ad98c4` |
+| `experiments/x0-census/scripts/runbook/logs/x0final_88_R1_regression.log` | `7f663c1d856ca6489cdd99151c0669571f1e7fd6a71cc4e89c6016c98a56935e` |
+| `experiments/x0-census/scripts/runbook/logs/x0final_88_R2_mock.log` | `4d6e630d677c3adfd0e52f6e59e982dbe27d214d3b2177584319a688e3769180` |
+| `experiments/x0-census/scripts/runbook/logs/x0final_probes_twin_formats.log` | `82c8858496a09443d48c59c56d400f3e74c14c1bd95272b1f32434da0fd14f51` |
 | `experiments/x0-census/scripts/runbook/logs/x0prep_70_prefreeze_win.log` | `de274e1f59db28ce317c7779bc709c77a3ab1f0a2eeaea3d50ffd3004a689f99` |
-| `experiments/x0-census/scripts/runbook/logs/x0prep_avs.log` | `0739b0494b68b0a3dcbb405ac9d7feb957d292f44f222f296489be17d158c25b` |
 | `experiments/x0-census/scripts/runbook/logs/x0prep_71_prefreeze_wsl.log` | `0c4374e0e2da91af7bdffaf86f13e7f19d16edbfd07709b73b645a658d4776ca` |
-| `experiments/x0-census/scripts/runbook/logs/x0prep_72_smoke_dispatch_check.log` | `5d741762d982598926a086f6629daa1d9f506510b3ddac4ce86988a2b487f2a6` |
 | `experiments/x0-census/scripts/runbook/logs/x0prep_71b_regression_compile_wsl.log` | `597e8383537690af68a655cfa3735428afb4c63db62bd29392e297ea9e63c900` |
 | `experiments/x0-census/scripts/runbook/logs/x0prep_72_regression_check.log` | `df9c4c9b501e77db6076e8f0c246764a280b01d6830398c37f3bc5107bc9f969` |
+| `experiments/x0-census/scripts/runbook/logs/x0prep_72_smoke_dispatch_check.log` | `5d741762d982598926a086f6629daa1d9f506510b3ddac4ce86988a2b487f2a6` |
+| `experiments/x0-census/scripts/runbook/logs/x0prep_avs.log` | `0739b0494b68b0a3dcbb405ac9d7feb957d292f44f222f296489be17d158c25b` |
+| `experiments/x0-census/scripts/runbook/logs/x0prep_norm2.log` | `da0e33f722bc85fbfaa79e576a168117f73fbdf2363b86b2c89d0e2f22f4c58e` |
+| `experiments/x0-census/scripts/runbook/logs/x0prep_xed_tables.log` | `041939c6baac010aae67af07f74adddfa3e7fc74295e6ad6f78abc03be579424` |
+| `experiments/x0-census/scripts/runbook/logs/x0prep_zoo.log` | `0528832924f7e4ff1d5f10cf983efa162ddeeafc700a923ec023bc36d891538d` |
+| `experiments/x0-census/scripts/smoke/results/x0final/R1reg_probe_sequences.txt` | `8d523a9f17966deecc5b876c4a8e45041fb5366c18fd49175d072fd24babb7ad` |
+| `experiments/x0-census/scripts/smoke/results/x0final/R1reg_summary.json` | `2c0c75dfb016ed598bff5521d97bfe91e01334140a2feb452b1bc3e8932049d1` |
+| `experiments/x0-census/scripts/smoke/results/x0final/R1reg_verdict.json` | `7dc5ee983d16bf540165479fcbc6f314278db49f42f35d6dde903ae1709f0c74` |
+| `experiments/x0-census/scripts/smoke/results/x0final/R1reg_verdict_regression_profile.json` | `9f78a285f9286c2741a89223f25791d48b76675d4610cf9d961e623809b3161b` |
+| `experiments/x0-census/scripts/smoke/results/x0final/R2mock_summary.json` | `36afe307a9ac3fdfd4ba1e6fbca8b3ac032f1abeb4a0aef4af92b716d18b23aa` |
+| `experiments/x0-census/scripts/smoke/results/x0final/R2mock_verdict.json` | `9524ad5e70c6ebbea854e032aef053a27d8c51566f255c231ea095fc38d01d07` |
+| `experiments/x0-census/scripts/smoke/results/x0final/R2mock_verdict_synthetic_rederivation.json` | `75f4ada28d5e5c03d75029cfcb008a5bfbdbc86497ef452bb865c7be8e9845b1` |
 | `experiments/x0-census/scripts/smoke/results_dispatch.json` | `d8af4f4069a85c4bf882d3ac6a0ae759c91497378c92b2b4fe2e82bfa43d9f67` |
 | `experiments/x0-census/scripts/smoke/results_regression.json` | `7595305bfba6d285400ef7d6478317974b0924719ea632f17d769bc868fb1ed6` |
 | `experiments/x0-census/class/objdump_norm_validation.json` | `9db4093e7ec1c0bac7c05fb537e0778cc37dd9e9380e0902ad6890eaad953f0c` |
+| `experiments/x0-census/scripts/runbook/logs/x0final_rev_probes.log` | `bf63918f784cafbe595a495363ab6b8b2dac86fc94c6e10ead19c41f56681936` |
+| `experiments/x0-census/scripts/runbook/logs/x0final_rev_88_R2_mock.log` | `4b40568a7bf49909d20071138e01f305db8b2a0b0e9921f09394d918930d7652` |
+| `experiments/x0-census/scripts/runbook/logs/x0final_rev_88_R1_regression.log` | `ca199d46e273d5a14873b5dc6ec1173b9e04a8f2b36da987ea6442509b6ee747` |
+| `experiments/x0-census/scripts/runbook/logs/x0final_rev_fallback.log` | `07de90a2fe420ec0c75ca4b57c656cb9c8f2d6f9ec4cc2be79c737dffef1ee02` |
+| `experiments/x0-census/scripts/smoke/results/x0final_rev/R1reg_probe_sequences.txt` | `5c32cba501296e553a20335cec0ff1f5abd3c1e94fdedffa30c7d5def9ebb17f` |
+| `experiments/x0-census/scripts/smoke/results/x0final_rev/R1reg_summary.json` | `8d3d94b8d8c0c2c13c40d9f80a0c96d0a698ce47464b5f75c0bd8e05a178af2c` |
+| `experiments/x0-census/scripts/smoke/results/x0final_rev/R1reg_verdict.json` | `70639505c4292318b33f827c6e62dff60218837e6d8b84588f4c09d1e30e507b` |
+| `experiments/x0-census/scripts/smoke/results/x0final_rev/R1reg_verdict_regression_profile.json` | `be7b03ed43cc21e4ad14ba7dc1a568130c39525172deeff411496aa8d2862fca` |
+| `experiments/x0-census/scripts/smoke/results/x0final_rev/R2mock_probe_sequences.txt` | `31fd5829762dd7c107b1c017758c00ab718b3658722a0756e4ba71cc329b8990` |
+| `experiments/x0-census/scripts/smoke/results/x0final_rev/R2mock_summary.json` | `9d696de9ee288f74a30c5b0157c225a829a5d7f20941ce8536610a9246fad45d` |
+| `experiments/x0-census/scripts/smoke/results/x0final_rev/R2mock_verdict.json` | `86cc69bf074baf7215da4eca80879fd07f9fe85b44e8c6aa9063a976839a0a3a` |
+| `experiments/x0-census/scripts/smoke/results/x0final_rev/R2mock_verdict_synthetic_rederivation.json` | `8075588fe4e1e1b6b4768ba8c6e506c1a6ad98031dbcb6a8cbefa547747ce2c7` |
 
 ### D4
 | File | SHA-256 |
@@ -133,7 +179,8 @@ Not run: any Hearth compile or decode; the twin attribution (not written); a cen
 
 ### D6
 External input: rust-lang/stdarch `eb9b3025937c85bd271a3ca46a681cd52739db12`, `intrinsics_data/x86-intel.xml`,
-SHA-256 `6762a50652a35ef663fd532ed83b789d19bbc2ac7e94b1771f19d666d96c2c30` (not stored here).
+SHA-256 `6762a50652a35ef663fd532ed83b789d19bbc2ac7e94b1771f19d666d96c2c30` (not stored here; the driver's step 82
+hashes the desktop copy `D:\mithril\x0prep\x86-intel.xml` into `census.json`, and V4 compares it with this pin).
 
 | File | SHA-256 |
 |---|---|
@@ -163,27 +210,37 @@ SHA-256 `6762a50652a35ef663fd532ed83b789d19bbc2ac7e94b1771f19d666d96c2c30` (not 
 |---|---|
 | `experiments/x0-census/scripts/probes/reduce_probe.c` | `1c04d4157d733a6dc5f8c0e7d5284973e7855345345ffbd4366680965b5d7888` |
 
-### D11 (scripts as of this list; the freeze records their commit)
+### D11 (every pinned input of V4: the class files and every file under `scripts/` except run outputs and documentation; `class/frozen_inputs.json` holds the same map; the freeze records the scripts' commit)
 | File | SHA-256 |
 |---|---|
-| `experiments/x0-census/scripts/x0obj.py` | `dbd4e07c836cfd189a1f10dfca2535b9de3c4142b733aee7b32d594c5fbbe981` |
-| `experiments/x0-census/scripts/x0_flags.py` | `60b1e74da0560cbb95ba4016fc38fd0c23b6381a05dc3a06f70280a32c059233` |
-| `experiments/x0-census/scripts/x0_extract.py` | `c045ed3a8839fa420b6947a603b27746e5bd23ad02d9bb33d79261f1ed6053aa` |
-| `experiments/x0-census/scripts/x0_decode.py` | `44dd9b33f9ba06d7c150e711928b45472edcd9bb9f23cfbecfffb23e69c0e4f9` |
-| `experiments/x0-census/scripts/x0_loops.py` | `2a0f250003e40b19cc833918e169307b157efe7bafcad0124af5e89368de1b5a` |
-| `experiments/x0-census/scripts/judge.py` | `2e8ab045e737f896e5b75aff68af9241a7870a54820c5ca649df49ded928fe2e` |
-| `experiments/x0-census/scripts/tests/test_flags.py` | `358209c1edafebcaefb4d39da26bf5ff177c4c284364bdc7712dd4be10e84112` |
-| `experiments/x0-census/scripts/tests/test_judge.py` | `829a10cc3f95e979cb76b4c09cac76c1e2efb7c31af3ccf58c8364207303d741` |
-| `experiments/x0-census/scripts/tests/test_loops.py` | `1f8c5e9c2c343f138a65342a1525834bc063f1214b1c32cb3e383da22967f811` |
-| `experiments/x0-census/scripts/smoke/smoke.c` | `e43e2690a45b958994c3ebdbe3301a11f494fc1989e5a8365d3d9f33d3bd99a7` |
-| `experiments/x0-census/scripts/smoke/smoke_dispatch.c` | `a59508a6bf989d6b264b4716c3bd77abc759b3b75b200243aae93f525bee55a2` |
-| `experiments/x0-census/scripts/smoke/smoke_loop_table.csv` | `0ee7ee7da78eacd1331ef59204b67e72ddc71e1fcb2b7de97cb73b6e0a266681` |
-| `experiments/x0-census/scripts/smoke/gen_zoo.py` | `78e87c4a14b34b87f852d601a56f750788f63d07fbe3437069bc1c81cbe63382` |
-| `experiments/x0-census/scripts/smoke/norm_check.py` | `e1b3e1872512da4505a540a46c56879281739ae071252fba9ba7d4229781743b` |
-| `experiments/x0-census/scripts/smoke/rv_tricky.c` | `121e60b05a0898dff90b2820f55bb56c03637c770478aae4826412ae916499e8` |
-| `experiments/x0-census/scripts/smoke/rv_tricky2.c` | `0045a5a968fa308e2ac1f19a9a8aeeebe395ce9e2808c1e589cca4b01059a9b5` |
-| `experiments/x0-census/scripts/smoke/tricky_expect.json` | `c5aa1f8c8a2ca82babffbb603012e02fbac5b5f5f7f303af36e0fa5733928a61` |
-| `experiments/x0-census/scripts/smoke/check_smoke.py` | `ccf1978fdc5caa538ba18d1a9d0c64862f2b50c6a97cef9c51249bf1b7f371c4` |
+| `experiments/x0-census/class/B_iform.json` | `a66e1a935d887a272d5f3fb868d10a1877f8e4d7b26137a3962079b1edcb1eaa` |
+| `experiments/x0-census/class/fp_class.csv` | `7cabb6913437c364f7d02c988a839ed5807462a3812cacd86e68a1c72a686c2f` |
+| `experiments/x0-census/class/fp_flag_patterns.txt` | `181ab6e8b9cffbe12dd2d7bbeb4bf7a6aeed36161bc8e4ec2692261bf8a42dbc` |
+| `experiments/x0-census/class/hand_map.csv` | `008f558ead3ee86b9484f8891470f51db0e10dbf8591a8509ca20c4219ad5d3e` |
+| `experiments/x0-census/class/loop_table.csv` | `0d94b2e636fb355e3c3c56d9b452dfef6a00925860adda05e116fe99b22a35be` |
+| `experiments/x0-census/class/objdump_norm.csv` | `d6196d60246a08733ca1581d83e81cc8be9891223e2750323b250c50dbc6e2e7` |
+| `experiments/x0-census/class/xed_tables.tsv` | `1db25e7f5f02b5796d06cbb94f4cb5ab7d8230ed1091bacae485fa5c517d1d13` |
+| `experiments/x0-census/scripts/baseline.py` | `6245e3017d43d550679e1ebb86e36837e85fd613b63a4e775d5c07a1cd67a9e6` |
+| `experiments/x0-census/scripts/classify.py` | `9f094eff8cb12551ea0b5a7f4b41cd68dca3ece161e8ab273336076e065e1b4c` |
+| `experiments/x0-census/scripts/judge.py` | `1ad84039cfe05d3d2880f1c0412d5a4d18148cf2ce33978a0022fa28f19b5b58` |
+| `experiments/x0-census/scripts/probes/reduce_probe.c` | `1c04d4157d733a6dc5f8c0e7d5284973e7855345345ffbd4366680965b5d7888` |
+| `experiments/x0-census/scripts/runbook/05_clone_sources.sh` | `5784af19f7d0a468b0ef23c08392310ba77de22f17adcd96507a9fef66833c6c` |
+| `experiments/x0-census/scripts/runbook/10_fetch_llvm.cmd` | `0f347586ae948b2ec7f24b9621026933ae8a9abd87c8e0ce370601c9a99a382b` |
+| `experiments/x0-census/scripts/runbook/11_verify_llvm.ps1` | `fd4a6f2d778004ca6d96e8d36f690fe1ca2c8a3def6d949f39fdc6e69deeddc5` |
+| `experiments/x0-census/scripts/runbook/12_extract_llvm_win.cmd` | `ebdfe75fa71ded46bee1b919e0812d5d04aa1d89de79d1c4a6eef9bb83ab0def` |
+| `experiments/x0-census/scripts/runbook/13_extract_llvm_linux.sh` | `662d3bfbb25bc7bbe9047238e9067e04d96799a75bd6af506dabddebd6ef75ee` |
+| `experiments/x0-census/scripts/runbook/20_fetch_verify_cmake.ps1` | `25a2d7388f2ce6b6612d999db9f0489cef77d0507be7b46ed245541a946db94e` |
+| `experiments/x0-census/scripts/runbook/21_extract_cmake_linux.sh` | `d0a5956bf46ae5e1161478317d8cfbfcc2e003aa84c1bbb97dd3cba136853024` |
+| `experiments/x0-census/scripts/runbook/22_verify_cmake.ps1` | `c89d3aef4e4422acb80b3179920274682dbfc3d5701cbbbf12e6a8a9defd1565` |
+| `experiments/x0-census/scripts/runbook/30_build_xed_wsl.sh` | `77c880f164ceb005aeafb0953ea40feedf0b1e1babbe44c7ce6ba27c69ed3859` |
+| `experiments/x0-census/scripts/runbook/31_build_xed_win.cmd` | `3ac69a40fe8d4bd653635ed5b4e023b277a4eeac7c5c53586172590d9b032161` |
+| `experiments/x0-census/scripts/runbook/40_verify_win.cmd` | `75a8ace24229ea16db95a55270edd5b7bbec0573a012f04eb6c86fa93c3b29be` |
+| `experiments/x0-census/scripts/runbook/41_verify_wsl.sh` | `999cd1e55cc692e73c365ba35a29bc284928019ca5823e48ffafbbc8e78ad125` |
+| `experiments/x0-census/scripts/runbook/50_configure_win.cmd` | `7277af90255ec9851e8c27d511c9a6a7ed0c41cf51a20ab5e267af19f9029801` |
+| `experiments/x0-census/scripts/runbook/51_configure_wsl.sh` | `7b0d35ce1836de814868db01ac3d4179f292ff5d5a8a7c115e5786f7436a4794` |
+| `experiments/x0-census/scripts/runbook/60_smoke_win.cmd` | `a150e82cd7d3a56da8eb7731e5973538632eb5d0634d6ae42941fba2a0a7bcdb` |
+| `experiments/x0-census/scripts/runbook/61_smoke_wsl.sh` | `02660f1acbf04951f1b82b75740be352f69433bfb2e3b88e6611bb5cadf35d30` |
+| `experiments/x0-census/scripts/runbook/62_smoke_decode_win.cmd` | `19490bce189b38a32862efb08691d9de9bccd0dadd159a856e690c82732f8947` |
 | `experiments/x0-census/scripts/runbook/68_xed_tables_win.cmd` | `eced4c0ea8ad74fec4999283247c5cdbb8bd7992c6fe5031c345a1b97e98c403` |
 | `experiments/x0-census/scripts/runbook/69_zoo_norm_check_win.cmd` | `41f021b2ded6b9e7ad51ff5a585b819a0dc24bad6c3a495613c7949ae154b9b7` |
 | `experiments/x0-census/scripts/runbook/70_prefreeze_win.cmd` | `85364237aeeb1d63cdd2cc297535655ea1190ffcd994baab2c31934575cd856d` |
@@ -191,37 +248,102 @@ SHA-256 `6762a50652a35ef663fd532ed83b789d19bbc2ac7e94b1771f19d666d96c2c30` (not 
 | `experiments/x0-census/scripts/runbook/71_prefreeze_wsl.sh` | `8f83ecb6517c26ee5c43fa4ef850d47a5eb42c71c58fa219763ffd7579efe351` |
 | `experiments/x0-census/scripts/runbook/71b_regression_compile_wsl.sh` | `4fd3bc705875458d76dc8ec43d420d118e5173674e981855c1579b1d0f501c60` |
 | `experiments/x0-census/scripts/runbook/72_smoke_dispatch_check.cmd` | `7e5b85f13499ffe19a71f14cbb6221d33b03df563f47bd66a7db77e757c0ed26` |
+| `experiments/x0-census/scripts/runbook/79_census_init.cmd` | `3a2846818737c3f494c6ed1c9540836962cb47aedb113cfef4f94c232d97f796` |
+| `experiments/x0-census/scripts/runbook/80_census_win.cmd` | `dbc703b64607c18d8146d9c045f85a904b0cbb14c4ea8ac6e0ed75ff725c13f6` |
+| `experiments/x0-census/scripts/runbook/81_census_wsl.sh` | `671c98e54b8632e9427665d971820767c9a475e9942835b90b305e9ea3e0a1b7` |
+| `experiments/x0-census/scripts/runbook/82_census_assemble.cmd` | `5ecfe6094216114b28cd4a2e37049d443cc4c0a428924b84be15b43124e684c6` |
+| `experiments/x0-census/scripts/runbook/86_mock_prefreeze_win.cmd` | `ccd47ff2dc0f3ec7d4a673716c75cf64ee82a06e8b785f2a1e87c9f9b17ce05f` |
+| `experiments/x0-census/scripts/runbook/86_mock_prefreeze_wsl.sh` | `2377aeca99f47894fa8978309aa179c416a2d0ba506c4c806eab573484f90f35` |
+| `experiments/x0-census/scripts/runbook/88_x0final_smoke_runs.ps1` | `2314abe3d5125d5c6cdf6fc973f5195a4e2cf05c9bd931801597c2fe8bb1c211` |
+| `experiments/x0-census/scripts/runbook/bproxy_set.json` | `ae82de9e2ffe697913961724fd4f985734180f24e6b2fc30464dacec0cb98762` |
+| `experiments/x0-census/scripts/runbook/cc1flags.py` | `c9259244556d544c3c5c0b2a245c75e1af51af8d4d806a8a0327bb8b9d6cfc9c` |
+| `experiments/x0-census/scripts/runbook/census_tools_win.json` | `39396c67ed068efab59a8c55d2efa47ec1d4ab9bd40196f10b21836a1e7832bb` |
+| `experiments/x0-census/scripts/runbook/census_tools_wsl.json` | `d9c68c51b86e48d4b747e760cad018f9facbc89d6b6e6fbd05b616cad990092b` |
+| `experiments/x0-census/scripts/runbook/compare_decodes.py` | `c57d89dfcd3fae363fbed16e2a02ab068c01f4f62536e7fe789cc6ef6448cefb` |
+| `experiments/x0-census/scripts/runbook/design_time_lines.py` | `3c9ce976eb477c07201c406f07769117b0afa9b11d0d8c4346dd65e6bcffbf7e` |
+| `experiments/x0-census/scripts/runbook/gen_norm_csv.py` | `8b9f6f441b89881565d3dc24dd0de8dd594e8267592c09c4a7647115a1dfa0ef` |
+| `experiments/x0-census/scripts/runbook/hearth_shingles.py` | `4e60e541b3214e4df7d08a6dd439e6defb3f343f3686489b5aac3f9b2924ae12` |
+| `experiments/x0-census/scripts/runbook/negtest.py` | `8e4d1dc04560b83c742259ffca1409aeec4fc844a04c8f5d2b8060146737a242` |
 | `experiments/x0-census/scripts/runbook/negtest_dispatch.py` | `09471e5ae80a9e87758f401c1a11ea8f044529e64e2e13af3b1de2d5621689a4` |
-| `experiments/x0-census/scripts/runbook/zoo_fix.py` | `39750be8f32133e6e42f8025fc251ce219ba5f8674fe3b70ea6f03ba56722426` |
+| `experiments/x0-census/scripts/runbook/pin_inputs.py` | `0e0cf40c75b0c2ba8a533a1e074817bb4a03ab2e257f3443de426b6c94878e4b` |
+| `experiments/x0-census/scripts/runbook/probes/atomic_probe.c` | `16f9a0ee48afab092e0efed7f3c23e4633eba1f0d6766c33571ecf4a7e9cded3` |
+| `experiments/x0-census/scripts/runbook/probes/fpc.c` | `77904ec7d0c2aebaff68cc9bae1ab60cc832e56e7d12e72293bf849329e6c1a4` |
+| `experiments/x0-census/scripts/runbook/probes/hello_avx2.c` | `305a3a147bcb91179ee7c879a871909940d4e23f85628fa2f622d4603604b626` |
+| `experiments/x0-census/scripts/runbook/probes/hello_avx512.c` | `1014fa234d4837d33138a0cb77de1c507df0cae85b63f1f17bbad7d04a11c640` |
+| `experiments/x0-census/scripts/runbook/probes/vnni_probe.c` | `4e69827634c762df3e6145c83c28c7738114d6666394dbed36bd9837bd9d774c` |
 | `experiments/x0-census/scripts/runbook/summarize_regression.py` | `c6de989cb8e91f2747dbf19f7524313ae4a4ebe65a0b6b672eb732e0b7bc1a92` |
+| `experiments/x0-census/scripts/runbook/summarize_x0final.py` | `277cb52dfb2156d67a7f0a2327c2de34dfb5a6439c84ddafc4c631d3df441e5a` |
+| `experiments/x0-census/scripts/runbook/zoo_fix.py` | `39750be8f32133e6e42f8025fc251ce219ba5f8674fe3b70ea6f03ba56722426` |
+| `experiments/x0-census/scripts/smoke/check_regression_run.py` | `3a654362777d38fbd97e9bcf063d8ab6ef0984d1d5325f718d760eca4c527b8a` |
+| `experiments/x0-census/scripts/smoke/check_smoke.py` | `ccf1978fdc5caa538ba18d1a9d0c64862f2b50c6a97cef9c51249bf1b7f371c4` |
+| `experiments/x0-census/scripts/smoke/gen_zoo.py` | `78e87c4a14b34b87f852d601a56f750788f63d07fbe3437069bc1c81cbe63382` |
+| `experiments/x0-census/scripts/smoke/judge_regression.py` | `ba5503809fae93d8052abf22f42e4f1516d8041655e8d9b27ab25d1f1c0fa104` |
+| `experiments/x0-census/scripts/smoke/mock/CMakeLists.txt` | `e567e268389467308a28d0312594c75eefc6be786133820acbb9f25888f0eee6` |
+| `experiments/x0-census/scripts/smoke/mock/X0_NOT_HEARTH` | `e501f0857c670b7f00db4f982a569a0b1bf99a43713b8ef1c2bf0098495633da` |
+| `experiments/x0-census/scripts/smoke/mock/engine/src/hx_quant.h` | `2da36a6880855e6cc7beb5e94d6970fe91ff4ca7644c3d83dd5dc1af77033ea7` |
+| `experiments/x0-census/scripts/smoke/mock/engine/src/other.c` | `bf6b372f1357a7600afd90b3cfc11d223851b42aaadcbe17a3a4075caf9fec2a` |
+| `experiments/x0-census/scripts/smoke/mock/engine/src/quant.c` | `15786c5836c387b165379ffb82138b1a7e69055102792320b0803ea0f6febe70` |
+| `experiments/x0-census/scripts/smoke/mock/engine/src/quant_avx2.c` | `60259f96549f35dc791f85af5e186eca5553637f3dbf2d32eca74a686b56d2ad` |
+| `experiments/x0-census/scripts/smoke/mock/engine/src/quant_avx512.c` | `628ce4edcb7ccfab81769351b6025255d1724f964f1833ba801d129d235d0427` |
+| `experiments/x0-census/scripts/smoke/norm_check.py` | `e1b3e1872512da4505a540a46c56879281739ae071252fba9ba7d4229781743b` |
+| `experiments/x0-census/scripts/smoke/regression_set.json` | `87952f837a62bfc9318ccf23c6715d1bed43d7e088c52516861d93a3dfb5bbd7` |
+| `experiments/x0-census/scripts/smoke/results_dispatch.json` | `d8af4f4069a85c4bf882d3ac6a0ae759c91497378c92b2b4fe2e82bfa43d9f67` |
+| `experiments/x0-census/scripts/smoke/results_regression.json` | `7595305bfba6d285400ef7d6478317974b0924719ea632f17d769bc868fb1ed6` |
+| `experiments/x0-census/scripts/smoke/rv_tricky.c` | `121e60b05a0898dff90b2820f55bb56c03637c770478aae4826412ae916499e8` |
+| `experiments/x0-census/scripts/smoke/rv_tricky2.c` | `0045a5a968fa308e2ac1f19a9a8aeeebe395ce9e2808c1e589cca4b01059a9b5` |
+| `experiments/x0-census/scripts/smoke/smoke.c` | `e43e2690a45b958994c3ebdbe3301a11f494fc1989e5a8365d3d9f33d3bd99a7` |
+| `experiments/x0-census/scripts/smoke/smoke_dispatch.c` | `a59508a6bf989d6b264b4716c3bd77abc759b3b75b200243aae93f525bee55a2` |
+| `experiments/x0-census/scripts/smoke/smoke_loop_table.csv` | `0ee7ee7da78eacd1331ef59204b67e72ddc71e1fcb2b7de97cb73b6e0a266681` |
+| `experiments/x0-census/scripts/smoke/tricky_expect.json` | `c5aa1f8c8a2ca82babffbb603012e02fbac5b5f5f7f303af36e0fa5733928a61` |
+| `experiments/x0-census/scripts/tests/test_build.py` | `4a16108ec4c79a7a4d785bf7be8b5e8f6a8b25388d3dc84dd7c6405f985747b2` |
+| `experiments/x0-census/scripts/tests/test_census.py` | `6d0ef319ed897921525c661fb391118fe62bd78729f0fdd3f966db5925c9b56f` |
+| `experiments/x0-census/scripts/tests/test_driver_guard.py` | `2a206f89757ff653d593e2dfab54e4a33ae3a0f26f60ee33e352f302be181a8f` |
+| `experiments/x0-census/scripts/tests/test_flags.py` | `358209c1edafebcaefb4d39da26bf5ff177c4c284364bdc7712dd4be10e84112` |
+| `experiments/x0-census/scripts/tests/test_judge.py` | `5a6512554565e5f9eb0062ab9a7b36b0a6bfc70c7314698c4f2d964eb078c8a3` |
+| `experiments/x0-census/scripts/tests/test_loops.py` | `1f8c5e9c2c343f138a65342a1525834bc063f1214b1c32cb3e383da22967f811` |
+| `experiments/x0-census/scripts/tests/test_loops_x0final.py` | `a4cc721eea6f13f2c090e5445e0bd60ad3a4055e970982785d687a099adf9530` |
+| `experiments/x0-census/scripts/tests/test_twin.py` | `e7ffdbfc1ec3000b57f69a490189d35e01ee0b4f572347e0133521a0a89bb581` |
+| `experiments/x0-census/scripts/x0_build.py` | `24914445b6545ae332ad4683e0a779fbdbb54c3373719c8c7b509a2f25f85d2a` |
+| `experiments/x0-census/scripts/x0_census.py` | `d0de1d1e697ee4b90f6b9ea053dffad8841f1c7060ba5c85893dfec76752aa67` |
+| `experiments/x0-census/scripts/x0_decode.py` | `f2eae8e33fc08f9b2ca8cb3ee7c9f42f1910d0c5b943d2404d162753a83eaa8d` |
+| `experiments/x0-census/scripts/x0_driver.py` | `73eac10f37b7ee708d6f05be3024a69a7c185dfe4363b880b790b7e5cce653ee` |
+| `experiments/x0-census/scripts/x0_extract.py` | `97c1f52f4b3730cd9431e2da0f2f3f3b3c22ec723f6150ab95631291708e05df` |
+| `experiments/x0-census/scripts/x0_flags.py` | `60b1e74da0560cbb95ba4016fc38fd0c23b6381a05dc3a06f70280a32c059233` |
+| `experiments/x0-census/scripts/x0_loops.py` | `3e8e1ab323a9b56c79e55870f9b88645ed6657ab11482503722cb959f9e9e72f` |
+| `experiments/x0-census/scripts/x0_norm.py` | `a165b3572c91ffc544c8bd4b54f8475f2769b6b1e5888bc6a660464cd11fc0a6` |
+| `experiments/x0-census/scripts/x0_twin.py` | `d6d34b344e98fe64d17b4d7cb743a5929846563204a2d983dd7888383349d341` |
+| `experiments/x0-census/scripts/x0obj.py` | `dbd4e07c836cfd189a1f10dfca2535b9de3c4142b733aee7b32d594c5fbbe981` |
+| `experiments/x0-census/scripts/xed_tables.c` | `8190b2504589a94a0c7007692877818283059e5ea6ca7b1cfa28dfae53a097d0` |
 
 ### Other files of this preparation
 The record's hash changes when its status line changes to FROZEN; it is listed for traceability only.
+`class/hearth_shingles.json` is the smoke guard's input (record §2), not a census input, so it is not in V4.
 
 | File | SHA-256 |
 |---|---|
-| `experiments/x0-census/class/frozen_inputs.json` | `2181f91b754ccbe033c6d6dbf54567802f8e6e15b4685f9559a50021faad5c7b` |
-| `experiments/x0-census/class/README.md` | `4a23755022000b540113d55949dbac4b96673a1f28684960e5d629d49ff4fc92` |
+| `experiments/x0-census/class/frozen_inputs.json` | `a8a69e8e1b9478612e0839f0db4ae4660ea05f954bfa6a3a96e1cbdd9e891495` |
+| `experiments/x0-census/class/hearth_shingles.json` | `dd3bac3ab076d7937b6af6c8efd8cf4b22763fe008f1fd5e10261070120bc8d9` |
+| `experiments/x0-census/class/README.md` | `9b741092c21c229c81d6f47084f096055ca3e33738a2a00dff19f01c530a3626` |
 | `experiments/x0-census/rederive/PROCEDURE.md` | `01bb49402ff8f5c2de879f3b89f49f0130f60c3c2055f7e724989bf1b7a69ea9` |
-| `experiments/x0-census/scripts/README.md` | `a6f27cc86351c951f661dde0d7e9eaf8667f6e12079cbc04b6be7836352d4fea` |
-| `docs/m0/prereg/X0-census.md` | `e1243b4e75121e642cf7d7f2c3406b3c10b098ba8644bfa5bdf179c0aab41894` |
+| `experiments/x0-census/scripts/README.md` | `085ff5c5a1a73ed01670c48d143b7aa48b33d6102108303a61d657453d2ab4c2` |
+| `docs/m0/prereg/X0-census.md` | `590b57963d933786d7454a3ee185635504679b261af96e4fdcd4be850c755093` |
 
 ## Desktop footprint of this preparation (for Pierce)
 
-- New on D: `D:\mithril\x0prep\` (sync copy of the scripts, configure trees A-vs / A-ninja / B-cmake, the
-  instruction zoo, smoke objects, flag captures, the stdarch XML) and `D:\mithril\jobs\x0prep\` (logs). Nothing
-  was deleted or changed outside them; the earlier `D:\mithril\x0` trees were only read.
-- C: one WSL VM start (step 71) with a detached keepalive `wsl.exe -d Ubuntu --exec sleep 43200`, started
-  because none was running; it adds one WSLg trace file under
-  `%LOCALAPPDATA%\Temp\DiagOutputDir\RdClientAutoTrace\` (about 23 MB each, see `TOOLCHAINS.md` §9). No file on C:
-  was deleted. No system setting was changed.
-- GPU: not used (`CUDA_VISIBLE_DEVICES=-1` in every job). Threads: one per job, at most two jobs at once.
-- After the review (reviser, 2026-10-16, 19:21 to 19:39 EDT):
-  - new on D: `D:\mithril\x0prep\reg\` (24 regression objects and their decode outputs) and logs and a
-    disassembly listing under `D:\mithril\jobs\x0prep\`;
-  - the synced scripts in `D:\mithril\x0prep\x0\` were refreshed;
-  - WSL ran only inside the keepalive VM that was already up, so no new VM start and no new trace file;
-  - read-only `find`/`ls` in the WSL home for the D12 re-check;
-  - at most 2 threads (decode `-j 2`, one job at a time); no GPU;
-  - nothing deleted outside the track's own directories; reviewer 2's `D:\mithril\review-x0prep\` was only
-    listed (its outputs were read from the laptop copy).
+- x0prep: new on D: `D:\mithril\x0prep\` (sync copy of the scripts, configure trees A-vs / A-ninja / B-cmake, the
+  instruction zoo, smoke and regression objects, flag captures, the stdarch XML) and `D:\mithril\jobs\x0prep\`
+  (logs). C: one WSL VM start (step 71) with a detached keepalive `wsl.exe -d Ubuntu --exec sleep 43200`, started
+  because none was running; it adds one WSLg trace file under `%LOCALAPPDATA%\Temp\DiagOutputDir\RdClientAutoTrace\`
+  (about 23 MB each, see `TOOLCHAINS.md` §9). No file on C: was deleted. No system setting was changed. GPU not used.
+- x0final (2026-10-16 22:48 to 2026-10-17 00:35 EDT): new on D: `D:\mithril\x0final\` and `D:\mithril\jobs\x0final\`.
+  WSL ran only inside the keepalive VM that was already up. One compiler or MSBuild node at a time, XED `-j 2`;
+  `CUDA_VISIBLE_DEVICES=-1` in every job; no GPU.
+- x0final revision (2026-10-17 01:03 to 01:57 EDT, i.e. before the 23:00 PT quiet window): new on D: only
+  `D:\mithril\x0final-rev\` (the probe project, the decoder outputs for the reviewer's `rvx.c`, sync copies of
+  `experiments/x0-census`, the runs `runs\R1reg`, `runs\R2mock`, `runs\RFmockerr` and the mock's captures
+  `runs\mockfrozen`) and `D:\mithril\jobs\x0final-rev\` (logs). Read only: the x0final reviewer's NON-Hearth objects
+  under `D:\mithril\review-x0final\`. WSL only inside the keepalive VM already up (x0prep's, started 18:08 EDT, expiring
+  about 06:08 EDT: a later WSL step needs a new detached keepalive, which means a new WSLg trace file on C:). One
+  compiler or MSBuild node at a time, XED `-j 2`, `CUDA_VISIBLE_DEVICES=-1`, no GPU. Nothing written on C:, no
+  system setting changed, no Hearth file compiled, no Hearth object decoded, the Hearth working tree, the WSL home
+  objects and GEMS files not touched.

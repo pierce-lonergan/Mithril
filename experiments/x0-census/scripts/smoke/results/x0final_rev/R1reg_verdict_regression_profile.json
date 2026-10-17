@@ -1,0 +1,1511 @@
+{
+ "amber_a": null,
+ "amber_b": [],
+ "amber_c": [],
+ "conservative_resolution": false,
+ "eval_date": "2026-10-17",
+ "eval_date_basis": {
+  "latest_census_run_date": "2026-10-17",
+  "system_utc_date": "2026-10-17"
+ },
+ "narrowing": null,
+ "non_gate": [],
+ "notes": [
+  "NON-Hearth smoke run judged by judge_regression.py: {\"expected_variants\": 42, \"census_files\": [\"smoke_dispatch.c\", \"smoke_dispatch.c#scalar\", \"rv_tricky.c\", \"rv_tricky.c#scalar\", \"rv_tricky2.c\", \"rv_tricky2.c#scalar\"]}",
+  "SYNTHETIC REDERIVATION: V3 forced true to exercise the rows; not a census result",
+  "smoke record (record.id X0-census-smoke, NON-Hearth): no freeze commit is required"
+ ],
+ "outcomes": [
+  "tooling_failure"
+ ],
+ "record": "X0-census",
+ "tooling_bound": "2026-11-12",
+ "tooling_runs": 0,
+ "validity": {
+  "v1": false,
+  "v2": true,
+  "v3": true,
+  "v4": true
+ },
+ "validity_detail": {
+  "v1_config_gaps": [],
+  "v1_tooling_gaps": [
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect CALL_NEAR through variable rv_hook",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x2f loads rv_hook, not an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect CALL_NEAR through variable rv_hook",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x2f loads rv_hook, not an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect CALL_NEAR through variable rv_hook",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x2f loads rv_hook, not an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect CALL_NEAR through variable rv_hook",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x2f loads rv_hook, not an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "A",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect CALL_NEAR through variable rv_hook",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x31 loads rv_hook, not an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect CALL_NEAR through variable rv_hook",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x31 loads rv_hook, not an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect CALL_NEAR through variable rv_hook",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x31 loads rv_hook, not an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect CALL_NEAR through variable rv_hook",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x31 loads rv_hook, not an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "B-cmake",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect CALL_NEAR through memory call qword ptr [r14]",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x1c9 is not a load of an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "other",
+    "config": "C",
+    "detail": "overlapping reachable decodes at 0x20a and 0x20b",
+    "slot": "matmul[4]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect CALL_NEAR through memory call qword ptr [r14]",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x1c9 is not a load of an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "other",
+    "config": "C",
+    "detail": "overlapping reachable decodes at 0x20a and 0x20b",
+    "slot": "matmul[4]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect CALL_NEAR through memory call qword ptr [r14]",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x1c9 is not a load of an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "other",
+    "config": "C",
+    "detail": "overlapping reachable decodes at 0x20a and 0x20b",
+    "slot": "matmul[4]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect CALL_NEAR through memory call qword ptr [r14]",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x1c9 is not a load of an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "other",
+    "config": "C",
+    "detail": "overlapping reachable decodes at 0x20a and 0x20b",
+    "slot": "matmul[4]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "C",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect CALL_NEAR through memory call qword ptr [r12]",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x62c is not a load of an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "other",
+    "config": "D",
+    "detail": "overlapping reachable decodes at 0x666 and 0x667",
+    "slot": "matmul[4]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect CALL_NEAR through memory call qword ptr [r12]",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x49c is not a load of an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "other",
+    "config": "D",
+    "detail": "overlapping reachable decodes at 0x4d6 and 0x4d7",
+    "slot": "matmul[4]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c"
+   },
+   {
+    "build_index": 1,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect CALL_NEAR through memory call qword ptr [r12]",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x62c is not a load of an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "other",
+    "config": "D",
+    "detail": "overlapping reachable decodes at 0x666 and 0x667",
+    "slot": "matmul[4]",
+    "table": "rv_table@rv_tricky.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[0]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect CALL_NEAR through memory call qword ptr [r12]",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect CALL_NEAR through a register (definition at 0x49c is not a load of an import or GOT slot)",
+    "slot": "matmul[3]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "other",
+    "config": "D",
+    "detail": "overlapping reachable decodes at 0x4d6 and 0x4d7",
+    "slot": "matmul[4]",
+    "table": "rv_table@rv_tricky.c#scalar"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c"
+   },
+   {
+    "build_index": 2,
+    "cause": "unresolved_indirect",
+    "config": "D",
+    "detail": "indirect jump through a register (no definition on a path from the function entry)",
+    "slot": "matmul[1]",
+    "table": "rv_table2@rv_tricky2.c#scalar"
+   }
+  ],
+  "v2_resolved_by_amendment": [],
+  "v2_unresolved": [],
+  "v3": [],
+  "v4": []
+ }
+}
