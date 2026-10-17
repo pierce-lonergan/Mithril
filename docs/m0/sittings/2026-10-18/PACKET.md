@@ -239,7 +239,7 @@ Tag lines: `D0-7a: <YES|NO|AMEND>`, `D0-8: <YES|NO|AMEND>`, `Q7: <YES|NO|OTHER>`
 
 ## 4. X4-noise-pilot record (if FROZEN), 15 min at summary level
 
-**Freeze commit: `<<FILL: X4-noise-pilot freeze commit, or "not FROZEN: item dropped">>`**
+**Freeze commit: not FROZEN: item dropped to sitting 2 (Sun 10-25). The record needs your answers to C01, C02, C25 and D0-7a first, and the service still lacks observe mode, hygiene sensors and the session driver (X4 track, 2026-10-17)**
 
 **Summary.**
 - **What it is.** The first quiet-night measurement and the one your R5 answer schedules. It runs 20
@@ -282,7 +282,7 @@ sitting: 1 (2026-10-18)
 
 ## 5. X0 record (FROZEN by the lead engineer), 15 min at summary level
 
-**Freeze commit: `<<FILL: X0 freeze commit>>`**
+**Freeze commit: `152fa33cc24225d78806bc028a1985fffbd3148b` (FROZEN 2026-10-17 01:25 PT; census scheduled from 07:07 PT Sat 10-17)**
 
 **Summary.**
 - **What it tests.** X0 compiles Hearth's three quant files with every configuration and XED-decodes
