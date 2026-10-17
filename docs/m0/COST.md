@@ -1,10 +1,25 @@
 # M0 cost tracker
 
 Status: living ledger, opened 2026-10-16, revision 2 the same day after a same-family review
-([PLAN §15](PLAN.md#15-review-log)). It tracks spend, Owner hours and machine hours against
-ROADMAP §10's M0 lines. The plan track maintains the format. Each track appends its own rows.
-Evidence tags follow [README](README.md#evidence-tags). [PLAN.md](PLAN.md) holds the schedule that
-these figures are compared against.
+([PLAN §15](PLAN.md#15-review-log)), revision 3 the same day by the owner track to carry the Owner's
+chat answers, and revision 4 the same day after one review of revision 3 (Claude, same family,
+independent context; logged in [PLAN §15](PLAN.md#15-review-log) and
+[OWNER-QUEUE](OWNER-QUEUE.md#review-log)). It tracks spend, Owner hours and machine hours against ROADMAP §10's M0
+lines. The plan track maintains the format. Each track appends its own rows. Evidence tags follow
+[README](README.md#evidence-tags). [PLAN.md](PLAN.md) holds the schedule that these figures are
+compared against.
+
+**Owner answers, 2026-10-16** ([OWNER-ANSWERS.md](OWNER-ANSWERS.md), commit `11210a8`; decided by
+Pierce in chat, not yet AUTHORITY facts until a `d0-sign-<n>` tag ratifies them at sitting 1, Sun
+2026-10-18; work proceeds on them provisionally): D0-10a "No metered API". Claude work runs on
+Pierce's Claude Code plan, and no family gets paid API access; D0-10c names the local Qwen3 via Hearth
+as the only family besides Claude, as the ROADMAP pilot ([D0_BRIEF §0](../D0_BRIEF.md)). So **the
+metered budget stated by Pierce is $0 (approved once D0-10a is ratified)**. ROADMAP's API lines below
+stay as estimates of what M0 would cost at API prices, never as a spend authorisation. The costs that
+bind instead are Claude Code plan usage (tokens and the account-wide 5-hour and weekly windows),
+daytime desktop hours for Qwen3 and, if Pierce writes X1's templates himself, owner hours (§1.6). His
+batch-2 X1 rule ("Claude kills; pass provisional") makes X1's Claude attempts the largest plan-usage
+line; his check of the plan's terms and capacity is OWNER-QUEUE A20.
 
 **Contents**
 1. [Budget](#1-budget)
@@ -19,7 +34,9 @@ these figures are compared against.
 ## 1. Budget
 
 None of this is approved. The amounts become a budget only when D0-10 is signed. Until then they are
-ROADMAP's estimates.
+ROADMAP's estimates. Under D0-10a's chat answer (pending ratification) no metered amount will be
+approved: the dollar figures in §1.1–§1.3 are API-price estimates only. §1.6 gives the plan-token and
+desktop-hour figures that replace them.
 
 ### 1.1 M0 totals (ROADMAP §3.7, §10)
 
@@ -57,8 +74,8 @@ ROADMAP's estimates.
 | *Not in ROADMAP's lines:* | | | | |
 | Held-out growth if the n rule asks for n > 60: 48 attempts per extra item [D: (5 × 3 + 3 × 3) × 2] | 48 × (n − 60) | $0.024–0.096k per extra item [D] | — | [D] |
 | — for example n = 120 (the example n_max of PLAN §3.2): 5,760 held-out attempts in all | 5,760 | $2.9–11.5k in all [D] | — | [D] |
-| Proposed Rust arm on the card-iteration items (PLAN §3.2, Q16): 20 × 5 × 1 epoch × 2 families | 200 | $0.1–0.4k [D] | — | [D], pending Q16 and D0-10a |
-| **Family B authoring and reviews (metered):** X1 sealed tasks, oracles, reference solutions and the reserve; the `mithi` planted corpus; X4's blind hack batch; the X2 lockstep Prover; the CC Prover and Adversary; R-diff reviews of SIGNED records and verdicts (PLAN §9) | — | **not estimated** [G]; filled in from the first provider export | — | — |
+| Proposed Rust arm on the card-iteration items (PLAN §3.2, Q16): 20 × 5 × 1 epoch × 2 families; 100 at one kill-carrying family (D0_BRIEF Q16) | 200 (100 at one family) | $0.1–0.4k [D], an API-price estimate, not a budget (D0-10a chat answer); on the plan it costs tokens | — | [D], pending PLAN Q16 and D0_BRIEF Q16 |
+| **Family B authoring and reviews (metered):** X1 sealed tasks, oracles, reference solutions and the reserve; the `mithi` planted corpus; X4's blind hack batch; the X2 lockstep Prover; the CC Prover and Adversary; R-diff reviews of SIGNED records and verdicts (PLAN §9) | — | **not estimated** [G]; filled in from the first provider export. *Revision 3: no Family B exists under the chat answers; these roles fall to the local Qwen3 (desktop hours, §1.6) or the Owner, pending D0_BRIEF Q16–Q18* | — | — |
 
 The price basis is $0.5–2 per agentic attempt with a frontier model [inference, ROADMAP §10].
 
@@ -103,8 +120,47 @@ planned test. "Bound" means each A/A session runs to the amber limit N (2 × pla
 | 5 | 200 h | 168 h | 160 h |
 | 7 (D0_BRIEF D0-10d) | 280 h | 248 h | 224 h |
 
-*[D]: weeks × nights × 8 h (`check.py`). The ask and the rule for lowering the rate after the pilot
-are in PLAN §6.3, provisional, pending D0-10d.*
+*[D]: weeks × nights × 8 h (`check.py`). The ask and the rule for setting the rate after the pilot
+are in PLAN §6.3, provisional, pending D0-10d. Revision 3: the ask is now D0_BRIEF D0-10d's staged
+window (4 pilot-week nights, then the rule's rate, at most 7); the 7-night row is that rule's
+maximum, not the ask.*
+
+### 1.6 Plan tokens and desktop hours under the 2026-10-16 owner answers
+
+All rows are pending ratification of the chat answers and, for X1, D0_BRIEF Q17 and Q18 (Q16 is
+answered in chat: option 4b). The X1 record's section "X1 under the 2026-10-16 owner constraints"
+derives them (`scratchpad/owner/calc.py`, `calc2.py`). Template-based rows carry two template counts:
+**≤ 1 held-out item per template** (the X1 record's §4.3, as designed; ≈ 127–204 templates) and
+**2–3 per template** (≈ 71–94 templates; it needs a template-clustered analysis, an F = 1 power
+simulation not yet run and a §4.3 change Pierce would sign).
+
+| Item | Claude Code plan tokens | Daytime desktop hours (local Qwen3) | Owner h beyond ROADMAP's X1 line | Tag |
+|---|---|---|---|---|
+| One Claude attempt (X1) | ≈ 0.26–0.92 M | — | — | [D from G: X1 DESIGN §12.1's formula, 10–20 turns, 10–15k prefix, 5–20k output] |
+| X1, one kill-carrying family, n = 96: 2,856 attempts (2,016 held-out + 600 card iteration + 240 calibration) | ≈ 0.73–2.63 B | — | — | [D] |
+| X1, one kill-carrying family, n = 160: 3,816 attempts | ≈ 0.97–3.51 B | — | — | [D] |
+| X1 option 1 (Claude and Qwen3 both carry the kill; Qwen3 writes whole items). Contradicts D0-10c's option text and the X1 rule; for comparison only | ≈ 0.73–2.63 B | ≈ 288–788 | ≈ 0 | [D from G and inference] |
+| X1 option 4b (the X1 rule), Qwen3 templates (D0_BRIEF Q18 = GEN_QWEN3), ≤ 1 held-out item per template | ≈ 0.73–2.63 B, plus 5–20 M for the generator | ≈ 44–378 | ≈ 1–5 | [D from G and inference] |
+| — the same, 2–3 per template | as above | ≈ 30–190 | ≈ 1–5 | [D from G and inference] |
+| X1 option 4b, Owner-written templates (GEN_OWNER), ≤ 1 per template | as 4b | ≈ 12–30 | ≈ 64–306 | [D from G: 0.5–1.5 h per template] |
+| — the same, 2–3 per template | as 4b | ≈ 12–30 | ≈ 36–141 | [D from G] |
+| X1 option 4b, Claude-written templates (GEN_CLAUDE; a labelled loosening of 05 §13's author guard, not recommended) | as 4b, plus ≈ 9–200 M for the templates | ≈ 12–30 | ≈ 1–5 | [D from G: 5–10 turns, 15–30k prefix, 20–40k output, × 1–2 drafts per template, over 71–204 templates] |
+| X1 local pilot (all options) | — | 5–10 | — | [inference, ROADMAP §3.2]; unverified under 8 threads (PLAN Q18) |
+| D0_BRIEF Q17 roles, if Qwen3 holds them (bounded placeholder): R-local reviews of ≤ 23 records and verdicts | — | ≈ 1–12 | — | [D from G: 10–25k tokens in, 2–5k out, 1–3 passes; prefill 100–226 tok/s, of which 226 is measured on a 2,048-token prompt [R11]; decode 13–22 tok/s] |
+| — CC Prover and Adversary (the note ≈ 70k tokens [D: 277,935 bytes / 4, G]) | — | ≈ 0.3–4 | — | [D from G: 5–20k out, 1–3 passes; context length not verified, so chunking may add time] |
+| — X2 lockstep Prover | — | ≈ 0.04–1 | — | [D from G: 10–30k in, 2–10k out, 1–3 passes] |
+| — X4 batch (b) Adversary | — | ≈ 0.6–21 | — | [D from G: 10–30 hacks, 20–50k in and 3–10k out each, 1–2 drafts] |
+| — Q17 roles together | — | ≈ 2–38 | — | [D]; or a weekly Qwen3 cap Pierce signs instead (PLAN Q18, OWNER-QUEUE B06) |
+
+*For scale, the agent work of 2026-10-16 so far reported 10,649,295 tokens (ledger rows 4 and 5)
+[D: 10,248,932 + 400,363], so X1's Claude attempts alone are ≈ 70–250 times that at n = 96 [D].
+How plan tokens convert to the 5-hour and weekly windows is unknown; X1's smoke run (PLAN S70)
+measures it. The windows are account-wide (§2), so for about six weeks X1 would take a large, so far
+unmeasured share of them, and the agent team and Pierce's other Claude use would slow down
+[inference]; whether the plan's terms allow it is Pierce's own check (OWNER-QUEUE A20). If the X1 option chosen cannot fit the windows, a signed amendment comes before
+collection (ROADMAP §1 rule 1). The figure that would restore ROADMAP's design, a second frontier
+family's attempts alone, is ≈ $1.4–5.7k at n = 96 [D: 2,856 × $0.5–2]; it is listed for comparison
+and is contrary to the D0-10a answer.*
 
 ---
 
@@ -127,6 +183,9 @@ sessions cost $0 in the API column. Record what is available, in this order:
 1. **Tokens.** Record cumulative token counts when a usage report or transcript export provides them,
    tagged [M]. A *context occupancy* snapshot (the tokens in a session's window at one moment, as
    `get_usage` reports it) is not cumulative consumption. Record it as such, never as tokens spent.
+   A workflow or agent report's total is tagged [M, workflow report] and its row says what it counts
+   (for example "subagent tokens", which excludes the orchestrating session) and which earlier rows
+   it already contains, so that rows are never added twice.
 2. **Plan-window usage.** Take snapshots of the 5-hour and weekly percentages at the start and end of
    a work block, and at least 4 per work block when they are used for pacing. Tag them [M], with the
    reset time `get_usage` reports. The window is account-wide, so a delta includes every session that
@@ -174,6 +233,9 @@ and Machine h are as in §2.
 | 1 | 2026-10-16 | **Sprint setup, est.** The host session "Full-send Mithril: D0 brief + M0 falsification sprint" was created at 17:53Z. It covers reading the repository and the Hearth clone, the `docs/m0/` scaffold, the X0 record draft, the start of the X0 toolchain setup (LLVM, XED) and the X0 scripts, and orchestrating the track agents | all | $0 [G: no metered API keys provisioned, per the sprint brief] | host-session context occupancy 250,894 tokens at 18:17Z (a snapshot, not cumulative) [M]. Plan usage at 18:17Z: 5-hour 3%, weekly all-models 10% [M]. Cumulative tokens unknown | not logged (Pierce to fill) | laptop: light, not metered. Desktop: downloads and clones, not metered | **est.** | `get_usage`, 2026-10-16T18:17Z |
 | 2 | 2026-10-16 | Plan track: read ROADMAP, ARCHITECTURE §11–§17, DECISIONS §1/§4, 05 §13, 06 §6–§7, 07 §4 and the X0 record; wrote PLAN.md and COST.md; ran `check.py` (< 1 s) | plan | $0 [G] | Plan usage at 18:29Z: 5-hour 8%, weekly all-models 11% [M]. Delta from row 1: +5 and +1 points, account-wide, while several tracks ran in parallel; the plan track's share is unknown [G] | 0 | laptop: < 1 CPU-minute [G] | M / G | `get_usage`, 2026-10-16T18:29Z |
 | 3 | 2026-10-16 | Plan reviser: checked 18 same-family review findings against the sources; wrote PLAN.md revision 2 and COST.md revision 2; ran `check.py` revision 2 | plan | $0 [G] | Plan usage at 18:45Z: 5-hour 16%, weekly all-models 13%, weekly Fable 0% [M]. 5-hour reset `2026-10-16T22:59:59.905Z`; extra usage disabled [M]. Delta from row 2: +8 and +2 points in 16 min, account-wide; the plan track's share is unknown [G] | 0 | laptop: `check.py` 0.14 s wall [M, `time`] | M / G | `get_usage`, 2026-10-16T18:45Z |
+| 4 | 2026-10-16 | **Workflow 1** (the week-0 build): 30 agents, the track authors, reviewers and revisers for the D0 brief, PLAN and COST, the X0–X4 records and designs and the core-calculus note. It contains the agents of rows 2 and 3; do not add those rows to it | all | $0 (Claude Code plan; no metered API, D0-10a chat answer) | **10,248,932 subagent tokens** [M, workflow report]; excludes the orchestrating host session (row 1) | not logged (Pierce to fill) | laptop: light, not metered; desktop: not metered (job wrapper not yet live) | M | workflow 1 report, as relayed to the owner track |
+| 5 | 2026-10-16 | **Toolchain setup agent** (X0): LLVM 23.1.3 for Windows and Linux, XED v2026.08.23, CMake, the Hearth source on D:, smoke and probe compiles ([TOOLCHAINS.md](../../experiments/x0-census/TOOLCHAINS.md)) | X0 | $0 (Claude Code plan) | **400,363 tokens** [M] | 0 | desktop: downloads, builds and smoke compiles, not metered (TOOLCHAINS.md lists them) | M | agent report, as relayed to the owner track |
+| 6 | 2026-10-16 | **Build round** (this round: the owner track's integration of the chat answers, the X1 restructure section and OWNER-QUEUE.md, plus whatever other tracks run in the same round) | all | $0 (Claude Code plan) | *to be filled from the round's report* | 0 | owner track: laptop, `calc.py` and a brief-parsing check, each < 1 s [M] | — | to be filled |
 
 **Note on row 2** [D]: the 5-hour window rose 5 points in 12 minutes (18:17Z to 18:29Z). At that rate
 the remaining 92 points would last ≈ 3.7 h, against a reset 4.5 h away (23:00Z). Parallel track agents
@@ -189,6 +251,11 @@ pacing until it has at least 4 readings per work block (§2).
 reset ≈ 4.2 h away, so the window would run out ≈ 1.2 h before it resets. All three readings come
 from the first hour of track start-up, so this is still a burst figure, not a pacing rate.
 
+**Note on rows 4–6** [D]: the reported totals so far are 10,649,295 tokens [D: 10,248,932 +
+400,363], all on the Claude Code plan, with metered API spend $0. The host session's own cumulative
+tokens (row 1) are not reported. No plan-window reading from the end of workflow 1 is recorded
+here, so the tokens-to-window conversion that X1's sizing needs (§1.6) is still unmeasured.
+
 ---
 
 ## 4. Totals against budget
@@ -198,8 +265,10 @@ amount.
 
 | Line | Budget | To date | % of low end | % of high end | Tag |
 |---|---|---|---|---|---|
-| API $ (metered) | $16–36k [inference] | $0 [G] | 0% | 0% | [G] until the first provider export |
-| of which family B authoring and reviews | not estimated; sub-cap pending D0-10a (PLAN Q19) | $0 [G] | — | — | [G] |
+| API $ (metered) | $16–36k [inference] as ROADMAP's estimate; **stated by Pierce: $0** (approved once D0-10a is ratified) | $0 [G] | 0% | 0% | [G] until the first provider export |
+| of which family B authoring and reviews | no Family B under the chat answers; PLAN Q19 moot | $0 [G] | — | — | [G] |
+| Claude Code plan tokens (reported totals) | not a ROADMAP line; X1's Claude attempts estimated at ≈ 0.73–2.63 B at n = 96 (§1.6) | 10,649,295 [D: rows 4 + 5]; row 6 to come | — | — | [D] |
+| Daytime desktop hours, local Qwen3 | not a ROADMAP line except the pilot; ≈ 12–378 h for X1 depending on D0_BRIEF Q18 and the template count, plus ≈ 2–38 h for the Q17 roles (§1.6) | 0 [M: no Qwen3 job run yet] | — | — | [M] |
 | Owner hours | ~195 h [inference] | not logged | — | — | — |
 | Quiet-machine hours | ≈ 60–215 h [inference]; reconstruction 60.3–333.4 h [D] | 0 h [M: no quiet window agreed yet] | 0% | 0% | [M] |
 | Desktop daytime hours | X1 pilot 5–10 h [inference]; the rest unbudgeted | not metered (job wrapper due W1) | — | — | — |
@@ -209,7 +278,10 @@ amount.
 
 ## 5. Alerts and stop-loss
 
-These are proposals [G]. The Owner sets the actual levels with D0-10.
+These are proposals [G]. The Owner sets the actual levels with D0-10. **Under D0-10a's chat answer
+(no metered API; pending ratification) the metered rows are dormant: any metered charge at all
+stops the work that caused it and goes to Pierce, because no metered amount is approved.** The
+subscription rows become the binding ones, and X1's sizing depends on them (§1.6; PLAN R17, R29).
 
 | Signal | Level | Action |
 |---|---|---|
@@ -221,6 +293,8 @@ These are proposals [G]. The Owner sets the actual levels with D0-10.
 | Quiet hours | planned hours for the remaining nights > the nights agreed, at the pilot's σ_d and the frozen A/A stopping rule (PLAN §6.3) | Raise the night rate by PLAN §6.3's rule if the Owner agrees; otherwise record the D-22 trigger fact (ROADMAP §9), and X4 "waits" (ROADMAP §3.7) |
 | Subscription 5-hour window | projected exhaustion before reset (as in rows 2–3) | Stagger track agents; long jobs wait for the reset |
 | Subscription weekly window | % used > (days elapsed / 7) × 100 + 15 points | Pace the tracks; the Owner decides on extra usage |
+| Any metered charge (revision 3) | > $0 | Stop the job that caused it; report to Pierce; nothing metered resumes without a new signed decision |
+| Local Qwen3 daytime hours (revision 3) | the week's Qwen3 hours would push the 8-thread cap's queue past the share Pierce agreed (PLAN Q18) | Re-plan the Qwen3 jobs at the next checkpoint; never move them into a quiet window |
 
 ---
 
@@ -236,6 +310,6 @@ Tokens:            metered harness tokens in/out …; Claude Code cumulative …
 Plan usage:        weekly all-models start …% / end …%; 5-hour peaks …% (readings: …)          [M]
 Owner hours:       by track D0 … X0 … X1 … X2 … X3 … X4 … CC …; total … vs PLAN … (A or B)   [M, owner log]
 Quiet hours:       used … (voided …) of … agreed; nights …; rate in force …/week; pilot σ_d …   [M, service log]
-Daytime desktop:   … h (jobs: …; peak tokens …)                                               [M, job wrapper log]
+Daytime desktop:   … h (jobs: …; peak tokens …); of which local Qwen3 … h                     [M, job wrapper log]
 Alerts fired:      …
 ```

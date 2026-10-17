@@ -1,7 +1,15 @@
 # X1: cold-agent writability with all arms
 
-Status: DRAFT (track x1, 2026-10-16; revised the same day after two independent same-family
-reviews, §12). No data may be collected under this record.
+Status: DRAFT; **X1 rule answered in chat 2026-10-16** (Claude kills, pass provisional; ratify at
+sitting 1 via a signed amendment record; [OWNER-ANSWERS.md](../OWNER-ANSWERS.md), batch 2);
+**template author ([D0_BRIEF](../../D0_BRIEF.md) Q18) still open**, with the Qwen3 roles (Q17) and the
+plan check (OWNER-QUEUE A20). As designed, X1 needs ≥ 2 frontier families, a non-Claude family to
+author sealed items and metered spend; the Owner's chat answers of 2026-10-16 provide none of them,
+and the section "X1 under the 2026-10-16 owner constraints" (below) sets out the rule he chose and
+what remains open. Track x1, 2026-10-16; revised the same day after two independent same-family
+reviews (§12), again by the owner track the same day (restructure section), and once more after one
+review of that section (same family, independent context; §12). No data may be collected under this
+record.
 ROADMAP anchor: [§3.2](../../ROADMAP.md#32-x1-cold-agent-writability-with-all-arms-weeks-05); §1 rules 1–5;
 §4 (kill outcomes); §10 (measurement budget); §11 (D0-9, D0-10, D0-11, D0-12). DR-002, DR-003, DR-004,
 DR-005, DR-013, DR-017.
@@ -10,7 +18,10 @@ Power analysis: [experiments/x1-harness/power/](../../../experiments/x1-harness/
 seed 20261016, results).
 Owner authorisation: **none.** Collection, including the calibration run of §6.3, needs this record
 FROZEN and either SIGNED or covered by an explicit Owner instruction
-([docs/m0/README.md](../README.md#pre-registration-lifecycle-roadmap-1-rule-1-d0-12)).
+([docs/m0/README.md](../README.md#pre-registration-lifecycle-roadmap-1-rule-1-d0-12)). Under the
+Owner's chat answer to D0-12 of 2026-10-16 ("Batch weekly review"; pending ratification), only X0 has
+an instruction; this record is signed at a weekly sitting (Sunday evenings, sitting 1 on 2026-10-18,
+per his batch-2 answer) before any collection.
 
 Every number carries an evidence tag: [M] measured, [D] derived, [S] simulated, [G] judgment,
 [inference], [target]. Thresholds copied from ROADMAP §3.2 keep its [target] label. Where this record
@@ -19,6 +30,310 @@ Owner is marked *provisional, pending D0-x*. "[S]" numbers come from
 [x1_power_sim.py](../../../experiments/x1-harness/power/x1_power_sim.py) (blocks named per
 [x1_power_tables.md](../../../experiments/x1-harness/power/results/x1_power_tables.md)), run on
 2026-10-16 by this track on the shared laptop; all simulation inputs are [G].
+
+---
+
+## X1 under the 2026-10-16 owner constraints
+
+*Added 2026-10-16 by the owner track (a Claude agent) and revised the same day after one review
+(Claude, same family, independent context; §12). The X1 rule is answered in chat (D0_BRIEF Q16 =
+option 4b, below), pending ratification by a signed amendment record; D0_BRIEF Q17 and Q18 are open.
+Where this section conflicts with §§2–13 or with [DESIGN](../../../experiments/x1-harness/DESIGN.md),
+this section governs until the Owner's answers are ratified and Q18 is answered; the X1 track then
+revises §§2–13 to the chosen option. Arithmetic: `scratchpad/owner/calc.py` and `calc2.py` [D].*
+
+### Why X1 cannot run as designed
+
+As designed, X1 rests on three things:
+1. **At least two frontier families carry the kill** (ROADMAP §1 rule 5, §3.2; DR-017).
+2. **Non-Claude authors.** Task authors come from a family other than the card editors' (05 §13), and
+   the planted corpus from a family other than `mithi`'s author (ROADMAP §3.2). Claude edits the card
+   and builds `mithi` (DESIGN §2).
+3. **Metered spend**: ≈ 5.7k frontier attempts at n = 96 across the two families [D: 4,032 held-out
+   + 1,200 card iteration + 480 calibration, §6.1], plus Family B's authoring and reviews; $5.6–18.9k
+   in all [D, DESIGN §16].
+
+The Owner's chat answers of 2026-10-16 are logged verbatim, with the option text he saw, in
+[OWNER-ANSWERS.md](../OWNER-ANSWERS.md) (commit `11210a8`; [D0_BRIEF §0](../../D0_BRIEF.md)). Status:
+decided by Pierce in chat; not yet AUTHORITY facts until a `d0-sign-<n>` tag ratifies them; work
+proceeds on them provisionally. Batch 1: no metered API; Claude, through the Claude Code plan, is the
+only frontier family; the local Qwen3 served by Hearth runs the ROADMAP pilot ("reported but not part
+of the kill", in the option text he saw). So items 1 and 3 cannot be met, and item 2 only by the
+Owner, by a generator whose templates someone writes, or by Qwen3 if a new answer gives it that role.
+ROADMAP §11's "if declined" mechanism for D0-10 therefore applies to X1: **no X1 kill can be evaluated
+as ROADMAP defines it.**
+
+**The Owner's X1 rule (batch 2).** Asked which rule to draft for his signature, Pierce answered
+"Claude kills; pass provisional (Recommended)". The option text he saw: "Claude alone can fire the
+kill (VP@1 gap >15, or CABW >5 worse than Rust). A pass is only provisional until a second frontier
+family confirms it at M1. Claude also edits the card, which biases toward passing, so a kill is the
+more trustworthy signal. Sealed items are generated from templates with deterministic oracles, so no
+model writes them." That is option 4b with option 2's generated suite below. It supersedes the
+batch-1 option text's "X1 cannot pass or kill and stays amber", pending ratification. It is to be
+drafted as a signed amendment record. It leaves open who writes the templates (D0_BRIEF Q18, with the
+caveat in option 2 below) and whether his plan's terms and capacity carry it (OWNER-QUEUE A20).
+
+Every option below is an amendment the Owner signs. None changes a ROADMAP threshold: 15 points on
+VP@1, 5 points on CABW, ≥ 60 held-out items, kill operating characteristics ≤ 10% at a 5-point gap
+and ≥ 90% at 25, 8 checker calls per task, ≥ 95% mutant kill and ≥ 100 planted items all stay, as do
+this record's stricter R-CABW and R-JOINT (§6.2).
+
+### Facts common to every option
+
+- **Claude as participant runs through the Claude Code plan, not the API.** The runner (DESIGN §12.1)
+  would drive headless Claude Code sessions restricted to the harness tools (`read_file`,
+  `write_file`, `check`, `submit`, …), from an empty working directory, with an isolated
+  configuration so that no Mithril design file, memory or project instruction reaches a "cold"
+  attempt. How far a Claude Code session's system prompt, tool set and configuration can be fixed is
+  not verified [not verified]. Sampling parameters cannot be pinned the way §2 asks [inference]; the
+  model ID can be pinned per session [inference]. Results then describe "Claude in Claude Code", which
+  is also the agent setting Mithril targets [inference].
+- **Plan usage per Claude attempt** ≈ 0.26–0.92M tokens processed [D: DESIGN §12.1's cumulative
+  input ≈ prefix·t + 1.5k·t², inputs G: t = 10–20 turns, prefix 10–15k, plus 5–20k output]. One
+  family's full share is 2,856 attempts at n = 96 [D: 2,016 held-out + 600 card iteration + 240
+  calibration] and 3,816 at the cap n = 160 [D]. That is ≈ 0.73–2.63 billion tokens at n = 96 and
+  ≈ 0.97–3.51 billion at n = 160 [D]. For scale, workflow 1 of 2026-10-16 (30 agents) used 10,248,932
+  subagent tokens [M, workflow report]; X1's Claude share is ≈ 71–256 such workflows at n = 96 [D].
+  How the plan's 5-hour and weekly windows convert to tokens is not known [unknown]. **This is the
+  largest feasibility risk of every option.** A measured smoke run, 20–40 attempts on the public
+  smoke set (DESIGN §5.2; not collection), should precede any freeze and give tokens per attempt and
+  window percentage per attempt [M] in place of these estimates.
+- **The plan's terms and its other users.** Whether the Claude Code plan's terms allow scripted,
+  headless harness attempts at this volume is not verified; Pierce checks that himself, and agents do
+  not interpret the terms (OWNER-QUEUE A20). The plan's windows are account-wide ([COST §2](../COST.md)),
+  so for about six weeks X1 would take a large, so far unmeasured share of them, and the M0 agent team
+  and Pierce's other Claude use would slow down [inference]. If either is unacceptable, the X1 rule
+  cannot run as planned and needs a new answer before freeze.
+- **The local Qwen3** runs in daytime only, never in a quiet window (DR-023, ROADMAP §3.2), and counts
+  against the 8-thread total Mithril desktop cap that X0, X2 and X3 share. Its tok/s under 8 threads is
+  not measured (PLAN Q18). ROADMAP's planning figure is 5–10 minutes per agentic attempt [inference,
+  ROADMAP §3.2]. That may be several times too low if Hearth's server re-prefills the whole context
+  every turn [inference]: Hearth's measured prefill is 226 tok/s on a 2,048-token prompt [R11], and a
+  20-turn attempt reads several hundred thousand tokens in all [D, formula above]. Hearth's tool-call
+  support and usable context length are not verified (DESIGN §15). Text-only roles (authoring,
+  review) need no tool calls. **Any Qwen3 role beyond the pilot is a new decision** (D0_BRIEF Q17,
+  Q18): the D0-10c option text Pierce chose described only the 60-attempt pilot outside the kill.
+- **Contamination.** Whatever a Claude participant reads (visible bundles only) goes to Anthropic under
+  the plan's data-use setting, which is not verified [not verified]; Owner question 4 now concerns
+  that setting. Qwen3 output never leaves the desktop. Under every option hidden bundles never reach
+  a Claude session, and the family-A firewall (DESIGN §4.6) applies to the desktop, where Claude
+  sessions also run over SSH, so any authoring there needs a separate account that no Claude session
+  can read (D0-9b's gate account would serve); Claude settings deny rules alone are weak there,
+  because agents reach the desktop over SSH as Pierce [inference] (OWNER-QUEUE A06).
+- **One kill-carrying family needs a larger n.** With F = 1, the per-family standard deviations at
+  n = 96 are 3.2–3.8 points for VP@1 and 3.6–4.5 for CABW, against 2.5–3.2 pooled [S, block 11]. The
+  power simulation must be extended to F = 1 and re-run before freeze; this round did not run it.
+  n_final is expected to rise [inference]. If no n ≤ 160 meets R-VP, R-CABW and R-JOINT, §6.3 step 5
+  applies: collection waits for a new signed record, and no threshold moves.
+- **Roles that 05 §13 and DESIGN §2 give to "family B or C"** (item reviewers, the semantic guard, the
+  kit acceptance corpus, half the scorer canaries, defect-claim confirmers) fall to the Owner, or to
+  Qwen3 by a new answer (D0_BRIEF Q17), under every option.
+
+### Option 1: two families, one of them local
+
+*Shown for completeness. It contradicts the D0-10c option text Pierce chose (the pilot is "not part of
+the kill") and his batch-2 X1 rule.*
+
+- **Design.** Claude (card editor and participant) and Qwen3 via Hearth (author of every sealed
+  item, the planted corpus and the item reviews; participant) both carry the kill. The pooled
+  estimand and statistics of §7 stay as written (F = 2).
+- **DR-017's kill.** Binding in form. ROADMAP §3.2 says "at least two frontier families", and Qwen3
+  is not frontier [inference], so §3.2 is amended. Whether that loosens the kill is unknown: floor
+  effects (a weak model near zero in both arms) pull Qwen3's gap and the pooled Δ toward 0, while a
+  weaker model may also suffer more from unfamiliar syntax, which widens it [inference; neither is
+  measured]. A pre-registered eligibility floor (Qwen3 carries the kill only if its Rust VP@1 on the
+  calibration set reaches a level the X1 track proposes before freeze) keeps the reading honest; if
+  Qwen3 misses the floor, X1 falls to option 4's rules, decided by the frozen text, not after data.
+  Qwen3 both writes and attempts the items, so D0_BRIEF Q15 must be YES and the author × arm
+  interaction of §9 cannot be removed.
+- **Cost.** Claude ≈ 0.73–2.63 billion tokens [D]. Qwen3: participant attempts ≈ 238–476 h [D:
+  2,856 × 5–10 min]; whole-item authoring, planted corpus and reviews ≈ 50–312 h [D from G: 228 items ×
+  15–30k output tokens at 13–22 tok/s [measured decode rates: 13.02 tok/s at a 2 GiB cache, R11;
+  19–22 tok/s cached, noisy, ROADMAP §7; thread count not verified], × 1–2 for rejected drafts, plus
+  200 planted items and 228 reviews]; ≈ 288–788 daytime desktop hours in all [D]. Owner hours as in DESIGN §16 (≈ 45 h).
+- **Schedule.** 288–788 h is ≈ 3–8 weeks of the whole 8-thread daytime cap at 14 usable hours a day
+  [D; 14 h/day is G], during which X2 fuzzing, X3 builds and X0 re-runs cannot use the desktop. X1's
+  verdict moves from ≈ W11–W12 (PLAN Plan B) to roughly W14–W20 [G].
+- **Contamination.** Lowest for authoring (local). Claude participants as in the common facts.
+- **Pierce signs.** An amendment of ROADMAP §3.2's "frontier" for M0, with the eligibility floor;
+  D0-10c's roles (Qwen3 as author and participant); D0_BRIEF Q15 = YES; a daytime-capacity allocation between
+  Qwen3 and X0, X2 and X3 (PLAN Q18).
+
+### Option 2: a generated suite (an authoring method; pairs with option 1 or 4)
+
+- **Design.** A deterministic generator instantiates sealed items from parametric templates. 05 §13
+  already describes items as "parametric variants within a family (formats, tie rules, sizes, failure
+  modes)". Each template carries a brief template, stubs, Rust and C11 references and a bit-exact
+  oracle model with vector generators. The Gatekeeper seals the seeds and the template-to-split
+  assignment. Mutant kill (≥ 95%), reference agreement and the contamination check run mechanically, as
+  now (DESIGN §4.5, §6.2). Mithril references come from a deterministic Rust-to-X1-subset
+  transliteration tool where it succeeds (a public tool Claude may write), and from the template
+  author otherwise. No model family writes a held-out *instance*.
+- **What it does not settle.** Who carries the kill: pair it with option 1 or 4 (the Owner's X1 rule
+  pairs it with 4b). **Who writes the templates.** The template carries the authorship and the
+  item-level variance, so 05 §13's guard applies to it. The Owner's X1 rule says "no model writes"
+  the sealed items; the template author is still a separate choice (D0_BRIEF Q18), and no default is
+  given:
+  - **the Owner** (GEN_OWNER): the reading that matches "no model writes them" (option 3's costs);
+  - **Qwen3** (GEN_QWEN3): meets 05 §13's guard, but a model family then authors the templates, which
+    departs from the summary he accepted and extends the D0-10c pilot answer;
+  - **Claude** (GEN_CLAUDE): would need 05 §13's guard amended, because the card editor would become
+    the author, a Goodhart risk toward passing on top of the card bias his X1 rule names. A labelled
+    loosening only Pierce can grant; not recommended. ≈ 9–200 million plan tokens [D from G: a
+    Claude Code authoring session of 5–10 turns, 15–30k prefix, 20–40k output, × 1–2 drafts, ≈ 0.13–
+    0.98 M tokens per template, over 71–204 templates], about 1–20 times workflow 1.
+
+  The planted corpus stays with a non-Claude author too: a Claude-written mutation engine would make
+  `mithi`'s author family its author in substance.
+- **Sample-size consequence.** Items from one template are correlated, so generation does not cut the
+  template count. Two counts, which every cost below carries:
+  - **≤ 1 held-out item per template (§4.3, as designed):** ≈ 127–204 templates [D: n_final 96–160
+    + 24 calibration + 7–20 iteration templates].
+  - **2–3 held-out items per template:** the high scenario needs n ≈ 120 with a template-clustered
+    analysis [S, block 4b, F = 2], that is ≈ 71–94 templates [D: 40–60 held-out + 24 calibration +
+    7–10 iteration]. This count rests on an F = 1 simulation that has not been run and on a change
+    to §4.3 that Pierce would sign (Owner question 10).
+- **Cost.** Generator and transliterator by Claude ≈ 5–20 million tokens [inference: about 0.5–2
+  workflow-1 equivalents]. Templates by Qwen3: ≈ 32–349 daytime desktop hours at ≤ 1 item per
+  template, or ≈ 18–161 h at 2–3 [D from G: 20–40k output tokens per template at 13–22 tok/s, × 1–2].
+  Templates by the Owner: ≈ 64–306 h at ≤ 1 item per template, or ≈ 36–141 h at 2–3 [D from G:
+  0.5–1.5 h each].
+- **Contamination.** Lowest of all: instances do not exist until they are sealed. Templates that
+  follow Hearth's public code paths (T-Q4, T-ACTQ) are caught by the existing `public_near` check.
+- **Pierce signs.** The generation method and the template author (D0_BRIEF Q18), in this record before freeze.
+
+### Option 3: Owner-authored items (an authoring method; pairs with option 1 or 4)
+
+- **Design.** Pierce writes the held-out and calibration templates or items, with Rust and C11
+  references; the mechanical gates stay; Mithril references by transliteration or by Pierce; the
+  planted corpus by Pierce, or by Qwen3 if a new answer allows it.
+- **Independence.** The strongest of all options: a human author shares no model priors with the
+  card editors. It holds only if Pierce drafts without a Claude session's help, and he then cannot
+  review card edits before the card freeze (§9, "the Owner as a channel"; Owner question 17 becomes
+  "sign the card hash only").
+- **Cost.** Whole items: ≈ 228–456 owner hours [D from G: 228 items × 1–2 h], not feasible at 15 h a
+  week. As templates for option 2: ≈ 64–306 h at ≤ 1 held-out item per template, or ≈ 36–141 h at
+  2–3 [D from G], on top of DESIGN §16's ≈ 45 h.
+- **Schedule.** At 15 h a week, +64–306 h is ≈ 4–20 more weeks and +36–141 h ≈ 2–9 [D], so X1's
+  verdict moves to roughly W15–W32 or W13–W21 [G].
+- **Contamination.** Lowest.
+- **Pierce signs.** His authoring role and hours, a cost change rather than a threshold change; Owner
+  question 17's new form.
+
+### Option 4: one frontier family at M0; DR-017's binding two-family test when a second family exists
+
+Two forms. Both use option 2's generated suite with the template author of D0_BRIEF Q18 (the Owner,
+or Qwen3 by a new answer), the planted-corpus author of D0_BRIEF Q17 (the Owner or Qwen3), and Qwen3
+for the ROADMAP pilot (60 attempts, reported, 5–10 daytime hours [inference, ROADMAP §3.2]).
+
+- **4a, referral form (as first framed).** Claude carries X1 alone. A breach (K1 or K2) becomes an
+  Owner referral instead of STOP-L, and DR-017's binding test moves to M1 once a second family exists.
+  **This loosens ROADMAP §4's X1 row**: an X1 breach would no longer stop the standalone surface, the
+  cheap early stop that M0 exists for. Not recommended.
+- **4b, strict form (the Owner's chat answer of 2026-10-16, "Claude kills; pass provisional";
+  pending ratification by a signed amendment record).**
+  - Claude is the only kill-carrying family at M0 (F = 1). The estimand of §7.1 becomes Claude's, and
+    n is recomputed for F = 1 as above.
+  - **A breach stays binding:** K1 or K2 on Claude's estimate is the X1 kill, STOP-L (ROADMAP §4), with
+    the `standalone_surface` tombstone, whose `models` field then names one family. The one-family
+    design's main known bias runs in Mithril's favour: the card is tuned on Claude, the family that
+    then attempts the items [inference]. A breach despite that bias is therefore conservative
+    evidence. Author bias is removed, because the template author (the Owner or Qwen3) is not a
+    participant.
+  - **A pass is provisional** (`pass_one_family`). It is not DR-017's pass. The binding two-family
+    test runs as soon as a second frontier family exists, on a fresh sealed batch built as M1's is
+    (ROADMAP §5) and drawn from the unspent reserve, with both families, pooled as §7 says; its result
+    is X1's DR-017 verdict, and a breach then is the kill. It must run before M1's DR-017 gate is
+    evaluated, which agrees with the Owner's wording "until a second frontier family confirms it at
+    M1"; the amendment record uses his wording [G].
+  - **The M0 verdict** treats `pass_one_family` as neither pass nor kill. Rows that need X1 = pass (the
+    "X2 kill alone" clause) stay undecided, and the M0 verdict may be signed with X1 open (PLAN §3.8,
+    pending PLAN Q7). M1 work may start.
+  - **Standing gap.** Under the 2026-10-16 answers no second frontier family is planned. If none ever
+    exists, the pass never becomes binding, and M1's own DR-017 kill, which also needs ≥ 2 families,
+    cannot be evaluated either. A tombstone records this, with a trigger on the number of frontier
+    families in the harness (`harness.frontier_families >= 2`, a fact the harness would write), so
+    `mithc revisit` reopens it.
+  - **Cost.** Claude ≈ 0.73–2.63 billion tokens at n = 96, ≈ 0.97–3.51 billion at n = 160 [D], plus
+    5–20 million for the generator [inference], on a plan whose windows are account-wide (the common
+    facts: for about six weeks the agent team and Pierce's other Claude use slow down [inference];
+    OWNER-QUEUE A20). Qwen3, besides any templates: ≈ 1–4 h for 200 planted items, ≈ 6–15 h for item
+    reviews and 5–10 h for the pilot, ≈ 12–30 h [D from G and inference]. With Qwen3 templates
+    (GEN_QWEN3), ≈ 44–378 daytime hours in all at ≤ 1 held-out item per template (§4.3, as
+    designed), or ≈ 30–190 h at 2–3 per template [D]. With Owner templates (GEN_OWNER), Qwen3 ≈ 12–30
+    h and Owner +64–306 h or +36–141 h. Owner hours otherwise as in DESIGN §16 (≈ 45 h), with the
+    post-freeze sample review covering 24 templates instead of 24 items (≈ 4–8 h instead of
+    ≈ 3.2 h [G]).
+  - **Schedule.** With Qwen3 templates: authoring in daytime W1–W5 alongside X2 fuzzing under the
+    shared cap; sealing ≈ W5–W6; card iteration and calibration ≈ W6–W9; held-out runs ≈ W10–W11.
+    That keeps PLAN Plan B's X1 verdict at ≈ W11–W12 [G], **if** the plan's token windows carry
+    0.7–3.5 billion tokens over about six weeks, which is not known, and if the template count is at
+    the low end: at ≤ 1 item per template, up to ≈ 349 template hours do not fit W1–W5 under the
+    shared cap [inference], and the verdict date is not re-derived here. With Owner templates, X1's
+    verdict moves to ≈ W15–W32 or ≈ W13–W21 (option 3) [G].
+  - **Contamination.** As option 2.
+  - **Pierce signs.** (i) The amendment for M0: F = 1, breach binding, pass provisional, the
+    confirmation rule and its trigger, so that ROADMAP §1 rule 5 and §3.2 apply at confirmation (D0_BRIEF Q16).
+    (ii) The generated suite and its template author (D0_BRIEF Q18), and the planted-corpus and
+    review roles (D0_BRIEF Q17). (iii) The M0-verdict state `pass_one_family` (PLAN Q7). (iv) The
+    Claude Code runner: unpinned sampling and an isolated configuration (a new Owner question for
+    this record; OWNER-QUEUE D07). (v) His check of the plan's data-use setting (Owner question 4) and
+    of its terms and capacity (OWNER-QUEUE A20).
+
+### Comparison
+
+| | Option 1 | Option 4a (+ 2) | **Option 4b (+ 2), Qwen3 templates** | **Option 4b (+ 2), Owner templates** |
+|---|---|---|---|---|
+| Status | contradicts D0-10c's option text and the X1 rule | not recommended (a loosening) | 4b is the Owner's chat answer; Qwen3 templates are one answer to D0_BRIEF Q18, open | 4b is the Owner's chat answer; Owner templates are one answer to D0_BRIEF Q18, open |
+| Kill-carrying families at M0 | Claude + Qwen3 | Claude | Claude | Claude |
+| An X1 breach at M0 | STOP-L (pooled, "frontier" amended) | Owner referral (a loosening) | STOP-L | STOP-L |
+| An X1 pass at M0 | DR-017 pass | provisional | provisional until a second frontier family confirms | provisional |
+| Sealed items written by | Qwen3 (whole items) | generator, templates per Q18 | generator, Qwen3 templates | generator, Owner templates |
+| Matches "no model writes them" (the X1 rule's text)? | no | as 4b, by template author | no: a model writes the templates | yes |
+| Claude plan tokens, n = 96 [D] | 0.73–2.63 B | 0.73–2.63 B | 0.73–2.63 B (more if F = 1 raises n) | same |
+| Qwen3 daytime desktop hours, ≤ 1 held-out item per template (§4.3, as designed) [D] | ≈ 288–788 | as 4b, by template author | ≈ 44–378 | ≈ 12–30 (no templates) |
+| Qwen3 hours, 2–3 per template (needs an F = 1 simulation not yet run and a §4.3 change Pierce signs) [D] | — | as 4b, by template author | ≈ 30–190 | ≈ 12–30 |
+| Extra owner hours, ≤ 1 per template [D from G] | ≈ 0 | as 4b, by template author | ≈ 1–5 | ≈ 64–306 |
+| Extra owner hours, 2–3 per template [D from G] | — | as 4b, by template author | ≈ 1–5 | ≈ 36–141 |
+| X1 verdict under Plan B [G] | ≈ W14–W20 | as 4b, by template author | ≈ W11–W12, if the token windows suffice and the template hours fit W1–W5 | ≈ W15–W32 (≤ 1 per template) or ≈ W13–W21 (2–3) |
+| Contamination of held-out content | local authoring; low | lowest | lowest | lowest |
+| ROADMAP text amended (signed) | §3.2 "frontier" | §4's X1 row and §1 rule 5 at M0 | §1 rule 5 and §3.2 at M0, pass side only | as 4b |
+
+The Qwen3 hours for "Owner templates" are the pilot, the planted corpus and the reviews only [D].
+Every option also carries the plan-capacity cost of the common facts (OWNER-QUEUE A20).
+
+### The Owner's choice (chat) and what remains open
+
+**Chosen in chat, 2026-10-16 (batch 2), pending ratification:** option 4b's rule, "Claude kills; pass
+provisional" (D0_BRIEF Q16 = OPT4_STRICT), with option 2's generated suite. It keeps every ROADMAP
+threshold and keeps an X1 breach binding, so the cheap early stop that M0 exists for still works. It
+gives up a two-family pass at M0: DR-017's pass waits for a second frontier family, possibly
+indefinitely under the current answers, and that gap stays visible in the M0 verdict and in a
+tombstone.
+
+**Still open before X1 can write a sealed template or freeze:**
+1. **The template author** (D0_BRIEF Q18; OWNER-QUEUE A04): no default, because the Owner's text says
+   "no model writes them" and the earlier default, Qwen3, is a model. GEN_OWNER matches the text and
+   costs owner hours and weeks; GEN_QWEN3 keeps the schedule and departs from the text; GEN_CLAUDE is
+   a labelled loosening.
+2. **The Qwen3 roles** (D0_BRIEF Q17; OWNER-QUEUE A05), including whether passes resting on Qwen3 stay
+   provisional.
+3. **The plan's terms and capacity** (OWNER-QUEUE A20), the Gatekeeper store (A06) and the Claude
+   Code runner (D07).
+4. **The template count**: ≤ 1 held-out item per template as §4.3 says, or 2–3 with a
+   template-clustered analysis (Owner question 10), after the F = 1 simulation is run.
+5. **The amendment record** itself, drafted and frozen, then signed at a sitting.
+
+**What would restore ROADMAP's design**, for completeness only and against the D0-10a and D0-10c
+answers: a second frontier family's participant attempts alone, ≈ 2,856 attempts at n = 96, about
+$1.4–5.7k at ROADMAP §10's $0.5–2 per attempt [D]; ≈ 2,040 attempts and $1.0–4.1k at ROADMAP's own
+60-item size [D]. Its authoring would still go to the Owner, a generator or Qwen3. This is not
+recommended over the Owner's answer; it is listed so that the price of the gap is visible.
+
+**Until those are answered.** The X1 track builds only family-agnostic parts: grammar, cards, `mithi`,
+kit, runner, scoring, the generator engine and the power code, including F = 1 support. It writes no
+sealed content and runs no attempt on any sealed or Hearth-derived item. The smoke run above is
+development on public items, not collection, and needs no signature.
 
 ---
 
@@ -781,7 +1096,27 @@ because the surface stops.
 
 Both reviews are **same-family, independent-context**, which is weaker than ROADMAP's
 different-family requirement ([docs/m0/README.md](../README.md)); a family B or C review is still
-required before FREEZE once D0-10 names the families.
+required before FREEZE once D0-10 names the families. Under the Owner's chat answer to D0-10c, that
+review can only be the local Qwen3's, and only by a new answer (D0_BRIEF Q17).
+
+The section "X1 under the 2026-10-16 owner constraints" was added on 2026-10-16 by the owner track (a
+Claude agent). It changes no threshold. Elsewhere the owner track added only status notes: the status
+and authorisation lines, the note under "Owner questions", the note under "Budget per ROADMAP §10"
+and this paragraph. That section, with the owner track's other files, then had one review:
+
+| Date | Reviewer | Family | Context | Scope | Result |
+|---|---|---|---|---|---|
+| 2026-10-16 | Reviewer 1 of the owner-track revision, the Owner's position lens (fidelity to the owner answers log, decision by framing, cost completeness, sitting feasibility; inferred from the findings) | Claude, same family, independent context | separate agent context | the section "X1 under the 2026-10-16 owner constraints", with D0_BRIEF, PLAN, COST and OWNER-QUEUE | 13 findings across the five files: 1 blocker, 6 major, 6 minor; all 13 accepted, 6 with a modified fix; 0 rejected. Full log in [OWNER-QUEUE](../OWNER-QUEUE.md#review-log) |
+
+In this record the review led to: the Owner's batch-2 X1 rule recorded as answered (status line;
+"The Owner's choice (chat) and what remains open" replaces "Recommendation"); option 4b no longer
+fixed to Qwen3 templates, the template author left open with GEN_OWNER first and GEN_CLAUDE priced as
+a labelled loosening; both template counts carried through options 2, 3 and 4b and the comparison
+(Qwen3 templates ≈ 32–349 h at ≤ 1 held-out item per template, not the earlier "35–349", which used
+140 templates for the lower end; Owner templates ≈ 36–141 h at 2–3 per template, not "35–142") [D,
+`owner/calc2.py`]; option 1 marked as contradicting D0-10c's option text and the X1 rule; the plan's
+terms and account-wide capacity added to the common facts and to 4b's cost; Qwen3 roles beyond the
+pilot marked as new decisions.
 
 **Totals:** 32 findings (1 blocker, 17 major, 14 minor); 32 accepted, 0 rejected. Revised by track x1
 on 2026-10-16: this record, DESIGN.md, and the power simulation (blocks 9–13 added; blocks 1–8 re-run
@@ -847,6 +1182,18 @@ DR-017 test form: point_estimate (writes owner.decision(dr017_test_form))
 D0 numbers are ROADMAP §11's. Sub-items in brackets point to the split in
 [docs/D0_BRIEF.md](../../D0_BRIEF.md), a separate draft, so that each answer can be signed where it
 belongs.
+
+*Status after the Owner's chat answers of 2026-10-16 (both batches, [OWNER-ANSWERS.md](../OWNER-ANSWERS.md);
+pending ratification; owner track):* question 1 is answered for families (Claude through the plan;
+the local Qwen3 as the ROADMAP pilot only); which Qwen3 checkpoint, and the settings, remain open.
+Question 2's dollar figures are moot, because there is no metered spend; its sample-size choices
+remain and are now priced in plan tokens (section "X1 under the 2026-10-16 owner constraints").
+Question 3 becomes D0_BRIEF Q18 and Q17. Question 4 now concerns the Claude Code plan's data-use
+setting. Question 6 is moot under the Owner's X1 rule (option 4b, one kill-carrying family).
+Question 10 now decides which template count the generated suite uses. Two new questions: accept the
+Claude Code runner with unpinned sampling and an isolated configuration (OWNER-QUEUE D07), and do
+the plan's terms and capacity carry X1's Claude attempts (OWNER-QUEUE A20)? All open questions are
+consolidated, deduplicated and ranked in [OWNER-QUEUE.md](../OWNER-QUEUE.md).
 
 1. **D0-10 [D0-10c], model families.** Which two frontier families carry the kill (family A presumably
    Claude), which exact model versions, and with what reasoning and sampling settings? Which local model
@@ -931,7 +1278,10 @@ belongs.
 | X1 total (ROADMAP §3.2) | $7–15k, ~55 h, including the tooling kit and the checker precondition | ≈ $5.6–18.9k at n = 96, $6.6–22.7k at n = 160 [D, DESIGN §16]; ≈ 45 owner hours [D from G, DESIGN §16] |
 
 The per-attempt price ($0.5–2 per agentic attempt with a frontier model) is ROADMAP §10's
-[inference]. The pinned price table (§2) replaces it at freeze.
+[inference]. The pinned price table (§2) replaces it at freeze. Under the Owner's chat answer to
+D0-10a ("No metered API", pending ratification) no line of this table is a spend authorisation; the
+costs become Claude Code plan tokens and desktop hours, priced per option in the section "X1 under the
+2026-10-16 owner constraints".
 
 ---
 
