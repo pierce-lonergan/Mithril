@@ -75,10 +75,28 @@ findings (F-30 to F-59) and the rules that now close them; the remaining review 
 gate record, the prelude and the tombstones. No canonical verdict changed. One derived verdict (D-D11) now rests on a new provisional rule, and the agreement
 rule now covers the out-of-X1 derived snippets (§0.3, Q10).
 
+A second independent review (two same-family reviewers, 2026-10-16, §17) reported 39 findings, 11 of
+them blockers. Each was re-derived by this reviser and confirmed; none was rejected as a whole, and in
+2 the reviewer's proposed fix was replaced by an alternative the same reviewer offered (§17). Five theorems or
+lemmas were false as stated. Most of the defects were in closures: summaries fixed every capture's
+grade at creation, so a `FnMut` closure's own state leaked; loans stored into captures or carried by
+moved references, and loans and writes passed through by-value parameters such as
+`Option<&mut T>`, were lost; and writes through a closure's `&mut` parameter, through a captured
+reference, or just before a return in a closure body never reached the caller. Elsewhere, a read through a local reference used a stale
+grade, `Proj-Split` let two iterations write one element, `T-Cover` strong-updated a may-alias
+place, loops without a `break` dropped their exit grades, and a `det` boundary's claim did not
+exclude shared-mutable contents. §0.6 lists the 29 resulting findings (F-60 to F-88). No canonical
+verdict changed. The canonical D-C2 and D-C8, and their copies, now rest on prelude declarations
+they had assumed without stating (`BlockQ4` and `Buf<T>`, F-87, F-88), and D-D11's nested cover is
+the new rule `Cover-Proj` [prov] (F-73).
+
 One cross-track conflict needs the Owner (§12, Q9). The X1 track's design draft rejects `par for`,
 `deterministic`, `schedule`, `spec` and `linear` in `mithi` as "not yet", but ROADMAP §3.6 requires
 `mithi` to accept every canonical snippet, and the canonical snippets use them. This note recommends
-typing-only acceptance in `mithi`; it does not loosen the gate.
+typing-only acceptance in `mithi`; it does not loosen the gate. The second review adds one Owner
+question, Q12 (§16): a directly called closure that stores or returns the loan of an annotated
+reference parameter is accepted where rustc rejects it, unless `mithi` mirrors rustc's
+closure-signature inference (OP-22).
 
 **Contents**
 
@@ -134,7 +152,7 @@ narrowing). There is no kill row for this note in ROADMAP §4.
 |---|---|
 | Canonical snippet | Each fenced `mith` block in ARCHITECTURE §5.3 (7 blocks) and in README "A taste" (1 block): 8 blocks [M] |
 | Derived snippet | Each other fenced `mith` block in ROADMAP.md and docs/architecture/01–07 at the pinned commit: 37 occurrences, so 45 in all, 35 distinct by hash [M]. Negative examples written as comments inside a block (`// fn first_dyn …`) are separate items with an `n` suffix |
-| Agreement | For **every** canonical and derived item in verdicts.json and each negative item marked `gate_item`: `mithi`'s verdict (accept or reject) equals the expected one, and for a reject its primary diagnostic code equals the expected code. For an item in X1 scope (`scope` of `x1` or `x1-front-end`) the expected verdict is the calculus verdict. For an item outside X1 scope the expected verdict at the checker precondition is the out-of-scope rejection in its `x1_expected` field, `E-OUT-OF-SCOPE-<KW>` [prov], where KW names the first out-of-X1 keyword, format code or `std_platform` name in source order (§12); the calculus verdict is recorded beside it and becomes the expected verdict when the construct enters scope (Q10). The primary code is the first emitted code in the precedence order of §5.16. Facts (row, `may_trap`, output grade) are secondary and reported |
+| Agreement | For **every** canonical and derived item in verdicts.json and each negative item marked `gate_item`: `mithi`'s verdict (accept or reject) equals the expected one, and for a reject its primary diagnostic code equals the expected code. For an item in X1 scope (`scope` of `x1` or `x1-front-end`) the expected verdict is the calculus verdict. For an item outside X1 scope the expected verdict at the checker precondition is the out-of-scope rejection in its `x1_expected` field, `E-OUT-OF-SCOPE-<KW>` [prov], where KW names the first out-of-X1 keyword, format code or `std_platform` name in source order (§12); the calculus verdict is recorded beside it and becomes the expected verdict when the construct enters scope (Q10). Where no calculus verdict has been derived (D-D10, D-D19 and D-D23, whose `verdict` field is `not-derived`), the item gets a derivation before its construct enters scope; `not-derived` is never an expected verdict (review item R4-15). The primary code is the first emitted code in the precedence order of §5.16. Facts (row, `may_trap`, output grade) are secondary and reported |
 | Conditional item | An item whose verdict depends on a declaration outside the snippet. Its conditions are listed, and the prelude of [derivations §P](core-calculus/derivations.md#p-the-canonical-prelude) supplies them |
 | Tier 0 rule atom | Each rule-bearing line the Tier 0 card must carry under [05 §2](../architecture/05-agent-protocol.md#2-reference-cards-and-budgets): the three clauses of the subset rule, the seven rules of the "Rules" block, each keyword and the effect and grade lists, each false-friend row of [01 §2.5](../architecture/01-language.md#25-seed-false-friend-table-v0), each of the eight snippet constructs, and the loop and verbs block. 57 atoms (§10) |
 
@@ -156,7 +174,7 @@ resolves it; §14 lists the changes that sibling documents would need.
 | ID | Finding | Fix in this note |
 |---|---|---|
 | F-1 | A weak (summary) update of a written array joins the caller's raw NaN state with canonical writes. If the sink check reads the final contents, the canonical `q4_matvec` and 07's `softmax` fail `E-NAN-RAW-SINK` at once; if it checks only the values written, the kernel passes but its transfer still depends on the old `y`, and the error appears at the next exact sink downstream | `T-Cover`: a loop that writes every element exactly once is a strong update (§5.9) |
-| F-2 | The canonical schedule names `j` and `acc`, bound in `q4_row_dot`, not in `q4_matvec` | Schedule names resolve over the inlined KIR and must be unique there (§5.14) |
+| F-2 | The canonical schedule names `j` and `acc`, bound in `q4_row_dot`, not in `q4_matvec` | Schedule names resolve in the meaning's own scope first, and otherwise must be bound exactly once in the inlined kernel callees (§5.14 (s2), F-86) |
 | F-3 | `Matrix::row` is kernel-callable only if its slice bounds are discharged, which needs `invariant Matrix { blocks.len() == rows * blocks_per_row }`; no snippet shows it | The prelude declares it; `kcall` predicate (§5.10) |
 | F-4 | 01's T-CloE has no capability-capture premise, so a function without `io` could create an `io` closure and hand it to `spawn` | `T-CloE` requires and charges ε_e ⊆ Σ; service threads are attributed to their closure's row (§5.7, Thm 2) |
 | F-5 | Theorem 4's "non-failing environment" covers only the store's demand set; a direct `read_slab` of a faulty copy returns `Err` in a non-failing environment | Non-failing is generalised to direct I/O outside `det` blocks (§7.4) |
@@ -223,6 +241,46 @@ those that change a rule are recorded here. "R1-n" and "R2-n" are the reviewers'
 | F-57 | The grade of a hint value received by the core was unstated, so a hint flowing into an exact sink was not a type error (R2-26) | Hint values are graded `γ_sh` (§5.13) |
 | F-58 | Lemma 3a ran `C[𝒪_r]` under a scheduler for a different configuration space; Lemma 3b did not quantify over interleavings; policies set MXCSR's sticky status flags (R1-22, R2-23) | `proj(s)`; Lemma 3b over every scheduler; the port wrapper restores MXCSR (§7.3) |
 | F-59 | The std functions admissible in exact context were never listed, and FF-SUM's `product` and `fold` were missing from `cls` (R2-30) | Closed X1 list C-EXACT-STD (§12); `cls` covers `sum`, `product` and `fold` (§5.0) |
+
+### 0.6 Findings from the second review (2026-10-16)
+
+Two further independent same-family reviewers (§17) reported 39 items. Their items are numbered
+"R3-n" (the second round's reviewer 1) and "R4-n" (its reviewer 2), so that they do not collide with
+the first round's. Each counterexample was re-derived under the rules as they stood; all were
+confirmed. Every new rule is [prov]. The counterexamples are supplementary items N-40 to N-69
+(derivations §N).
+
+| ID | Finding (review items) | Fix in this note |
+|---|---|---|
+| F-60 | A closure summary fixed every capture's grade at creation, so a `FnMut` closure that writes a by-mut capture or its own moved state under a high pc, and returns that state on a later call, leaked it; generic bodies and std higher-order calls had the same defect (R3-1, R4-2) | `Θ_κ` is computed over symbols for the parameters, each by-mut captured place (β_q) and the closure's own state (σ); `T-CallClo` instantiates them with the current grades and raises `γ(f)` by the state writes; per-κ re-typing treats by-mut captures as implicit `&mut` referents; std calls take the fixpoint over repeated invocation (§5.7) |
+| F-61 | A reference moved into a closure lost its loan, and a loan the body stored into a by-mut capture never reached the caller, so both dangled (R3-2, R4-5, R4-6) | The closure value carries the loans of its by-move captures; `Θ_κ` has a loan transfer λ_q per by-mut capture, applied by `T-CallClo`; storing into a capture a loan on a by-mut capture, on the closure's own state or on a body local is `E-LOCAL-MUT-STORE`, and so is a parameter's loan at a `Fn*` bound (§5.4, §5.7) |
+| F-62 | Loans and `&mut` carried inside by-value parameters (`Option<&mut T>`, tuples, `Vec<&mut T>`) were invisible to `T-Call`, `θ_mut`, `Γ0` and `E-LOCAL-MUT-STORE` (R3-3) | Every parameter whose type contains a reference at any depth carries symbolic loans; `θ_mut,j` exists for every parameter whose type contains `&mut`; `T-Call` applies it through every mutable loan the argument carries (§5.4, §5.5, §5.15) |
+| F-63 | `Proj-Split` checked only that π is injective, so a projection whose arguments vary with i let two iterations write one element; the instrumented semantics gave the receiver reborrow exclusive permission on the whole receiver (R3-4) | The projection's other arguments are invariant in the `par`, or T2 proves the composed map injective; the receiver reborrow takes permission only on the footprint element (§5.9, §7.1) |
+| F-64 | `T-Cover` strong-updated every member of a may-alias `target*` set; premise 3 left ancestors of p (`&mut s` for `s.buf`) and closures open; premise 1 did not say how a write inside a nested loop or closure counts (R3-5, R3-13, R4-16) | Premise 4: `target*(p)` is one place; premise 3 covers every overlapping place and by-mut closure captures; premise 1 is syntactic, one top-level write (§5.9) |
+| F-65 | `T-Loop` gave a loop with no `break` the type `()` and an output context that dropped the ρ, ω, X and outer J raised inside it (R3-6) | Type `!` without a break; ρ, ω, X and outer J are kept on every exit (§5.5) |
+| F-66 | `break` and `continue` left a loop-local Linear value unconsumed and a loan on a loop-local live, unchecked (R3-7) | `T-Jump` checks the Linear locals and the loans of the scopes it leaves (§5.5) |
+| F-67 | A closure's write through a captured local reference raised the reference's grade, not the borrowed place's (R3-8) | Captures are places, as in Rust 2021; closure writes go to `target*` of the captured place (§2.4, §5.7) |
+| F-68 | Inside a closure body `X` recorded only `&mut` parameters, so a write to a by-mut capture just before `return`, and a `par`'s early-return grading, were lost (R3-9, R4-4) | `X` covers every output place of the body being checked: by-mut captures, `&mut`-carrying parameters and the closure's state (§4, §5.5, §5.7, §5.9) |
+| F-69 | A closure's `&mut` parameters had no transfer, std higher-order functions that hand `&mut` items to a closure had no `θ_mut`, and a closure argument's `mt_κ` did not reach `may_trap` of a std call (R4-3) | `Θ_κ` has `θ_mut,j` per `&mut`-carrying parameter, applied by `T-CallClo`; std signatures state `θ_mut,self` and include `mt_κ` and `θ_exit` of the closures they run (§5.7) |
+| F-70 | `θ_inv` was stated only for `with_lock` and lazy `next`, so `Option::map`, `sort_by`, `fold` and the other std higher-order functions ran closures under an undefined pc (R3-10) | Every std higher-order signature states `θ_inv`; short-circuiting and comparator-driven ones include the closure's result transfer; the default is the join of all parameter symbols and that transfer (§5.7) |
+| F-71 | The exercised row was not part of a signature, so a `det` block inside a helper called from a `par` body escaped `E-PAR-EFFECT` (R3-11) | `sig(g)` carries `ε^x_g`, a least fixpoint over the call graph, and `T-Call` adds it (§2.5, §5.5, §5.15) |
+| F-72 | A `det` claim of the form "a function of the free inputs' values" was satisfied by a block that reads a `Mutex` local whose contents came from a clock while its grade was `cd`; `E-DET-RESULT` could not be checked on a generic result type (R3-12, R4-17) | E's claim must hold for every content of the shared-mutable objects reachable from the free inputs; Lemma F restated; `E-DET-RESULT` on monomorphised types (§5.11, §7.5) |
+| F-73 | D-D11 relied on a nested cover that no stated rule derived ("nested covers compose" had no premises) (R3-13, R4-11) | Rule `Cover-Proj` [prov]: an outer loop covers p when its body is one inner covering loop through a footprinted projection whose footprints tile p (§5.9) |
+| F-74 | `E-Domain` produced its result without abandoning the domain frame's Linear locals, and a `par` iteration's root frame was both "not a domain" and "of domain kind iter" (R3-14) | `E-Domain` and `E-Par-Done` abandon the root frame's `Φ.lin` first; the table separates fail domains from join-reporting roots; the Abandon lemma says "exactly once" (§6.3, §6.4, §7.1) |
+| F-75 | `E-PAR-BREAK` forbade only a `break` that targets the `par`, so a `break 'outer` in a `par` body had no dynamic rule (R3-15, R4-8) | No `break` targets the `par` or an enclosing loop, and no `continue` targets an enclosing loop; a `continue` that targets the `par` ends the iteration normally (§5.9, §6.4) |
+| F-76 | `RT-Cover` assumed the finished iterations form a prefix and hard-coded ν canon (R3-16, R4-18) | A finished set S, any set for `par`, and the grade of `e_w` (§7.1) |
+| F-77 | Lemma E said every target-dependent value has ν raw, which `x.to_bits()` of a raw x contradicts (R3-17) | Restated: ν raw or `d_p = dev(platform)` (§7.5) |
+| F-78 | `T-Call` joined a callee's `θ_mut` into the caller's place weakly even when the callee overwrote the whole place, so F-1 reappeared one call up (R3-18) | A strong update when the argument borrows one whole place; verifying it showed that D-C5's `θ_mut,buf` had been overstated (§5.5) |
+| F-79 | Write mode forbade every live loan overlapping p, including the loan p is reached through, so no write through a reference typed (R3-19) | The loans p is reached through are exempt (§5.4) |
+| F-80 | Fresh loans at every `T-Ref` gave `T-Loop`'s fixpoint no finite carrier, and per-κ re-typing did not terminate under polymorphic recursion over closure types (R3-20) | Loans are named by creation site; a monomorphisation chain deeper than a fixed limit is `E-MONO-DEPTH` [prov] (§5.4, §5.15) |
+| F-81 | P-ind's hint-taint discharge passes through `T-Det`, whose recomputed result drops hint taint on the strength of its evidence (R3-21) | Stated: that discharge is capped by the grades of the boundaries it crosses (§7.3, §7.6) |
+| F-82 | A read through a local reference used the reference's grade from its creation, so `let r = &mut y; *r = h; *r` read h at ⊥ (R4-1) | `P-Deref` for a local reference reads the borrowed place's current grade, and `d_s^in` uses that grade (§5.4, §5.11) |
+| F-83 | `E-Par-Join` ignored `Exit(Ret(v))` records above the winner, so a Linear value inside such a v was lost (R4-7) | The join abandons the Linear values of ignored records too (§6.4, §7.1) |
+| F-84 | The loan table omitted aggregates, enum constructors, branch results and pattern bindings (R4-9) | Rows added (§5.4) |
+| F-85 | §12 froze "loops", but only two `for` forms were elaborated: `loop` with a value, `while`, `while let`, `if let`, `let … else`, labelled blocks and `for` over an iterator had no elaboration (R4-10) | Elaborations added (§3.2) |
+| F-86 | (s2) did not state "own scope first", which D-C3 relies on for `w` (R4-12) | (s2) rewritten (§5.14) |
+| F-87 | The prelude did not declare `BlockQ4`, `Lease` or `Clock`, which items judged on "prelude plus snippet" use; its own `Store::lease` named the undeclared `Lease` (R4-13) | Declared; a snippet that itself declares one of them is run without the prelude's copy (derivations §P, §V) |
+| F-88 | `Matrix::row` slices a `Buf<B>`, whose indexing is not on C-EXACT-STD, so `kcall(Matrix::row)` failed when read strictly (R4-14) | `Buf<T>` derefs to `[T]`, and its `len`, indexing and slicing are the built-in ones (§12 C-EXACT-STD, derivations §P) |
 
 ---
 
@@ -312,10 +370,13 @@ K   ::= Copy | Linear | Local | Send | Sync          derived kinds (§5.1); Δ �
         α : ?Local and α : ?Linear (std signatures only)
 ```
 
-Every closure-creation site κ has a summary `Θ_κ = (θ_ret, θ_mut,q for each by-mut capture q,
-θ_exit, mt_κ, ε_κ)`, computed from its body by `T-CloL` or `T-CloE` over symbols for its parameters
-(§5.7). A type that mentions `clo⟨κ⟩`, directly, behind a reference or as a type argument of a std
-adapter (`Map<I, clo_L⟨κ⟩>`), carries κ, so every rule can look the summary up.
+Every closure-creation site κ has a summary `Θ_κ = (θ_ret, θ_mut,q for each by-mut captured place q,
+θ_mut,j for each parameter j whose type contains &mut, θ_state, θ_exit, λ_q for each by-mut captured
+place q, mt_κ, ε_κ, ε^x_κ)`, computed from its body by `T-CloL` or `T-CloE` over symbols for its
+parameters (ᾱ), for the grades of its by-mut captured places when it is called (β̄), and for its own
+state (σ, the grade of its by-move captures) (§5.7, F-60, F-61, F-69). A type that mentions
+`clo⟨κ⟩`, directly, behind a reference or as a type argument of a std adapter (`Map<I, clo_L⟨κ⟩>`),
+carries κ, so every rule can look the summary up.
 
 There is no `dyn`, no lifetime parameter and no raw pointer type outside packages granted `unsafe`
 (DR-004, DR-005). Std and `std_platform` types used by the canonical snippets: `Option`, `Result`,
@@ -374,8 +435,14 @@ e   ::= v | copy p | move p | &p | &mut p | p = e
       | scope { e }                                     structured spawning (std)
       | det[E] { e }
       | comptime { e }                                  staging (§5.14)
-c   ::= x by ref | x by mut | x by move                closure captures
+c   ::= p by ref | p by mut | p by move                closure captures: places, as Rust 2021 captures
+                                                       disjoint places (`*r`, `s.f`) (F-67)
 ```
+
+Captures are places, not only variables, because Rust 2021 captures the disjoint places a closure
+body uses: `|| *r = 1` captures `*r` by unique borrow, not `r` [inference: Rust 2021 edition's
+disjoint closure captures, RFC 2229; not re-read here]. MCore follows the pinned edition's capture
+analysis (E1).
 
 ### 2.5 Items and signatures
 
@@ -389,9 +456,13 @@ D   ::= fn g⟨Δ⟩(x̄: m̄ τ̄) -> τ  uses ε?  requires φ̄  ensures ψ̄
       | schedule …  |  spec …  |  store …  |  evolve slot …   side judgements, not MCore terms
 
 sig(g) = ∀Δ. (m̄ τ̄) -> τ_r
-         row       ε_g
+         row       ε_g                     the charged row
+         exercised ε^x_g ⊇ ε_g             adds nondet that T-Det removed and the rows of Local
+                                           closures called, in g and its callees (F-71)
          transfers Θ_g = (θ_ret, θ_mut,1 … θ_mut,k, θ_exit, θ_inv,1 … θ_inv,c)
-                   one per result, per &mut, per exit, and per closure-typed parameter (F-35)
+                   one per result; per parameter whose type contains &mut at any depth (F-62); per
+                   exit; per closure-typed parameter (F-35); and, in a per-κ instantiation (§5.7),
+                   one θ_mut,q per by-mut captured place q of κ (F-60)
          may_trap  mt_g ∈ {true, false}
          contract  (φ_req, ψ_ens)
          kind      ∈ {fn, kernel, policy, std, prim, proj(x★, m★)}
@@ -403,7 +474,9 @@ sig(g) = ∀Δ. (m̄ τ̄) -> τ_r
 O is the set of parameters whose raw float content reaches a NaN observer (§5.3) on some path. A
 transfer without it would have to add `obs⁰` always, which falsely rejects hashing canonical values
 through a helper, or never, which is unsound. `θ_inv,j` is the join of the pc at every point where
-g, or a function g passes the closure to, invokes closure parameter j.
+g, or a function g passes the closure to, invokes closure parameter j. For std functions it is
+declared (§5.7 rule 2); a std signature that states none gets the join of all its parameter symbols
+and of the closure's result transfer applied to them (F-70).
 
 ### 2.6 Runtime syntax
 
@@ -496,6 +569,23 @@ satisfy them, and the differential test (DR-010) compares them.
 | `e?` | derived (`expert_step`, `moe_ffn`) | `match ⟦e⟧ { Ok(v) => v, Err(r) => return Err(From::from(r)) }` | `T-Match` |
 | closures `\|x\| e` | derived (`hottest`, `note_use`) | `clo_L` if a capture is by reference or `Local`, else `clo_E` (§5.7); captures follow Rust's inference of capture modes | `T-CloL`, `T-CloE` |
 
+**Forms outside the canonical snippets [prov, F-85].** §12 freezes "loops" and the rest of the
+Rust-coincident core for X1, so every loop and binding form an X1 solution may write needs an
+elaboration, not only the two `for` forms above. These follow the desugarings of the pinned Rust
+edition [inference: from the Rust Reference's desugarings of `while`, `while let`, `for` and `if
+let`; not re-read here]. `t_L` and `it` are fresh locals; `t_L` starts `uninit`, so reading it on a
+path that did not assign it is an ownership error, as in Rust.
+
+| Surface form | MCore | Rule |
+|---|---|---|
+| `loop { … break v … }` (a value-carrying `break`) | `let mut t_L; loop_L { … { t_L = ⟦v⟧; break_L } … }; move t_L`. The assignment is typed under the effective pc, so a break value chosen under h carries h | `T-Loop`, `T-Assign`, `T-Jump` |
+| `'a: { … break 'a v … }` (labelled block) | a one-trip loop: `let mut t_a; loop_a { t_a = { … }; break_a }; move t_a`, each `break 'a v` as in the row above | `T-Loop` |
+| `while c { b }` | `loop_L { if ⟦c⟧ { ⟦b⟧ } else { break_L } }`; the guard's grade enters `J(L)` as for `for` | `T-Loop`, `T-Jump` |
+| `while let pat = e { b }` | `loop_L { match ⟦e⟧ { pat => ⟦b⟧, _ => break_L } }`; the scrutinee's grade enters `J(L)` | `T-Loop`, `T-Match` |
+| `for pat in e { b }`, e not a range or `&[T]` | `let mut it = IntoIterator::into_iter(⟦e⟧); loop_L { match Iterator::next(&mut it) { Some(pat) => ⟦b⟧, None => break_L } }`; `next`'s result grade enters `J(L)`, and a `next` that runs a stored closure applies its summary (§5.7) | `T-Loop`, `T-Match`, `T-Call` |
+| `if let pat = e { a } else { b }` | `match ⟦e⟧ { pat => ⟦a⟧, _ => ⟦b⟧ }` | `T-Match` |
+| `let pat = e else { d };` rest | `match ⟦e⟧ { pat => rest, _ => ⟦d⟧ }`, with `d : !` | `T-Match` |
+
 ### 3.3 What elaboration may not do
 
 Elaboration may not insert a copy that the source did not write above the hot-path budget (DR-027,
@@ -559,24 +649,31 @@ call from a test or from other code is an ordinary call, and a trap in it propag
 The context of J6 is `Γ = (V, Λ, Φ, ω, ρ, J, X)`:
 
 - `V : x ↦ (τ, γ, st, μ, L)` with ownership state `st ∈ {own, moved, uninit}`, mutability `μ`, and
-  the set `L` of loans the value of x carries (F-39). For a variable of reference type, γ is the
-  grade of what is read through it, including the grade of whatever chose the target (an index or a
-  row number). A reference parameter j's referent contents carry the symbolic loan `ℓ_j*`: "whatever
-  the caller lent".
+  the set `L` of loans the value of x carries (F-39). For a parameter of reference type, γ is its
+  referent's grade, and writes through it update γ. For a local of reference type, γ is the grade of
+  the reference itself: the grade of the borrowed place when it was created and of whatever chose
+  the target (an index or a row number); a read through it also reads the borrowed place's current
+  grade (`P-Deref`, F-82). Every parameter j whose type contains a reference at any depth (`&T`,
+  `Option<&mut T>`, `(&mut T, usize)`, `Vec<&T>`) carries the symbolic loan `ℓ_j*`, "whatever the
+  caller lent through j", and the referents reached through it form one pseudo-place `*j` with
+  grade `α_j` (F-62).
 - `Λ` is the set of live loans `λ = (q, m)` with target place q and mode m. A loan is live iff some
   live value carries it in its `L` (§5.4).
 - `Φ` is the set of path facts over SSA versions (§5.10).
 - `ω` is the exit grade so far, and `ρ` the grade of values returned so far.
 - `J : L ↦ γ` holds, for each open jump target L (each enclosing loop, and the function F), the
   join of the pc at every jump to L taken so far (F-30).
-- `X` holds, for each `&mut` parameter, the join of its referent grade at every `return` so far (F-31).
+- `X` holds, for each **output place** of the body being checked, the join of its grade, and the
+  union of its loan set, at every `return` so far (F-31, F-68). The output places are the referents
+  reached through parameters whose types contain `&mut` (F-62) and, in a closure body, its by-mut
+  captured places and its own state (F-60).
 
 The **effective pc** of an expression is `pc ⊔ ⨆_L Γ.J(L)`; every rule below that joins "pc" uses the
 effective pc. J6 is flow-sensitive and threads Γ to Γ'. Rows and grades are separate outputs composed
 by different operators, union and join (01 §7.4). J6 has two row outputs: the **charged row** ε,
 which must be within the authority Σ, and the **exercised row** `ε^x ⊇ ε`, which adds the rows
-`ε_κ` of `Local` closures the expression calls and the `nondet` that `T-Det` removes inside it
-(F-36). Contexts that restrict what code may do at run time (`E-PAR-EFFECT`, (k1), (t1)) check
+`ε_κ` of `Local` closures the expression calls, the `nondet` that `T-Det` removes inside it (F-36),
+and the exercised row `ε^x_g` of every function it calls (F-71). Contexts that restrict what code may do at run time (`E-PAR-EFFECT`, (k1), (t1)) check
 `ε^x`; the capability check checks ε. Where a rule below shows one row, `ε^x` is the union of the
 premises' exercised rows plus the extra labels the rule names.
 
@@ -748,8 +845,8 @@ dependency analysis: `D` is the set of parameters the output depends on by data 
 | Claim slots and Forge slots | the grade the slot states (03 §3.5) |
 
 A sink is checked on its final contents at every normal exit: the returned value, and each `&mut`
-parameter's referent as the body leaves it, at its end and at every `return` (the exit context `X`,
-F-31). It fails with `E-GRADE` (fidelity or scope) or
+parameter's referent (each output place, §4) as the body leaves it, at its end and at every `return`
+(the exit context `X`, F-31). It fails with `E-GRADE` (fidelity or scope) or
 `E-NAN-RAW-SINK` (01 §13.6). The exit grade
 `ω_g` must also meet the scope requirement when the output's required scope is `cross_device`,
 because Theorem 4's outcome grade includes the pc of every reachable return, trap and early exit.
@@ -761,17 +858,32 @@ because Theorem 4's outcome grade includes the pc of every reachable return, tra
  ───────────────────── P-Var            ───────────────────────────── P-Field
  Γ ⊢ x : τ @ γ                          Γ ⊢ p.f : τ_f @ γ
 
- Γ ⊢ p : &τ @ γ  or  &mut τ @ γ          Γ ⊢ p : [τ; n] or [τ] @ γ    Γ;Σ;pc ⊢ e : usize @ γ_i ! ε ⊣ Γ'
- ───────────────────── P-Deref          ─────────────────────────────────────────────── P-Index
- Γ ⊢ *p : τ @ γ                          Γ' ⊢ p[e] : τ @ γ ⊔ γ_i     with assert⟨idx⟩(e < len(p))
+ Γ ⊢ p : &τ @ γ  or  &mut τ @ γ,  p a parameter or rooted in one's referent
+ ───────────────────── P-Deref           (V of a parameter holds its referent's grade; writes update it)
+ Γ ⊢ *p : τ @ γ
+
+ r a local of type &τ or &mut τ, carrying L(r)                                      (F-82)
+ ───────────────────────────────────────────────────────────────── P-Deref-Local
+ Γ ⊢ (*r)·π : τ' @ Γ(r).γ ⊔ ⨆_{(q, _) ∈ L(r)} Γ ⊢ q·π           resolved recursively through reborrows
+
+ Γ ⊢ p : [τ; n] or [τ] @ γ    Γ;Σ;pc ⊢ e : usize @ γ_i ! ε ⊣ Γ'
+ ─────────────────────────────────────────────── P-Index
+ Γ' ⊢ p[e] : τ @ γ ⊔ γ_i     with assert⟨idx⟩(e < len(p))
 ```
+
+A read through a local reference reads the borrowed place's current grade, joined with the
+reference's own grade (the address grade and the grade the place had when it was borrowed). Writes
+through r go to the borrowed place (`target*`, below), so reading only r's own grade read the value
+from before the write: `let r = &mut y; *r = h; *r` read h at ⊥ (item N-64, F-82).
 
 Access modes:
 
 - **Read** (`copy p`, `&p`): no live mutable loan on a place overlapping p, other than the loan p is
   read through.
-- **Write** (`p = e`, `&mut p`): no live loan of any mode on a place overlapping p; p is rooted in a
-  `mut` local or reached through `&mut`.
+- **Write** (`p = e`, `&mut p`): no live loan of any mode on a place overlapping p, other than the
+  loans p is reached through and the loans those are nested in (F-79); p is rooted in a `mut` local
+  or reached through `&mut`. Without the exception, `let r = &mut y; *r = 1;` conflicts with r's own
+  loan on y.
 - **Move** (`move p`): as for a write, and p is a local or a field path of an owned local, not behind
   a reference (`E-MOVE-BORROWED`).
 
@@ -783,16 +895,32 @@ move, so a reference stored through `&mut`, pushed into a `Vec` or swapped out o
 its target. Loans now travel with values:
 
 ```text
- T-Ref        &p, &mut p carry {λ}, λ = (p, m) fresh
+ T-Ref        &p, &mut p carry {λ}, λ = (p, m, s): a loan is named by its creation site s (and by κ
+              for a site inside a closure body), so loan sets range over a finite set per body (F-80)
  T-Copy/Move  the result carries L(root(p))            (conservative for fields of Local aggregates)
  T-Let        L(x) := L(value)
  T-Assign     L(p) := L(value) for a whole local, else L(t) ∪= L(value) for each t ∈ target*(p);
-              for a place reached through a reference parameter j, see E-LOCAL-MUT-STORE below
+              for a place reached through a parameter j whose type contains a reference, see
+              E-LOCAL-MUT-STORE below
+ aggregates   S { f̄: ē }, (ē), [ē] and a variant constructor C(ē) (Some(&y), Ok(&y)): the union of
+              the components' L                                                         (F-84)
+ branches     the result of if, match or a block: the union of the L of the branches that produce a
+              value (a branch of type ! contributes nothing)                            (F-84)
+ patterns     a by-value binding in a pattern (let, match, if let, a closure or for pattern) takes
+              the scrutinee's L; a by-reference binding (ref x, or Rust's default binding mode
+              through a reference) takes the scrutinee's L plus its own fresh loan       (F-84)
  T-Call       result: λ_r for a projection (T-Proj); the union of the Local arguments' L for a std
               adapter (T-Ret (b)); ∅ for a non-Local result. A std function that stores an argument
               (Vec::push, Option::insert, Option::replace, mem::swap, mem::replace) adds the stored
-              values' L to the receiving referent's L (both ways for swap)
- T-CallClo    see §5.7 (F-40)
+              values' L to the receiving referent's L (both ways for swap). A user callee stores
+              into a place reached through a parameter only values carrying that place's own
+              position's symbolic loan (E-LOCAL-MUT-STORE, below), so a user call adds no loan to
+              the caller's places
+ T-CloL/E     the closure value carries the loans of its by-ref and by-mut captures and the loans its
+              by-move captures carry (F-61)
+ T-CallClo    a Local result carries the loans of κ's by-ref captures, the loans κ's by-move captures
+              carry, and the Local arguments' L; each by-mut captured place q gets L(t) ∪= λ_q for
+              t ∈ target*(q) (§5.7, F-40, F-61)
 ```
 
 A loan is live at a point iff some value live there carries it. This is Rust's non-lexical liveness,
@@ -801,10 +929,22 @@ body:
 
 ```text
  when the scope of local x ends, no live loan targets x or a sub-place of x       (E-BORROW-OUTLIVE [prov])
- a value stored into a Local-typed place reached through reference parameter j (by assignment, or
-   through a storing std call) carries no loan other than ℓ_j*                   (E-LOCAL-MUT-STORE [prov])
+   (a scope ends at its block's end and at every break, continue or return that leaves it, T-Jump)
+ a value stored into a Local-typed place reached through a parameter j whose type contains a
+   reference (by assignment, or through a storing std call) carries no loan other than ℓ_j,k*, where
+   k is the reference position of the place's own type                       (E-LOCAL-MUT-STORE [prov])
  at the end of a body every live loan is the result's projection loan (T-Ret (a))
 ```
+
+**Symbolic loans per reference position [F-62].** `ℓ_j*` stands for one symbolic loan `ℓ_j,k*` per
+reference position k in τ_j, because Rust's elision gives every elided reference in a parameter
+type its own lifetime. In `fn put(o: Option<&mut Option<&u32>>, d: &u32)`, `o` has positions
+`o.1` (the `&mut`) and `o.2` (the inner `&u32`), and storing `Some(d)` into `*r` for `Some(r) = o`
+stores `ℓ_d*` into a position-`o.2` place, which is `E-LOCAL-MUT-STORE`; rustc rejects it too,
+because the lifetimes differ [inference: from Rust's elision rules; not compiled, no rustc on this
+host] (item N-46). One symbol per parameter would have let a callee store one component of a tuple
+parameter into another, `(&mut Vec<&u32>, &u32)`, which rustc rejects for the same reason
+[inference] and which would then have added a loan the caller never saw.
 
 `E-LOCAL-MUT-STORE` rejects `fn set(o: &mut Option<&u32>, d: &u32) { *o = Some(d); }`, which rustc
 also rejects, because elision gives the two references distinct lifetimes. It accepts reshuffling a
@@ -812,12 +952,23 @@ parameter's own contents (`*it = it.clone()`) and calling std's `next` on `&mut 
 alternative, rejecting every user signature that takes `&mut τ` with `τ : Local`, is simpler but
 rejects Rust that compiles (C-STORE in §12).
 
-**Write targets [F-39].** For a write through a reference, `target*(p)` is the place whose grade
-changes. If p is rooted in a reference parameter, it is that parameter's referent, as before. If p is
-rooted in a local reference r (`let r = &mut y; *r = e`, or a projection result bound to a local), it
-is `target*` of the place each loan `(q, mut) ∈ L(r)` targets, with p's path suffix appended: the
-borrowed place, not r, whose own grade means "what is read through it". Every reference traversed
-contributes its grade (the address grade, for example `γ_i` in `let r = &mut v[i]`).
+**Write targets [F-39].** For a write through a reference, `target*(p)` is the set of places whose
+grade changes. If p is rooted in a parameter whose type contains a reference, it is that parameter's
+referent (the pseudo-place `*j` for a by-value parameter such as `Option<&mut T>`, F-62). If p is
+rooted in a local reference r (`let r = &mut y; *r = e`, a projection result bound to a local, or a
+reference bound by a pattern), it is `target*` of the place each loan `(q, mut) ∈ L(r)` targets,
+with p's path suffix appended: the borrowed place, not r. In a closure body, a place rooted in a
+by-mut captured place q is resolved through q's loans in the creating context, so a closure that
+captures `*r` writes the place r borrows (F-67). Every reference traversed contributes its grade
+(the address grade, for example `γ_i` in `let r = &mut v[i]`).
+
+**Must-alias [F-64, F-78].** `target*(p)` is **one place** when p is rooted in a whole local, in the
+referent of a parameter of type `&τ` or `&mut τ`, or in a local reference whose loan set is exactly
+one loan that is not the symbolic loan of a by-value parameter and whose target is itself one place
+(recursively, through reborrows). A strong update (`T-Cover`, the
+strong case of `T-Call`) is allowed only then; a write through a may-alias set, such as
+`let y = if h { &mut *a } else { &mut *b }` with `L(y) = {(*a, mut), (*b, mut)}`, updates every
+member weakly (item N-48).
 
 **The consequence (01 §5.2).** Every loan created in a body ends before the body returns, except a
 projection result, which is a loan on the caller's own place. Borrow checking is intraprocedural.
@@ -835,21 +986,24 @@ abbreviates `Δ;Γ;Σ;pc ⊢` when Δ does not change.
  ───────────────────────────────────── T-Copy     ───────────────────────────────────────── T-Move
  Γ;Σ;pc ⊢ copy p : τ @ γ ⊔ pc ! ∅ ⊣ Γ               Γ;Σ;pc ⊢ move p : τ @ γ ⊔ pc ! ∅ ⊣ Γ[p ↦ moved]
 
- Γ ⊢ p : τ @ γ ⇐ read  (write for &mut)    λ = (p, ref) fresh  ((p, mut) for &mut)
+ Γ ⊢ p : τ @ γ ⇐ read  (write for &mut)    λ = (p, ref, s), s this creation site ((p, mut, s) for &mut; F-80)
  ───────────────────────────────────────────── T-Ref / T-RefMut
  Γ;Σ;pc ⊢ &p : &τ @ γ ⊔ pc ! ∅ ⊣ Γ + λ,  the result carrying L = {λ}       (&mut p : &mut τ)
 
  Γ;Σ;pc ⊢ e : τ @ γ ! ε ⊣ Γ1    Γ1 ⊢ p : τ @ γ_p ⇐ write    the value of e carries loans L_e
  γ_sel = ⨆ grades of the index expressions in p;  γ_addr = ⨆ grades of the references p traverses
  the old content of p is not an initialised Linear value                         (else E-LINEAR-DROP)
- p reached through reference parameter j and τ : Local ⇒ L_e ⊆ {ℓ_j*}           (else E-LOCAL-MUT-STORE)
+ p reached through parameter j at reference position k, τ : Local ⇒ L_e ⊆ {ℓ_j,k*}  (else E-LOCAL-MUT-STORE)
+ p rooted in a by-mut captured place of the closure being checked, τ : Local ⇒ L_e carries no loan on
+   a by-mut captured place, on the closure's by-move state, or on a local of the body (F-61)
+                                                                                 (else E-LOCAL-MUT-STORE)
  Γ2 = Γ1[t ⊔= γ ⊔ γ_sel ⊔ γ_addr ⊔ pc for each t ∈ target*(p)][L(t) ∪= L_e]   weak update
     = Γ1[p := γ ⊔ pc][L(p) := L_e]                                            strong, p a whole local
  ───────────────────────────────────────────── T-Assign
  Γ;Σ;pc ⊢ p = e : () @ pc ! ε ⊣ Γ2
-   -- target*(p) (§5.4): the local p is rooted in; a reference parameter's referent; or, through a
-   --   local reference or projection result, the place its loans target (F-39). Writes into a &mut
-   --   parameter's referent are what θ_mut records
+   -- target*(p) (§5.4): the local p is rooted in; a parameter's referent; or, through a local
+   --   reference, projection result or captured place, the place its loans target (F-39, F-67).
+   --   Writes into an output place (§4) are what θ_mut records
 
  Γ;Σ;pc ⊢ e1 : τ1 @ γ1 ! ε1 ⊣ Γ1    Γ1, x : (τ1, γ1, own, μ, L_e1);Σ;pc ⊢ e2 : τ @ γ ! ε2 ⊣ Γ2
  τ1 Linear ⇒ x is moved in Γ2 (else E-LINEAR-DROP)    x carries no loan that is live in Γ2
@@ -883,29 +1037,45 @@ abbreviates `Δ;Γ;Σ;pc ⊢` when Δ does not change.
    -- T-Match is T-If over arms: the scrutinee's grade joins pc in every arm; patterns bind by Rust's
    --   default binding modes; non-exhaustive matches are rejected as in Rust
 
- ───────────────────────────────────────────── T-Jump  (F-30)
- Γ;Σ;pc ⊢ break_L : ! ⊣ Γ[J(L) ⊔= pc]          and records Γ into Γ_brk(L)
- Γ;Σ;pc ⊢ continue_L : ! ⊣ Γ[J(L) ⊔= pc]       and records Γ into Γ_cont(L)
+ 𝓛 = the locals declared inside L's body that are in scope at the jump
+ every Linear local in 𝓛 is consumed                                            (else E-LINEAR-DROP)
+ no loan that is live after the jump (at L's exit for break, at L's head for continue) targets a
+   local in 𝓛 or a sub-place of one                                             (else E-BORROW-OUTLIVE)
+ ───────────────────────────────────────────── T-Jump  (F-30, F-66)
+ Γ;Σ;pc ⊢ break_L : ! ⊣ Γ[J(L) ⊔= pc]          and records Γ \ 𝓛 into Γ_brk(L)
+ Γ;Σ;pc ⊢ continue_L : ! ⊣ Γ[J(L) ⊔= pc]       and records Γ \ 𝓛 into Γ_cont(L)
    -- pc is the effective pc, so a jump decided under h raises J(L) by h; return raises J(F) (T-Return)
+   -- a jump leaves the scopes of 𝓛 as a block's end does, so it checks what T-Let checks there:
+   --   without it, `loop { let l = store.lease(id)?; if h { break; } store.release(l); }` leaked
+   --   the lease on the break path (item N-51, F-66)
    -- a trap raises nothing: it ends the fail domain, so no code of the domain runs after it, and
    --   T-Trap, T-Assert and θ_exit already put its pc into ω, which joins every outcome grade (§7.4)
 
  Γ_I ⊒ Γ[J(L) := ⊥]    Γ_I;Σ;pc ⊢ e : () @ _ ! ε ⊣ Γ_B    Γ_I ⊒ Γ_B ⊔ Γ_cont(L)
  (least such Γ_I; ownership states loop-invariant, else E-MOVE-LOOP)
- ───────────────────────────────────────────── T-Loop
- Γ;Σ;pc ⊢ loop_L {e} : () @ pc ! ε ⊣ Γ_brk(L) \ J(L)       Γ_brk(L) = ⨆ of the contexts at L's breaks
+ Γ_out = Γ_brk(L) \ J(L), with ρ, ω, X and J(L') for every L' ≠ L taken from Γ_I ⊔ Γ_B ⊔ Γ_brk(L)
+ ───────────────────────────────────────────── T-Loop  (F-65)
+ Γ;Σ;pc ⊢ loop_L {e} : () @ pc ! ε ⊣ Γ_out      if L has a break    Γ_brk(L) = ⨆ of the contexts at L's breaks
+ Γ;Σ;pc ⊢ loop_L {e} : ! ! ε ⊣ Γ_out            if L has no break   (Γ_brk(L) = ⨆∅: V and Λ unreachable)
    -- J(L) is part of the fixpoint, so an iteration runs under the jump decisions of the iterations
    --   before it; for `for` loops the guard's break puts the bound's grade into every iteration
    -- termination-insensitive: code after the loop runs under pc, because every break of L reaches it;
    --   the places the loop writes carry J(L) through T-Assign's effective pc. J entries for targets
    --   outside the loop (an outer label, F) persist after it
+   -- Γ_out keeps what returns, traps and outer jumps inside the loop raised, as T-If keeps them for a
+   --   branch of type !. The first rule's output was Γ_brk(L) alone, so a loop left only by return
+   --   lost X and ρ, and `fn f() -> u32 { loop { return 1; } }` was typed () (items N-49, N-50)
 
  Γ;Σ;pc ⊢ e : τ_r @ γ ! ε ⊣ Γ'    the value of e carries at most the projection loan of T-Ret (a)
  every live Linear local is consumed                                              (else E-LINEAR-DROP)
  ───────────────────────────────────────────── T-Return
  Γ;Σ;pc ⊢ return e : ! @ pc ! ε ⊣ Γ'[ρ ⊔= γ ⊔ pc][ω ⊔= pc][J(F) ⊔= pc][X ⊔= Γ'|_out]
-   -- Γ'|_out: the referent grades of the &mut parameters at this return; T-Fn reads θ_mut from the
-   --   end of the body joined with X (F-31). Without X, `if h { *y = v; return }` left θ_mut,y = ⊥
+   -- Γ'|_out: the grades and loan sets of the output places (§4) at this return: the referents
+   --   reached through &mut-carrying parameters and, in a closure body (where F is the closure),
+   --   its by-mut captured places, resolved through target*, and its state (F-68). T-Fn, T-CloL and
+   --   T-CloE read θ_mut from the end of the body joined with X (F-31). Without X,
+   --   `if h { *y = v; return }` left θ_mut,y = ⊥, and inside a closure `if b { y = 1; return; }`
+   --   left θ_mut,y = ⊥ (item N-53)
 
  sig(g) = ∀Δ_g. (m̄ τ̄) → τ_r ! ε_g; Θ_g; mt_g; (φ_req, ψ_ens); kind_g
  Δ ⊢ θ : Δ_g  (bounds, including the implicit ¬Local and ¬Linear, hold)    ε_g ⊆ Σ    cls(g, ctx) ≠ Dc
@@ -914,22 +1084,43 @@ abbreviates `Δ;Γ;Σ;pc ⊢` when Δ does not change.
  Γ;Σ;pc ⊢ ā : θτ̄ @ γ̄ ! ε̄ ⊣ Γ'   (own: move or copy;  ref: &p or a shared reborrow;  mut: &mut p or a reborrow)
  Γ'.Φ ⊢_T2 φ_req[ā/x̄], or the caller is neither a kernel nor a kcall helper and assert⟨req(g)⟩
    stays (may_trap)                                                                (else E-KERNEL-OBLIGATION)
- Γ'' = Γ'[t ⊔= θ_mut,j(γ̄) ⊔ pc                  for each a_j a mutable borrow or reborrow, t ∈ target*(*a_j)]
-         [q ⊔= wr_q ⊔ pc ⊔ θ_inv,j(γ̄)          for each a_j whose type mentions clo⟨κ⟩, and each q that κ
-                                                captures by mut]
-         [ω ⊔= pc ⊔ θ_exit(γ̄)                   if mt_g]
+ Γ'' = Γ'[t := θ_mut,j(γ̄) ⊔ pc        for each a_j = &mut p or &mut *y at a parameter of type &mut τ,
+                                        when target*(*a_j) is one place (§5.4) that a_j borrows whole
+                                        (strong update, F-78)]
+         [t ⊔= θ_mut,j(γ̄) ⊔ pc        for every other parameter j whose type contains &mut at any depth,
+                                        each (q, mut) ∈ L(a_j) and each t ∈ target*(q) (weak, F-62)]
+         [t ⊔= θ_mut,q(γ̄, β̄) ⊔ pc;  L(t) ∪= λ_q[actuals]     if g is re-typed per κ (§5.7 rule 1),
+                                        for each by-mut captured place q of κ and t ∈ target*(q),
+                                        with β_q := Γ'(target*(q)) (F-60, F-61)]
+         [t ⊔= wr_q ⊔ pc ⊔ θ_inv,j(γ̄);  L(t) ∪= λ_q[actuals]  if g is std, for each a_j whose type
+                                        mentions clo⟨κ⟩, each by-mut captured place q of κ and
+                                        t ∈ target*(q) (F-35, F-67)]
+         [t ⊔= wr_σ ⊔ pc ⊔ θ_inv,j(γ̄)  for t ∈ target*(*a_j), if g is std and a_j is a `&mut` to a
+                                        closure whose body writes its own state (F-60)]
+         [ω ⊔= pc ⊔ θ_exit(γ̄) (⊔ Θ_κ.θ_exit for each closure κ that a std g runs)   if mt_g]
          [Φ := Φ with the facts on every place g may write killed (§5.10); Φ += ψ_ens[ā/x̄, result]]
          [L as in §5.4]
  ───────────────────────────────────────────── T-Call
- Γ;Σ;pc ⊢ g::⟨θ⟩(ā) : θτ_r @ θ_ret(γ̄) ⊔ pc ! ⋃ε̄ ∪ ε_g ⊣ Γ''
+ Γ;Σ;pc ⊢ g::⟨θ⟩(ā) : θτ_r @ θ_ret(γ̄) ⊔ pc ! ⋃ε̄ ∪ ε_g ⊣ Γ''       exercised: ⋃ε̄^x ∪ ε^x_g (F-71)
    -- ε_g ⊆ Σ is the capability check: κ_ℓ for each ℓ ∈ ε_g is passed implicitly
    -- target*(*a_j): for a reborrow &mut *r of a local reference r, the place r's loan targets (F-39)
-   -- wr_q = Θ_κ.θ_mut,q at the parameter grades with which g runs the closure: those its signature
-   --   declares (with_lock: γ_sh), or for a user generic g the grades at its invocation sites, read
-   --   off g's per-κ check (§5.7, F-35)
+   -- strong update: θ_mut,j already contains α_j wherever g may leave old contents in place, so
+   --   replacing the caller's grade loses nothing; a write through a sub-slice, an element, a
+   --   projection result or a may-alias set stays weak. The first rule joined always, so a caller
+   --   that passed a raw buffer to a covering kernel kept raw ⊔ canon = raw (item N-62, F-78)
+   -- wr_q (std g) = the least fixpoint of q ⊒ Γ'(target*(q)) ⊔ Θ_κ.θ_mut,q(γ̄_g, β_q := q, σ) over
+   --   the invocations g makes, with γ̄_g the parameter grades its signature declares for the closure
+   --   (with_lock: γ_sh) and σ the closure's state; one application when g runs the closure at most
+   --   once (with_lock, Option::map, an FnOnce bound). wr_σ likewise for the state (F-60)
+   -- λ_q[actuals]: κ's loan transfer into q with each parameter symbol ℓ_j* replaced by the loans of
+   --   what g passes there; for a std g, the union of the call's Local arguments' L (F-61)
+   -- in a std signature, Θ_f.θ_ret and the other closure transfers it applies are instantiated
+   --   with β_q at the capture's grade after the wr_q fixpoint and σ at the closure's grade after
+   --   wr_σ, so a std call's result sees the state its own invocations wrote (F-60)
    -- "mentions clo⟨κ⟩" includes &F, &mut F and std adapters that store the closure (Map<I, clo⟨κ⟩>),
    --   so the call that finally runs a lazily stored closure (next, a consuming method, for) applies
    --   κ's writes at its own pc. Applying them also at calls that do not run it is conservative
+   -- mt_g for a std g that runs closure κ includes mt_κ (F-69), so D-D04's max_by_key may trap
    -- θ_exit joins ω only if g may trap: a callee's early returns end in the caller's continuation,
    --   and their decisions are already in θ_ret and θ_mut through the callee's J(F), ρ and X
 ```
@@ -988,33 +1179,61 @@ that sub-place plus a read of those fields (F-45). This is what lets loans on di
 
 ```text
  some capture is by ref or by mut, or a captured value is Local      κ fresh
- Γ_c, x̄ : (τ̄, ᾱ);Σ;⊥ ⊢ e : τ @ γ ! ε_e ⊣ Γ_e   over parameter symbols ᾱ, captures at their grades in Γ
+ Γ_c = by-ref captured places at their grades and loans in Γ (constants);
+       each by-mut captured place q at the symbol β_q, carrying the symbolic loan ℓ_q*;
+       by-move captures at the state symbol σ, carrying the loans they carry in Γ
+ Γ_c, x̄ : (τ̄, ᾱ, ℓ̄*);Σ;⊥ ⊢ e : τ @ γ ! ε_e ⊣ Γ_e   over parameter symbols ᾱ (with ℓ_j* as in Γ0, §5.15)
  ε_e ⊆ Σ    the result discipline below holds                                      (else E-REF-ESCAPE)
- Θ_κ = (θ_ret from γ ⊔ Γ_e.ρ, θ_mut,q from Γ_e's final grade of each by-mut capture q, θ_exit from Γ_e.ω,
-        mt_κ, ε_κ = ε_e^x), each read off over ᾱ as in T-Fn
+ Θ_κ = (θ_ret from γ ⊔ Γ_e.ρ;  θ_mut,q from Γ_e(q) ⊔ Γ_e.X(q) for each by-mut captured place q;
+        θ_mut,j likewise for each parameter j whose type contains &mut;  θ_state from the grades of
+        the by-move captures the body writes, at its end ⊔ X;  θ_exit from Γ_e.ω;  λ_q from L_e(q) ∪
+        Γ_e.X(q)'s loans;  mt_κ;  ε_κ = ε_e;  ε^x_κ = ε_e^x),
+       each read off over ᾱ, β̄ and σ as in T-Fn                                    (F-60, F-61, F-68, F-69)
  ───────────────────────────────────────────── T-CloL
- Γ;Σ;pc ⊢ clo_L⟨κ⟩[c̄] |x̄| e : clo_L⟨κ⟩(τ̄) → τ @ pc ! ε_e ⊣ Γ + loans of the by-ref and by-mut captures
-   -- the row is charged here, once (Effekt-style); calls add ε_κ to the exercised row only (F-36)
+ Γ;Σ;pc ⊢ clo_L⟨κ⟩[c̄] |x̄| e : clo_L⟨κ⟩(τ̄) → τ @ pc ⊔ ⨆γ(by-move c̄) ! ε_e
+          ⊣ Γ[by-move c̄ moved] + loans of the by-ref and by-mut captures,  the closure value carrying
+            those loans and the loans its by-move captures carry (F-61)
+   -- the row is charged here, once (Effekt-style); calls add ε^x_κ to the exercised row only (F-36)
    -- by-ref captures cannot change while the closure holds its loan on them, so their grades are
-   --   constants of Θ_κ; by-mut captures change only through the closure, which θ_mut,q records
+   --   constants of Θ_κ. By-mut captured places can change between calls (through this closure, or
+   --   through the caller's T-Call of a function that runs it), and the closure's by-move state can
+   --   change through its own calls (FnMut), so both are symbols, instantiated at every call. The
+   --   first rule fixed them at creation, so `let mut f = || { let o = c; c = true; o };
+   --   if h { f(); } f()` returned h graded cross_device (items N-40, N-41, F-60)
+   -- inside the body, a write to a by-mut captured place, or through a reference held in one,
+   --   resolves through the capture's loans in the creating context (target*, §5.4, F-67)
 
  every capture is by move and no captured value is Local
- Γ_c, x̄ : (τ̄, ᾱ);ε_e;⊥ ⊢ e : τ @ γ ! ε_e ⊣ Γ_e     ε_e ⊆ Σ      (capability capture, F-4)
+ Γ_c (by-move captures at σ), x̄ : (τ̄, ᾱ);ε_e;⊥ ⊢ e : τ @ γ ! ε_e ⊣ Γ_e     ε_e ⊆ Σ   (capability capture, F-4)
  the result discipline below holds; Θ_κ as for T-CloL                             (else E-REF-ESCAPE)
  ───────────────────────────────────────────── T-CloE
  Γ;Σ;pc ⊢ clo_E⟨κ⟩[c̄] |x̄| e : clo_E⟨κ⟩(τ̄) → τ ! ε_e @ pc ⊔ ⨆γ(c̄) ! ε_e ⊣ Γ[c̄ moved]
    -- the creator is charged ε_e, so a function that hands an io closure to spawn shows io in its row;
    --   the type keeps ε_e for whoever runs the closure; it is Linear if a moved capture is (K-LinClo)
+   -- a closure value's grade γ(f) is its state's grade: it starts at the join of its by-move
+   --   captures' grades and rises when a call writes the state (T-CallClo)
 
  f : clo⟨κ⟩ (or fn(τ̄) → τ ! ε_f ▷ Θ)    Γ;Σ;pc ⊢ ā : τ̄ @ γ̄ ! ε̄ ⊣ Γ'    clo_E or fn: ε_f ⊆ Σ
- ───────────────────────────────────────────── T-CallClo  (F-35, F-40)
- Γ;Σ;pc ⊢ f(ā) : τ @ Θ.θ_ret(γ̄) ⊔ γ(f) ⊔ pc ! ⋃ε̄ (∪ ε_f for clo_E and fn)
-           ⊣ Γ'[q ⊔= Θ.θ_mut,q(γ̄) ⊔ γ(f) ⊔ pc for each by-mut capture q][ω ⊔= pc ⊔ Θ.θ_exit(γ̄) if mt]
-   ε^x ∪= ε_κ;  a Linear f is consumed;  if τ is Local, the result carries the loans of κ's by-ref
-   captures and of the Local arguments
-   -- inside a generic body, f : F with F bounded by Fn*: the call is typed per κ at monomorphisation
-   --   (below); the captures q are not in scope there, so the call instead raises θ_inv,j by pc and
-   --   the caller applies κ's writes through T-Call's wr_q ⊔ θ_inv,j
+ ι = [ᾱ := γ̄,  β_q := Γ'(target*(q)) for each by-mut captured place q,  σ := γ(f)]
+ ───────────────────────────────────────────── T-CallClo  (F-35, F-40, F-60, F-61, F-69)
+ Γ;Σ;pc ⊢ f(ā) : τ @ Θ.θ_ret[ι] ⊔ γ(f) ⊔ pc ! ⋃ε̄ (∪ ε_f for clo_E and fn)
+           ⊣ Γ'[t ⊔= Θ.θ_mut,q[ι] ⊔ γ(f) ⊔ pc;  L(t) ∪= λ_q[ℓ_j* := L(a_j)]
+                                   for each by-mut captured place q and t ∈ target*(q)]
+               [t ⊔= Θ.θ_mut,j[ι] ⊔ γ(f) ⊔ pc   for each parameter j whose type contains &mut,
+                                   (q, mut) ∈ L(a_j) and t ∈ target*(q)]
+               [t ⊔= Θ.θ_state[ι] ⊔ pc   for t ∈ target*(f), the place that holds the closure
+                                   called (f itself, or what a reference to it borrows),
+                                   if κ's body writes its by-move state]
+               [ω ⊔= pc ⊔ Θ.θ_exit[ι]          if mt]
+   ε^x ∪= ε^x_κ;  a Linear f is consumed;  if τ is Local, the result carries the loans of κ's by-ref
+   captures, the loans κ's by-move captures carry, and the Local arguments' L (F-40, F-61)
+   -- inside a generic body re-typed per κ (rule 1 below), κ's by-mut captured places are implicit
+   --   &mut referents of that body, so the call updates them there like any place, and the body's
+   --   per-κ signature carries their θ_mut,q and λ_q to its caller (T-Call)
+   -- the first rule updated q itself, applied no loans, and had no θ_mut,j: a closure that captures
+   --   *r and writes it, one that stores a parameter's or a capture's loan into a capture, and one
+   --   that writes through its &mut parameter all left the caller's places unchanged (items N-43,
+   --   N-44, N-52, N-65)
 ```
 
 **Result discipline for closures [F-40].** `T-Ret` (a) applies to closures too. When a closure is
@@ -1023,25 +1242,72 @@ instantiated at a type parameter whose `Fn*` bound declares a `Local` result (`F
 signature (or on its sub-places); a loan on a capture is `E-REF-ESCAPE`, as rustc rejects the
 higher-ranked signature. When the creating frame calls a `Local` closure directly, `T-CallClo` gives
 the result the loans of the closure's by-ref captures, so `let r = { let c = || &x[0]; c() };` keeps
-x borrowed while r is live, and a later `x.push(2)` is `E-BORROW-CONFLICT`.
+x borrowed while r is live, and a later `x.push(2)` is `E-BORROW-CONFLICT`. The result also carries
+the loans its by-move captures carry: `let r = &y; let c = move || r; out = c();` keeps y borrowed
+through out (item N-66, F-61). A result that carries a loan on a by-mut captured place or on the
+closure's own by-move state is `E-REF-ESCAPE`, as rustc rejects a reference that escapes an `FnMut`
+body [inference: not compiled].
 
-**Closure summaries and monomorphisation [prov, F-35].** A closure's grade behaviour is its summary
-`Θ_κ`, not its value grade. Without it, `fn apply<F: Fn() -> u64>(f: F) -> u64 { f() }` returned ⊥
-for a closure that reads a clock, and `fn maybe<F: FnMut()>(h: bool, f: &mut F) { if h { f() } }`
-left the closure's by-mut captures untouched by h. Three rules close this:
+**Stores into captures [prov, F-61].** A closure body may store into a by-mut captured place a value
+carrying by-ref capture loans, loans its by-move captures carry, the place's own old loans (ℓ_q*)
+and its parameters' loans (ℓ_j*); `T-Assign` rejects the rest with `E-LOCAL-MUT-STORE`. The loans
+it may store form `λ_q`, and `T-CallClo` adds them, with each ℓ_j* replaced by the argument's loans,
+to the caller's places. So `{ let mut put = |d: &u32| { slot = Some(d); }; let x = 5u32; put(&x); }
+*slot.unwrap()` gives slot the loan on x, and x's scope end is `E-BORROW-OUTLIVE` (item N-43), as is
+storing `&y` for a by-ref captured y (item N-44). When the closure is instantiated at a type
+parameter whose `Fn*` bound writes a parameter as a reference with an elided lifetime
+(`F: FnMut(&u32)`), that parameter is higher-ranked in Rust, so storing its loan into a capture is
+`E-LOCAL-MUT-STORE` there, as rustc rejects it [inference]; this mirrors the result discipline
+above. A bound whose parameter is an associated type with a named lifetime (`for_each`'s
+`F: FnMut(Self::Item)` on `slice::Iter<'a, T>`) is not higher-ranked, and the store is transferred
+with the std call's Local arguments' loans (T-Call). A directly called closure whose parameter is
+annotated `&u32` is higher-ranked in Rust too, so `T-CallClo`'s transfer accepts some stores and
+returns that rustc rejects (OP-22).
 
-1. A generic body with a type parameter bounded by `Fn`, `FnMut` or `FnOnce` is re-typed per closure
-   site κ at monomorphisation, for grades, loans, the exercised row and the side judgements, as B
-   already is (§5.12). Its signature then has, per instantiation, a result transfer that includes
-   `Θ_κ.θ_ret` and an invocation transfer `θ_inv,j` per closure parameter.
-2. Std higher-order functions declare their transfers with the closure's summary as a symbol:
-   `with_lock`: `θ_ret = Θ_f.θ_ret(γ_sh) ⊔ γ(f)`, `θ_inv,f = ⊥` (it runs f once, unconditionally);
-   `Option::map`: `θ_ret = α_self ⊔ Θ_f.θ_ret(α_self)`; `max_by_key`, `min_by_key`, `max_by`,
-   `min_by`: `θ_ret = α_self ⊔ Θ_f.θ_ret(α_item)`; `sort_by`, `sort_by_key`: `θ_mut,self = α_self ⊔
-   Θ_f.θ_ret(α_item, α_item)`; lazy adapters (`map`, `filter`, `inspect`) store κ in their type, and
-   `next` on them has `θ_ret = α_self ⊔ Θ_f.θ_ret(α_item)` and `θ_inv = α_self`.
-3. The exercised row of a call to a closure parameter is `ε_κ`, so a restriction (`E-PAR-EFFECT`,
+**Closure summaries and monomorphisation [prov, F-35, F-60].** A closure's grade behaviour is its
+summary `Θ_κ`, not its value grade. Without it, `fn apply<F: Fn() -> u64>(f: F) -> u64 { f() }`
+returned ⊥ for a closure that reads a clock, and `fn maybe<F: FnMut()>(h: bool, f: &mut F) { if h {
+f() } }` left the closure's by-mut captures untouched by h. Four rules close this:
+
+1. A generic body with a type parameter instantiated at a type that mentions `clo⟨κ⟩` (a parameter
+   bounded by `Fn`, `FnMut` or `FnOnce`, or any other, such as `I: Iterator` at `Map<_, clo⟨κ⟩>`) is
+   re-typed per closure site κ at monomorphisation, for grades, loans, the exercised row and the side
+   judgements, as B already is (§5.12). In that check κ's by-mut captured places are implicit `&mut`
+   referents of the body, with symbols β_q and ℓ_q*, so closure calls inside it update them by
+   `T-CallClo`, and the per-κ signature carries `θ_mut,q` (from the end of the body ⊔ X) and `λ_q` to
+   its caller, which applies them like `θ_mut,j` (T-Call). Its result transfer includes `Θ_κ.θ_ret`.
+   So `fn twice<F: FnMut(u32) -> u32>(mut f: F, h: u32) -> u32 { f(h); f(0) }` returns h's grade
+   through its capture (item N-42, F-60).
+2. Std higher-order functions declare their transfers with the closure's summary as a symbol, and
+   every one states `θ_inv` (F-70), `mt` and `θ_exit` including those of the closure it runs, and,
+   when it passes `&mut` items to the closure, `θ_mut,self` (F-69):
+   - `with_lock`: `θ_ret = Θ_f.θ_ret(γ_sh) ⊔ γ(f)`, `θ_inv,f = ⊥` (it runs f once, unconditionally);
+     it has no `θ_mut,self`: its receiver is a shared reference, and the closure's writes through its
+     `&mut T` parameter go to the locked state, whose every read has the fixed grade `γ_sh` (§5.3);
+   - `Option::map`, `and_then`, `filter`, `is_some_and`, `unwrap_or_else`, `map_or_else`: `θ_ret = α_self ⊔
+     Θ_f.θ_ret(α_self)`, `θ_inv = α_self` (whether f runs depends on self);
+   - `max_by_key`, `min_by_key`, `max_by`, `min_by`, `fold`, `for_each`:
+     `θ_ret = α_self ⊔ Θ_f.θ_ret(α_item)`, `θ_inv = α_self`;
+   - `any`, `all`, `position`, `find`, `take_while`, `skip_while`, and the comparator-driven `sort_by`,
+     `sort_by_key`, `binary_search_by`: `θ_inv = α_self ⊔ Θ_f.θ_ret(α_item)`, because how often f runs
+     depends on its own results; `sort_by` and `sort_by_key` have `θ_mut,self = α_self ⊔
+     Θ_f.θ_ret(α_item, α_item)`;
+   - closures over `&mut` items (`iter_mut().for_each`, `Option::as_mut().map`, `retain_mut`,
+     `chunks_mut(n).for_each`): `θ_mut,self = α_self ⊔ Θ_f.θ_mut,1(α_item) ⊔ θ_inv`;
+   - lazy adapters (`map`, `filter`, `inspect`) store κ in their type, and `next` on them has
+     `θ_ret = α_self ⊔ Θ_f.θ_ret(α_item)` and `θ_inv = α_self`.
+
+   A std higher-order function whose signature states no `θ_inv` gets the join of all its parameter
+   symbols and of `Θ_f.θ_ret` applied to them (§2.5). Without these, `o.map(|v| { c = 1; v })` with
+   o chosen under h left c at ⊥ (item N-55). How often the closure runs is the fixpoint in `T-Call`'s
+   `wr_q`.
+3. The exercised row of a call to a closure parameter is `ε^x_κ`, so a restriction (`E-PAR-EFFECT`,
    (k1), (t1)) sees what the closure does wherever it runs.
+4. **Depth [prov, F-80].** Per-κ re-typing follows instantiation chains. Polymorphic recursion over
+   closure types, `fn f<F: Fn()>(g: F, n: u32) { if n > 0 { f(|| g(), n - 1) } }` called once, makes
+   a new instance at every level, so a chain deeper than a fixed limit, proposed as the pinned rustc's
+   default recursion limit, is `E-MONO-DEPTH` [prov]. rustc rejects the same programs at that limit
+   [inference: not compiled] (item N-63).
 
 The cost is a re-check per closure site for generic helpers, which OP-19 asks X1 to measure.
 
@@ -1057,7 +1323,9 @@ at `clo_L`. The body is then checked with `Δ ⊢ F : Local`.
 | `E-LOCAL-RETURN` | a function returns a `Local` adapter or closure outside T-Ret (FF-LOCAL) |
 | `E-REF-FIELD` | a struct or enum field has a `Local` type (FF-REF, FF-LOCAL) |
 | `E-LOCAL-INSTANTIATE` | a user generic is instantiated at a `Local` type outside the exception |
-| `E-REF-ESCAPE` | a reference is returned outside T-Ret, or a std generic parameter with the implicit `¬Local` bound (such as `with_lock`'s result type R) is instantiated at a reference type (F-28), or a closure's result carries a loan that its bound's elision does not allow (F-40) |
+| `E-REF-ESCAPE` | a reference is returned outside T-Ret, or a std generic parameter with the implicit `¬Local` bound (such as `with_lock`'s result type R) is instantiated at a reference type (F-28), or a closure's result carries a loan that its bound's elision does not allow (F-40), or a loan on a by-mut captured place or on its own by-move state (F-61) |
+| `E-LOCAL-MUT-STORE` | a value stored into a parameter's referent or into a by-mut captured place carries a loan the rules of §5.4 and of "Stores into captures" do not allow (F-39, F-61, F-62) |
+| `E-MONO-DEPTH` [prov] | a per-κ instantiation chain exceeds the fixed depth (F-80) |
 
 `heat_view` (01 §5.8) is the F-28 case. Its own signature, `fn heat_view(st: &Mutex<StoreState>) ->
 &[u32]`, is a valid projection by elision. The rejection comes from instantiating `with_lock`'s `R` at
@@ -1072,6 +1340,8 @@ at `clo_L`. The body is then checked with `Δ ⊢ F : Local`.
 ```
 
 - An implicit drop is `E-LINEAR-DROP`, including assignment over an initialised Linear place.
+- A `break` or `continue` that leaves x's scope is an end of that scope: `T-Jump` requires x to be
+  consumed there (F-66), as `T-Return` does for a `return`.
 - "Moved into a call" counts as consumption only because the callee's own `T-Lin` then applies to
   the parameter. A generic callee is checked with its type parameters `¬Linear` and may drop them, so
   instantiating one at a Linear type is `E-LINEAR-INSTANTIATE` (§5.1, F-41). Moving a Linear value
@@ -1094,11 +1364,15 @@ at `clo_L`. The body is then checked with `Δ ⊢ F : Local`.
  every read in e of a place in W is at the iteration's own index π(i) or within [lo(i), hi(i));
      captured &mut places are split per iteration                                     (E-PAR-RACE)
  shared captures are Sync; written or moved element types are Send                   (E-PAR-SEND)
- no break targets the par                                                             (E-PAR-BREAK)
+ no break in e targets the par or a loop enclosing it, and no continue in e targets a loop
+     enclosing it; a continue that targets the par ends the iteration (F-75)        (E-PAR-BREAK)
  ε_e^x ⊆ {blob} ∪ {alloc(A) | A : Sync}: the exercised row, so the rows of Local closures the body
-     calls and nondet removed by a det block in the body count (F-36)               (E-PAR-EFFECT)
+     calls, nondet removed by a det block in the body, and the exercised rows of every function the
+     body calls count (F-36, F-71)                                                  (E-PAR-EFFECT)
  γ_unspec = (exact, ⟨sd, cd⟩, ∅, raw)
  X' = X_e ⊔ X_e[w ⊔= γ_unspec for w ∈ W]   if e may return (contains return or ?), else X_e   (F-38)
+     where X is the exit context of the body that contains the par, a closure body included, and W's
+     places among its output places (§4) are what X' raises (F-68)
  ───────────────────────────────────────────── T-Par
  Γ;Σ;pc ⊢ par i in a..b {e} : () @ pc' ! εa ∪ εb ∪ ε_e
         ⊣ Γ0[w ⊔= γ_w ⊔ pc' for w ∈ W][ω ⊔= pc' ⊔ ω_e][ρ ⊔= ρ_e][J(F) ⊔= J_e(F)][X := X']
@@ -1118,9 +1392,16 @@ at `clo_L`. The body is then checked with `Δ ⊢ F : Local`.
 on row t in every iteration, which is not a place of the forms above. The rule: inside a `par` over
 i, a call to a projection with a declared footprint whose result is used, within one iteration, only
 as the base of a write or read at index `π(i)` contributes only `footprint(proj)[π(i)]` to W and to the
-reads, and its loan is split per iteration like a captured `&mut` place. Without the rule, D-D11's
-inner `par` is `E-PAR-DISJOINT`; the alternative is to ask 02's owner to hoist `let yt = &mut y[t];`
-above the inner `par` (§14 P-19).
+reads, and its loan is split per iteration like a captured `&mut` place, provided that **the
+projection's arguments other than its receiver are invariant in the `par`**: they mention neither i
+nor any place the body writes (F-63). Otherwise T2 must prove that the composed map
+`i ↦ footprint(proj(args(i)))[π(i)]` is injective on [a, b), or the call contributes its whole
+footprint for every i and `E-PAR-DISJOINT` judges it. The first rule checked only that π is
+injective, so with `window(t)` footprinted as `blocks[t..t+4]`, `par for i in 0..4 { y.window(3 - i)[i]
+= … }` wrote `blocks[3]` in every iteration (item N-47). In D-D11 the argument is the outer `par`'s
+t, which the inner body does not write. Without the rule, D-D11's inner `par` is `E-PAR-DISJOINT`;
+the alternative is to ask 02's owner to hoist `let yt = &mut y[t];` above the inner `par` (§14
+P-19).
 
 **`T-Cover` (F-1, F-37).** A loop L, either `for i in 0..n {…}` or `par i in 0..n {…}`, *covers* the
 place p with the expression `e_w` if its surface body (not the elaborated header of §3.2) satisfies:
@@ -1128,19 +1409,50 @@ place p with the expression `e_w` if its surface body (not the elaborated header
 0. the body contains no `break`, `continue`, `return` or `?`, targeting L or any enclosing construct,
    anywhere, before or after the write. Traps are allowed: a trap ends the enclosing fail domain, so
    no normal exit follows it, and sinks and transfers concern normal exits only (§5.3);
-1. on every path through one iteration that does not trap, the body writes `p[i] = e_w` exactly
-   once, and no `if` or `match` arm precedes the write on any path;
-2. `Γ.Φ ⊢_T2 n == p.len()`; and
-3. the body makes no other write to p: no other element, no whole-p or length-changing write, and no
-   `&mut` of p or of a sub-place passed to a call. Writes are identified by place after reborrows and
-   local references are resolved (`target*`, §5.4).
+1. the body contains exactly one write `p[i] = e_w`, and it is a statement at the top level of the
+   surface body: not inside a nested loop, a closure, an `if`, a `match` or an inner block. No `if`
+   or `match` precedes it. With premise 0, every iteration that does not trap therefore executes it
+   exactly once. The first wording ("on every path … exactly once") did not say how a checker counts
+   a write inside a nested loop, which may run zero times, or inside a closure (items N-59, N-60,
+   F-64);
+2. `Γ.Φ ⊢_T2 n == p.len()`;
+3. the body makes no other write to p: no other element, no whole-p or length-changing write, no
+   `&mut` of any place that overlaps p, ancestors included, passed to a call or stored (for p = `s.buf`,
+   `poke(&mut *s)` is such a write, item N-58), and no closure in the body that captures by mut a place
+   overlapping p. Writes are identified by place after reborrows and local references are resolved
+   (`target*`, §5.4). The one exception is `Cover-Proj`'s receiver reborrow, below; and
+4. `target*(p)` is one place (must-alias, §5.4): p is rooted in a whole local, in a reference
+   parameter's referent, or in a local reference with exactly one loan. With
+   `let y = if h { &mut *a } else { &mut *b };`, a strong update of both `*a` and `*b` would mark the
+   one not written canonical (item N-48, F-64).
 
 After a covering loop, the element grade of p is a strong update, `p[*] := γ(e_w) ⊔ pc'`, with the
 NaN bit included, instead of `T-Assign`'s weak join; `pc'` includes `J(L)`, so the bound's grade.
-Nested covers compose for two-dimensional projections such as `y[t][r]` when the row projection
-declares its footprint. The first draft's condition 1 forbade exits only before the write, so
-`for i in 0..n { y[i] = canon::nan(x[i]); if x[i] > 0.0 { break; } }` passed and marked y canonical
-while its tail kept the caller's raw NaNs (item N-14).
+Two-dimensional covers through a projection are `Cover-Proj`, below; the previous revision's
+sentence "nested covers compose" had no premises (F-73). The first draft's condition 1 forbade
+exits only before the write, so `for i in 0..n { y[i] = canon::nan(x[i]); if x[i] > 0.0 { break; } }`
+passed and marked y canonical while its tail kept the caller's raw NaNs (item N-14).
+
+**`Cover-Proj` [prov, F-73].** An outer loop `for t in 0..m` or `par t in 0..m` covers the element
+storage S of a place p (for `Matrix`, `S = p.blocks`) with `e_w`, through a projection `proj` with a
+declared footprint, if:
+
+0. premise 0 of `T-Cover` holds for the outer body and for the inner body;
+1. the outer body is exactly one inner loop `for r in 0..k` or `par r in 0..k`, with nothing before or
+   after it, and the inner body contains exactly one write `(*proj(&mut *p, t))[r] = e_w`, at its top
+   level, with no `if` or `match` before it (premise 1 of `T-Cover`);
+2. T2 proves that the footprints tile S: `footprint(proj(p, t)) = S[lo(t)..hi(t)]` with `lo(0) = 0`,
+   `hi(t) = lo(t+1)`, `hi(m−1) = S.len()`, and `k = hi(t) − lo(t)` for every t in `0..m`;
+3. neither body writes S, or any place overlapping S or p (ancestors included), other than by that
+   one write; the projection call's receiver reborrow `&mut *p` is exempt from premise 3 of `T-Cover`
+   because `Proj-Split` resolves it to `footprint[r]`, and its other arguments are invariant in the
+   inner loop (F-63); and
+4. `target*(p)` is one place (premise 4).
+
+Then `S[*] := γ(e_w) ⊔ pc'_t ⊔ pc'_r`, a strong update, where `pc'_t` and `pc'_r` include the two
+bounds' grades. For D-D11, `proj` is `IndexMut::index_mut` on `Matrix<f32>`, `lo(t) = t · bpr`, and the
+tiling follows from the `Matrix` invariant `blocks.len() == rows * blocks_per_row` and the kernel's
+`requires` (`y.rows() == a.rows()`, `y.cols() == w.rows()`, `cols() == blocks_per_row()`).
 
 Without `T-Cover`, the canonical `q4_matvec` fails its sink check. The caller's `y` is `raw`, and the
 weak join `raw ⊔ canon` is `raw` (derivation D-C2 in the appendix). A sink check that looks only at
@@ -1235,10 +1547,11 @@ it ([derivations §P](core-calculus/derivations.md#p-the-canonical-prelude)).
    E's subject is the block itself, named by its anchor, or the enclosing definition when the block
    is that definition's entire body; subjects are resolved to definition content hashes when E is
    admitted, and the enclosing definition's current hash must be among them      (E-DET-EVIDENCE, E-DET-STALE)
- τ contains no closure type and Δ ⊢ τ : ¬Local                                       (E-DET-RESULT [prov])
+ τ contains no closure type and Δ ⊢ τ : ¬Local, on the monomorphised type         (E-DET-RESULT [prov])
  Γ;Σ ∪ {nondet};pc ⊢ e : τ @ (f, ⟨d_s, d_p⟩, B, ν) ! ε ⊣ Γ'          the body, typed without any mask
- d_s^in = ⨆ { Γ(y).d_s | y free in e }   (for a reference y, its referent grade; for a closure, its
-                                          captures)                                        (F-32)
+ d_s^in = ⨆ { Γ(y).d_s | y free in e }   (for a local reference y, the read grade of P-Deref-Local,
+                                          F-82; for a reference parameter, its referent grade;
+                                          for a closure, its captures and its state)       (F-32)
  ───────────────────────────────────────────── T-Det
  Γ;Σ;pc ⊢ det[E] {e} : τ @ (f, ⟨d_s^in, d_p⟩ ⊔ pc.d, B ∪ {E} ∪ pc.B, ν) ! ε \ {nondet} ⊣ Γ'
    -- exercised row: ε^x keeps nondet (F-36)
@@ -1264,7 +1577,23 @@ it ([derivations §P](core-calculus/derivations.md#p-the-canonical-prelude)).
 - **First-order results (F-34).** A closure created inside the block and returned from it would run
   its `nondet` code after the block, outside the extent E's evidence covers, and with no label
   (item N-32). The result type therefore contains no closure and is not `Local`. An escaping closure
-  that stays inside the block keeps `nondet` in its type (F-26).
+  that stays inside the block keeps `nondet` in its type (F-26). In a generic body the result type
+  may be a type parameter that is later instantiated at a closure type, so `E-DET-RESULT` is
+  evaluated on the monomorphised type, like the other side judgements (F-53, F-72).
+- **What E must claim [F-72].** `d_s^in` reads the free inputs' grades, and the contents of a
+  shared-mutable object (`Mutex<T>`, a `Condvar`-guarded state) never raise the grade of the local
+  that holds it: writes inside `with_lock` go to state whose reads are always `γ_sh` (§5.3). So the
+  claim E must establish, and the one `T-Det` relies on, is: **for every scheduler, every environment
+  non-failing for the run, and every content of the shared-mutable objects reachable from the free
+  inputs, the block's result is the same function of the free inputs' values with those contents
+  excluded.** A claim of the form "a function of the free inputs' values" would be true of
+  `let m = Mutex::new(0u64); m.with_lock(|v| *v = clock.now_ns()); deterministic(by: E) { m.with_lock(|v| *v) }`,
+  whose result is the time while `d_s^in = cd` (item N-57). The store's evidence for `acquire` must
+  show exactly this, which is what 01 §6.4's comment on `acquire` says: "the bytes returned are a
+  function of the immutable, content-hashed file", whatever the cache state. Joining `γ_sh` into
+  `d_s^in` for every free input that reaches shared state would also close the hole, but it would
+  make D-C5's `acquire` result `schedule_dependent` for every caller, against 01 §6.4 rule 2, which
+  gives the result the grade of a `blob` read.
 
 ### 5.12 Static-dispatch traits
 
@@ -1296,7 +1625,8 @@ it ([derivations §P](core-calculus/derivations.md#p-the-canonical-prelude)).
   monomorphisation, and a generic body carries a placeholder for it that instantiation resolves.
 - **Generic bodies** are checked once for grades and rows. A call `Tr::m` on a type parameter uses
   `ε_m` and `Θ̂_m`. Monomorphisation substitutes and needs no grade re-check, except that it resolves
-  B, and that bodies generic over a closure type are re-typed per closure site (§5.7).
+  B, and that bodies whose type parameters are instantiated at a type mentioning a closure type are
+  re-typed per closure site (§5.7 rule 1, F-60).
 - **Side judgements on the monomorphised call graph [F-53].** `⊢_to` (t5)–(t9), `⊢_k` (k3)–(k6),
   `kcall` and `E-DET-POLICY` are facts about callee bodies. A policy generic over `T: Score` that calls
   `Score::score` cannot know whether the impl it will get contains a `det` block, a `Mutex` or a loop
@@ -1374,9 +1704,9 @@ codes exist only inside formats (01 §4).
 ```text
  ⊢_sch N for g on t  iff
   (s1) g is a kernel fn, and t names a catalogue target with known feature names
-  (s2) every name in N resolves over the inlined KIR of g: kernel callees are inlined, and a name
-       bound in an inlined callee is accepted if it is unique in the inlined loop nest (F-2)
-                                                                                  (E-SCHED-AMBIGUOUS)
+  (s2) every name in N resolves first in g's own scope (its parameters and its let and loop
+       bindings); a name not bound there is looked up in the inlined KIR of g's kernel callees and
+       must be bound exactly once in the inlined loop nest (F-2, F-86)            (E-SCHED-AMBIGUOUS)
   (s3) every primitive is in 02 §8.1's licence table; its class is recorded: exact; int_assoc, which
        emits T2 obligations for the reordered integer sum (a bound on the sum of absolute values of
        the terms, and for VNNI the bias identity over ActQ8.sum); keep_order; or timing-only (prefetch)
@@ -1394,6 +1724,12 @@ codes exist only inside formats (01 §4).
   (s4) a primitive outside the licence set, or one whose (s3') condition fails (split accumulators,
        FMA, a lane-count change, vectorising a float accumulator) is rejected (02 §8.2) (E-SCHED-REASSOC)
 ```
+
+The previous wording of (s2), "a name bound in an inlined callee is accepted if it is unique in the
+inlined loop nest", did not say that g's own scope comes first. After inlining, the canonical
+schedule's `w` is bound twice, as `q4_matvec`'s parameter and as `q4_row_dot`'s, so read literally
+`prefetch w` was `E-SCHED-AMBIGUOUS`; D-C3's accept relied on "own scope first", which only P-10
+stated (F-86).
 
 Without (s3'), `schedule bad for q4_row_dot on x86_64(avx512f) { vectorize g; }`, which splits the
 float `acc` chain across lanes (02 §8.2's split accumulator), passed the front end and was caught only
@@ -1427,23 +1763,32 @@ subset except `const` items (§12).
 
 ```text
  sig(g) wf: parameter and result types wf; a Local result only under T-Ret; ⊢_pkg ε_g ok
- Γ0: parameters as owned locals with symbolic grades α_j (reference parameters: referent grades,
-     carrying ℓ_j*), J0 = {F ↦ ⊥}, X0 = ⊥,
+ Γ0: parameters as owned locals with symbolic grades α_j (reference parameters: referent grades);
+     every parameter whose type contains a reference at any depth carries ℓ_j,k* per reference
+     position k, and its referents form the pseudo-place *j at α_j (F-62); J0 = {F ↦ ⊥}, X0 = ⊥,
      Φ0 = requires ∪ parameter ranges ∪ invariants of parameter types;  Σ = ε_g (declared or inferred)
- Γ0;Σ;⊥ ⊢ body : τ_r @ γ ! ε ⊣ Γ1
+ Γ0;Σ;⊥ ⊢ body : τ_r @ γ ! ε (exercised ε^x) ⊣ Γ1
  ε ⊆ Σ;  every Linear by-value parameter is consumed;  no loan is live at exit except T-Ret (a)'s
- Θ_g: θ_ret from γ ⊔ Γ1.ρ;  θ_mut,j from the referent grade of &mut parameter j in Γ1 ⊔ Γ1.X (the
-      end of the body and every return, F-31);  θ_exit from Γ1.ω;  θ_inv,j from the pc at the
-      invocations of closure parameter j; each read off as (γ⁰, D, n, O) over the symbols α_j
+ Θ_g: θ_ret from γ ⊔ Γ1.ρ;  θ_mut,j from the grade of *j in Γ1 ⊔ Γ1.X for every parameter j whose
+      type contains &mut (the end of the body and every return, F-31, F-62);  θ_exit from Γ1.ω;
+      θ_inv,j from the pc at the invocations of closure parameter j; each read off as (γ⁰, D, n, O)
+      over the symbols α_j;  ε^x_g = ε^x (F-71)
  may_trap(g) as in §5.10;  ctx(g) as in §5.3;  g's sinks meet req(ctx(g))
  kernel fns satisfy ⊢_k; policy fns satisfy ⊢_to
  ───────────────────────────────────────────── T-Fn
  ⊢ fn g … : sig(g)
 ```
 
-A program checks when every item checks and the call graph's rows, transfers and `may_trap` facts
-reach their least fixpoint. The link rule INV-LOSSLESS-DEFAULT applies at link time: a default profile
-that reaches `lossy` is a link error (01 §7.3).
+A program checks when every item checks and the call graph's rows, exercised rows, transfers and
+`may_trap` facts reach their least fixpoint. The link rule INV-LOSSLESS-DEFAULT applies at link
+time: a default profile that reaches `lossy` is a link error (01 §7.3).
+
+**Termination of the checker [F-80].** Every fixpoint the rules take is over a finite lattice:
+grades, rows and `may_trap` are finite; a body's loan sets are drawn from its finitely many loan
+creation sites (with κ for a site in a closure body) and its parameters' symbolic loans (§5.4); and
+`T-Loop`'s, `wr_q`'s and the call graph's iterations only join. Per-κ re-typing is the one step that
+can create new work without bound, and `E-MONO-DEPTH` (§5.7 rule 4) bounds it. The first revision
+created a fresh loan at every `T-Ref`, so `loop { let r = &x; … }` had no finite fixpoint carrier.
 
 ### 5.16 Rejection codes the rules emit
 
@@ -1464,8 +1809,9 @@ another family writes.
 | `E-ROW-UNDECLARED` | §5.2 | 01 §6.3 |
 | `E-LINEAR-DROP`, `E-LINEAR-COPY`, `E-LINEAR-PARTIAL` [prov] | T-Lin, J1 | 01 §5.6 |
 | `E-LINEAR-INSTANTIATE` [prov] | J2, T-Call | F-41 |
+| `E-MONO-DEPTH` [prov] | §5.7 rule 4 | F-80 (rustc rejects the same programs at its recursion limit [inference]) |
 | `E-BORROW-CONFLICT` [prov], `E-MOVE-BORROWED`, `E-MOVE-LOOP` | §5.4, T-Loop | Rust's rules |
-| `E-BORROW-OUTLIVE`, `E-LOCAL-MUT-STORE` [prov] | §5.4, T-Let, T-Assign | F-39 (rustc rejects the same programs) |
+| `E-BORROW-OUTLIVE`, `E-LOCAL-MUT-STORE` [prov] | §5.4, T-Let, T-Assign, T-Jump, §5.7 | F-39, F-61, F-62, F-66 (rustc rejects the same programs [inference, not compiled, for the closure and by-value-parameter cases]; OP-22 lists where MCore accepts more) |
 | `E-FOOTPRINT` [prov] | §5.6 | F-45 |
 | `E-PAR-DISJOINT`, `E-PAR-RACE`, `E-PAR-SEND`, `E-PAR-BREAK`, `E-PAR-EFFECT` | T-Par | 01 §12.3 |
 | `E-DET-GRANT`, `E-DET-POLICY`, `E-DET-EVIDENCE`, `E-DET-STALE` | T-Det | 01 §6.4 |
@@ -1486,7 +1832,8 @@ fixed. `mithi` reports every failure it finds; the primary code is the first in 
 within one class the first by source position:
 
 1. `E-OUT-OF-SCOPE-<KW>`, then J2 well-formedness (`E-DYN`, `E-REF-FIELD`, `E-LIFETIME`,
-   `E-LOCAL-INSTANTIATE`, `E-LINEAR-INSTANTIATE`, `E-FF-CELL`, `E-DROP-IMPL`, …) and `E-TYPE`;
+   `E-LOCAL-INSTANTIATE`, `E-LINEAR-INSTANTIATE`, `E-MONO-DEPTH`, `E-FF-CELL`, `E-DROP-IMPL`, …) and
+   `E-TYPE`;
 2. class codes from `cls` and the Dc list (`E-FF-*`, `E-AMBIENT-IO`, `E-MACRO`, `E-TRAIT-OFF`);
 3. rows and grants (`E-ROW-UNDECLARED`, `E-GRANT-*`, `E-FP-ENV`, `E-DET-GRANT`);
 4. loans and linearity (`E-BORROW-*`, `E-MOVE-*`, `E-LOCAL-*`, `E-REF-ESCAPE`, `E-LINEAR-*`,
@@ -1578,9 +1925,17 @@ their interface specification. A lock acquisition is a `lock(tid)` choice, an I/
               after abandon(v_x) for each x in Φ.lin, newest first, and drop glue for Φ's other
               std-owned locals; the caller's context at the call site is discarded too
 
- [E-Domain] Φ.dom = k:
+ [E-Domain] Φ.dom = k, a fail domain (export, port, test, main, service):
             ⟨Φ̄·Φ ; ⇑(σ, ī)⟩ → the domain result D_k(σ, ī)       (table below)
+              after abandon(v_x) for each x in Φ.lin, newest first, and drop glue for Φ's other
+              std-owned locals, exactly as E-Pop does (F-74)
 ```
+
+The root frame of a `par` iteration (kind `iter(j, k)`) or of a scoped child (kind `child(s, k)`)
+is not a fail domain: it produces no `D_k`, but reports to its join (`E-Par-Done`, §6.4), and it too
+abandons its `Φ.lin` first. The first revision's `E-Domain` produced `D_k` without abandoning, so in
+a test case `{ let l = store.lease(id)?; let v = xs[99]; store.release(l); }` the `idx` trap at the
+entry frame leaked the lease while the host survived (F-74).
 
 Discarding a context is safe for linear resources only because of E6 and `E-Call`'s `lin_g`: every
 Linear temporary already evaluated in a discarded context is a named local in `Φ.lin`, and a callee's
@@ -1600,8 +1955,8 @@ trap. An environment fault `Fault(φ)` propagates the same way, as `⇑F(φ)`.
 | test or harness case | a recorded failure naming σ | 01 §12.2 |
 | `main(root)` | process exit with a trap status. The host is the process itself | added (F-9) |
 | service root (a long-lived `std_platform` service) | the service enters `Trapped(σ)`; its owner observes this at its next interaction or at the join | added (F-9) [prov] |
-| scoped child (`scope.spawn`) | not a domain: it propagates to the scope's join, where the lowest spawn index wins, as in `par` | added (F-9) [prov] |
-| `par` iteration | not a domain: it propagates to the join (§6.4) | 01 §12.3 |
+| scoped child (`scope.spawn`) | not a fail domain (root kind `child(s, k)`): after abandoning its `Φ.lin`, it reports to the scope's join, where the lowest spawn index wins, as in `par` | added (F-9) [prov]; F-74 |
+| `par` iteration | not a fail domain (root kind `iter(j, k)`): after abandoning its `Φ.lin`, it reports to the join (§6.4) | 01 §12.3; F-74 |
 
 **Never unwinds.** Between a trap and its domain, no user-written code runs: no `Drop` impl (user
 `Drop` is Dc, F-17), no `catch_unwind` (Dc, 01 §12.1), and no code from the discarded contexts. Only
@@ -1627,14 +1982,18 @@ The meaning of `par i in a..b { e }` is its serial projection: `for i in a..b { 
 
  [E-Par-Claim] choice claim(j, k) with r(k) = pending:
                if k < m(J_j): r(k) := running, and a child thread ⟨Φ_iter(j, k) ; e[i := k]⟩ starts,
-                              its root frame of domain kind iter(j, k), logical parent the frame
-                              that executed the par (§7.2)
+                              its root frame of kind iter(j, k) (a join-reporting root, not a fail
+                              domain, §6.3), logical parent the frame that executed the par (§7.2)
                else:          r(k) := skipped
 
- [E-Par-Done]  a child for k ends with a value:              r(k) := Normal
-               it reaches ⇑(σ, ī) at its root:                r(k) := Exit(Trap(σ, ī))
+ [E-Par-Done]  a child for k ends with a value, or executes
+                 continue_par at its root (F-75):             r(k) := Normal
+               it reaches ⇑(σ, ī) at its root:                abandon the root frame's Φ.lin, newest
+                                                              first (as E-Pop); r(k) := Exit(Trap(σ, ī))
                it executes return v at its root:              r(k) := Exit(Ret(v))
-               it reaches ⇑F(φ) at its root:                  r(k) := Exit(Fault(φ))
+               it reaches ⇑F(φ) at its root:                  abandon as above; r(k) := Exit(Fault(φ))
+               (E-PAR-BREAK leaves no other jump at the root: a break or continue that targets a loop
+               outside the body is rejected statically, F-75)
 
  [E-Par-Join]  when no child of j is running and r(k) = Normal for every k < m(J_j):
                (1) m = hi:                      E[join(j)] → E[()]
@@ -1644,9 +2003,17 @@ The meaning of `par i in a..b { e }` is its serial projection: `for i in a..b { 
                exits recorded above m, faults included, are ignored, as the serial projection never
                reaches them; before reducing, in cases (2) to (4): abandon, in ascending index order,
                every Linear value any iteration wrote into W, leaving those places holding no live
-               Linear value (None for Option elements); in test builds, overwrite W's other places
-               with a valid value of their type (F-7)
+               Linear value (None for Option elements), and then, in ascending index order, the
+               Linear values held by every ignored record r(k) = Exit(Ret(v)), k > m (F-83); in test
+               builds, overwrite W's other places with a valid value of their type (F-7)
 ```
+
+An ignored `Exit(Ret(v))` above the winner can hold a Linear value that no place holds any more:
+in `par for i in 0..slots.len() { if want[i] { return slots[i].take(); } }` with `want[3]` and
+`want[9]` true, iteration 9's lease left `slots[9]` and lives only in its record. The first revision
+ignored the record, so the lease was lost (item N-67, F-83). Rejecting a `par` whose body may return
+a Linear value was the alternative; the join already abandons W's Linear values on the same paths,
+so abandoning the records' values too keeps one rule.
 
 The first draft tried a "some iteration faulted" case first. A fault at an index above the winner
 then overrode the serial outcome, and φ was "the first fault recorded", which depends on timing
@@ -1766,13 +2133,17 @@ glue.
    RT-Trap   ⇑(σ, ī) and ⇑F(φ) : τ for any τ, at a site whose pc is already in ω
    RT-Port   a port(q) frame : Hint_q, its state copy typed as the state block with no loan outside it
    RT-Moved  ⊠ inhabits a location only where V marks it moved or uninit
-   RT-Cover  a loop that covers p and has finished iterations [0, k) is typed by the generalised
-             T-Cover, "covers p[k..n] given Ψ(p[i]) ⊑ γ(e_w) with ν canon for every i < k"
+   RT-Cover  a loop over [a, b) that covers p with e_w and whose finished iterations form the set
+             S ⊆ [a, b) is typed by the generalised T-Cover, "covers p restricted to [a, b) \ S,
+             given Ψ(p[i]) ⊑ γ(e_w) ⊔ pc' for every i ∈ S", with the NaN bit that γ(e_w) carries;
+             for `for`, S = [a, k); for a covering `par`, any S, and RT-Join uses it (F-76)
   ```
 
   With `RT-Cover` and element-wise grades in Ψ, `T-Cover`'s strong update is preserved after each
-  iteration, although the residual loop runs from k, not from 0 (the first draft's premise 2 failed
-  there). Lemma E and Theorem 4 are proved over this runtime typing; if grade monotonicity at some
+  iteration, although the residual loop runs over the unfinished indices, not from a (the first
+  draft's premise 2 failed there). The previous revision's `RT-Cover` assumed a finished prefix
+  `[0, k)` and ν canon, which a covering `par`, whose iterations finish in any order, and a covering
+  write of a raw value both contradict (F-76). Lemma E and Theorem 4 are proved over this runtime typing; if grade monotonicity at some
   step proves awkward, the fallback is a binary logical relation for Theorem 4, and preservation then
   claims types, loans and rows only.
 - **Progress.** If `Ψ ⊢ C`, then one of these holds: every thread has reached its root with a domain
@@ -1780,9 +2151,10 @@ glue.
   `std_platform` synchronisation or I/O operation. A thread in a propagating state `⇑` can always step
   (Lemma A).
 - **Corollaries.** No use after move. No access through an ended loan. No data race: no two unordered
-  accesses to one location of which at least one is a write. No Linear value dropped on a normal path.
-  Every trap occurs at a site the checker recorded for the frame it occurs in, and never in a kernel
-  frame (Lemma D).
+  accesses to one location of which at least one is a write. No Linear value dropped on a normal path:
+  each is consumed, or abandoned exactly once by an audited routine on a trap path or at a `par`
+  join after an early exit (F-74, F-83). Every trap occurs at a site the checker recorded for the
+  frame it occurs in, and never in a kernel frame (Lemma D).
 - **Not claimed.** Termination, deadlock freedom, and freedom from stack exhaustion (F-8). The
   permutation scheduler and liveness monitors cover the first two (01 §5.8).
 
@@ -1801,11 +2173,20 @@ semantics, then erasure:
    result loan is nested in its argument's loan, and a loan set moves with its value, §5.4),
    **Frame-Pop** (every loan carried by a popped frame ends, except a projection loan, which is
    re-rooted on the caller's place), **Par-Split** (W splits into per-iteration exclusive footprints by
-   injectivity or T2, and shared captures are read-only, so shared permissions can be duplicated),
-   **Par-Join** (footprints merge back; an invariant re-check deferred to the join runs only after
-   they have), **Scope-End** (`E-BORROW-OUTLIVE` makes every loan on a dying local dead), and
-   **Abandon** (abandon routines restore `𝒫` for the leases they release; by E6 and `lin_g`, every
-   live Linear value is reachable from some frame's `Φ.lin` when a trap discards contexts).
+   injectivity or T2, and shared captures are read-only, so shared permissions can be duplicated; the
+   receiver reborrow `&mut *y` that a footprinted projection's call evaluates in every iteration takes
+   `excl` only on the footprint element `footprint[π(i)]` that `Proj-Split` assigns to the
+   iteration, and `shr` on the receiver's fields outside every footprint, so concurrent iterations do
+   not get stuck on it, F-63), **Closure-Transfer** (a closure call's effect on the caller's
+   places, grades and loans is its summary instantiated at the current grades, β and σ included,
+   F-60, F-61), **Par-Join** (footprints merge back; an invariant re-check deferred to the join runs
+   only after they have), **Scope-End** (`E-BORROW-OUTLIVE` makes every loan on a dying local dead,
+   at a block's end and at every jump that leaves it, F-66), and **Abandon** (abandon routines
+   restore `𝒫` for the leases they release; every live Linear value is consumed or abandoned exactly
+   once before its frame disappears: by E6 and `lin_g` it is reachable from some frame's `Φ.lin`
+   when a trap discards contexts; `E-Pop`, `E-Domain` and `E-Par-Done` abandon a frame's `Φ.lin`
+   before the frame disappears; and `E-Par-Join` abandons the Linear values left in W and in ignored
+   `Ret` records, F-74, F-83).
 3. Lemma C transfers the result to the uninstrumented semantics.
 
 **Hardest case.** Preservation at `E-Par-Join` after an early exit. Heap typing for W must be
@@ -1816,6 +2197,9 @@ projection, where Loan-Transfer must re-root the result loan without overlapping
 caller. The third is a value stored through `&mut` by a std function (`Vec::push`, `mem::swap`),
 where the loan set must follow the value into the receiving referent; the review's examples of
 dangling references (items N-24 to N-27) all fail exactly there when loan sets are not propagated.
+The second review's dangling references (items N-43, N-44, N-46, N-66, N-68) are the same case
+through a closure's captures, a by-value parameter and an aggregate, so Closure-Transfer and the
+per-position symbolic loans of §5.4 carry the same weight.
 
 ### 7.2 Theorem 2: capability confinement
 
@@ -1888,7 +2272,11 @@ call takes its fallback.
   increasing cost: no trap site is reachable in the port-reachable core (`may_trap = false`, which is
   what the first draft's P-tot demanded); every trap site reachable under a pc or guard that depends
   on a hint value is discharged (a hint-taint variant of `may_trap`, using the grade `γ_sh` of hint
-  values, §5.13); or the store-core bounded model check proves it, up to its bound. The first draft's
+  values, §5.13); or the store-core bounded model check proves it, up to its bound. The hint-taint
+  discharge passes through `T-Det`, whose recomputed result drops the schedule taint that hint-changed
+  shared state carries, on the strength of E's claim (§5.11); a core trap guarded by a `det` result
+  is therefore excluded from P-ind only as far as the boundaries it crosses hold, and that discharge
+  is capped by their grades (§7.6, F-81). The first draft's
   P-tot ("C[𝒪] reaches no trap site for any input") was stronger than Theorem 3 needs and fails for
   any core with an input-dependent trap, which 01 §12.6 allows at exports.
 - **S-tot [F-48].** Every port call runs within a reserved stack region of at least `S(P_q)` (§5.13
@@ -2021,9 +2409,12 @@ removes only `nondet` and lowers grades by E.
    pc-based information-flow type systems (01 §13.1 names information-flow typing as the precedent).
    Primitives with `nondet` or `nondet(platform)` produce high values. Writes under a high effective
    pc go to high places (`T-Assign` joins the effective pc, which includes every jump decision still
-   open, F-30). Writes through a local reference go to the borrowed place (F-39). Closure calls apply
-   their summaries (F-35). Reads of shared state have the fixed high grade `γ_sh`. `T-Det`'s
-   recomputed result is justified by (i) and Lemma F.
+   open, F-30). Writes through a local reference go to the borrowed place (F-39), and reads through
+   it read the borrowed place's current grade (F-82). Closure calls apply their summaries,
+   instantiated at the current grades of the closure's by-mut captured places and of its own state,
+   and every write a closure makes, through a capture, a captured reference or a `&mut` parameter,
+   reaches the caller's place (F-35, F-60, F-67, F-69). Reads of shared state have the fixed high
+   grade `γ_sh`. `T-Det`'s recomputed result is justified by (i) and Lemma F.
 3. **`par`.** Lemma B reduces every parallel schedule to the serial projection.
 4. **Targets.** Conformance (§6.1) gives bit equality of primitives except NaN payloads, and Lemma E
    shows payloads never reach a low observer or a `cross_device` float sink.
@@ -2035,7 +2426,11 @@ join's waiting rule. The outcome is the minimum over low-determined iteration ou
 grading W high on the early-return exits (F-38) and excluding the runs in which a higher iteration
 diverges (iv). The NaN observers are the second hardest: every payload-exposing operation must carry
 the `device(platform)` taint, F-13 showed the list in 01 was incomplete, and F-50 showed the transfer
-form needs the observer set O to carry the taint through calls.
+form needs the observer set O to carry the taint through calls. The third is closure state: the
+second review's leaks (items N-40 to N-42, N-52 to N-55, N-64, N-65) all moved a high value through
+a place the unwinding argument had treated as fixed, a closure's capture or state, a reference's
+target, or a capture written before a return, so the unwinding invariant must range over closure
+state and the places reached through local references, not only over named locals.
 
 Hearth's INV-DET-1, -2 and -3 are instances. Kernels discharge them by per-build T1 witnesses,
 policies by Theorem 3, and the store path by its boundary evidence (01 §13.6).
@@ -2057,7 +2452,10 @@ policies by Theorem 3, and the store path by its boundary evidence (01 §13.6).
   plus W itself when no iteration exits early, equal those of `for i in a..b { e }`. The premise
   that does the work is `E-PAR-EFFECT` on the exercised row: the first draft checked the row after
   `T-Det` had removed `nondet`, so `par i in 0..n { let k = deterministic(by: E) { m.with_lock(…) }; … }`
-  passed while its iterations did not commute (F-36, item N-34). *Proof plan:*
+  passed while its iterations did not commute (F-36, item N-34), and the first revision still missed
+  the same block inside a helper the body calls, because signatures carried no exercised row (F-71,
+  item N-56). The write premise needs `Proj-Split`'s invariant-argument condition (F-63, item N-47).
+  *Proof plan:*
   disjoint footprints and the read rule make steps of different iterations commute (a diamond
   property), so every interleaving is equivalent to the serial order on the locations outside W. On an
   early exit the join waits for every index below m, so the indices below m are Normal in both runs,
@@ -2071,21 +2469,30 @@ policies by Theorem 3, and the store path by its boundary evidence (01 §13.6).
 - **Lemma D (kernels never trap).** If `⊢_k g` holds and T2 is sound, no trap occurs in a frame of g
   or of any `kcall` helper it calls.
 - **Lemma E (NaN canonicality).** Under conformance, every float value with `ν = canon` is either not
-  a NaN on any conforming target or the canonical NaN on every one. Every value whose bits can differ
-  between conforming targets has `ν = raw`, and every observer of such a value carries the
-  `device(platform)` taint. It rests on the restated conformance (canon-rule primitives return
-  `0x7fc00000`, F-51) and on `nanrule` being total. *Hardest case:* `T-Cover`'s strong update, which
-  must be justified by the loop writing every element exactly once on every path through an
-  iteration and by the body having no exit that could leave a later element unwritten (premise 0,
-  F-37); a trap is the only way out, and it ends the domain before any sink is read. At run time the
-  strong update is carried by `RT-Cover` (§7.1).
-- **Lemma F (boundary soundness).** Suppose `det[E] { e }` is well typed and E's claim holds: for
-  every scheduler and every environment non-failing for the run (condition (c) of the non-failing
-  definition exempts I/O inside `det`, so the claim must cover environment variation itself), the
-  block's result is a function of the values of its free inputs at entry. Then if those inputs are
-  low, the result is low, and `T-Det`'s recomputed result scope `⟨d_s^in, d_p⟩` preserves the
-  unwinding invariant of Theorem 4's proof. If an input is high, `d_s^in` is high and nothing is
-  claimed (F-32). E's claim is about first-order values only (F-34).
+  a NaN on any conforming target or `0x7fc00000` on every one. Every value whose bits can differ
+  between conforming targets has `ν = raw` or `d_p = dev(platform)`, and every observer of a raw
+  value carries the `device(platform)` taint. The first revision said every such value has `ν = raw`,
+  which `x.to_bits()` of a raw x contradicts: the result is an integer, so ν is canon, and its
+  bits can differ between x86 and arm64 [inference, as §5.3]; its `d_p` is what records that (F-77). The lemma rests on the
+  restated conformance (canon-rule primitives return `0x7fc00000`, F-51) and on `nanrule` being
+  total. *Hardest case:* `T-Cover`'s and `Cover-Proj`'s strong updates, which must be justified by
+  the loop writing every element exactly once in every iteration that does not trap (premise 1, now
+  syntactic), by the body having no exit that could leave a later element unwritten (premise 0,
+  F-37), by the place written being the one place updated (premise 4, must-alias, F-64) and, for
+  `Cover-Proj`, by the footprints tiling the storage (F-73); a trap is the only way out, and it ends
+  the domain before any sink is read. At run time the strong update is carried by `RT-Cover` (§7.1).
+- **Lemma F (boundary soundness).** Suppose `det[E] { e }` is well typed and E's claim holds in the
+  form `T-Det` requires (§5.11, F-72): for every scheduler, every environment non-failing for the run
+  (condition (c) of the non-failing definition exempts I/O inside `det`, so the claim must cover
+  environment variation itself), and every content of the shared-mutable objects reachable from the
+  free inputs, the block's result is the same function of the free inputs' values, those contents
+  excluded. Then if those inputs are low, the result is low, and `T-Det`'s recomputed result scope
+  `⟨d_s^in, d_p⟩` preserves the unwinding invariant of Theorem 4's proof. If an input is high,
+  `d_s^in` is high and nothing is claimed (F-32). The quantification over shared-mutable contents is
+  what makes `d_s^in` sufficient: the grade of a local that holds a `Mutex` does not rise when its
+  contents change, so a claim that only said "a function of the free inputs' values" was true of a
+  block returning a clock reading stored in a local `Mutex` (item N-57). E's claim is about
+  first-order values only (F-34).
 
 ### 7.6 What each statement is worth today
 
@@ -2097,7 +2504,7 @@ by-trigger (DR-010, D-08).
 | Theorem 1 | paper proof plan above; `mithi` against `mithc` differential testing; checker property tests and mutation | `tested` | Lean MCore when D-08 fires |
 | Theorem 2 (a, b, b', b'') | Theorem 1 plus the no-forging case analysis; capability audit graph in the Fact Plane | `tested` | Lean MCore (D-08) |
 | Theorem 2 (c), binary level | T0 allowlist decision procedure on lifted object code | effective `validated(partition)`; for `confined(S)`, `validated(bounded: …)` through the store-core theorem; code floor `tested`, printed, not met | mechanised T0 (D-08); second checker (D-09) |
-| Theorem 3 | Lemma 3a (T0 plus this note) and Lemma 3b (store core with O6, F-tot, P-ind, S-tot and A-ind: bounded model check, chaos suite, core-mutant kill) | effective `validated(bounded: …)` with code floor `tested` when the binary check ran; `tested` otherwise | Lean or Verus proof of the store core (DR-010) |
+| Theorem 3 | Lemma 3a (T0 plus this note) and Lemma 3b (store core with O6, F-tot, P-ind, S-tot and A-ind: bounded model check, chaos suite, core-mutant kill) | effective `validated(bounded: …)` with code floor `tested` when the binary check ran; `tested` otherwise. A P-ind discharge by the hint-taint variant of `may_trap` that crosses a `det` boundary is capped by that boundary's grade (`tested` for `golden::scheduling_independence`) (F-81) | Lean or Verus proof of the store core (DR-010) |
 | Theorem 4 | Theorem 1, the unwinding argument and boundary evidence | `tested` (golden scheduling, ISA and batch identity, hash corpus); kernel instances `validated` by T1, code floor `tested` | Lean MCore (D-08) |
 | Lemmas A, B, D, E, F | as above | `tested` | with their theorems |
 | Lemma C (erasure) | inspection of generated C; object audit | `tested` | — |
@@ -2199,8 +2606,8 @@ lists them as signatures. `mithi` is judged on prelude plus snippet.
 | Item | Snippet (source) | Verdict | Rules that carry the derivation | Conditions |
 |---|---|---|---|---|
 | D-C1 | `format BlockQ4` (ARCH §5.3; 01 §4; 02 §7.1) | accept | ⊢_fmt, kcall | — |
-| D-C2 | `q4_row_dot`, `q4_matvec` (ARCH §5.3; 01 §5.3, §8; 02 §2) | accept | T-Fn, ⊢_k, T-Jump (loop guards), T-Call, T-Proj, T-Par, **T-Cover**, T2 by unrolling | Matrix invariant (F-3) |
-| D-C3 | `schedule q4_matvec_avx512` (ARCH §5.3; 02 §8.1) | accept (front end) | ⊢_sch with inlined-KIR resolution (F-2) | soundness is T1 at M2 |
+| D-C2 | `q4_row_dot`, `q4_matvec` (ARCH §5.3; 01 §5.3, §8; 02 §2) | accept | T-Fn, ⊢_k, T-Jump (loop guards), T-Call, T-Proj, T-Par, **T-Cover** (premises 0 to 4), T2 by unrolling | Matrix invariant (F-3); prelude `BlockQ4` (F-87) and `Buf<T>` deref (F-88) |
+| D-C3 | `schedule q4_matvec_avx512` (ARCH §5.3; 02 §8.1) | accept (front end) | ⊢_sch with (s2) own scope first, then inlined-KIR resolution (F-2, F-86) | soundness is T1 at M2 |
 | D-C4 | `policy fn pick_victim` (ARCH §5.3; README; 01, 02, 03) | accept; `may_trap` true | ⊢_to, T-Assert, T-Loop, T-Jump | prelude: `SlotView` and `Tick` are `#[view]` |
 | D-C5 | `read_slab`, `acquire` (ARCH §5.3; 01 §6.4; 02 §14; 03 §3.3) | accept | T-Fn, T-Proj, T-Det | `acquire` in module `store`; E present with subject `store::acquire`, hash-pinned (F-33); `acquire_inner`'s row |
 | D-C6 | `spec q4_matvec_claims` (ARCH; ROADMAP §1; 01; 03) | accept (front end) | ⊢_spec | `q4_matvec_avx2` exists; seam namespace |
@@ -2213,17 +2620,17 @@ lists them as signatures. `mithi` is judged on prelude plus snippet.
 | D-D06 | `note_use` (01 §5.8) | accept | T-CloL, with_lock's signature | prelude: `with_lock`, `StoreState::touch` |
 | D-D08 | `ActQ8`, `block_index` (01 §9.1) | accept | §5.10 contracts, T2 | — |
 | D-D09 | `check_entries` (01 §12.3) | accept | T-Par (W = ∅), early exit, Lemma B | — |
-| D-D11 | `q4_matmul` and its schedule (02 §9) | accept | nested T-Par, **Proj-Split**, T-Cover | Matrix `IndexMut` footprint (F-25), discharged statically at its definition (F-45); rule `Proj-Split` [prov] (F-45); `cols() == blocks_per_row()` |
+| D-D11 | `q4_matmul` and its schedule (02 §9) | accept | nested T-Par, **Proj-Split** (invariant argument t, F-63), **Cover-Proj** (F-73) | Matrix `IndexMut` footprint (F-25), discharged statically at its definition (F-45); rules `Proj-Split` and `Cover-Proj` [prov]; `cols() == blocks_per_row()`; `Buf<T>` deref (F-88) |
 | D-D12 | `flow moe_ffn` (02 §12.1) | out of X1 (M4–M5); at X1 `E-OUT-OF-SCOPE-FLOW` | T-Det, T-CloL | grant for its module (F-18); allocation rule (F-15); `map_on_arrival` scoped; evidence whose subject is this block (F-33) |
 | D-D13 | `store ExpertStore` (02 §12.3) | out of X1 (M4); at X1 `E-OUT-OF-SCOPE-STORE` | ⊢_store sketch | F-tot, P-ind, S-tot, A-ind; `next_layer` |
 | D-D16 | `value_sum` with a hole (04 §6.4) | accept | T-Hole, contracts (F-14) | — |
 | D-D17 | `KvRow`, `tick` (04 §6.5) | accept by the calculus | T-Assign, T-Proj | the hot-path copy rule is a lowering rule and may reject it |
 | D-D18 | `open_slots` (04 §9.3) | out of X1 (M5); at X1 `E-OUT-OF-SCOPE-MEMCAP` | T-Lin, T-Match | arena signatures |
-| D-D19 | `evolve slot store_evict` (06 §2.1) | out of X1 (M4); at X1 `E-OUT-OF-SCOPE-EVOLVE` | ⊢_store (slot) sketch | — |
+| D-D19 | `evolve slot store_evict` (06 §2.1) | not derived (sketch only); out of X1 (M4); at X1 `E-OUT-OF-SCOPE-EVOLVE` | ⊢_store (slot) sketch | needs a derivation before it enters scope |
 | D-D20 | `spec s5_forward_claims` (07) | accept (front end) | ⊢_spec | subjects in the target's closure (OP-16) |
 | D-D21 | `kernel fn softmax` (07) | accept | ⊢_k, **T-Cover** | transcendental choice provisional, pending D0-2 |
 | D-D22 | `heat_into` (07) | accept; `may_trap` true | T-CloL by-mut capture, γ_sh transfer | `Store::state` visible in module `store` |
-| D-D10, D-D23 | MXFP4 `format` (02 §7.3; 07) | out of scope (later); at X1 `E-OUT-OF-SCOPE-E8M0` | ⊢_fmt structure only | needs `canon.v1.1` |
+| D-D10, D-D23 | MXFP4 `format` (02 §7.3; 07) | not derived; out of scope (later); at X1 `E-OUT-OF-SCOPE-E8M0` | ⊢_fmt structure only | needs `canon.v1.1`, and a derivation before it enters scope |
 
 The remaining items are copies with their own hashes: D-D03 and D-D07 (the two halves of D-C2 in 01),
 D-D14 and D-D15 (the two halves of D-C5 in 02 and 03), D-D24 (ROADMAP's indented copy of D-C6), D-D25
@@ -2238,9 +2645,9 @@ Negative items that are part of the gate, because they appear as comments inside
 `Quantity` (`E-TYPE`), a clock read in a policy (`E-FF-CLOCK`) and a bare float sum in a kernel
 (`E-FF-SUM`).
 
-The review's counterexamples became supplementary items N-11 to N-39 (derivations §N): each is a
-program the first draft accepted wrongly, or handled wrongly, with the verdict and code the revised
-rules give. They are not gate inputs, because ROADMAP §3.2's agreement covers the documents'
+The first review's counterexamples became supplementary items N-11 to N-39, and the second review's
+N-40 to N-69 (derivations §N): each is a program a previous revision accepted wrongly, or handled
+wrongly, with the verdict and code the revised rules give. They are not gate inputs, because ROADMAP §3.2's agreement covers the documents'
 snippets, and they are offered to the planted Dc corpus of ROADMAP §3.2, which another model family
 writes.
 
@@ -2353,7 +2760,12 @@ APIs whose order follows the buckets under the provisional `nondet` rule (OP-2, 
 visible atomics, which carry `nondet` (C-ATOMIC). The review's other new rejections
 (`E-LOCAL-MUT-STORE`, `E-BORROW-OUTLIVE`, the closure result discipline) reject only programs that
 rustc also rejects, so they should add nothing to the subset rejection rate [G]. `E-LINEAR-INSTANTIATE`
-applies only to Linear values, which Rust does not have.
+applies only to Linear values, which Rust does not have. The second review's new rejections are of
+the same kind: stores into closure captures that rustc rejects as escaping an `FnMut` body or a
+higher-ranked parameter, stores through by-value parameters whose elided lifetimes differ, and
+`E-MONO-DEPTH`, which rustc reports at its recursion limit [inference: none of these was compiled;
+no rustc on this host]. In the other direction, `T-CallClo`'s loan transfer accepts some stores and
+returns of an annotated closure parameter that rustc rejects (OP-22).
 
 ---
 
@@ -2368,7 +2780,7 @@ implement for the checker precondition. The agent-facing subset may be smaller (
 
 | Construct | Rules frozen |
 |---|---|
-| Rust-coincident core: `fn`, `let`, `struct`, `enum`, `match`, `if`, loops, `?`, `Result`, `Option`, integer and float primitives, `as` | §3, §5.0–§5.5, §5.10, §6.1–§6.3 |
+| Rust-coincident core: `fn`, `let`, `struct`, `enum`, `match`, `if`, loops (`loop` with and without a value, `while`, `while let`, `for`, labelled blocks), `if let`, `let … else`, `?`, `Result`, `Option`, integer and float primitives, `as` | §3 (including §3.2's elaborations, F-85), §5.0–§5.5, §5.10, §6.1–§6.3 |
 | Second-class references, projections, loans | §5.4, §5.6 |
 | Closures and the non-escaping kind, std iterator adapters | §5.7 |
 | `linear struct`, abandonment on trap paths | §5.8, §6.3 |
@@ -2436,11 +2848,13 @@ review and the Owner's signature on this note.
 | C-ATOMIC | load, store and read-modify-write operations on user-visible std atomics carry `nondet` (01 §6.1); atomics inside `Frozen` refcounts and `par` work distribution are not user-visible | atomics are Dc in the X1 subset | F-56 |
 | C-FMT-ADDR | the `{:p}` format specifier is Dc everywhere (`E-FF-ADDR`) | allow it in test builds only | F-56 |
 | C-LIN-GENERIC | every type parameter has an implicit `¬Linear` bound; only std may write `?Linear`; `drop`, `mem::forget` and discarding container methods keep `¬Linear` (`E-LINEAR-INSTANTIATE`) | linearity checked after monomorphisation, with errors far from their cause | F-41 |
-| C-STORE | storing a value with foreign loans into a parameter's `Local` referent is `E-LOCAL-MUT-STORE` | reject every user signature with `&mut τ`, `τ : Local` (simpler; rejects Rust that compiles) | F-39 |
-| C-PROJSPLIT | rule `Proj-Split` (§5.9) for footprinted projections inside `par` | none: without it D-D11 is `E-PAR-DISJOINT` and 02 §9 hoists the row (P-19) | F-45 |
-| C-CLOMONO | bodies generic over a closure type are re-typed per closure site at monomorphisation | a closure-summary bound declared on `Fn*` bounds (more annotation) | F-35, OP-19 |
+| C-STORE | storing a value with foreign loans into a parameter's `Local` referent is `E-LOCAL-MUT-STORE`, compared per reference position, for every parameter whose type contains a reference (F-62); into a closure's by-mut capture, a loan on a by-mut capture, on the closure's state or on a body local, or a parameter's loan at a higher-ranked `Fn*` bound, is too (F-61) | reject every user signature with `&mut τ`, `τ : Local` (simpler; rejects Rust that compiles) | F-39, F-61, F-62 |
+| C-PROJSPLIT | rule `Proj-Split` (§5.9) for footprinted projections inside `par`, with arguments other than the receiver invariant in the `par` (F-63) | none: without it D-D11 is `E-PAR-DISJOINT` and 02 §9 hoists the row (P-19) | F-45, F-63 |
+| C-COVERPROJ | rule `Cover-Proj` (§5.9): an outer loop covers a projection's storage when its body is one inner covering loop and the footprints tile it | none: without it D-D11's `y` is raw and its sink is `E-NAN-RAW-SINK`; 02 §9 would need a flat covering loop | F-73 |
+| C-CLOMONO | bodies whose type parameters are instantiated at a type that mentions a closure type are re-typed per closure site at monomorphisation, with the closure's by-mut captures as implicit `&mut` referents; chains deeper than a fixed limit are `E-MONO-DEPTH` | a closure-summary bound declared on `Fn*` bounds (more annotation) | F-35, F-60, F-80, OP-19 |
+| C-CLOSTATE | closure summaries are computed over symbols for the parameters, the by-mut captured places and the closure's own state, and carry loan transfers into captures | a coarser sound summary: join the current grades of all by-mut captured places and of the closure's state into every result and every capture write of the closure (simpler, less precise) | F-60, F-61 |
 | C-OOM | exhausting an arena whose capacity is not a program value is the environment fault `⇑F(oom(A))`; only program-sized sub-arenas trap | `oom(A)` a trap everywhere, with Theorem 4 restricted to environments of equal capacity | F-49 |
-| C-EXACT-STD | the std functions admissible in exact context (`⊢_k` (k3), `kcall`, `T-Call`): `<[T]>::len` and `<[T; n]>::len`; built-in indexing and slicing; `f16::to_f32`, `bf16::to_f32`; `canon::*`, `canon_v1::*`, `cr::*`; on integer types `wrapping_*`, `checked_*`, `saturating_*`, `min`, `max`, `abs`, `count_ones`, `leading_zeros`, `trailing_zeros`; `f32::max` and `f32::min` under FF-NANMAX; the constructors of `Option` and `Result`; format accessors. Every other std function is `E-KERNEL-CALL` in exact context | a longer list, each entry with a reason | F-59 |
+| C-EXACT-STD | the std functions admissible in exact context (`⊢_k` (k3), `kcall`, `T-Call`): `<[T]>::len` and `<[T; n]>::len`; built-in indexing and slicing; `Buf<T>::len`, indexing and range slicing, which deref to `[T]` and elaborate to the built-in forms (F-88); `f16::to_f32`, `bf16::to_f32`; `canon::*`, `canon_v1::*`, `cr::*`; on integer types `wrapping_*`, `checked_*`, `saturating_*`, `min`, `max`, `abs`, `count_ones`, `leading_zeros`, `trailing_zeros`; `f32::max` and `f32::min` under FF-NANMAX; the constructors of `Option` and `Result`; format accessors. Every other std function is `E-KERNEL-CALL` in exact context | a longer list, each entry with a reason | F-59 |
 
 ---
 
@@ -2468,7 +2882,8 @@ review and the Owner's signature on this note.
 | OP-18 | A-ind: whether the store core can exhaust an arena depending on hints (N11) | a new store-core obligation with no discharge route here | design with the S4 store prototype; P-2 |
 | OP-19 | Cost of re-typing generic closure bodies per closure site (C-CLOMONO, F-35) | checker time and diagnostics far from their cause | count per-κ re-checks on X1's reference solutions |
 | OP-20 | How an emptied Linear container (`Vec<Lease>`) is finally consumed (F-41) | without a consuming operation a Linear `Vec` can never leave scope | a std method that asserts emptiness and consumes, specified with the S4 store prototype |
-| OP-21 | Analysis cost of the jump grades and loan sets (F-30, F-39) in `mithi` | both add a fixpoint component to every loop | measure on the prelude and X1's reference solutions |
+| OP-21 | Analysis cost of the jump grades and loan sets (F-30, F-39) in `mithi`, and of the closure summaries over capture and state symbols (F-60, F-61) | each adds a fixpoint component to every loop, and closure summaries add symbols per by-mut capture | measure on the prelude and X1's reference solutions |
+| OP-22 | Rust coincidence of directly called closures with annotated reference parameters (F-61) | rustc makes `\|d: &u32\|` higher-ranked in d, so it rejects storing d into a capture or returning it; `T-CallClo` transfers the loan instead, which is sound but accepts programs rustc rejects, against E4 (§3.1). An unannotated parameter is not higher-ranked [inference: closure signature inference; not compiled] | decide with the X1 front end whether `mithi` mirrors rustc's closure signature inference (reject at an annotated parameter, transfer otherwise); until then, the transfer rule stands |
 
 01 §14's four open questions remain open: lexical charging of rows, richer `Local` types, whether
 `abandon` suffices for Hearth's error paths, and whether T1's lockstep rule composes with the serial
@@ -2506,7 +2921,9 @@ document.
 | P-21 | 01 §13.4 T-Det, 01 §6.4 | Keep `d°` as "the scope with the block's own `nondet` removed", stated as the join of the free inputs' schedule components (F-32); add the first-order result premise (F-34) and block-level evidence subjects (F-33) |
 | P-22 | 03 §6.2, 02 §12.3 | The port wrapper saves and restores MXCSR, status flags included, and runs each policy call in a reserved stack region of at least S(P) (F-48, F-58) |
 | P-23 | 01 §6.1, 01 §13.6 | List the observers and the unlabelled nondeterminism sources this note adds: `{:p}` (Dc), bucket-order `HashMap` APIs (F-56); give Theorem 4's non-failing clauses their every-scheduler form (F-49) |
-| P-24 | 01 §5.4, §5.6, §13.4 | Add loan sets and `E-BORROW-OUTLIVE`/`E-LOCAL-MUT-STORE` (F-39), closure summaries (F-35), jump grades (F-30), `¬Linear` by default and Linear closures (F-41) to the calculus sketch, or replace the sketch by this note (P-1) |
+| P-24 | 01 §5.4, §5.6, §13.4 | Add loan sets and `E-BORROW-OUTLIVE`/`E-LOCAL-MUT-STORE` (F-39), closure summaries (F-35), jump grades (F-30), `¬Linear` by default and Linear closures (F-41) to the calculus sketch, or replace the sketch by this note (P-1); after the second review also closure summaries over capture and state symbols with loan transfers (F-60, F-61, F-69), captures as places (F-67), per-position symbolic loans for by-value parameters (F-62), reads through local references (F-82) and the `det` claim form (F-72) |
+| P-25 | 02 §9, ARCHITECTURE §5.3 | If the Owner or the review rejects `Cover-Proj` (F-73), D-D11's `q4_matmul` needs a covering form the stated rules derive, for example a flat loop over `y.blocks`; and state where the `Matrix` invariant that the tiling uses is declared (with P-8) |
+| P-26 | 01 §12.3, 02 §3 | `par` bodies: no `break` or `continue` targets an enclosing loop, a `continue` ends the iteration (F-75); the join abandons the Linear values of ignored early returns (F-83) |
 
 ---
 
@@ -2644,7 +3061,8 @@ No ROADMAP threshold is judged wrong. One ROADMAP wording is made more precise (
 | Q8 | `debug_assert!` is pinned to "always checked", like overflow (C-MACROS). Confirm? | It is a choice Rust permits, but it costs run time outside kernels |
 | Q9 | The X1 design draft's agent subset rejects `par for`, `deterministic`, `schedule`, `spec` and `linear` with `E-X1-NOTYET`, but ROADMAP §3.6 needs `mithi` to accept every canonical snippet, which uses them (§12). Should `mithi` accept them typing-only (recommended), or does the Owner want to change the gate? | As drafted, the two documents cannot both hold; the note does not loosen the gate |
 | Q10 | ROADMAP §3.2 requires agreement "on every canonical and derived snippet". Six derived snippets use constructs outside the checker's X1 scope (`flow`, `store`, `evolve slot`, MXFP4 format codes, `MemCap`). This note now includes them in agreement, with the expected X1 verdict `E-OUT-OF-SCOPE-<KW>` (§0.3, §12). Is that what "every derived snippet" means at X1, or should `mithi` type them (more checker work), or may they be excluded (which would loosen §3.2 and needs the Owner)? | The first draft excluded them silently, which the review found loosened §3.2 (R2-19). Until answered, they stay in agreement with these codes |
-| Q11 | The review's counterexamples are supplementary items N-11 to N-39, reported and offered to the planted corpus, not gate items. Should any become gate items? | Making them gate items would add requirements ROADMAP §3.2 does not state; leaving them out means `mithi` could get them wrong without failing the gate |
+| Q11 | The two reviews' counterexamples are supplementary items N-11 to N-69, reported and offered to the planted corpus, not gate items. Should any become gate items? | Making them gate items would add requirements ROADMAP §3.2 does not state; leaving them out means `mithi` could get them wrong without failing the gate |
+| Q12 | A directly called closure with an annotated reference parameter is higher-ranked in Rust, so rustc rejects storing or returning that parameter's loan; MCore's `T-CallClo` transfers the loan and accepts such programs (OP-22). Should `mithi` mirror rustc's closure signature inference before the X1 freeze, or is the transfer rule acceptable for X1? | Accepting a program rustc rejects without a keyword is what the subset rule (DR-002) forbids; mirroring rustc costs a closure-signature rule in the checker |
 
 ---
 
@@ -2654,6 +3072,8 @@ No ROADMAP threshold is judged wrong. One ROADMAP wording is made more precise (
 |---|---|---|---|---|---|
 | 2026-10-16 | Reviewer 1 (adversarial soundness: counterexamples against the typing rules and the four theorems) | Claude (same family as author; independent context) | the note, derivations.md, verdicts.json | 23: 6 blocker, 13 major, 4 minor | 23 accepted (2 with a sub-claim rejected, below); 0 rejected |
 | 2026-10-16 | Reviewer 2 (soundness plus conformance: gate record, ROADMAP thresholds, DECISIONS format, cross-document facts) | Claude (same family as author; independent context) | the note, derivations.md, verdicts.json | 30: 1 blocker, 18 major, 11 minor | 30 accepted (1 with a sub-claim rejected, 1 with its proposed placement declined, below); 0 rejected |
+| 2026-10-16 (second round) | Reviewer 3, the round's "reviewer 1" (adversarial soundness: counterexamples against the revised rules and the four theorems; lens read off the report, the brief was not supplied to the reviser) | Claude, same family, independent context | the first revision: the note, derivations.md, verdicts.json | 21: 5 blocker, 9 major, 7 minor | 21 accepted (1 with its proposed fix replaced by the reviewer's alternative, below); 0 rejected |
+| 2026-10-16 (second round) | Reviewer 4, the round's "reviewer 2" (soundness counterexamples plus conformance of the derivations, the prelude and verdicts.json; lens read off the report) | Claude, same family, independent context | the first revision: the note, derivations.md, verdicts.json | 18: 6 blocker, 8 major, 4 minor | 18 accepted (1 with its minimal fix declined in favour of its precise one, below); 0 rejected |
 
 Totals: 53 findings, 7 blocker, 31 major, 15 minor [M: counted from the two reviewers' lists,
 2026-10-16]. Every finding was checked against the sources named in it (01 §5–§7, §12, §13; 02 §8,
@@ -2740,6 +3160,77 @@ reviewer 2's. The F numbers are §0.5's; the N numbers are the supplementary ite
 - R2-28, sub-claim that `port.obligations_unexpressible(…)` and `ledger.count(…)` are "not defined
   anywhere": both fact families appear in DECISIONS (DR-011's and DR-012's triggers). What is
   missing is a recorder for these parameter values, which §15 now lists.
+
+**Second round (2026-10-16).** Totals: 39 findings, 11 blocker, 17 major, 11 minor [M: counted from
+the two reviewers' lists, 2026-10-16]. Each counterexample was re-derived by this reviser against
+the first revision's rules (this note, derivations.md and verdicts.json as committed in `ddf902b`
+and unchanged at `11210a8`) before a fix was written, and each was confirmed; no finding was false
+as a whole, so none was rejected. No program was compiled with rustc (none is installed on this
+host), so every statement here about what rustc accepts or rejects is [inference]. By this reviser's reading [G], 7 of reviewer 3's items are the same defect as one of
+reviewer 4's (R3-1 and R4-2, R3-2 and R4-6, R3-9 and R4-4, R3-12 and R4-17, R3-13 and R4-11, R3-15
+and R4-8, R3-16 and R4-18), so the round found 32 distinct defects, 14 by reviewer 3 only and 11 by
+reviewer 4 only. Re-running the snippet census at `11210a8` reproduced all 45 occurrences and 35
+distinct hashes, with no drift from the pinned sources [M: CC track scratch script, 2026-10-16]. "R3-n"
+and "R4-n" are the n-th items of the round's reviewer 1 and reviewer 2, in the order of their
+reports.
+
+| Item | Severity | Disposition |
+|---|---|---|
+| R3-1 | blocker | accepted: F-60, `Θ_κ` over β and σ, `γ(f)` raised by state writes, N-40, N-41 |
+| R3-2 | blocker | accepted: F-61, loan transfer λ_q, N-43; proposed fix (a) replaced by the reviewer's alternative (below) |
+| R3-3 | blocker | accepted: F-62, symbolic loans per reference position, `θ_mut,j` for every `&mut`-carrying parameter, N-45, N-46 |
+| R3-4 | blocker | accepted: F-63, `Proj-Split`'s invariant-argument premise, Par-Split permission for the receiver reborrow, N-47 |
+| R3-5 | blocker | accepted: F-64, `T-Cover` premise 4 (must-alias), Lemma E's hardest case, N-48 |
+| R3-6 | major | accepted: F-65, `T-Loop` type `!` and `Γ_out`, N-49, N-50 |
+| R3-7 | major | accepted: F-66, `T-Jump` premises, `E-BORROW-OUTLIVE` at jumps, N-51 |
+| R3-8 | major | accepted: F-67, captures are places, N-52 |
+| R3-9 | major | accepted: F-68, X over every output place of the body, N-53 |
+| R3-10 | major | accepted: F-70, `θ_inv` for every std higher-order function and a default, N-55; extended: functions whose invocation count depends on the closure's results (`any`, `sort_by`, …) also include its result transfer, which the proposed list gave as `α_self` only |
+| R3-11 | major | accepted: F-71, `ε^x_g` in signatures, N-56 |
+| R3-12 | major | accepted: F-72, E's claim form, Lemma F, N-57 (accepted by typing; its fixture's claim is false under the restated form); the alternative that joins `γ_sh` into `d_s^in` was not taken, for the reason §5.11 gives |
+| R3-13 | major | accepted: F-64 (premise 3 covers ancestors), F-73 (`Cover-Proj`), D-D11 re-derived, N-58 |
+| R3-14 | major | accepted: F-74, `E-Domain` and `E-Par-Done` abandon, the fail-domain table, the Abandon lemma |
+| R3-15 | minor | accepted: F-75, N-61 |
+| R3-16 | minor | accepted: F-76, `RT-Cover` over a finished set |
+| R3-17 | minor | accepted: F-77, Lemma E restated |
+| R3-18 | minor | accepted: F-78, strong update at `T-Call`, N-62; verifying it showed that D-C5's `θ_mut,buf` had been stated as a strong update no rule gave, now corrected (a fact, not a verdict) |
+| R3-19 | minor | accepted: F-79 |
+| R3-20 | minor | accepted: F-80, loans named by site, checker termination, `E-MONO-DEPTH`, N-63 |
+| R3-21 | minor | accepted: F-81, the stated cap (§7.3, §7.6); the reviewer's other option, a hint-taint bit that `T-Det` does not remove, was not needed for P-ind as a premise and would add a grade component |
+| R4-1 | blocker | accepted: F-82, `P-Deref-Local`, `d_s^in`, proof plan step 2, N-64 |
+| R4-2 | blocker | accepted (same defect as R3-1): F-60, rule 1's per-κ captures, N-40 to N-42 |
+| R4-3 | blocker | accepted: F-69, `θ_mut,j` in `Θ_κ`, std `θ_mut,self`, `mt_κ` and `θ_exit` in std calls, N-65 |
+| R4-4 | blocker | accepted (overlaps R3-9): F-68, X' in closure bodies, N-53, N-54 |
+| R4-5 | blocker | accepted: F-61, the closure value and a `Local` result carry by-move capture loans, N-66 |
+| R4-6 | blocker | accepted (overlaps R3-2): F-61, N-43, N-44; proposed minimal form declined (below) |
+| R4-7 | major | accepted: F-83, the join abandons ignored records' Linear values, N-67 |
+| R4-8 | major | accepted (same defect as R3-15): F-75 |
+| R4-9 | major | accepted: F-84, N-68 |
+| R4-10 | major | accepted: F-85, §3.2 elaborations, §12's frozen-construct row, N-69 |
+| R4-11 | major | accepted (same defect as R3-13): F-73; D-D11 and verdicts.json cite `Cover-Proj` |
+| R4-12 | major | accepted: F-86, (s2) rewritten, F-2's fix aligned |
+| R4-13 | major | accepted: F-87, prelude declares `BlockQ4` and `Clock`; verifying it found that the prelude's own `Store::lease` named the undeclared `Lease`, now declared too |
+| R4-14 | major | accepted: F-88, `Buf<T>` declared in the prelude and listed on C-EXACT-STD |
+| R4-15 | minor | accepted: `not-derived` in verdicts.json for D-D10, D-D19, D-D23, and §0.3's agreement row |
+| R4-16 | minor | accepted: F-64, premise 1 syntactic, premise 3 closure captures, N-59, N-60 |
+| R4-17 | minor | accepted (overlaps R3-12): F-72, `E-DET-RESULT` on monomorphised types |
+| R4-18 | minor | accepted (same defect as R3-16): F-76 |
+
+**Parts not accepted in the second round.** No finding was rejected as a whole. These proposed
+fixes were not adopted as written:
+
+- R3-2, proposed fix (a), "a value stored into a by-mut capture may carry only loans live in the
+  creating context at κ, never a parameter symbol": replaced by the reviewer's own alternative, a
+  loan-transfer component applied by `T-CallClo`. Fix (a) alone does not close R4-6's
+  `let mut c = || { out = &y; };`, whose stored loan is a reborrow of a by-ref capture and so live at
+  κ, yet the caller's `L(out)` still missed it. Rejecting every stored parameter loan would also reject
+  unannotated closures that rustc accepts [inference]; the note rejects it at a `Fn*` bound, where
+  rustc does, and transfers it at a direct call (OP-22, Q12).
+- R4-6, proposed minimal form `L(q) ∪= L(f) ∪ ⋃ L(Local arguments)`: declined. `L(f)` contains the
+  closure's own capture loan `(q, mut)`, so q would carry a loan on itself, and every later read of
+  q would be `E-BORROW-CONFLICT`, for example `let mut c = || { out = &a2; }; c(); *out` with `a2`
+  outliving `out`, which rustc accepts [inference]. The precise transfer λ_q, which the reviewer gave
+  first, is adopted.
 
 Reviews still required by ROADMAP §3.6: a Prover and an Adversary from a model family other than
 this note's author's (D0-10). Until then reviews are logged as same-family, independent-context

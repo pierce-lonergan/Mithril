@@ -4,7 +4,10 @@ Status: DRAFT, with [the note](../core-calculus.md). Rules cited by name are the
 Expected verdicts are repeated, keyed by snippet hash, in [verdicts.json](verdicts.json).
 Revised 2026-10-16 after the first same-family review (note §17): the prelude, D-C2, D-C4, D-C5,
 D-D01, D-D04, D-D06, D-D09, D-D11 to D-D13, D-D18, D-D19, D-D21 to D-D23, §N and §V changed. No
-canonical verdict changed.
+canonical verdict changed. Revised again 2026-10-16 after the second same-family review (note §0.6,
+§17): the prelude (`BlockQ4`, `Lease`, `Clock`, `Buf<T>` declared; std higher-order transfers),
+D-C2, D-C3, D-C5 (a fact corrected), D-D02, D-D04, D-D10, D-D11 (now `Cover-Proj`), D-D19, D-D21,
+D-D22, D-D23, §N (N-40 to N-69) and §V changed. No canonical verdict changed.
 
 Every snippet below was hashed by the CC track's scratch script on 2026-10-16, at Mithril commit
 `ec46300` [M]. The hash is the SHA-256 of the fenced block's body (the lines between the opening
@@ -34,6 +37,14 @@ signatures. Its contents are assumptions of this note, not specifications taken 
 where a source is given. `mithi` is judged on "prelude plus snippet" (note §9, Owner question Q5). The
 block uses a `text` fence on purpose, so that it is never mistaken for a canonical `mith` snippet.
 
+Two declarations in the prelude are copies of declarations that snippets themselves make:
+`format BlockQ4` (D-C1 and its copies) and `linear struct Lease` (D-D05). When an item's
+snippet declares a name that the prelude also declares, the item is run with the prelude's copy of
+that declaration omitted, so that it is not declared twice (§V). The second review found that the
+first revision's prelude lacked `BlockQ4` and `Clock`, so that every item naming them was `E-TYPE`
+when run on "prelude plus snippet", and its own `Store::lease` named the undeclared `Lease` (note
+F-87).
+
 ```text
 // ---------- std (signatures; bodies are std's) ----------
 impl<T> [T] {
@@ -48,8 +59,11 @@ mod canon {
 mod canon_v1 { fn expf(x: f32) -> f32 }    // fixed op-DAG (DR-014); its use for softmax is
                                            // provisional, pending D0-2
 impl<T: ?Local + ?Linear> Option<T> {
-    fn map<U, F: FnOnce(T) -> U>(self, f: F) -> Option<U>    // θ_ret = α_self ⊔ Θ_f.θ_ret(α_self) (note §5.7)
+    fn map<U, F: FnOnce(T) -> U>(self, f: F) -> Option<U>
+        // θ_ret = α_self ⊔ Θ_f.θ_ret(α_self); θ_inv,f = α_self (f runs iff self is Some); at most once
+        // (note §5.7 rule 2, F-70)
     fn ok_or<E>(self, e: E) -> Result<T, E>
+    fn take(&mut self) -> Option<T>
 }
 impl u64 { fn checked_add(self, rhs: u64) -> Option<u64> }
 trait Iterator {                      // ?Local on Self and Item (01 §5.4)
@@ -58,10 +72,14 @@ trait Iterator {                      // ?Local on Self and Item (01 §5.4)
         // on an adapter that stores closure κ: θ_ret = α_self ⊔ Θ_κ.θ_ret(α_item), θ_inv = α_self
     fn filter<P: FnMut(&Self::Item) -> bool>(self, p: P) -> Filter<Self, P>      // lazy: stores κ_p
     fn max_by_key<B: Ord, F: FnMut(&Self::Item) -> B>(self, f: F) -> Option<Self::Item>
-        // θ_ret = α_self ⊔ Θ_f.θ_ret(α_item)
+        // θ_ret = α_self ⊔ Θ_f.θ_ret(α_item); θ_inv,f = α_self; may_trap includes mt_f (F-69, F-70)
     fn map<U, F: FnMut(Self::Item) -> U>(self, f: F) -> Map<Self, F>            // lazy: stores κ_f
     fn sum<S>(self) -> S              // integer S only in exact context (FF-SUM: float sum, product, fold)
+    // every other std higher-order method states θ_inv as note §5.7 rule 2 lists, or gets its default
 }
+struct Buf<T>;                        // an owned std buffer (note OP-1); Deref<Target = [T]> and
+                                      // DerefMut: len, indexing and range slicing are <[T]>'s built-in
+                                      // forms, so they are on C-EXACT-STD (note F-88)
 struct Reverse<T>(pub T);             // std::cmp: reverses Ord
 impl<T> From<T> for T { fn from(t: T) -> T }
 
@@ -87,15 +105,20 @@ struct Mutex<T: ¬Local>;
 impl<T> Mutex<T> {
     fn with_lock<R, F: FnOnce(&mut T) -> R>(&self, f: F) -> R  uses { nondet }
         // R carries the implicit ¬Local bound; f's parameter is declared at the shared grade γ_sh;
-        // θ_ret = Θ_f.θ_ret(γ_sh) ⊔ γ(f); θ_inv,f = ⊥ (f runs once, unconditionally) (note §5.7)
+        // θ_ret = Θ_f.θ_ret(γ_sh) ⊔ γ(f); θ_inv,f = ⊥ (f runs once, unconditionally) (note §5.7);
+        // no θ_mut,self: f's writes through its &mut T go to the locked state, always read at γ_sh
 }
 enum IoError { … }                    // Copy
+struct Clock;                         // capability type, affine (note C-CAP); used by N-13 and N-57
+impl Clock { fn now_ns(&self) -> u64 uses { time, nondet } }                 // a time primitive
 
 // ---------- Hearth-shaped declarations the snippets assume ----------
+format BlockQ4 { d: f16, q: nibbles<64, offset = 8> }   // verbatim from D-C1; omitted when the item's
+                                                         // own snippet declares BlockQ4 (note F-87)
 struct ActQ8 { d: f32, sum: i32, #[range(-127..=127)] q: [i8; 64] }          // 01 §9.1; hx_act_q8
 invariant ActQ8 { sum == q.iter().map(|v| *v as i32).sum::<i32>() }          // 01 §9.1
-struct Matrix<B> { rows: usize, blocks_per_row: usize, blocks: Buf<B> }      // Buf<B>: an owned
-                                                                             // std buffer (note OP-1)
+struct Matrix<B> { rows: usize, blocks_per_row: usize, blocks: Buf<B> }      // Buf<B>: the owned
+                                                                             // std buffer above
 invariant Matrix { blocks.len() == rows * blocks_per_row }                   // note F-3
 impl<B> Matrix<B> {
     pub fn rows(&self) -> usize            ensures result == self.rows
@@ -123,6 +146,9 @@ mod store {                           // mith.toml: declare_deterministic = ["st
     pub struct Store { state: Mutex<StoreState>, … }
     struct StoreState { count_f: Buf<f32>, … }
     impl StoreState { fn touch(&mut self, k: ExpertKey) }                     // row ∅
+    linear struct Lease { slot: SlotId, slab: Frozen<SlabBuf> }  // verbatim from D-D05; it and the
+    impl Lease { pub fn bytes(&self) -> &[u8] }                  // impl are omitted for D-D05, whose
+                                                                 // snippet declares both (note F-87)
     impl Store {
         fn acquire_inner(&self, id: ExpertId) -> Result<Frozen<SlabBuf>, IoError>
             uses { io, spawn, nondet }                                        // may_trap false
@@ -130,7 +156,8 @@ mod store {                           // mith.toml: declare_deterministic = ["st
         pub fn release(&self, l: Lease)                                uses { io, spawn }
         pub fn n_heat(&self) -> usize
     }
-    // read_slab, acquire (D-C5), heat_into (D-D22), note_use (D-D06) and Lease (D-D05) live here
+    // read_slab, acquire (D-C5), heat_into (D-D22), note_use (D-D06) and expert_step (D-D05) live
+    // here; the prelude's Lease above is D-D05's declaration
 }
 kernel fn ffn_q4(w: &[u8], x: &[f32], y: &mut [f32])         // D-D05; no requires assumed
 struct ExpertEntry { offset: u64, nbytes: u64 }
@@ -319,7 +346,7 @@ kernel fn q4_matvec(w: &Matrix<BlockQ4>, a: &[ActQ8], y: &mut [f32])
 | 1 | `w.row(r)` | `r < rows(*w)` | `r ∈ [0, rows(*w))` (par range) | T2 |
 | 2 | `q4_row_dot(…)` | `len(*wr) == len(*a)` | `row`'s ensures `len(result) == bpr(*w)`, and the requires `len(*a) == bpr(*w)` | T2 |
 | 3 | `y[r]` | `r < len(*y)` | `len(*y) == rows(*w)` (requires) | T2 |
-| 4 | `Matrix::row` itself | `kcall(Matrix::row)` | the `Matrix` invariant (D-D02) | — |
+| 4 | `Matrix::row` itself | `kcall(Matrix::row)` | the `Matrix` invariant (D-D02), and `Buf<T>`'s slicing being the built-in one on C-EXACT-STD (F-88) | — |
 
 **`T-Par`.**
 
@@ -338,10 +365,13 @@ kernel fn q4_matvec(w: &Matrix<BlockQ4>, a: &[ActQ8], y: &mut [f32])
 0. The surface body (`y[r] = q4_row_dot(w.row(r), a);`) contains no `break`,
    `continue`, `return` or `?`. Its only possible exits are traps, and it has none: every assert is
    discharged.
-1. The body writes `(*y)[r]` exactly once, with no `if` or `match` before the write (the call to the
-   kernel `q4_row_dot` cannot exit early).
+1. The body is the one write `(*y)[r] = …`, a statement at the top level of the surface body, with
+   no `if` or `match` before it (the call to the kernel `q4_row_dot` cannot exit early).
 2. `Φ ⊢ rows(*w) == len(*y)`.
-3. No other write to `*y`: no other element, no whole-`y` write, and `*y` is passed to no call.
+3. No other write to `*y`: no other element, no whole-`y` write, no `&mut` of `*y` or of any place
+   overlapping it passed to a call, and no closure.
+4. `target*((*y)[r])` is one place: `*y` is the referent of the reference parameter y (must-alias,
+   F-64).
 
 So the referent of `y` becomes `(exact, cross_device-if-inputs-are, {}, canon) ⊔ α_w`, a strong
 update. `θ_mut,y = (⊥, {w, a}, canon)`: the output does not depend on y's old contents.
@@ -370,12 +400,13 @@ update. `θ_mut,y = (⊥, {w, a}, canon)`: the output does not depend on y's old
 
 - (s1) `q4_matvec` is a kernel fn (D-C2), and the target `x86_64(avx512f, avx512bw, avx512vnni)` names
   catalogue features (prelude).
-- (s2) Name resolution over the inlined KIR. `r` and `w` resolve in `q4_matvec`'s own scope (the
-  `par` variable and the parameter). `j` and `acc` are not bound there; after inlining `q4_row_dot` each
-  is bound exactly once in the inlined nest, so each is accepted. `q4_row_dot`'s own parameter `w` is
-  shadowed by `q4_matvec`'s `w` under "own scope first", so `prefetch w` is unambiguous. Under a rule
-  that searched only `q4_matvec`'s scope, `j` and `acc` would be unresolved; under "unique anywhere in
-  the nest", `w` would be ambiguous (F-2).
+- (s2) Name resolution, own scope first (note §5.14, F-2, F-86). `r` and `w` resolve in
+  `q4_matvec`'s own scope (the `par` variable and the parameter), so they are not looked up further.
+  `j` and `acc` are not bound there; after inlining `q4_row_dot` each is bound exactly once in the
+  inlined nest, so each is accepted. `q4_row_dot`'s own parameter `w` is never consulted, because
+  `w` resolved in the first step, so `prefetch w` is unambiguous. Under a rule that searched only
+  `q4_matvec`'s scope, `j` and `acc` would be unresolved; under "unique anywhere in the nest", which
+  is how the first revision's (s2) read, `w` would be ambiguous.
 - (s3) Primitives and their licences:
   - `tile r by 16`: exact.
   - `vectorize j using vpdpbusd`: int_assoc. It emits T2 obligations for M2. With unsigned stored
@@ -487,7 +518,14 @@ fn read_slab(file: &BlobFile, off: Aligned<u64, 4096>, buf: &mut SlabBuf) -> Res
   - `may_trap` false.
   - `θ_ret = (⊥, {file, off}, canon)`. `io` on a `BlobFile` adds no taint (01 §6.1). The Ok/Err
     discriminant depends on the environment, which Theorem 4's non-failing condition (c) covers (F-5).
-  - `θ_mut,buf = (⊥, {file, off}, canon)`: the bytes are a function of the file and the offset.
+  - `θ_mut,buf = (⊥, {buf, file, off}, canon)`. The bytes `read_at` writes are a function of the file
+    and the offset, but the call reaches `*buf` through the projection result `b`, which `T-Call`'s
+    strong case does not cover (it needs an argument that borrows one whole place, and nothing
+    declares that `bytes_mut`'s result covers all of `*buf`), so the update is a weak join and buf's
+    old grade stays in D (note F-78). The previous revisions stated `(⊥, {file, off}, canon)`, which
+    needed a strong update that no rule gave; the second review's R3-18 led to the correction. It is a
+    secondary fact: `read_slab` has no sink, and no verdict depends on it. A footprint
+    `ensures footprint(result) == *self` on `bytes_mut` would make the update strong.
 - **Verdict: accept.**
 
 **`acquire`.**
@@ -639,7 +677,10 @@ pub fn row(&self, r: usize) -> &[B]  requires r < self.rows()  ensures result.le
   - the slice bounds hold;
   - the ensures holds: `(r + 1) · bpr − r · bpr = bpr`.
 
-  All are T2, but the first needs nonlinear bit-vector reasoning (OP-10).
+  All are T2, but the first needs nonlinear bit-vector reasoning (OP-10). `len((*self).blocks)` and
+  the range slice of `blocks: Buf<B>` are `<[B]>`'s built-in length and slicing through `Buf`'s
+  deref (prelude), which C-EXACT-STD admits (note F-88); read strictly, the first revision's list
+  did not cover them, and `kcall(Matrix::row)` failed (k3).
 - **Facts.** Row ∅. `may_trap` false given its requires and the invariant. `kcall` holds. Result
   referent grade `α_self ⊔ α_r`.
 - **Verdict: accept**, under the condition that `Matrix` declares the fields and the invariant (F-3).
@@ -671,7 +712,9 @@ fn hottest(slots: &[SlotView], heat: &[u32]) -> Option<SlotId> {
 4. `max_by_key` returns `Option<&SlotView>`, which is `Local`. Its loan is the union of its `Local`
    arguments' loans (`T-Ret` (b)). Its result grade is `α_slots ⊔ Θ_κ.θ_ret(α_slots)` (prelude), where
    the key closure's summary `Θ_κ` reads `heat`, so the grade is `α_slots ⊔ α_heat`; its `mt_κ` is
-   true (the `heat[s.idx]` check), which `T-CallClo` puts into `may_trap` (note §5.7, F-35).
+   true (the `heat[s.idx]` check), and `max_by_key`'s `may_trap` includes the `mt_κ` of the closure
+   it runs, so `T-Call` puts it into `may_trap` (note §5.5, §5.7 rule 2, F-35, F-69). `θ_inv,f =
+   α_self`, but the key closure has no by-mut capture, so nothing is raised by it (F-70).
 5. `Option::map` with a capture-free closure yields `Option<SlotId>`, which is not `Local`, so it is
    returned freely. The closures' results are not references, so the closure result discipline
    (F-40) has nothing to check.
@@ -813,12 +856,30 @@ kernel fn q4_matmul(w: &Matrix<BlockQ4>, a: &Matrix<ActQ8>, y: &mut Matrix<f32>)
   not admit that: the place is not of the form `p[π(r)]`, and every iteration borrows the same row.
   `Proj-Split` lets a footprinted projection whose result is used, within the iteration, only as the
   base of a write at index `π(r) = r` contribute only `footprint[r]` to W, with its loan split per
-  iteration. The inner W is then `{ row_t[r] }`, injective in r.
+  iteration. Its premise added after the second review holds: `index_mut`'s only argument besides
+  the receiver is t, the outer `par`'s index, which mentions neither the inner index r nor any place
+  the inner body writes (note §5.9, F-63). The inner W is then `{ blocks[t·bpr + r] }`, injective in r. At the
+  outer level the same call varies with t, so `Proj-Split` does not apply there; the outer W is
+  checked through the footprint's form, as above.
 - **Invariant.** The `&mut` loans on rows of `*y` end inside the `par` bodies; under F-43 the `Matrix`
   invariant re-check they trigger is deferred to each join, so it never reads a row another
   iteration is writing.
-- **Nested `T-Cover`.** t covers `0..rows(*y)` and r covers `0..cols(*y)`, so `y`'s elements are a
-  strong update with ν canon.
+- **Cover, by `Cover-Proj`** (note §5.9, F-73). The previous revisions wrote "nested `T-Cover`", but
+  no stated rule derived it: the outer body writes no `p[t] = e_w`, and every inner iteration passes
+  `&mut *y` to `index_mut` (second review, R3-13, R4-11). `Cover-Proj`'s premises:
+  0. neither body contains `break`, `continue`, `return` or `?`;
+  1. the outer body is exactly the inner `par r`, and the inner body is the one top-level write
+     `(*IndexMut::index_mut(&mut *y, t))[r] = q4_row_dot(…)`;
+  2. the footprints tile `S = (*y).blocks`: `lo(t) = t · bpr(*y)`, so `lo(0) = 0` and `hi(t) =
+     lo(t+1)`; `hi(rows(*a) − 1) = rows(*y) · bpr(*y) = len(S)` by `rows(*a) == rows(*y)` (requires)
+     and the `Matrix` invariant; and `k = rows(*w) = cols(*y) = bpr(*y)` by the requires and `cols`'s
+     ensures [D: T2 obligations, linear given the invariant];
+  3. the only other access to `*y` is the receiver reborrow, which `Proj-Split` resolves to
+     `footprint[r]`, with t invariant in the inner loop;
+  4. `*y` is the referent of the reference parameter y, one place.
+
+  So `S[*] := γ(q4_row_dot(…)) ⊔ pc'_t ⊔ pc'_r`, which is `(exact, cross_device-if-inputs-are, ∅,
+  canon)` joined with the bounds' grades: a strong update with ν canon, and the kernel's sink holds.
 - **Schedule.**
   - `t`, `r`: own scope.
   - `j`, `acc`: unique in the inlined `q4_row_dot`.
@@ -827,9 +888,11 @@ kernel fn q4_matmul(w: &Matrix<BlockQ4>, a: &Matrix<ActQ8>, y: &mut Matrix<f32>)
   - `keep_order acc`: exact.
   - `parallel r.tiles`: exact, inheriting disjointness.
 - **Verdict: accept**, under the `IndexMut` footprint, `cols() == blocks_per_row()` in the prelude, and
-  the provisional rule `Proj-Split`. Without a footprint, the outer `par` is checked as if it wrote
-  all of `*y`, and `E-PAR-DISJOINT` rejects it. Without `Proj-Split`, the inner `par` is
-  `E-PAR-DISJOINT`, and the fix is the hoist that note §14 P-19 proposes to 02's owner.
+  the provisional rules `Proj-Split` and `Cover-Proj`. Without a footprint, the outer `par` is checked
+  as if it wrote all of `*y`, and `E-PAR-DISJOINT` rejects it. Without `Proj-Split`, the inner `par`
+  is `E-PAR-DISJOINT`, and the fix is the hoist that note §14 P-19 proposes to 02's owner. Without
+  `Cover-Proj`, `*y`'s float content is the weak join `raw ⊔ canon = raw`, and the kernel's sink is
+  `E-NAN-RAW-SINK` (P-25).
 
 ### D-D12: `flow moe_ffn`
 
@@ -953,8 +1016,10 @@ prelude.
 candidate. The remaining clauses (`objective`, `niches`, `plausible`, `prune`, `holdout`, `promote`)
 are data for the Forge and the gate, not MCore.
 
-**Verdict: out of scope** for `mithi` at X1: the expected verdict at the checker precondition is
-reject with `E-OUT-OF-SCOPE-EVOLVE` (note §0.3, Q10).
+**Verdict: not derived.** This is a sketch, not a derivation, so no calculus verdict is recorded;
+verdicts.json's `verdict` is `not-derived`, and the item gets a derivation before `evolve slot`
+enters scope (note §0.3, review item R4-15). The expected verdict for `mithi` at the X1 checker
+precondition is reject with `E-OUT-OF-SCOPE-EVOLVE` (note §0.3, Q10).
 
 ### D-D20: `spec s5_forward_claims`
 
@@ -991,10 +1056,11 @@ for i in 0..len(*x) { (*x)[i] = canon::nan(prim_fdiv32(copy (*x)[i], s)) }      
 
 **Steps.**
 
-- The two write loops each satisfy `T-Cover`: each writes `(*x)[i]` exactly once, unconditionally,
-  over `0..len(*x)`, and neither body contains a `break`, `continue`, `return` or `?` (premise 0,
-  F-37). Each reads `(*x)[i]` before writing it; the strong update's grade `γ(e_w)` includes that
-  read.
+- The two write loops each satisfy `T-Cover`: each body is the one top-level write `(*x)[i] = …`
+  over `0..len(*x)` (premise 1), neither body contains a `break`, `continue`, `return` or `?`
+  (premise 0, F-37), neither passes `&mut` of `*x` or of an overlapping place to a call (premise 3),
+  and `*x` is the referent of the reference parameter x, one place (premise 4, F-64). Each reads
+  `(*x)[i]` before writing it; the strong update's grade `γ(e_w)` includes that read.
 - After the second loop the referent of `x` has ν canon and grade `α_x`.
 - `canon::sum16(x)` takes `&[f32]`; the `&mut` is reborrowed as shared for the call (Rust's coercion),
   and no loan conflicts.
@@ -1023,7 +1089,7 @@ reads final contents, fails with `E-NAN-RAW-SINK` (F-1).
 
 ```text
 fn heat_into(store: &Store, out: &mut [f32]) uses { nondet }  requires out.len() == store.n_heat() {
-  Mutex::with_lock(&(*store).state, clo_L⟨κ⟩[out by mut] |s: &mut StoreState| {
+  Mutex::with_lock(&(*store).state, clo_L⟨κ⟩[*out by mut] |s: &mut StoreState| {
     for k in 0..len(*out) { assert⟨idx⟩(k < len((*s).count_f)); (*out)[k] = copy (*s).count_f[k]; }
   });
 }
@@ -1031,15 +1097,20 @@ fn heat_into(store: &Store, out: &mut [f32]) uses { nondet }  requires out.len()
 
 **Steps.**
 
-- The closure captures `*out` by mutable reference, so it is `clo_L`, admitted by the exception.
-- `s` has grade `γ_sh`.
+- The closure captures the place `*out` by mutable (unique) borrow, as Rust 2021 captures disjoint
+  places (note §2.4, F-67), so it is `clo_L`, admitted by the exception. `target*(*out)` is the
+  referent of the reference parameter out.
+- In the body, `*out` has the capture symbol `β_out` (note §5.7, F-60), and `s` has grade `γ_sh`.
 - `(*out)[k]`'s bound is discharged (`k < len(*out)`).
 - `(*s).count_f[k]`'s bound is not: no fact relates `count_f`'s length to `n_heat()`. It stays a
   runtime check.
-- `T-Call` applies `wr_out ⊔ pc ⊔ θ_inv` to `out`'s referent, with `wr_out = Θ_κ.θ_mut,out(γ_sh) =
-  γ_sh ⊔ α_out` (the loop guard's `J(L)` carries `len(*out)`) and `θ_inv = ⊥` for `with_lock`. So the
-  copied values are `schedule_dependent`, as 01 §7.2 requires: "a value read out of a `Mutex` through
-  `with_lock` is never `cross_device`".
+- `Θ_κ.θ_mut,*out = β_out ⊔ α_s`: the weak element writes join the copied value's grade with the old
+  contents, and the loop guard's `J(L)` carries `len(*out)`, which is `β_out`.
+- `T-Call` applies `wr_out ⊔ pc ⊔ θ_inv` to `target*(*out)`. `with_lock` runs the closure once, so
+  `wr_out` is one application: `Θ_κ.θ_mut,*out(α_s := γ_sh, β_out := α_out) = γ_sh ⊔ α_out`, and
+  `θ_inv = ⊥`. So the copied values are `schedule_dependent`, as 01 §7.2 requires: "a value read out
+  of a `Mutex` through `with_lock` is never `cross_device`". The result is the same as the first
+  revision's; the symbols make it follow from the rule rather than from the creation-time grade.
 
 **Facts.** Row `{nondet}`. `may_trap` true.
 
@@ -1054,8 +1125,10 @@ fn heat_into(store: &Store, out: &mut [f32]) uses { nondet }  requires out.len()
 
 `⊢_fmt` structure only: 1 + 32 · 4/8 = 17 bytes [D], as the snippets say.
 
-**Verdict: out of scope.** At the X1 checker precondition the expected verdict is reject with
-`E-OUT-OF-SCOPE-E8M0`: `e8m0` is the first format code outside the X1 list in both snippets.
+**Verdict: not derived.** Only the structure is checked, and the dot order needs `canon.v1.1`, so
+no calculus verdict is recorded; verdicts.json's `verdict` is `not-derived` (review item R4-15). At
+the X1 checker precondition the expected verdict is reject with `E-OUT-OF-SCOPE-E8M0`: `e8m0` is the
+first format code outside the X1 list in both snippets.
 
 ### D-D24 to D-D27: copies
 
@@ -1076,9 +1149,11 @@ two halves of D-C2, verdict accept.
 Items N-01 to N-06 are the commented-out examples inside snippet blocks, uncommented; they are gate
 items. N-07 comes from ARCHITECTURE §5.3's reviewer note, which quotes the outline's earlier
 `q4_matvec`. N-08 to N-10 are constructed here from the documents' rules. N-11 to N-39 are the
-counterexamples of the 2026-10-16 review (note §17), each with the verdict the revised rules give.
-N-07 to N-39 are supplementary: reported, and offered to the planted corpus, but not gate inputs,
-because they are not in any fenced snippet (note Q11). Primary codes follow the precedence of note
+counterexamples of the first 2026-10-16 review, and N-40 to N-69 those of the second (note §17),
+each with the verdict the revised rules give. N-07 to N-69 are supplementary: reported, and offered
+to the planted corpus, but not gate inputs, because they are not in any fenced snippet (note Q11).
+In N-40 to N-69, `h` is a value read under `with_lock`, so its grade is `γ_sh`, and "rustc rejects"
+is [inference]: no program was compiled (no rustc on this host). Primary codes follow the precedence of note
 §5.16; secondary codes are in verdicts.json's `also`.
 
 | Item | Text (uncommented) | Expected | Code | Rule |
@@ -1122,6 +1197,36 @@ because they are not in any fenced snippet (note Q11). Primary codes follow the 
 | N-37 | `fn addr_len(v: &[u32]) -> usize { let s = format!("{:p}", &v[0]); s.len() }` (R2-25) | reject | `E-FF-ADDR` | C-FMT-ADDR (F-56) |
 | N-38 | at a port (M4, out of X1): `policy fn p(slots: &[SlotView], now: Tick) -> Hint<SlotId> { let scratch = [0u64; 1 << 21]; … }` with a port stack budget below 16 MiB [D: 2^21 · 8 bytes] (R1-18, R2-16) | reject | `E-TO-STACK` | (t9) and `⊢_store` (F-48) |
 | N-39 | `trait Key { fn key(&self) -> u32; } impl Key for f32 { fn key(&self) -> u32 { (*self + 0.0).to_bits() } }` (R1-20) | reject | `E-IMPL-GRADE` | the impl's constant part carries `obs⁰`, which `Θ̂_key` does not allow (F-50) |
+| N-40 | `#[grade(exact, cross_device)] fn leak(m: &Mutex<bool>) -> bool uses { nondet } { let h = m.with_lock(\|s\| *s); let mut c = false; let mut f = \|\| { let o = c; c = true; o }; if h { f(); } f() }` (R3-1, R4-2) | reject | `E-GRADE` | the first call raises c to `γ_sh`; the second call's `θ_ret` reads `β_c := Γ(c) = γ_sh` (F-60). Before: `θ_ret` was the creation constant ⊥ and the result, which equals h, was `cross_device` |
+| N-41 | N-40 with `let mut n = false; let mut f = move \|\| { let o = n; n = true; o };` (R3-1, R4-2) | reject | `E-GRADE` | the first call raises `γ(f)` by `θ_state ⊔ pc = γ_sh`; the second returns `θ_ret[σ := γ(f)] ⊔ γ(f)` (F-60) |
+| N-42 | `fn twice<F: FnMut(u32) -> u32>(mut f: F, h: u32) -> u32 { f(h); f(0) }` and `#[grade(exact, cross_device)] fn g(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(\|s\| *s); let mut c = 0u32; twice(\|x: u32\| -> u32 { let old = c; c = x; old }, h) }` (R4-2) | reject | `E-GRADE` | per-κ re-typing of `twice` treats c as an implicit `&mut` referent: after `f(h)` it holds `α_h`, so `f(0)` returns `α_h` and `twice`'s per-κ `θ_ret` carries it (F-60, rule 1) |
+| N-43 | `fn f() -> u32 { let mut slot: Option<&u32> = None; { let mut put = \|d: &u32\| { slot = Some(d); }; let x = 5u32; put(&x); } *slot.unwrap() }` (R3-2, R4-6) | reject | `E-BORROW-OUTLIVE` | `T-CallClo` transfers `λ_slot = {ℓ_d*}` with `ℓ_d* := {(x, ref)}`, so slot carries the loan on x when x's scope ends (F-61); rustc rejects it too |
+| N-44 | `fn bad2() -> u32 { let a = 1u32; let mut out: &u32 = &a; { let y = 5u32; let mut c = \|\| { out = &y; }; c(); } *out }` (R4-6) | reject | `E-BORROW-OUTLIVE` | `λ_out` holds the by-ref capture loan on y, which `T-CallClo` adds to `L(out)` (F-61); rustc rejects it with E0597 |
+| N-45 | `fn set(o: Option<&mut u32>, h: bool) { if let Some(r) = o { if h { *r = 1; } } }` and `#[grade(exact, cross_device)] fn g(m: &Mutex<bool>) -> u32 uses { nondet } { let h = m.with_lock(\|s\| *s); let mut y = 0u32; set(Some(&mut y), h); y }` (R3-3) | reject | `E-GRADE` | `set` has `θ_mut,o = α_o ⊔ α_h` for its `&mut`-carrying by-value parameter, and `T-Call` applies it to y through the loan `(y, mut)` that `Some(&mut y)` carries (F-62) |
+| N-46 | `fn put(o: Option<&mut Option<&u32>>, d: &u32) { if let Some(r) = o { *r = Some(d); } }`, called as `let mut slot = None; { let d = 5u32; put(Some(&mut slot), &d); } *slot.unwrap()` (R3-3) | reject | `E-LOCAL-MUT-STORE` | the stored value carries `ℓ_d*` into a place at reference position `o.2` (F-62); rustc rejects it too, the elided lifetimes differ |
+| N-47 | `impl W { fn window(&mut self, t: usize) -> &mut [f32] requires t + 4 <= self.blocks.len() ensures footprint(result) == self.blocks[t..t+4] { &mut self.blocks[t..t+4] } }` and `fn race(y: &mut W) { par for i in 0..4 { y.window(3 - i)[i] = i as f32; } }` (R3-4) | reject | `E-PAR-DISJOINT` | `window`'s argument `3 - i` varies with i, so `Proj-Split` does not apply, and the footprints `blocks[3-i..7-i]` overlap (F-63). Before: every iteration wrote `blocks[3]` |
+| N-48 | `#[grade(exact, cross_device)] fn k(a: &mut [f32], b: &mut [f32], x: &[f32], h: bool) { b[0] = x[0] - x[0]; let y = if h { &mut *a } else { &mut *b }; for i in 0..y.len() { y[i] = canon::nan(x[i]); } }` (R3-5) | reject | `E-NAN-RAW-SINK` | `T-Cover` premise 4 fails (`L(y)` has two loans), so the writes are weak and `*b` stays raw (F-64). For `x[0] = +∞` and h true, b[0] is the target's default NaN [inference, as note §5.3] |
+| N-49 | `fn set(m: &Mutex<u32>, y: &mut u32) uses { nondet } { loop { *y = m.with_lock(\|s\| *s); return; } }` and `#[grade(exact, cross_device)] fn g(m: &Mutex<u32>) -> u32 uses { nondet } { let mut y = 0u32; set(m, &mut y); y }` (R3-6) | reject | `E-GRADE` | `T-Loop`'s `Γ_out` keeps the X the return recorded, so `θ_mut,y` of `set` is `γ_sh` (F-65) |
+| N-50 | `fn f() -> u32 { loop { return 1; } }` (R3-6) | accept | — | a loop with no break has type `!` (F-65); before, it was `()` and the tail elaboration `return (loop {…})` was `E-TYPE` |
+| N-51 | `fn f(store: &Store, id: ExpertId, h: bool) -> Result<(), IoError> uses { io, spawn } { loop { let l = store.lease(id)?; if h { break; } store.release(l); } Ok(()) }` (R3-7) | reject | `E-LINEAR-DROP` | `T-Jump`: the break leaves l's scope with l unconsumed (F-66) |
+| N-52 | `#[grade(exact, cross_device)] fn f(m: &Mutex<bool>) -> u32 uses { nondet } { let h = m.with_lock(\|s\| *s); let mut y = 0u32; { let r = &mut y; let mut g = \|\| { *r = 1; }; if h { g(); } } y }` (R3-8) | reject | `E-GRADE` | the closure captures the place `*r`, and `T-CallClo` updates `target*(*r) = y` under pc `γ_sh` (F-67) |
+| N-53 | `#[grade(exact, cross_device)] fn f(m: &Mutex<bool>) -> u32 uses { nondet } { let h = m.with_lock(\|s\| *s); let mut y = 0u32; { let mut g = \|b: bool\| { if b { y = 1; return; } }; g(h); } y }` (R3-9, R4-4) | reject | `E-GRADE` | the closure's return records y in X, so `θ_mut,y = α_b`, instantiated at `γ_sh` (F-68) |
+| N-54 | `#[grade(exact, cross_device)] fn g(x: &[u32; 8]) -> u32 { let mut y = [0u32; 8]; let mut run = \|\| -> Result<(), E> { par for i in 0..8 { if x[i] == 0 { return Err(E) } y[i] = x[i]; } Ok(()) }; let _ = run(); y[7] }` (R4-4) | reject | `E-GRADE` | `T-Par`'s X' raises the by-mut captured place y by `γ_unspec` in the closure's exit context, and `θ_mut,y` reads it (F-68, F-38) |
+| N-55 | `#[grade(exact, cross_device)] fn leak(m: &Mutex<bool>) -> u32 uses { nondet } { let h = m.with_lock(\|s\| *s); let o: Option<u32> = if h { Some(1) } else { None }; let mut c = 0u32; let _ = o.map(\|v\| { c = 1; v }); c }` (R3-10) | reject | `E-GRADE` | `Option::map`'s `θ_inv,f = α_self = γ_sh` raises c (F-70) |
+| N-56 | in module `store`, with a fixture whose subject is the block: `fn bump(m: &Mutex<u32>, i: u32) -> u32 { deterministic(by: E) { m.with_lock(\|c\| { *c = c.wrapping_mul(2).wrapping_add(i); 0 }) } }` and `fn p(m: &Mutex<u32>, n: usize) { par for i in 0..n { let _ = bump(m, i as u32); } }` (R3-11; the review's `n: u32` would make the `par` range `E-TYPE` first, since `par` indices are `usize`) | reject | `E-PAR-EFFECT` | `bump`'s exercised row `ε^x_bump` keeps `nondet`, and `T-Call` adds it to the body's (F-71) |
+| N-57 | in module `store`, with a fixture E whose subject is the block: `#[grade(exact, cross_device)] fn leak(clock: &Clock) -> u64 uses { time, nondet } { let m = Mutex::new(0u64); m.with_lock(\|v\| *v = clock.now_ns()); deterministic(by: E) { m.with_lock(\|v\| *v) } }` (R3-12, R4-17) | accept; output graded `cross_device` | — | typing accepts: m's grade is ⊥, so `d_s^in = cd`. The restated claim form (note §5.11, F-72) makes E's claim false, because the result depends on m's contents; Theorem 4's condition (i) then fails and nothing is claimed. A fixture checker cannot detect a false claim; this item shows what evidence must establish |
+| N-58 | `struct S { buf: [f32; 4] }`, `fn poke(s: &mut S) { s.buf[0] = s.buf[0] - s.buf[0]; }` and `#[grade(exact, cross_device)] fn k(x: &[f32; 4], s: &mut S) { for i in 0..4 { s.buf[i] = canon::nan(x[i]); poke(&mut *s); } }` (R3-13) | reject | `E-NAN-RAW-SINK` | `&mut *s` overlaps `s.buf` as an ancestor, so `T-Cover` premise 3 fails, and `poke`'s raw write stays (F-64) |
+| N-59 | `kernel fn k(x: &[f32], y: &mut [f32], m: usize) requires x.len() == y.len() { for i in 0..y.len() { for _k in 0..m { y[i] = canon::nan(x[i]); } } }` (R4-16) | reject | `E-NAN-RAW-SINK` | the write is inside a nested loop, not at the top level, so `T-Cover` premise 1 fails; with m = 0 no element is written (F-64) |
+| N-60 | `#[grade(exact, cross_device)] fn k(x: &[f32], y: &mut [f32], c: bool) { for i in 0..y.len() { let mut w = \|\| y[i] = canon::nan(x[i]); if c { w() } } }` (R4-16) | reject | `E-NAN-RAW-SINK` | the only write is inside a closure, which premises 1 and 3 exclude (F-64) |
+| N-61 | `fn f(x: &[u32], n: usize) { 'outer: loop { par for i in 0..n { if x[i] == 0 { break 'outer; } } } }` (R3-15, R4-8) | reject | `E-PAR-BREAK` | a break in a `par` body targets an enclosing loop (F-75) |
+| N-62 | `kernel fn outer(w: &Matrix<BlockQ4>, a: &[ActQ8], y: &mut [f32]) requires y.len() == w.rows() && a.len() == w.blocks_per_row() && y.len() >= 1 { y[0] = y[0] - y[0]; q4_matvec(w, a, &mut *y); }` (R3-18) | accept | — | `&mut *y` borrows the whole referent of y, one place, so `T-Call` updates it strongly with `q4_matvec`'s `θ_mut,y = (⊥, {w, a}, canon)` (F-78); before, `raw ⊔ canon = raw` failed the sink |
+| N-63 | `fn f<F: Fn()>(g: F, n: u32) { if n > 0 { f(\|\| g(), n - 1) } }` called as `f(\|\| (), 3)` (R3-20) | reject | `E-MONO-DEPTH` | every level instantiates f at a new closure type, so per-κ re-typing exceeds the fixed depth (F-80); rustc reports its recursion limit |
+| N-64 | `#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let mut y = 0u32; let r = &mut y; *r = m.with_lock(\|s\| *s); *r }` (R4-1) | reject | `E-GRADE` | `P-Deref-Local` reads y's current grade `γ_sh` through r (F-82). Before: r's creation grade ⊥ |
+| N-65 | `#[grade(exact, cross_device)] fn g(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(\|s\| *s); let mut y = 0u32; let f = \|v: &mut u32\| { *v = h; }; f(&mut y); y }`; also with `fn app<F: Fn(&mut u32)>(f: F, y: &mut u32) { f(y) }`, and `y.iter_mut().for_each(\|v\| *v = h)` on an array (R4-3) | reject | `E-GRADE` | `Θ_κ.θ_mut,v = γ(h)`, applied by `T-CallClo` to `target*` of the argument's loan; the std form through `for_each`'s `θ_mut,self` (F-69) |
+| N-66 | `fn bad() -> u32 { let a = 1u32; let mut out: &u32 = &a; { let y = 5u32; let r: &u32 = &y; let c = move \|\| r; out = c(); } *out }` (R4-5) | reject | `E-BORROW-OUTLIVE` | the closure value and its `Local` result carry the loan r carries (F-61); rustc rejects it with E0597 |
+| N-67 | `fn take_first(slots: &mut [Option<Lease>], want: &[bool]) -> Option<Lease> { par for i in 0..slots.len() { if want[i] { return slots[i].take(); } } None }` (R4-7) | accept, if `SlabBuf : Send` | — | typing accepts; dynamically, with `want[3]` and `want[9]` true, iteration 9's lease is abandoned at the join instead of lost (F-83) |
+| N-68 | `fn t() -> u32 { let a = 1u32; let mut out = &a; { let y = 5u32; let t = (&y,); out = t.0; } *out }` (R4-9) | reject | `E-BORROW-OUTLIVE` | the tuple literal carries the loan on y, and `t.0` carries `L(t)` (F-84) |
+| N-69 | `#[grade(exact, cross_device)] fn f(m: &Mutex<bool>) -> u32 uses { nondet } { let h = m.with_lock(\|s\| *s); loop { if h { break 1 } else { break 0 } } }` (R4-10) | reject | `E-GRADE` | the elaboration assigns `t_L` under the effective pc `γ_sh` before each break (F-85) |
 
 ---
 
@@ -1130,7 +1235,9 @@ because they are not in any fenced snippet (note Q11). Primary codes follow the 
 1. For **every** canonical and derived item of verdicts.json, whatever its scope, the comparison
    script extracts the snippet from the named file and lines, checks its SHA-256 against the recorded
    hash (a mismatch is a stale item, not a disagreement), concatenates the prelude, and runs
-   `mithi --check --json`.
+   `mithi --check --json`. A prelude declaration whose name the snippet itself declares (`BlockQ4`
+   for D-C1 and its copies; `Lease` and its `impl` for D-D05) is omitted from the concatenation, so
+   nothing is declared twice (§P, note F-87).
 2. **Agreement** (note §0.3): the verdict matches; for a reject, the primary code matches, where the
    primary code is the first emitted code in the precedence order of note §5.16. A conditional item
    counts as an accept when the prelude supplies its conditions. For an item outside X1 scope the
@@ -1139,8 +1246,10 @@ because they are not in any fenced snippet (note Q11). Primary codes follow the 
    R2-19).
 3. **Secondary facts** are compared and reported, but are not gate inputs: row, `may_trap`, trap
    sites, and the output grade's scope and NaN bit.
-4. Negative items N-01 to N-06 are gate items. N-07 to N-39 are reported only (note Q11).
-5. The X1 design draft would reject several canonical constructs with `E-X1-NOTYET` (note §12, Q9).
+4. Negative items N-01 to N-06 are gate items. N-07 to N-69 are reported only (note Q11).
+5. An item whose `verdict` is `not-derived` (D-D10, D-D19, D-D23) is compared only on its
+   `x1_expected`; `not-derived` is never an expected verdict (note §0.3).
+6. The X1 design draft would reject several canonical constructs with `E-X1-NOTYET` (note §12, Q9).
    Such a rejection is a disagreement, not an agreement, under this rule.
-6. The comparison script belongs to the X1 track (`experiments/x1-harness/`). This note supplies
+7. The comparison script belongs to the X1 track (`experiments/x1-harness/`). This note supplies
    its inputs, not the script.

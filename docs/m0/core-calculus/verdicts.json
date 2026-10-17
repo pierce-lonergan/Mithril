@@ -1,6 +1,6 @@
 {
  "schema": "mithril.m0.core-calculus.verdicts/v0-draft",
- "status": "DRAFT, with docs/m0/core-calculus.md; revised 2026-10-16 after the first same-family review (note section 17)",
+ "status": "DRAFT, with docs/m0/core-calculus.md; revised 2026-10-16 after the first same-family review and again after the second same-family review (note sections 0.6 and 17)",
  "calculus": "MCore v0.1 (docs/m0/core-calculus.md)",
  "prelude": "derivations.md#p-the-canonical-prelude",
  "pinned": {
@@ -27,7 +27,7 @@
   "blocks_found": 45,
   "distinct_hashes": 35
  },
- "agreement_rule": "for every canonical and derived item, whatever its scope, and every negative item with gate_item true: mithi, run on the prelude plus the snippet, gives the expected verdict, and for a reject its primary code equals the expected code. For an item with scope x1 or x1-front-end the expected verdict is 'verdict' (an item with conditional true is judged with the prelude supplying its conditions). For an item outside X1 scope the expected verdict is 'x1_expected' (a reject with E-OUT-OF-SCOPE-<KW>, note sections 0.3 and 12, Owner question Q10); 'verdict' then records the calculus verdict, which becomes the expected verdict when the construct enters scope. The primary code is the first emitted code in the precedence order of note section 5.16; codes in 'also' are secondary. A rejection with E-X1-NOTYET-* is a disagreement (note section 12, Q9). Facts, including 'sig', are secondary and reported. The first draft compared X1-scope items only, which loosened ROADMAP section 3.2 (review item R2-19).",
+ "agreement_rule": "for every canonical and derived item, whatever its scope, and every negative item with gate_item true: mithi, run on the prelude plus the snippet, gives the expected verdict, and for a reject its primary code equals the expected code. For an item with scope x1 or x1-front-end the expected verdict is 'verdict' (an item with conditional true is judged with the prelude supplying its conditions). For an item outside X1 scope the expected verdict is 'x1_expected' (a reject with E-OUT-OF-SCOPE-<KW>, note sections 0.3 and 12, Owner question Q10); 'verdict' then records the calculus verdict, which becomes the expected verdict when the construct enters scope. The primary code is the first emitted code in the precedence order of note section 5.16; codes in 'also' are secondary. A rejection with E-X1-NOTYET-* is a disagreement (note section 12, Q9). Facts, including 'sig', are secondary and reported. The first draft compared X1-scope items only, which loosened ROADMAP section 3.2 (review item R2-19). An item whose 'verdict' is 'not-derived' (D-D10, D-D19, D-D23) is compared only on 'x1_expected'. When a snippet declares a name the prelude also declares (BlockQ4 in D-C1 and its copies; Lease and its impl in D-D05), the prelude's copy is omitted for that item (derivations section V, note F-87).",
  "items": [
   {
    "id": "D-C1",
@@ -96,10 +96,12 @@
    "scope": "x1",
    "verdict": "accept",
    "conditions": [
-    "prelude: Matrix fields and invariant blocks.len() == rows * blocks_per_row (F-3)"
+    "prelude: Matrix fields and invariant blocks.len() == rows * blocks_per_row (F-3)",
+    "prelude: format BlockQ4, declared in the prelude since the second review (F-87); omitted for D-C1 itself",
+    "prelude: Buf<T> derefs to [T], so Matrix::row's slicing is built-in and on C-EXACT-STD (F-88)"
    ],
    "requires_rules": [
-    "T-Cover (F-1), with premise 0 (F-37)",
+    "T-Cover (F-1), with premise 0 (F-37), premise 1 as a top-level write and premise 4 (one place) (F-64)",
     "T-Jump for the loop guards (F-30)"
    ],
    "facts": {
@@ -156,7 +158,7 @@
     "target catalogue features (prelude)"
    ],
    "requires_rules": [
-    "schedule name resolution: own scope first, then unique in inlined kernel callees (F-2)"
+    "schedule name resolution (s2): own scope first, then bound exactly once in the inlined kernel callees (F-2, F-86)"
    ],
    "facts": {
     "q4_matvec_avx512": {
@@ -268,7 +270,7 @@
      ],
      "may_trap": false,
      "ctx": "default",
-     "output": "Result<(), IoError>; &mut buf content depends on {file, off}",
+     "output": "Result<(), IoError>; &mut buf content depends on {buf, file, off}: the call reaches *buf through the projection result, so T-Call's update is weak (F-78); the earlier {file, off} assumed a strong update that no rule gave",
      "sig": "fn(&BlobFile, Aligned<u64, 4096>, &mut SlabBuf) -> Result<(), IoError> uses { io }"
     },
     "acquire": {
@@ -390,7 +392,7 @@
    "scope": "x1",
    "verdict": "accept",
    "conditions": [
-    "as D-C2 for q4_row_dot (prelude ActQ8; BlockQ4 from D-C1)",
+    "as D-C2 for q4_row_dot (prelude ActQ8 and BlockQ4, F-87)",
     "as D-C4 for pick_victim"
    ],
    "facts": {
@@ -465,7 +467,8 @@
    "scope": "x1",
    "verdict": "accept",
    "conditions": [
-    "Matrix fields rows, blocks_per_row, blocks and the invariant (F-3)"
+    "Matrix fields rows, blocks_per_row, blocks and the invariant (F-3)",
+    "prelude: Buf<T> derefs to [T]; len and range slicing are built-in and on C-EXACT-STD (F-88)"
    ],
    "facts": {
     "Matrix::row": {
@@ -542,7 +545,8 @@
    "rules": [
     "T-CloL",
     "closure-exception",
-    "T-Ret(b)"
+    "T-Ret(b)",
+    "T-Call (std higher-order: theta_inv and mt of the closure, F-69, F-70)"
    ],
    "derivation": "derivations.md#d-d04-hottest",
    "conditional": true
@@ -647,7 +651,7 @@
    "scope": "x1",
    "verdict": "accept",
    "conditions": [
-    "prelude: ActQ8 with its #[range] and invariant; BlockQ4 from D-C1"
+    "prelude: ActQ8 with its #[range] and invariant; BlockQ4 (F-87)"
    ],
    "facts": {},
    "rules": [
@@ -740,9 +744,10 @@
     ]
    },
    "scope": "out:later",
-   "verdict": "out-of-scope",
+   "verdict": "not-derived",
    "conditions": [
-    "needs canon.v1.1"
+    "needs canon.v1.1",
+    "needs a derivation before its construct enters scope"
    ],
    "facts": {},
    "rules": [
@@ -753,7 +758,7 @@
    "x1_expected": {
     "verdict": "reject",
     "code": "E-OUT-OF-SCOPE-E8M0",
-    "note": "expected mithi verdict at the X1 checker precondition (note section 0.3, section 12, Q10); 'verdict' is the calculus verdict"
+    "note": "expected mithi verdict at the X1 checker precondition (note section 0.3, section 12, Q10); 'verdict' is 'not-derived': no calculus verdict yet"
    }
   },
   {
@@ -773,11 +778,13 @@
    "verdict": "accept",
    "conditions": [
     "prelude: IndexMut<usize> for Matrix<f32> with a declared footprint (F-25), discharged statically at its definition (E-FOOTPRINT, F-45)",
-    "prelude: Matrix::cols() == blocks_per_row()",
-    "provisional rule Proj-Split (note section 5.9, F-45); without it the inner par is E-PAR-DISJOINT and note P-19 proposes a hoist to 02's owner"
+    "prelude: Matrix::cols() == blocks_per_row(); Buf<T> derefs to [T] (F-88)",
+    "provisional rule Proj-Split (note section 5.9, F-45), whose argument t is invariant in the inner par (F-63); without it the inner par is E-PAR-DISJOINT and note P-19 proposes a hoist to 02's owner",
+    "provisional rule Cover-Proj (note section 5.9, F-73); without it y's float content is raw and the sink is E-NAN-RAW-SINK (note P-25)"
    ],
    "requires_rules": [
-    "T-Cover (nested)",
+    "Cover-Proj (F-73), replacing the previous revisions' unstated 'nested T-Cover'",
+    "Proj-Split with invariant non-receiver arguments (F-45, F-63)",
     "footprints (F-25)"
    ],
    "facts": {
@@ -791,7 +798,7 @@
    },
    "rules": [
     "Proj-Split",
-    "T-Cover",
+    "Cover-Proj",
     "T-Par",
     "T-Par (nested)",
     "sch"
@@ -1049,18 +1056,20 @@
     ]
    },
    "scope": "out:M4",
-   "verdict": "out-of-scope",
-   "conditions": [],
+   "verdict": "not-derived",
+   "conditions": [
+    "needs a derivation before its construct enters scope"
+   ],
    "facts": {},
    "rules": [
     "store/slot (sketch)"
    ],
    "derivation": "derivations.md#d-d19-evolve-slot-store_evict",
-   "conditional": false,
+   "conditional": true,
    "x1_expected": {
     "verdict": "reject",
     "code": "E-OUT-OF-SCOPE-EVOLVE",
-    "note": "expected mithi verdict at the X1 checker precondition (note section 0.3, section 12, Q10); 'verdict' is the calculus verdict"
+    "note": "expected mithi verdict at the X1 checker precondition (note section 0.3, section 12, Q10); 'verdict' is 'not-derived': no calculus verdict yet"
    }
   },
   {
@@ -1108,7 +1117,7 @@
     "prelude: canon_v1::expf, canon::sum16, canon::nan (transcendental choice provisional, pending D0-2)"
    ],
    "requires_rules": [
-    "T-Cover (F-1)"
+    "T-Cover (F-1), premises 0 to 4 (F-37, F-64)"
    ],
    "facts": {
     "softmax": {
@@ -1160,7 +1169,7 @@
     }
    },
    "rules": [
-    "T-CloL",
+    "T-CloL (capture of the place *out, F-67; symbols beta, F-60)",
     "T-Call (wr transfer)"
    ],
    "derivation": "derivations.md#d-d22-heat_into",
@@ -1180,9 +1189,10 @@
     ]
    },
    "scope": "out:later",
-   "verdict": "out-of-scope",
+   "verdict": "not-derived",
    "conditions": [
-    "needs canon.v1.1"
+    "needs canon.v1.1",
+    "needs a derivation before its construct enters scope"
    ],
    "facts": {},
    "rules": [],
@@ -1191,7 +1201,7 @@
    "x1_expected": {
     "verdict": "reject",
     "code": "E-OUT-OF-SCOPE-E8M0",
-    "note": "expected mithi verdict at the X1 checker precondition (note section 0.3, section 12, Q10); 'verdict' is the calculus verdict"
+    "note": "expected mithi verdict at the X1 checker precondition (note section 0.3, section 12, Q10); 'verdict' is 'not-derived': no calculus verdict yet"
    }
   },
   {
@@ -1698,6 +1708,335 @@
    "scope": "x1",
    "gate_item": false,
    "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-40",
+   "source": "review 2026-10-16 (second round), R3-1, R4-2",
+   "text": "#[grade(exact, cross_device)] fn leak(m: &Mutex<bool>) -> bool uses { nondet } { let h = m.with_lock(|s| *s); let mut c = false; let mut f = || { let o = c; c = true; o }; if h { f(); } f() }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-60: the second call's theta_ret reads beta_c at c's current grade gamma_sh",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-41",
+   "source": "review 2026-10-16 (second round), R3-1, R4-2",
+   "text": "N-40 with: let mut n = false; let mut f = move || { let o = n; n = true; o };",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-60: the first call raises gamma(f) by theta_state and pc; the second returns theta_ret[sigma := gamma(f)]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-42",
+   "source": "review 2026-10-16 (second round), R4-2",
+   "text": "fn twice<F: FnMut(u32) -> u32>(mut f: F, h: u32) -> u32 { f(h); f(0) } and #[grade(exact, cross_device)] fn g(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|s| *s); let mut c = 0u32; twice(|x: u32| -> u32 { let old = c; c = x; old }, h) }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-60, note section 5.7 rule 1: per-kappa re-typing treats c as an implicit &mut referent of twice",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-43",
+   "source": "review 2026-10-16 (second round), R3-2, R4-6",
+   "text": "fn f() -> u32 { let mut slot: Option<&u32> = None; { let mut put = |d: &u32| { slot = Some(d); }; let x = 5u32; put(&x); } *slot.unwrap() }",
+   "verdict": "reject",
+   "code": "E-BORROW-OUTLIVE",
+   "note": "F-61: T-CallClo transfers lambda_slot with l_d* := {(x, ref)}; rustc rejects it too [inference]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-44",
+   "source": "review 2026-10-16 (second round), R4-6",
+   "text": "fn bad2() -> u32 { let a = 1u32; let mut out: &u32 = &a; { let y = 5u32; let mut c = || { out = &y; }; c(); } *out }",
+   "verdict": "reject",
+   "code": "E-BORROW-OUTLIVE",
+   "note": "F-61: lambda_out holds the by-ref capture loan on y; rustc rejects it with E0597 [inference]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-45",
+   "source": "review 2026-10-16 (second round), R3-3",
+   "text": "fn set(o: Option<&mut u32>, h: bool) { if let Some(r) = o { if h { *r = 1; } } } and #[grade(exact, cross_device)] fn g(m: &Mutex<bool>) -> u32 uses { nondet } { let h = m.with_lock(|s| *s); let mut y = 0u32; set(Some(&mut y), h); y }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-62: theta_mut,o of the &mut-carrying by-value parameter, applied through the loan (y, mut)",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-46",
+   "source": "review 2026-10-16 (second round), R3-3",
+   "text": "fn put(o: Option<&mut Option<&u32>>, d: &u32) { if let Some(r) = o { *r = Some(d); } } called as let mut slot = None; { let d = 5u32; put(Some(&mut slot), &d); } *slot.unwrap()",
+   "verdict": "reject",
+   "code": "E-LOCAL-MUT-STORE",
+   "note": "F-62: l_d* stored into a place at reference position o.2; rustc rejects it too [inference]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-47",
+   "source": "review 2026-10-16 (second round), R3-4",
+   "text": "impl W { fn window(&mut self, t: usize) -> &mut [f32] requires t + 4 <= self.blocks.len() ensures footprint(result) == self.blocks[t..t+4] { &mut self.blocks[t..t+4] } } and fn race(y: &mut W) { par for i in 0..4 { y.window(3 - i)[i] = i as f32; } }",
+   "verdict": "reject",
+   "code": "E-PAR-DISJOINT",
+   "note": "F-63: window's argument varies with i, so Proj-Split does not apply and the footprints overlap",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-48",
+   "source": "review 2026-10-16 (second round), R3-5",
+   "text": "#[grade(exact, cross_device)] fn k(a: &mut [f32], b: &mut [f32], x: &[f32], h: bool) { b[0] = x[0] - x[0]; let y = if h { &mut *a } else { &mut *b }; for i in 0..y.len() { y[i] = canon::nan(x[i]); } }",
+   "verdict": "reject",
+   "code": "E-NAN-RAW-SINK",
+   "note": "F-64: T-Cover premise 4 fails (L(y) has two loans), so the writes are weak",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-49",
+   "source": "review 2026-10-16 (second round), R3-6",
+   "text": "fn set(m: &Mutex<u32>, y: &mut u32) uses { nondet } { loop { *y = m.with_lock(|s| *s); return; } } and #[grade(exact, cross_device)] fn g(m: &Mutex<u32>) -> u32 uses { nondet } { let mut y = 0u32; set(m, &mut y); y }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-65: T-Loop's output keeps the X the return recorded",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-50",
+   "source": "review 2026-10-16 (second round), R3-6",
+   "text": "fn f() -> u32 { loop { return 1; } }",
+   "verdict": "accept",
+   "note": "F-65: a loop with no break has type !; before, it was () and the tail return was E-TYPE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-51",
+   "source": "review 2026-10-16 (second round), R3-7",
+   "text": "fn f(store: &Store, id: ExpertId, h: bool) -> Result<(), IoError> uses { io, spawn } { loop { let l = store.lease(id)?; if h { break; } store.release(l); } Ok(()) }",
+   "verdict": "reject",
+   "code": "E-LINEAR-DROP",
+   "note": "F-66: T-Jump requires l to be consumed at the break",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-52",
+   "source": "review 2026-10-16 (second round), R3-8",
+   "text": "#[grade(exact, cross_device)] fn f(m: &Mutex<bool>) -> u32 uses { nondet } { let h = m.with_lock(|s| *s); let mut y = 0u32; { let r = &mut y; let mut g = || { *r = 1; }; if h { g(); } } y }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-67: the closure captures the place *r; T-CallClo updates target*(*r) = y",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-53",
+   "source": "review 2026-10-16 (second round), R3-9, R4-4",
+   "text": "#[grade(exact, cross_device)] fn f(m: &Mutex<bool>) -> u32 uses { nondet } { let h = m.with_lock(|s| *s); let mut y = 0u32; { let mut g = |b: bool| { if b { y = 1; return; } }; g(h); } y }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-68: the closure's return records y in X",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-54",
+   "source": "review 2026-10-16 (second round), R4-4",
+   "text": "#[grade(exact, cross_device)] fn g(x: &[u32; 8]) -> u32 { let mut y = [0u32; 8]; let mut run = || -> Result<(), E> { par for i in 0..8 { if x[i] == 0 { return Err(E) } y[i] = x[i]; } Ok(()) }; let _ = run(); y[7] }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-68, F-38: T-Par's X' raises the by-mut captured place y by gamma_unspec in the closure's exit context",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-55",
+   "source": "review 2026-10-16 (second round), R3-10",
+   "text": "#[grade(exact, cross_device)] fn leak(m: &Mutex<bool>) -> u32 uses { nondet } { let h = m.with_lock(|s| *s); let o: Option<u32> = if h { Some(1) } else { None }; let mut c = 0u32; let _ = o.map(|v| { c = 1; v }); c }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-70: Option::map's theta_inv,f = alpha_self",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-56",
+   "source": "review 2026-10-16 (second round), R3-11",
+   "text": "in module store, with a fixture whose subject is the block: fn bump(m: &Mutex<u32>, i: u32) -> u32 { deterministic(by: E) { m.with_lock(|c| { *c = c.wrapping_mul(2).wrapping_add(i); 0 }) } } and fn p(m: &Mutex<u32>, n: usize) { par for i in 0..n { let _ = bump(m, i as u32); } }",
+   "verdict": "reject",
+   "code": "E-PAR-EFFECT",
+   "note": "F-71: bump's exercised row keeps nondet; the review's n: u32 would be E-TYPE first, since par indices are usize",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-57",
+   "source": "review 2026-10-16 (second round), R3-12, R4-17",
+   "text": "in module store, with a fixture E whose subject is the block: #[grade(exact, cross_device)] fn leak(clock: &Clock) -> u64 uses { time, nondet } { let m = Mutex::new(0u64); m.with_lock(|v| *v = clock.now_ns()); deterministic(by: E) { m.with_lock(|v| *v) } }",
+   "verdict": "accept",
+   "facts": {
+    "output": "u64 @ cross_device (d_s^in = cd: m's grade is bottom)"
+   },
+   "note": "F-72: accepted by typing; under the restated claim form (note section 5.11) E's claim is false, so Theorem 4's condition (i) fails and nothing is claimed",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-58",
+   "source": "review 2026-10-16 (second round), R3-13",
+   "text": "struct S { buf: [f32; 4] }, fn poke(s: &mut S) { s.buf[0] = s.buf[0] - s.buf[0]; } and #[grade(exact, cross_device)] fn k(x: &[f32; 4], s: &mut S) { for i in 0..4 { s.buf[i] = canon::nan(x[i]); poke(&mut *s); } }",
+   "verdict": "reject",
+   "code": "E-NAN-RAW-SINK",
+   "note": "F-64: &mut *s overlaps s.buf as an ancestor, so T-Cover premise 3 fails",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-59",
+   "source": "review 2026-10-16 (second round), R4-16",
+   "text": "kernel fn k(x: &[f32], y: &mut [f32], m: usize) requires x.len() == y.len() { for i in 0..y.len() { for _k in 0..m { y[i] = canon::nan(x[i]); } } }",
+   "verdict": "reject",
+   "code": "E-NAN-RAW-SINK",
+   "note": "F-64: the write is not at the top level of the surface body (premise 1)",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-60",
+   "source": "review 2026-10-16 (second round), R4-16",
+   "text": "#[grade(exact, cross_device)] fn k(x: &[f32], y: &mut [f32], c: bool) { for i in 0..y.len() { let mut w = || y[i] = canon::nan(x[i]); if c { w() } } }",
+   "verdict": "reject",
+   "code": "E-NAN-RAW-SINK",
+   "note": "F-64: the only write is inside a closure (premises 1 and 3)",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-61",
+   "source": "review 2026-10-16 (second round), R3-15, R4-8",
+   "text": "fn f(x: &[u32], n: usize) { 'outer: loop { par for i in 0..n { if x[i] == 0 { break 'outer; } } } }",
+   "verdict": "reject",
+   "code": "E-PAR-BREAK",
+   "note": "F-75",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-62",
+   "source": "review 2026-10-16 (second round), R3-18",
+   "text": "kernel fn outer(w: &Matrix<BlockQ4>, a: &[ActQ8], y: &mut [f32]) requires y.len() == w.rows() && a.len() == w.blocks_per_row() && y.len() >= 1 { y[0] = y[0] - y[0]; q4_matvec(w, a, &mut *y); }",
+   "verdict": "accept",
+   "note": "F-78: &mut *y borrows the whole referent, one place, so T-Call's update is strong",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-63",
+   "source": "review 2026-10-16 (second round), R3-20",
+   "text": "fn f<F: Fn()>(g: F, n: u32) { if n > 0 { f(|| g(), n - 1) } } called as f(|| (), 3)",
+   "verdict": "reject",
+   "code": "E-MONO-DEPTH",
+   "note": "F-80; rustc reports its recursion limit [inference]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-64",
+   "source": "review 2026-10-16 (second round), R4-1",
+   "text": "#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let mut y = 0u32; let r = &mut y; *r = m.with_lock(|s| *s); *r }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-82: P-Deref-Local reads y's current grade through r",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-65",
+   "source": "review 2026-10-16 (second round), R4-3",
+   "text": "#[grade(exact, cross_device)] fn g(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|s| *s); let mut y = 0u32; let f = |v: &mut u32| { *v = h; }; f(&mut y); y }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-69: the closure's theta_mut,v, applied by T-CallClo; the variants through fn app<F: Fn(&mut u32)>(f: F, y: &mut u32) { f(y) } and y.iter_mut().for_each(|v| *v = h) are rejected the same way",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-66",
+   "source": "review 2026-10-16 (second round), R4-5",
+   "text": "fn bad() -> u32 { let a = 1u32; let mut out: &u32 = &a; { let y = 5u32; let r: &u32 = &y; let c = move || r; out = c(); } *out }",
+   "verdict": "reject",
+   "code": "E-BORROW-OUTLIVE",
+   "note": "F-61: the closure and its Local result carry the loan r carries; rustc rejects it with E0597 [inference]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-67",
+   "source": "review 2026-10-16 (second round), R4-7",
+   "text": "fn take_first(slots: &mut [Option<Lease>], want: &[bool]) -> Option<Lease> { par for i in 0..slots.len() { if want[i] { return slots[i].take(); } } None }",
+   "verdict": "accept",
+   "note": "F-83: accepted if SlabBuf is Send; dynamically the join abandons the Linear values of ignored Ret records",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-68",
+   "source": "review 2026-10-16 (second round), R4-9",
+   "text": "fn t() -> u32 { let a = 1u32; let mut out = &a; { let y = 5u32; let t = (&y,); out = t.0; } *out }",
+   "verdict": "reject",
+   "code": "E-BORROW-OUTLIVE",
+   "note": "F-84: the tuple literal carries the loan on y",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-69",
+   "source": "review 2026-10-16 (second round), R4-10",
+   "text": "#[grade(exact, cross_device)] fn f(m: &Mutex<bool>) -> u32 uses { nondet } { let h = m.with_lock(|s| *s); loop { if h { break 1 } else { break 0 } } }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-85: the break value is assigned under the effective pc",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
   }
  ],
  "precedence": [
@@ -1721,7 +2060,8 @@
     "major": 13,
     "minor": 4,
     "accepted": 23,
-    "rejected": 0
+    "rejected": 0,
+    "round": 1
    },
    {
     "id": 2,
@@ -1731,9 +2071,39 @@
     "major": 18,
     "minor": 11,
     "accepted": 30,
-    "rejected": 0
+    "rejected": 0,
+    "round": 1
+   },
+   {
+    "id": 3,
+    "round": 2,
+    "family": "Claude, same family, independent context",
+    "findings": 21,
+    "blocker": 5,
+    "major": 9,
+    "minor": 7,
+    "accepted": 21,
+    "rejected": 0,
+    "note": "the second round's reviewer 1, items R3-n; R3-2's proposed fix (a) replaced by the reviewer's alternative (loan transfer)"
+   },
+   {
+    "id": 4,
+    "round": 2,
+    "family": "Claude, same family, independent context",
+    "findings": 18,
+    "blocker": 6,
+    "major": 8,
+    "minor": 4,
+    "accepted": 18,
+    "rejected": 0,
+    "note": "the second round's reviewer 2, items R4-n; R4-6's minimal fix declined in favour of its precise loan transfer"
    }
   ],
   "log": "docs/m0/core-calculus.md#17-review-log-and-signature-block"
+ },
+ "verdict_values": {
+  "accept": "the calculus accepts the item",
+  "reject": "the calculus rejects the item with 'code' as its primary code",
+  "not-derived": "no calculus verdict has been derived (a sketch or a structure-only check); only for items outside X1 scope, which are compared on 'x1_expected'. The item gets a derivation before its construct enters scope. Never an expected verdict (note section 0.3, review item R4-15)"
  }
 }
