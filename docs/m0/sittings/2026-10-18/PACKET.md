@@ -309,6 +309,23 @@ sitting: 1 (2026-10-18)
   reported both ways. OQ-1 = OP_CLASS also needs a ROADMAP amendment first.
 - **Only the verdict waits for your signature**, not collection.
 
+**Census run 1 happened (Sat 10-17, 07:10-07:19 PT); full report in [REPORT.md](../../../../experiments/x0-census/REPORT.md).**
+- **Computed verdict: `tooling_failure` (V3), UNSIGNED.** The independent re-derivation matches every figure
+  except one screen (P3(c), the loop-accumulator check), where 29 loop flags disagree. Both sides' tools are at
+  fault, by the re-deriver's and the reviewer's diagnoses; nothing points at Hearth or a compiler. The record's
+  route is a logged tooling fix (appended amendment), a census re-run and a fresh re-derivation before the week-3
+  bound, 2026-11-12. The lead engineer schedules it after the weekly plan quota resets (Fri 10-23).
+- **Measured [M], and matched by the re-derivation:** coverage complete for every dispatched variant under every
+  configuration that compiled; 0 cross-decoder disagreements; identical code across rebuilds; **no FMA contraction
+  anywhere (P2 = 0)**; |U_all| = 446 against 2 × T_forms = 204; 32 FP-sensitive iclasses against 20.
+- **Previews, not verdicts [D]:** Amber (a) would hold, so the table would cover MSVC and Clang only. Amber (b)
+  would hold for clang-cl built through Hearth's CMake, whose `if(MSVC)` branch gives it no `-ffp-contract=off`. It
+  changed no code at b5d3f14, so it is a latent defect. Row N2 would hold because that build cannot compile
+  `quant_avx512.c` (no VNNI under `/arch:AVX512`). Two Hearth issue texts are drafted in REPORT §14; nothing is
+  filed. Filing them is your call.
+- **What this changes for tonight:** nothing in the record. Signing it now fixes the readings before the re-run,
+  which is the strongest position. Its verdict still waits for V3.
+
 **Full record:** [X0-census.md](../../prereg/X0-census.md), §8 (outcomes), Appendix A (OQ-1 to OQ-7),
 §13 (signature block).
 
@@ -337,7 +354,7 @@ T_forms: <min(|B_iform|, 105) as registered | accept recomputed |B_iform| = __>
 
 ## 6. X1-amendment-1 (if FROZEN), optional tonight, 15 min at summary level
 
-**Freeze commit: `<<FILL: X1-amendment-1 freeze commit, or "not FROZEN: item dropped">>`**
+**Freeze commit: not FROZEN: deferred to sitting 2 (Sun 10-25), as this packet recommends. Its signed fields (effort level, s, cap, K) need your values before it can freeze, and the smoke run needs your plan-terms check (A20) first**
 
 **Summary.** The amendment carries your rule R4 into X1's design.
 - **Kill and pass.** Claude is the only kill-carrying family at M0. K1 (VP@1 gap > 15) or K2 (CABW
