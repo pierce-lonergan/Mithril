@@ -16,6 +16,18 @@ pub const THRESHOLD: f64 = 20.0;
 pub const THETA: f64 = 0.5; // superiority, non-inferiority
 pub const THETA_KILL: f64 = 0.8; // kill
 
+/// The rejection threshold `max(20, 1/alpha_i)` (DR-018 floor). `None` = no alpha charged (X4 spends
+/// none), which gives exactly 20.
+pub fn threshold(alpha_i: Option<f64>) -> f64 {
+    match alpha_i {
+        Some(a) => {
+            assert!(a > 0.0 && a <= 1.0, "alpha_i must be in (0, 1]");
+            THRESHOLD.max(1.0 / a)
+        }
+        None => THRESHOLD,
+    }
+}
+
 /// Clip rules (section 8.1, 8.4). Given at construction so the pilot's sigma_hat_d flows through one
 /// place. c = max(3*sigma, 2*m_NI); c_kill = max(3*sigma, m_kill + 3*sigma); c_run = 4*sigma_run.
 pub fn clip_for(sigma: f64) -> f64 {
@@ -85,6 +97,9 @@ pub struct EProcess {
 
 impl EProcess {
     pub fn new(m: f64, c: f64, side: Side, theta: f64, prior_x: f64, prior_sd: Option<f64>) -> Self {
+        // validity needs 1 + lam*g >= 0 with g >= -1, i.e. lam in [0, 1]
+        assert!((0.0..=1.0).contains(&theta), "theta must lie in [0, 1]");
+        assert!(c.is_finite() && m.is_finite() && prior_x.is_finite(), "non-finite e-process constant");
         let (scale, sign) = match side {
             Side::Upper => {
                 assert!(c > m, "clip c must exceed the margin m");
@@ -110,7 +125,9 @@ impl EProcess {
     fn g(&self, x: f64) -> f64 {
         self.sign * (x - self.m) / self.scale
     }
+    /// Fold one clipped block statistic. A non-finite x is a caller bug (the scorer rejects it).
     pub fn update(&mut self, x: f64) -> f64 {
+        assert!(x.is_finite(), "non-finite block statistic");
         self.bettor.update(self.g(x))
     }
     pub fn wealth(&self) -> f64 {
@@ -119,6 +136,10 @@ impl EProcess {
     /// A crossing is the first block whose float64 wealth reaches 20.0 (section 8.6).
     pub fn crossed(&self) -> bool {
         self.bettor.k >= THRESHOLD
+    }
+    /// Crossing at the threshold for a charged alpha_i: max(20, 1/alpha_i).
+    pub fn crossed_at(&self, alpha_i: Option<f64>) -> bool {
+        self.bettor.k >= threshold(alpha_i)
     }
 }
 
@@ -139,6 +160,10 @@ pub struct BlockScorer {
     kind: Scorer,
     c: f64,
     c_run: f64,
+    /// R/Rk run reference before either arm has history: the pilot incumbent median of the per-run
+    /// log-times (ln ns), pinned in the pre-data fill-in amendment. 0.0 reproduces the Python
+    /// reference's centred simulations, which hard-code it (stats/x4_calibration.py, Scorer).
+    pilot_median: f64,
     sorted_a: Vec<f64>,
     sorted_b: Vec<f64>,
     pub slow_a: u64,
@@ -182,11 +207,13 @@ fn insort(v: &mut Vec<f64>, x: f64) {
 }
 
 impl BlockScorer {
-    pub fn new(kind: Scorer, c: f64, c_run: f64) -> Self {
+    pub fn new(kind: Scorer, c: f64, c_run: f64, pilot_median: f64) -> Self {
+        assert!(c.is_finite() && c > 0.0 && c_run.is_finite() && pilot_median.is_finite());
         BlockScorer {
             kind,
             c,
             c_run,
+            pilot_median,
             sorted_a: Vec::new(),
             sorted_b: Vec::new(),
             slow_a: 0,
@@ -212,18 +239,35 @@ impl BlockScorer {
     }
 
     /// Score one block. `runs` are (arm, log_time) in block order; `d` = 0.5*(sum_B - sum_A).
+    /// Panics on a non-finite input; callers that cannot rule one out use `try_score`.
     pub fn score(&mut self, d: f64, runs: &[(Arm, f64)]) -> f64 {
+        self.try_score(d, runs, &[]).expect("non-finite block input")
+    }
+
+    /// As `score`, but returns Err on a non-finite d or log-time instead of scoring it (f64::max and
+    /// f64::min drop NaN, which would clip it to -c: the best case for the candidate). `capped`
+    /// marks runs stopped at the time cap: each counts as a slow outlier (section 8.7).
+    pub fn try_score(&mut self, d: f64, runs: &[(Arm, f64)], capped: &[bool]) -> Result<f64, String> {
+        if !d.is_finite() || runs.iter().any(|r| !r.1.is_finite()) {
+            return Err(format!("non-finite block input (d = {})", d));
+        }
         let c = self.c;
         if self.kind == Scorer::Lit06 {
-            return if -c <= d && d <= c { d } else { c };
+            return Ok(if -c <= d && d <= c { d } else { c });
         }
         let mut out = false;
         // first pass: detect outliers against the pre-block history (predictable reference)
-        for &(a, l) in runs {
+        for (i, &(a, l)) in runs.iter().enumerate() {
             let h = self.arm_hist(a);
-            let reference = if h.is_empty() { 0.0 } else { median_sorted(h) };
+            let reference = if h.is_empty() { self.pilot_median } else { median_sorted(h) };
             let dev = l - reference;
-            if dev.abs() > self.c_run {
+            if capped.get(i).copied().unwrap_or(false) {
+                out = true;
+                match a {
+                    Arm::A => self.slow_a += 1,
+                    Arm::B => self.slow_b += 1,
+                }
+            } else if dev.abs() > self.c_run {
                 out = true;
                 if dev > 0.0 {
                     match a {
@@ -248,12 +292,12 @@ impl BlockScorer {
         }
         self.last_outlier = out;
         if self.kind == Scorer::S {
-            return d.max(-c).min(c);
+            return Ok(d.max(-c).min(c));
         }
         if out {
-            return if self.kind == Scorer::Rk { -c } else { c };
+            return Ok(if self.kind == Scorer::Rk { -c } else { c });
         }
-        d.max(-c).min(c)
+        Ok(d.max(-c).min(c))
     }
 }
 
@@ -311,7 +355,7 @@ mod tests {
     fn outlier_block_halves_superiority_wealth() {
         // An R-scored block with an outlier run scores +c; g_sup = -c/c = -1; with lam<=0.5, K*=(1+lam*-1).
         let c = 0.06;
-        let mut sc = BlockScorer::new(Scorer::R, c, 0.08);
+        let mut sc = BlockScorer::new(Scorer::R, c, 0.08, 0.0);
         // seed arm A history so the reference exists, then a huge B deviation triggers the outlier
         let runs = [(Arm::A, 0.0), (Arm::B, 10.0), (Arm::B, 10.0), (Arm::A, 0.0)];
         let d = block_d(&runs);
@@ -329,6 +373,52 @@ mod tests {
         insort(&mut w, 5.0);
         insort(&mut w, -1.0);
         assert_eq!(w, vec![-1.0, 5.0]);
+    }
+
+    #[test]
+    fn first_block_uses_the_pilot_median_not_zero() {
+        // review R2-7: four identical 10 s runs are not outliers when the pilot incumbent median is
+        // the reference
+        let l = (10.0f64).ln();
+        let runs = [(Arm::A, l), (Arm::B, l), (Arm::B, l), (Arm::A, l)];
+        let mut sc = BlockScorer::new(Scorer::R, 0.06, 0.08, l);
+        assert_eq!(sc.score(block_d(&runs), &runs), 0.0);
+        assert!(!sc.last_outlier);
+        assert_eq!(sc.slow_b, 0);
+        // with the old hard-coded 0 the same block is scored +c (the defect)
+        let mut old = BlockScorer::new(Scorer::R, 0.06, 0.08, 0.0);
+        assert_eq!(old.score(block_d(&runs), &runs), 0.06);
+    }
+
+    #[test]
+    fn non_finite_blocks_are_rejected_not_scored_best_case() {
+        // review R2-13
+        let runs = [(Arm::A, f64::NEG_INFINITY), (Arm::B, 0.0), (Arm::B, 0.0), (Arm::A, 0.0)];
+        let mut s = BlockScorer::new(Scorer::S, 0.06, 0.08, 0.0);
+        assert!(s.try_score(f64::NAN, &runs, &[]).is_err());
+        assert!(s.try_score(0.0, &runs, &[]).is_err());
+    }
+
+    #[test]
+    #[should_panic]
+    fn theta_above_one_is_refused() {
+        let _ = EProcess::make(Test::Kill, 0.1, 1.5);
+    }
+
+    #[test]
+    fn threshold_floor_and_alpha() {
+        assert_eq!(threshold(None), 20.0);
+        assert_eq!(threshold(Some(0.1)), 20.0);
+        assert_eq!(threshold(Some(0.01)), 100.0);
+    }
+
+    #[test]
+    fn capped_run_is_a_slow_outlier() {
+        let mut sc = BlockScorer::new(Scorer::R, 0.06, 0.08, 0.0);
+        let runs = [(Arm::A, 0.0), (Arm::B, 0.0), (Arm::B, 0.0), (Arm::A, 0.0)];
+        let x = sc.try_score(0.0, &runs, &[false, true, false, false]).unwrap();
+        assert_eq!(x, 0.06);
+        assert_eq!(sc.slow_b, 1);
     }
 
     #[test]

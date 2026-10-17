@@ -283,6 +283,95 @@ pub fn discard_asymmetry_p(a_discards: i64, b_discards: i64) -> f64 {
     two.min(1.0)
 }
 
+/// Pooled within-group SD (each group's deviations from its own mean, sum(n_g - 1) degrees of freedom).
+/// Used for sigma_hat_run (one group per (session, arm) of per-run log-times) and, DESCRIPTIVE ONLY,
+/// for the within-session SD of the pilot's A/A d. It is NOT sigma_hat_d: subtracting each session's
+/// mean d would drop between-session variation the e-process sees (X4-noise-pilot section 4, review
+/// round 3). None if fewer than 2 df.
+pub fn pooled_sd(groups: &[Vec<f64>]) -> Option<f64> {
+    let mut ss = 0.0;
+    let mut df = 0usize;
+    for g in groups {
+        if g.len() < 2 {
+            continue;
+        }
+        let m = g.iter().sum::<f64>() / (g.len() as f64);
+        ss += g.iter().map(|v| (v - m) * (v - m)).sum::<f64>();
+        df += g.len() - 1;
+    }
+    if df < 2 {
+        None
+    } else {
+        Some((ss / df as f64).sqrt())
+    }
+}
+
+/// sigma_hat_d of the X4-noise-pilot record (section 4): the root mean square of the A/A block d about
+/// the null mean 0, over all non-voided pilot blocks of one run type, with df = B (the mean is known,
+/// not estimated: identical binaries, randomised order). Between-session variation stays in it.
+/// Returns (sigma_hat_d, df). None for no blocks or a non-finite d.
+pub fn rms_about_zero(d: &[f64]) -> Option<(f64, usize)> {
+    if d.is_empty() || d.iter().any(|v| !v.is_finite()) {
+        return None;
+    }
+    let ss: f64 = d.iter().map(|v| v * v).sum();
+    Some(((ss / d.len() as f64).sqrt(), d.len()))
+}
+
+/// sigma_hat_U = sigma_hat * sqrt(df / chi2_{0.10, df}): the one-sided 90% upper bound used to plan n
+/// and N (MEASUREMENT section 5.4). The caller states df: B for `rms_about_zero` (the record's
+/// sigma_hat_d), sum(n_g - 1) for a pooled within-group SD. Accurate for df up to at least 500
+/// (unit test against Wilson-Hilferty).
+pub fn sigma_upper_90(sigma_hat: f64, df: usize) -> f64 {
+    assert!(df >= 1);
+    let df = df as f64;
+    sigma_hat * (df / chi2_quantile(0.10, df)).sqrt()
+}
+
+/// Nearest-rank quantile (the record's rule for t_run's 1st/99th percentiles and the load-gate
+/// percentile): the ceil(p * n)-th smallest value, p in (0, 1]. None for an empty or non-finite set.
+pub fn quantile_nearest_rank(xs: &[f64], p: f64) -> Option<f64> {
+    if xs.is_empty() || !(p > 0.0 && p <= 1.0) || xs.iter().any(|v| !v.is_finite()) {
+        return None;
+    }
+    let mut v = xs.to_vec();
+    v.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let k = ((p * v.len() as f64).ceil() as usize).clamp(1, v.len());
+    Some(v[k - 1])
+}
+
+/// First-order carry-over contrast (MEASUREMENT section 4.1), from runs in block order with the arm
+/// of the previous run *in the same block*: co_BA = mean(lA | prev B) - mean(lA | prev A),
+/// co_AB = mean(lB | prev A) - mean(lB | prev B); returns (co_BA - co_AB, its standard error) with the
+/// four cell means treated as independent. None if a cell has fewer than 2 runs.
+pub fn carry_over_contrast(blocks: &[[(bool, f64); 4]]) -> Option<(f64, f64)> {
+    // cells: (arm is B, previous is B)
+    let mut cells: [Vec<f64>; 4] = [Vec::new(), Vec::new(), Vec::new(), Vec::new()];
+    for b in blocks {
+        for i in 1..4 {
+            let (is_b, l) = b[i];
+            let prev_b = b[i - 1].0;
+            cells[(is_b as usize) * 2 + prev_b as usize].push(l);
+        }
+    }
+    let stat = |v: &Vec<f64>| -> Option<(f64, f64)> {
+        if v.len() < 2 {
+            return None;
+        }
+        let n = v.len() as f64;
+        let m = v.iter().sum::<f64>() / n;
+        let var = v.iter().map(|x| (x - m) * (x - m)).sum::<f64>() / (n - 1.0);
+        Some((m, var / n))
+    };
+    let (a_after_a, va1) = stat(&cells[0])?;
+    let (a_after_b, va2) = stat(&cells[1])?;
+    let (b_after_a, vb1) = stat(&cells[2])?;
+    let (b_after_b, vb2) = stat(&cells[3])?;
+    let co_ba = a_after_b - a_after_a;
+    let co_ab = b_after_a - b_after_b;
+    Some((co_ba - co_ab, (va1 + va2 + vb1 + vb2).sqrt()))
+}
+
 fn median_sorted(xs: &[f64]) -> f64 {
     let n = xs.len();
     if n % 2 == 1 {
@@ -360,5 +449,63 @@ mod tests {
     fn discard_asymmetry_symmetric_is_high_p() {
         assert!(discard_asymmetry_p(10, 10) > 0.5);
         assert!(discard_asymmetry_p(0, 20) < 0.01);
+    }
+
+    #[test]
+    fn pilot_estimators() {
+        // two groups with within-group SD 1 (values m-1, m, m+1): pooled SD = 1 whatever the means
+        let g = vec![vec![9.0, 10.0, 11.0], vec![-1.0, 0.0, 1.0]];
+        assert!((pooled_sd(&g).unwrap() - 1.0).abs() < 1e-12);
+        assert!(pooled_sd(&[vec![1.0]]).is_none());
+        // sigma_U exceeds sigma_hat and approaches it as df grows
+        let u24 = sigma_upper_90(0.02, 24);
+        let u480 = sigma_upper_90(0.02, 480);
+        assert!(u24 > u480 && u480 > 0.02 && u24 < 0.03);
+        // rms about zero keeps between-session variation that the within-session SD drops
+        let g = vec![vec![0.03, 0.04, 0.05], vec![-0.05, -0.04, -0.03]];
+        let all: Vec<f64> = g.iter().flatten().copied().collect();
+        let (rms, df) = rms_about_zero(&all).unwrap();
+        assert_eq!(df, 6);
+        assert!(rms > pooled_sd(&g).unwrap() * 3.0, "{rms}");
+        assert!((rms - ((2.0 * (0.0009 + 0.0016 + 0.0025)) / 6.0f64).sqrt()).abs() < 1e-15);
+        assert!(rms_about_zero(&[]).is_none() && rms_about_zero(&[f64::NAN]).is_none());
+    }
+
+    #[test]
+    fn chi2_quantile_holds_at_pilot_block_counts() {
+        // Wilson-Hilferty: q_p(df) ~ df (1 - 2/(9df) + z_p sqrt(2/(9df)))^3, z_0.10 = -1.2815516; at
+        // df >= 30 it is within ~0.1 of the exact quantile [D, standard approximation error]
+        for df in [33usize, 36, 460, 480] {
+            let d = df as f64;
+            let a = 2.0 / (9.0 * d);
+            let wh = d * (1.0 - a - 1.2815516 * a.sqrt()).powi(3);
+            let q = chi2_quantile(0.10, d);
+            assert!((q - wh).abs() < 0.15, "df {df}: {q} vs WH {wh}");
+        }
+    }
+
+    #[test]
+    fn nearest_rank_quantile() {
+        let xs: Vec<f64> = (1..=100).map(|i| i as f64).collect();
+        assert_eq!(quantile_nearest_rank(&xs, 0.99), Some(99.0));
+        assert_eq!(quantile_nearest_rank(&xs, 0.01), Some(1.0));
+        assert_eq!(quantile_nearest_rank(&xs, 0.5), Some(50.0));
+        assert_eq!(quantile_nearest_rank(&[3.0, 1.0, 2.0], 1.0), Some(3.0));
+        assert_eq!(quantile_nearest_rank(&xs, 0.0), None);
+        assert_eq!(quantile_nearest_rank(&[], 0.5), None);
+    }
+
+    #[test]
+    fn carry_over_contrast_detects_a_planted_carry() {
+        // ABBA then BAAB, repeated; an A run right after a B run is 0.05 slower
+        let mut blocks = Vec::new();
+        for k in 0..20 {
+            let jitter = (k as f64) * 1e-4;
+            blocks.push([(false, 0.0 + jitter), (true, 0.0), (true, 0.0), (false, 0.05 + jitter)]);
+            blocks.push([(true, 0.0), (false, 0.05 - jitter), (false, 0.0 + jitter), (true, 0.0 + jitter)]);
+        }
+        let (c, se) = carry_over_contrast(&blocks).unwrap();
+        assert!((c - 0.05).abs() < 0.01, "{c}");
+        assert!(c / se > 3.0);
     }
 }

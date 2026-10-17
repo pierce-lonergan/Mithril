@@ -504,14 +504,19 @@ static int run_workload(run_cfg *cfg) {
         if (readable && r->priority != THREAD_PRIORITY_NORMAL) { r->flags |= X4P_CF_PRIORITY_BAD; prio_bad++; }
         if (!harness && reg && !parked) reg_unparked++;   /* a registered thread still alive = unjoined (a3) */
     }
-    /* t1 threads that exited before the census still answer to the CPU rule */
+    /* t1 threads that exited before the census still answer to the CPU rule, and a registered thread
+     * that was alive and unparked at t1 was not joined before the clock stopped (a3), whether or not it
+     * is still alive at the census (review round 3: the census-only count missed a worker that exited
+     * between t1 and the census) */
     for (int i = 0; i < g_t1_n; i++) {
         t1_entry *e = &g_t1[i];
         if (e->in_census || g_rows_n >= X4H_MAX_THREADS + 64) continue;
         census_row *r = &g_rows[g_rows_n++];
         memset(r, 0, sizeof *r);
         r->tid = e->tid; r->cyc_t1 = e->cyc_t1; r->cyc_hash = e->cyc_hash;
-        r->flags = X4P_CF_EXITED | (reg_slot_of(e->tid) >= 0 ? X4P_CF_REGISTERED : 0);
+        int slot = reg_slot_of(e->tid);
+        r->flags = X4P_CF_EXITED | (slot >= 0 ? X4P_CF_REGISTERED : 0) | (slot >= 0 && g_parked[slot] ? X4P_CF_PARKED : 0);
+        if (slot >= 0 && !g_parked[slot] && e->tid != g_harness_tid) reg_unparked++;
     }
     for (int i = 0; i < g_rows_n; i++) {
         census_row *r = &g_rows[i];

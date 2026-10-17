@@ -41,7 +41,8 @@ enum { X4P_H_VERSION, X4P_H_PID, X4P_H_PAGE, X4P_H_SECTION_BYTES, X4P_H_OUT_OFFS
 /* Output section layout, shared by both sides (MEASUREMENT-SERVICE.md section 3 step 2):
  *   [0, off)                 head: poison byte; any change = a write before the extent
  *   [off, off + out_bytes)   the output extent: poison + salt in the first and last 64-byte line
- *   [off + out_bytes, +page) guard page, PAGE_NOACCESS in the child's view (an overflow faults)
+ *   [off + out_bytes, +page) guard page, PAGE_NOACCESS in the child's view (an overflow faults); the
+ *                            child can lift that, so the orchestrator also requires it to stay zero
  * off is at least one page and makes the extent END on a page boundary. out_bytes must be a
  * non-zero multiple of 64; both sides reject anything else. */
 #define X4P_PAGE 4096u
