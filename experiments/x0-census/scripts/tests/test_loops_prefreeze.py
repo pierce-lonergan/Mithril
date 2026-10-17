@@ -183,6 +183,69 @@ class TestNoNewFalseCounts(Base):
         self.assertEqual(self.run_loop(seq)["acc_lanes_emitted"], 0)
 
 
+class TestDependencyBreakingIdioms(Base):
+    """Pre-freeze tooling fix of the desktop re-run of 2026-10-17 (record §4.7, Appendix E): a register zeroed by an
+    idiom at the top of an outer loop is not live into its header, so the DEP reading does not make an inner max chain
+    or an integer sum feeding a scalar MULSS a carried accumulator of the outer loop (the shapes MSVC, clang-cl, GCC and
+    Clang emitted for the mock's act_quantize_q8 and matmul[Q8]/[Q4] and for smoke_dispatch.c's sd_q8)."""
+
+    def loop_at(self, seq, edges, header):
+        insts, succ = build(seq, edges)
+        loops, preds = L.natural_loops((1, 0), succ)
+        lp = next(x for x in loops if x["header"] == (1, 4 * header))
+        return L.analyse_loop(lp, insts, succ, preds)
+
+    def outer_max_stream(self, zero):
+        # 0 NOP | 1 zero xmm1 (outer header) | 2-5 inner max loop over [rdi] | 6 scale = xmm1 * c | 7 store | 8 JNZ outer
+        return [NOP, zero, ins("MOVSS", ["REG0/W", "MEM0/R"], {"REG0": "XMM0", "MEM0": "ptr [RDI]"}),
+                ins("MAXSS", ["REG0/RW", "REG1/R"], {"REG0": "XMM1", "REG1": "XMM0"}), rdi_step(4), JNZ,
+                ins("MULSS", ["REG0/RW", "REG1/R"], {"REG0": "XMM1", "REG1": "XMM7"}),
+                ins("MOVSS", ["MEM0/W", "REG0/R"], {"REG0": "XMM1", "MEM0": "ptr [RSI]"}), JNZ, RET]
+
+    def test_xorps_zeroed_max_is_not_carried_by_the_outer_loop(self):
+        seq = self.outer_max_stream(ins("XORPS", ["REG0/RW", "REG1/R"], {"REG0": "XMM1", "REG1": "XMM1"}))
+        edges = {5: [2, 6], 8: [1, 9]}
+        outer = self.loop_at(seq, edges, 1)
+        self.assertEqual((outer["acc_lanes_emitted"], outer["partial_results"]), (0, []))
+        self.assertNotIn("V1", outer["carried_registers"])
+        self.assertEqual(self.loop_at(seq, edges, 2)["acc_lanes_emitted"], 1)     # the inner max chain still counts
+
+    def test_a_real_carry_through_a_non_idiom_still_counts(self):
+        # xorps xmm1, xmm2 depends on both registers: the outer loop carries xmm1's value into the max chain
+        seq = self.outer_max_stream(ins("XORPS", ["REG0/RW", "REG1/R"], {"REG0": "XMM1", "REG1": "XMM2"}))
+        self.assertEqual(self.loop_at(seq, {5: [2, 6], 8: [1, 9]}, 1)["acc_lanes_emitted"], 1)
+
+    def test_integer_sum_zeroed_by_vpxor_and_xor_feeding_a_scalar_mul(self):
+        # 1 vpxor xmm2 (outer header) | 2 xor ecx | 3-5 inner integer sum | 6 vmovd ecx, xmm2 | 7 cvtsi2ss | 8 mulss
+        seq = [NOP, vop("VPXOR", "XMM2", "XMM2", "XMM2"),
+               ins("XOR", ["REG0/RW", "REG1/R"], {"REG0": "ECX", "REG1": "ECX"}),
+               ins("VPADDD", ["REG0/W", "REG1/R", "REG2/R"], {"REG0": "YMM2", "REG1": "YMM3", "REG2": "YMM2"}),
+               rdi_step(0x20), JNZ, ins("VMOVD", ["REG0/W", "REG1/R"], {"REG0": "ECX", "REG1": "XMM2"}),
+               ins("VCVTSI2SS", ["REG0/W", "REG1/R", "REG2/R"], {"REG0": "XMM2", "REG1": "XMM31", "REG2": "ECX"}),
+               vop("VMULSS", "XMM2", "XMM2", "XMM0"),
+               ins("VMOVSS", ["MEM0/W", "REG0/R"], {"REG0": "XMM2", "MEM0": "ptr [RSI]"}), JNZ, RET]
+        outer = self.loop_at(seq, {5: [3, 6], 10: [1, 11]}, 1)
+        self.assertEqual(outer["acc_lanes_emitted"], 0)
+        self.assertFalse({"V2", "RCX"} & set(outer["carried_registers"]))
+
+    def test_idiom_recognition(self):
+        yes = [ins("XOR", ["REG0/RW", "REG1/R", "REG2/W"], {"REG0": "EAX", "REG1": "EAX", "REG2": "RFLAGS"}),
+               ins("SUB", ["REG0/RW", "REG1/R"], {"REG0": "R8", "REG1": "R8"}),
+               ins("PXOR", ["REG0/RW", "REG1/R"], {"REG0": "XMM3", "REG1": "XMM3"}),
+               vop("VXORPS", "XMM0", "XMM1", "XMM1"), vop("VPXORD", "ZMM4", "ZMM4", "ZMM4"),
+               vop("VPCMPEQD", "YMM5", "YMM5", "YMM5"), vop("VPSUBQ", "XMM6", "XMM6", "XMM6")]
+        no = [vop("VXORPS", "XMM0", "XMM1", "XMM2"),
+              ins("XOR", ["REG0/RW", "IMM0/R"], {"REG0": "ECX", "IMM0": "0x55"}),
+              ins("XORPS", ["REG0/RW", "MEM0/R"], {"REG0": "XMM1", "MEM0": "ptr [RIP+0x10]"}),
+              ins("VPXORD", ["REG0/RCW", "REG1/R", "REG2/R", "REG3/R"],
+                  {"REG0": "ZMM1", "REG1": "K1", "REG2": "ZMM1", "REG3": "ZMM1"}),
+              vop("VADDPS", "XMM1", "XMM1", "XMM1"), vop("VANDPS", "XMM1", "XMM1", "XMM1")]
+        self.assertEqual([L.dependency_breaking(x) for x in yes], [True] * len(yes))
+        self.assertEqual([L.dependency_breaking(x) for x in no], [False] * len(no))
+        self.assertEqual(L.uses_defs(yes[0]), (set(), {"RAX"}))
+        self.assertEqual(L.uses_defs(no[0])[0], {"V1", "V2"})
+
+
 class TestSourceLoopRule(unittest.TestCase):
     """Finding 8: the mirror test, nesting through the inline stack, unrelated loops."""
     ROWS = {"k.c:86": {"loop_id": "k.c:86", "source_lanes": "16", "trip_count": "4"},

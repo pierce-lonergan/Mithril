@@ -16,6 +16,8 @@ Definitions (record §4.7), per dispatched variant:
   * Registers: XMMn/YMMn/ZMMn are one register Vn; GPR sub-registers map to the 64-bit name; flags are ignored.
     A memory operand [RSP+d] or [RBP+d] with no index register is a stack slot treated as a register. A call
     defines (clobbers) the caller-saved registers of the object's ABI (SysV for ELF, Win64 for COFF; x0final).
+    A dependency-breaking idiom (XOR/SUB r,r; (V)XORPS/PD, (V)PXOR[D/Q], (V)PSUB*, (V)PCMPGT*, (V)PCMPEQ* x,x without
+    memory, immediate or mask operands) reads no register (pre-freeze tooling fix of the desktop re-run, 2026-10-17).
   * Accumulation instruction: an FP-sensitive instruction of op_class ADD, SUB, MUL, MAX or MIN (FMA-class counts
     as ADD) that reads, through its data operands, a loop-carried value (pre-freeze review of 2026-10-17: any value
     to which a carried location's header value may flow along data operands, through any instruction, not only
@@ -186,14 +188,46 @@ def call_clobbers(ins):
     return CALL_CLOBBERS[ABI["current"]] if ins.get("iclass", "").startswith("CALL") else set()
 
 
+# Dependency-breaking idioms (pre-freeze tooling fix of the desktop re-run of 2026-10-17, record §4.7 and Appendix E):
+# an instruction whose register sources are one and the same register and whose result does not depend on that
+# register's value reads no value: XOR r,r and SUB r,r; (V)XORPS/PD, (V)PXOR, VPXORD/Q, (V)PSUBB/W/D/Q and
+# (V)PCMPGTB/W/D/Q x,x (all zero); (V)PCMPEQB/W/D/Q x,x (all ones). Not with a memory or immediate source, a write
+# mask or merge masking. XED lists the register as read, so a register zeroed at the top of an outer loop (`xorps
+# xmm1, xmm1` before an inner max chain, `vpxor` before an integer sum, `xor ecx, ecx`) looked live into the header and,
+# through the DEP reading of "reads a loop-carried value", a carried accumulator (measured on the census mock and the
+# regression set under A, B-cmake, C and D: P3(c) flags on loops whose source and code carry no FP value across
+# iterations).
+IDIOM_RE = re.compile(r"^(XOR|SUB|V?XORP[SD]|V?PXOR|VPXOR[DQ]|V?PSUB[BWDQ]|V?PCMPGT[BWDQ]|V?PCMPEQ[BWDQ])$")
+
+
+def dependency_breaking(ins):
+    if not IDIOM_RE.match(ins.get("iclass", "")):
+        return False
+    f, srcs = ins.get("fields", {}), []
+    for op in ins.get("operands", []):
+        p = op.split("/")
+        nm, act = p[0], (p[1] if len(p) > 1 else "")
+        if nm.startswith(("MEM", "AGEN", "IMM")) or act in ("CW", "RCW"):
+            return False
+        if nm.startswith("REG") and "R" in act:
+            r = f.get(nm) or ""
+            if re.match(r"^K[0-7]$", r):
+                return False
+            if norm_reg(r):
+                srcs.append(r)
+    return len(srcs) >= 2 and len(set(srcs)) == 1
+
+
 def uses_defs(ins):
     """Register (and stack-slot) uses and defs. Conditional writes (CW, RCW: merge masking) also use the old
-    value, so they count as uses. A call defines the caller-saved registers of the ABI."""
+    value, so they count as uses. A call defines the caller-saved registers of the ABI. A dependency-breaking idiom
+    (dependency_breaking) uses nothing."""
     u, d = set(), set()
+    idiom = dependency_breaking(ins)
     for kind, name, act in operands(ins):
         if name is None:
             continue
-        if "R" in act or act == "CW":
+        if ("R" in act or act == "CW") and not idiom:
             u.add(name)
         if "W" in act:
             d.add(name)

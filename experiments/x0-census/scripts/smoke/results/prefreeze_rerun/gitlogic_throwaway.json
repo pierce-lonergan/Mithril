@@ -1,0 +1,205 @@
+{
+ "git": "git version 2.45.1.windows.1",
+ "python": "3.13.4",
+ "repo": "D:\\mithril\\x0reg\\gitwork\\repo",
+ "commits": {
+  "C1_draft": "1f4d34f2c97b26aeb84d1af82f634d3fbff2e974",
+  "C2_frozen": "30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d",
+  "C3_amend1": "8e6dd1c12ca107c83070e7b52f667284c111a5b7",
+  "C4_fix_partly_named": "764a9544f18fea200b2ec124b1ce50e8bed81a18",
+  "C5_fix_named": "610dda1b875f8e751c9f7376bde9717535ad56a2",
+  "C6_freeze_md": "eb865187a5e752f12bea859d224cba375455f3c3"
+ },
+ "results": [
+  {
+   "scenario": "S0_record_draft",
+   "why": "HEAD's record reads DRAFT",
+   "expect": "refuse",
+   "got": "refuse",
+   "ok": true,
+   "head": "1f4d34f2c97b26aeb84d1af82f634d3fbff2e974",
+   "message": "REFUSED: the record D:\\mithril\\x0reg\\gitwork\\repo\\docs\\m0\\prereg\\X0-census.md is not FROZEN ('Status: DRAFT (to be FROZEN at the commit that first adds it with this line changed to FROZEN, and'); no census collection before freeze"
+  },
+  {
+   "scenario": "S1_freeze_point_clean",
+   "why": "HEAD is the freeze point, clean",
+   "expect": "accept",
+   "got": "accept",
+   "ok": true,
+   "head": "30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d",
+   "freeze_commit": "30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d",
+   "run_commit": "30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d",
+   "post_freeze_changes": [],
+   "record_appended_bytes": 0,
+   "hearth_commit": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220",
+   "source_commit": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220",
+   "source_blobs_ok": true,
+   "scripts_match_pins": true,
+   "pycache_present_and_ignored": true
+  },
+  {
+   "scenario": "S2_dirty_tracked_file",
+   "why": "uncommitted edit of scripts/x0_loops.py",
+   "expect": "refuse",
+   "got": "refuse",
+   "ok": true,
+   "head": "30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d",
+   "message": "M experiments/x0-census/scripts/x0_loops.py"
+  },
+  {
+   "scenario": "S3_untracked_file",
+   "why": "untracked file under scripts/",
+   "expect": "refuse",
+   "got": "refuse",
+   "ok": true,
+   "head": "30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d",
+   "message": "?? experiments/x0-census/scripts/untracked_note.txt"
+  },
+  {
+   "scenario": "S4_ignored_pyc",
+   "why": "ignored scripts/evil.pyc (a sourceless .pyc is importable)",
+   "expect": "refuse",
+   "got": "refuse",
+   "ok": true,
+   "head": "30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d",
+   "message": "REFUSED: ignored files under class/, scripts/ or flags/ (an ignored .pyc is importable): ['experiments/x0-census/scripts/evil.pyc']"
+  },
+  {
+   "scenario": "S5_appended_amendment",
+   "why": "record = freeze record + appended amendment; no class/scripts/flags change",
+   "expect": "accept",
+   "got": "accept",
+   "ok": true,
+   "head": "8e6dd1c12ca107c83070e7b52f667284c111a5b7",
+   "freeze_commit": "30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d",
+   "run_commit": "8e6dd1c12ca107c83070e7b52f667284c111a5b7",
+   "post_freeze_changes": [],
+   "record_appended_bytes": 85,
+   "hearth_commit": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220",
+   "source_commit": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220",
+   "source_blobs_ok": true,
+   "scripts_match_pins": true
+  },
+  {
+   "scenario": "S6_change_not_named",
+   "why": "re-pinned class/frozen_inputs.json changed but the amendment does not name it",
+   "expect": "refuse",
+   "got": "refuse",
+   "ok": true,
+   "head": "764a9544f18fea200b2ec124b1ce50e8bed81a18",
+   "message": "REFUSED: experiments/x0-census/class, experiments/x0-census/scripts, experiments/x0-census/flags changed after the freeze point 30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d without an amendment naming them (record \u00a710): ['experiments/x0-census/class/frozen_inputs.json']"
+  },
+  {
+   "scenario": "S7_changes_named",
+   "why": "every changed class/scripts path is named in the appended amendment",
+   "expect": "accept",
+   "got": "accept",
+   "ok": true,
+   "head": "610dda1b875f8e751c9f7376bde9717535ad56a2",
+   "freeze_commit": "30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d",
+   "run_commit": "610dda1b875f8e751c9f7376bde9717535ad56a2",
+   "post_freeze_changes": [
+    "experiments/x0-census/class/frozen_inputs.json",
+    "experiments/x0-census/scripts/x0_loops.py"
+   ],
+   "record_appended_bytes": 245,
+   "hearth_commit": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220",
+   "source_commit": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220",
+   "source_blobs_ok": true,
+   "scripts_match_pins": true
+  },
+  {
+   "scenario": "S8_named_but_not_repinned",
+   "why": "x0_census.py changed and named, frozen_inputs.json not re-pinned",
+   "expect": "refuse",
+   "got": "refuse",
+   "ok": true,
+   "head": "caef5067bddb22990ca68cd7f047a1d80e898ae8",
+   "message": "REFUSED: the scripts on disk differ from class/frozen_inputs.json \"scripts\""
+  },
+  {
+   "scenario": "S9_in_place_edit",
+   "why": "record body edited in place after the freeze point",
+   "expect": "refuse",
+   "got": "refuse",
+   "ok": true,
+   "head": "e3f63643c49325e2b40ec67a772875eda9b8a54b",
+   "message": "REFUSED: the record at HEAD differs from the record at the freeze point 30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d other than by an appended amendment (docs/m0/README: only a dated section appended at the end may change it)"
+  },
+  {
+   "scenario": "S10_in_place_edit_plus_append",
+   "why": "in-place edit hidden behind an appended amendment",
+   "expect": "refuse",
+   "got": "refuse",
+   "ok": true,
+   "head": "d78dbf15af9045d5963b61b43fd45e40ef90218d",
+   "message": "REFUSED: the record at HEAD differs from the record at the freeze point 30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d other than by an appended amendment (docs/m0/README: only a dated section appended at the end may change it)"
+  },
+  {
+   "scenario": "S11_unfreeze_edit_refreeze",
+   "why": "DRAFT, body rewritten, FROZEN again: the freeze point stays the first FROZEN commit",
+   "expect": "refuse",
+   "got": "refuse",
+   "ok": true,
+   "head": "77ad8a0810e01fe3da7af51581830717d17d35ef",
+   "message": "REFUSED: the record at HEAD differs from the record at the freeze point 30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d other than by an appended amendment (docs/m0/README: only a dated section appended at the end may change it)"
+  },
+  {
+   "scenario": "S12_record_elsewhere",
+   "why": "--record is a byte-identical copy outside the checkout",
+   "expect": "refuse",
+   "got": "refuse",
+   "ok": true,
+   "head": "610dda1b875f8e751c9f7376bde9717535ad56a2",
+   "message": "REFUSED: --record D:\\mithril\\x0reg\\gitwork\\record_copy.md is not the record of the checkout D:\\mithril\\x0reg\\gitwork\\repo"
+  },
+  {
+   "scenario": "S13_flags_change_not_named",
+   "why": "flags/prefreeze/README.md changed, no amendment names it",
+   "expect": "refuse",
+   "got": "refuse",
+   "ok": true,
+   "head": "2f8175996467501c0241c3350ee5edd6cb201777",
+   "message": "REFUSED: experiments/x0-census/class, experiments/x0-census/scripts, experiments/x0-census/flags changed after the freeze point 30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d without an amendment naming them (record \u00a710): ['experiments/x0-census/flags/prefreeze/README.md']"
+  },
+  {
+   "scenario": "S14_change_outside_frozen_dirs",
+   "why": "FREEZE.md is outside class/, scripts/, flags/ (by design not refused)",
+   "expect": "accept",
+   "got": "accept",
+   "ok": true,
+   "head": "eb865187a5e752f12bea859d224cba375455f3c3",
+   "freeze_commit": "30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d",
+   "run_commit": "eb865187a5e752f12bea859d224cba375455f3c3",
+   "post_freeze_changes": [
+    "experiments/x0-census/class/frozen_inputs.json",
+    "experiments/x0-census/scripts/x0_loops.py"
+   ],
+   "record_appended_bytes": 245,
+   "hearth_commit": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220",
+   "source_commit": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220",
+   "source_blobs_ok": true,
+   "scripts_match_pins": true
+  },
+  {
+   "scenario": "S15_real_hearth_tree",
+   "why": "unstubbed: Hearth tree D:\\mithril\\src\\hearth read by source_blob_check/source_commit",
+   "expect": "accept",
+   "got": "accept",
+   "ok": true,
+   "head": "610dda1b875f8e751c9f7376bde9717535ad56a2",
+   "freeze_commit": "30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d",
+   "run_commit": "610dda1b875f8e751c9f7376bde9717535ad56a2",
+   "post_freeze_changes": [
+    "experiments/x0-census/class/frozen_inputs.json",
+    "experiments/x0-census/scripts/x0_loops.py"
+   ],
+   "record_appended_bytes": 245,
+   "hearth_commit": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220",
+   "source_commit": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220",
+   "source_blobs_ok": true,
+   "scripts_match_pins": true
+  }
+ ],
+ "all_ok": true
+}

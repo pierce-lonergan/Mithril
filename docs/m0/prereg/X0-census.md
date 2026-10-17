@@ -52,8 +52,10 @@ of the x0final revision and of the lead engineer's OQ-6 and ruling edits (§12):
 `smoke_dispatch.c` carried Hearth's own lines (§2, E6), widened the E6 label to the P3(c) results those lines bear on,
 strengthened the shingle guard, made the accumulator and source-loop rules count what they missed, tied the census to
 the freeze point and re-checked the pinned scripts at every step, pinned the header environment, and corrected the
-header's authorisation text (Appendix E rows marked "pre-freeze review"). Its end-to-end re-run on the desktop is
-pending (§7, Appendix D). The record stays DRAFT.
+header's authorisation text (Appendix E rows marked "pre-freeze review"). Its end-to-end re-run on the desktop was made
+on 2026-10-17: the first run raised P3(c) flags through dependency-breaking idioms, which one pre-freeze tooling fix
+removed, and the final run with the re-pinned scripts shows the x0final revision's outcomes (§4.7, §7, Appendix E row
+"desktop re-run"). The record stays DRAFT.
 
 Conventions. Evidence tags follow [docs/m0/README](../README.md#evidence-tags). "Reviser" means the
 agent that revised this DRAFT on 2026-10-16. It worked on the laptop running this session (hostname
@@ -239,6 +241,12 @@ Release`), with nothing added or removed. §4.6 defines the one exception, the d
       numbers (`for (int j = 0; j < s; ++j) L[j] += L[j + s];`, the constant renamed, `amax = m > amax ? m : amax;`), so
       `smoke_loop_table.csv` and `tricky_expect.json` stay valid; whether the compiled objects are unchanged is checked
       by the desktop re-run (§7, pending). The E6 label now also covers those P3(c) results (the ruling above; `judge.py` writes it).
+      *Checked by the desktop re-run of 2026-10-17 (§7):* the decoded code of the rewritten file equals the x0final
+      revision's under A, A-ninja and C, in both builds and both objects (`smoke_dispatch.c` and its scalar build);
+      under B-cmake and D (Clang) one function differs, `sd_float_common`, whose flattened s = 8, 4, 2, 1 tree has the
+      same instruction count and iclass multiset but FP additions with commuted operands and another schedule; the
+      `rv_tricky*.c` objects and every arm-P object are unchanged [M, desktop, decode comparison,
+      `runbook/logs/prefreeze_rerun_checks.log` §3].
 - **No Hearth source is compiled before freeze, not even as an unread smoke test.** (The previous draft
   allowed a compile smoke test of the three files; x0prep removed it, Appendix E.) Whether each census file
   compiles under each configuration is therefore census data, classified by the compile rule of §5 P1. The
@@ -835,7 +843,29 @@ them still produces the mandatory report (§10).
        `rv_tricky2.c` (8 configurations, 120 loops, none with an FP accumulator under either rule) the pinned and the
        revised script give identical loop results [M, reviser, laptop, 2026-10-17; no compile, no new decode]. The
        desktop re-run of step 88 (R1 regression replay, R2 mock), required to show that the broader reading adds no
-       false P3(c) flag on real GCC, Clang and MSVC output, is pending (§7, Appendix D).
+       false P3(c) flag on real GCC, Clang and MSVC output, is pending (§7, Appendix D). *Done 2026-10-17: it did add
+       false flags, through the idioms of the next bullet, and none after that fix (§7).*
+     - *Desktop re-run of step 88 (2026-10-17; pre-freeze tooling fix, §10; precision).* A **dependency-breaking idiom**
+       reads no value: an instruction whose register sources are one and the same register and whose result does not
+       depend on that register's value, namely XOR and SUB r,r; (V)XORPS, (V)XORPD, (V)PXOR, VPXORD, VPXORQ,
+       (V)PSUBB/W/D/Q and (V)PCMPGTB/W/D/Q x,x (all zero); (V)PCMPEQB/W/D/Q x,x (all ones); not with a memory or
+       immediate operand, a write mask or merge masking. XED lists that register as read. Under the DEP reading of the
+       bullet above, a register zeroed at the top of an outer loop therefore looked live into the outer header, and the
+       inner loop's max chain, or the scalar multiply after an inner integer sum, "read a loop-carried value": the first
+       re-run with the re-pinned scripts flagged loops whose source carries no FP value across iterations and whose code
+       zeroes every register of the counted cycle with such an idiom before use (`xorps x,x`, `pxor`, `vpxor x,x,x`,
+       `vxorps x,x,x`, `xor r,r`): on the mock, the scalar act block loop (A, A-ninja), the scalar act loop and the AVX2
+       Q8/Q4 row loop (B-cmake, B-proxy, D), the scalar and AVX2 act loops (C), 26 variant builds in all, 2 to 24 lanes
+       against bounds of 0, 1 or 8, all of them block or row loops that re-zero the max or sum each iteration (the
+       real amax loops inside them still count their lanes after the fix, 1 scalar and 8 AVX2 where one is emitted);
+       on the regression set, `sd_q8`'s row loop (smoke_dispatch.c:132, 0 source lanes) under
+       B-cmake, C and D, 24 variant builds [M, desktop runs smoke-20261017T072407Z and smoke-20261017T072727Z; every
+       loop re-analysed on the laptop, `runbook/logs/prefreeze_rerun_checks.log` §1]. With the idiom rule every one of
+       them counts 0 lanes; the earlier flags keep their counts (Clang's two 16-lane partial results of the tail sum, 32
+       lanes; the enclosing loops 16, as in the x0final revision's run, where the broader reading had made them 32)
+       [M, final run, §7]. A zero or all-ones idiom's result is a constant, so the rule can hide no partial result.
+       `x0_loops.py` `dependency_breaking`; unit cases in `tests/test_loops_prefreeze.py` (an outer loop over a zeroed
+       max chain, a zeroed integer sum feeding a scalar multiply, a non-idiom XORPS that still carries, recognition).
      - "Reads a loop-carried value" is decided by a forward data-flow over one iteration (back edges into the
        header cut): the value read may be the one live into the header, directly or through register moves
        and stack reloads (*superseded by the pre-freeze review revision above: through any data-operand path*).
@@ -919,7 +949,9 @@ A.
     review found these values recorded but never compared; the reviser also found that D's tree was recorded as null
     in the x0final revision's run (the driver passed clang-cl's `/clang:` form to any compiler whose name contains
     "cl", `clang` included) [M, reviser, read of that run's `config.json` copies, laptop, 2026-10-17]; fixed, to be
-    confirmed by the desktop re-run (§7, pending);
+    confirmed by the desktop re-run (§7, pending); *confirmed 2026-10-17:* in both runs of the re-run every
+    configuration's header environment equals its pin, D's and P.D's tree recorded as 327 files `18b182d3…`, B-cmake's,
+    B-proxy's and P.B-cmake's as 322 files `5587c91b…` [M, desktop, §7];
   - *success*: exit status 0 and an object exists. *x0final revision (review of 2026-10-16/17; stricter):* and the
     pinned compiler ran (`compiler_ran`) with exactly the frozen argv (`argv_matches_frozen` true); a build with
     exit status 0 that lacks any of these is *tooling* `other`. Before this, `judge.py` accepted any exit status 0,
@@ -1200,7 +1232,56 @@ unaffected), with the re-pinned scripts, to show (a) `check_regression_run.py` s
 the earlier rules did not raise, each new flag explained or fixed before freeze, and (c) every configuration's header
 environment equal to its pin (`judge.py` V1), in particular D's resource-dir tree. The re-run's P3(c) results on
 `smoke_dispatch.c`'s tree, accumulation and amax loops bear on the same Hearth shapes as before and fall under the E6
-label (§2). Until then the end-to-end evidence below is for the previous scripts.
+label (§2). Until then the end-to-end evidence below is for the previous scripts. *Done: the re-run is described next;
+the paragraphs after it are the earlier scripts' evidence.*
+
+*End-to-end validation of the driver, pre-freeze review revision: the desktop re-run* [M, desktop DESKTOP-8RS9J1J,
+2026-10-17 03:23-03:55 EDT (00:23-00:55 PDT), inside the 23:00-07:00 PT window by the lead engineer's authorisation for
+that night (not a pilot quiet night); runbook steps 86 and 88 on a sync copy of the tree (`D:\mithril\x0reg`); one
+compiler or MSBuild node at a time, XED `-j 2`, at most 4 threads, `CUDA_VISIBLE_DEVICES=-1`, WSL only inside the
+running keepalive VM; logs `scripts/runbook/logs/prefreeze_rerun_*`, results `scripts/smoke/results/prefreeze_rerun/`].
+NON-Hearth inputs only.
+- *First run, with the scripts of commit 2191ff8 as pinned* (runs `smoke-20261017T072407Z` R2 and
+  `smoke-20261017T072727Z` R1, `scripts_match_pins` true): (a) held, `check_regression_run.py` 0 deviations over 60
+  decode outputs (420 variants); (c) held, every configuration's header environment equals its pin (A to D, B-proxy and
+  every P.<CFG>; D 327 files `18b182d3…`); (b) failed: besides the 24 earlier regression variant builds, P3(c) flagged
+  24 more (`sd_q8`'s row loop, 8 each under B-cmake, C and D) and 26 mock variant builds (A 2, A-ninja 2, B-cmake 6,
+  B-proxy 6, C 4, D 6), and the earlier enclosing loops counted 32 lanes instead of 16. Every one of these came from
+  dependency-breaking idioms read as data (§4.7, bullet "Desktop re-run of step 88"), so they are false flags. Every
+  other figure of the run summaries (attribution, d1, d2, tags, P3(a), metrics, verdict outcomes) equals the x0final
+  revision's.
+- *Pre-freeze tooling fix* (§10, Appendix E): the idiom rule in `x0_loops.py` with four unit tests (183 in all, all
+  pass), re-pinned (`x0_loops.py`, `tests/test_loops_prefreeze.py`, `class/frozen_inputs.json`; `pin_inputs.py` 0
+  differences on the laptop and on the desktop's sync copy).
+- *Final run with the re-pinned scripts* (runs `smoke-20261017T074224Z` R2, 03:42-03:46 EDT, and
+  `smoke-20261017T074551Z` R1, 03:46-03:49 EDT; `scripts_match_pins` true; `census.json` records `x0_loops.py`
+  `8c7ecc9e…`). (a) `check_regression_run.py` 0 deviations over 60 decode outputs (420 variants); d1 `pass` and
+  attribution exact everywhere; builds 1 and 2 identical; 32 cross-decoder disagreements, all NOP (`rv_overlap`).
+  (b) P3(c) flags exactly the x0final revision's 24 regression variant builds through the same loops (B-cmake: the tail
+  loop `L19_2a0`, 32 lanes over 16, and its enclosing loops `L19_1ca` and `L19_123`, 16 over 0; D: `L2_10c0`, `L2_f34`,
+  `L2_e66` likewise), none under A, A-ninja or C, and none on the mock. (c) Every configuration's header environment
+  equals its pin, as in the first run. On the mock: 0 non-zero steps; every compiler pin and argv check holds; builds 1
+  and 2 identical; A and A-ninja identical for all 36 variants; d1 `pass`; d2 `match` on the AVX-512 `tree16` and
+  `mismatch` on the AVX2 `tree16` (designed); P3(a1) on B-cmake; B-cmake's genuine `quant_avx512.c` failure. `judge.py`:
+  V1, V2, V4 true, V3 false: `tooling_failure`; with V3 forced (smoke only) `amber_a` (|U_all| 326 > 204, P5_iclass 31),
+  `amber_b`, `amber_c` (32), N1 (B-cmake, C), N2 (B-cmake). Regression set: `tooling_failure`; with the set's constants
+  V1 fails on the 184 designed gaps, V2 and V4 hold. Against the x0final revision's summaries the only differences are
+  descriptive: fewer `software-pipelined` and more `lockstep` tags, `unrolled-u` under D 68 → 64 loops, and the B-proxy
+  tag agreement of three AVX-512 slots, all from registers no longer taken as carried; arm P's probe records are
+  identical. The decoded code of the rewritten `smoke_dispatch.c` is described in §2 (remedy). The MSBuild fallback was
+  not repeated (its build path is unchanged).
+- *Freeze point and Hearth HEAD* (§8 item 10): `x0_driver.py init`'s freeze-point logic ran with Windows git 2.45.1 and
+  Python 3.13.4 against a THROWAWAY repository with this layout (record DRAFT, then FROZEN in one commit, then appended
+  amendments, tooling changes and in-place edits). It accepted the freeze point itself (`freeze_commit` = `run_commit`),
+  an appended amendment, and a tooling change named in the amendment with its re-pin (listed in
+  `post_freeze_changes`); it refused a DRAFT record, an uncommitted edit, an untracked file, an ignored `.pyc`, an
+  unnamed class/ or flags/ change, a named but not re-pinned script, an in-place edit (alone, behind an appended
+  amendment, or through DRAFT and FROZEN again) and a `--record` outside the checkout: 16 of 16 scenarios as expected,
+  the last one with the real Hearth source checks [M, `runbook/logs/prefreeze_rerun_checks.log` §5,
+  `smoke/results/prefreeze_rerun/gitlogic_throwaway.json`]. A change outside class/, scripts/ and flags/ (FREEZE.md)
+  is accepted, by design. Windows git reads `D:\mithril\src\hearth` at b5d3f14a801d… directly (rc 0); `.git/HEAD` holds
+  the same commit, and `source_commit` returns it also with no git on PATH (the fallback); the seven blobs match [M,
+  §4 of that log].
 
 *End-to-end validation of the driver, x0final revision* [M, x0final revision, desktop, final run 2026-10-17 01:49-01:57
 EDT (22:49-22:57 PDT), runbook steps 86 and 88 with the final scripts, runs `smoke-20261017T054918Z` (R2) and
@@ -1482,6 +1563,13 @@ them measured]:
     inside the loop, which the smoke file does not]. Every report of those P3(c) results carries the E6 label (§2,
     `judge.py` "canaries"). Two §4.7 rules were tuned on flags of this text before freeze (§2); the label discloses it,
     and whether more is needed is the lead engineer's call.
+  - *Desktop re-run (2026-10-17), disclosure.* A third §4.7 rule, the dependency-breaking idioms, was made on P3(c)
+    flags of the first re-run: the census mock's loops (not Hearth text since the x0final revision's rewrite), among
+    them its scalar and AVX2 act loops, whose amax shape is the scalar act variant's, and `smoke_dispatch.c`'s `sd_q8`
+    row loop (not one of its Hearth runs; its rewritten amax loop was not flagged in either run) [M, §7]. So the scalar
+    act variant's P3(c) outcome on Hearth again concerns a shape a rule was tuned on before freeze. The rule removes
+    only reads of a zeroed register, which carry no value, so it cannot hide a split; the expectation above is
+    unchanged, and the label covers it.
 
 ## 9. Threats to validity
 
@@ -1536,6 +1624,11 @@ them measured]:
   pre-freeze review revision broadened "reads a loop-carried value" to any data-operand path and added the SSE2 select
   form and the must-analysis of (b), all in the counting direction; the unit cases show no new count on the shapes that
   caused earlier false flags, but its effect on real compiler output is known only from the pending desktop re-run (§7).
+  *Desktop re-run (2026-10-17):* on real MSVC, clang-cl, GCC and Clang output the broader reading over-counted through
+  dependency-breaking idioms (a zeroed register read as data); the idiom rule of §4.7 removed all 50 such flags, and
+  the final run flags only what the x0final revision's run flagged (§7). Other over-counts of the same kind on Hearth
+  objects (an instruction that ignores a source's value but is not on the idiom list) would show as P3(c) flags with
+  their partial-result cycles listed per loop.
   The source-loop rule now takes the smaller bound for unrelated loops and the inner bound under the mirror test, which
   can raise a false flag where debug lines mislead; the notes list every such loop.
 - **Pre-freeze exposure through the mock (x0final revision).** Hearth's own helper text was compiled before freeze
@@ -1650,7 +1743,9 @@ Status of review coverage (updated by the x0final revision, 2026-10-17):
   (2026-10-17):* they, and the lead engineer's OQ-6 and ruling edits, were reviewed on 2026-10-17 (row above; handling
   below). The pre-freeze review revision's own changes (Appendix E rows "pre-freeze review") are unreviewed, and their
   effect on real compiler output awaits the desktop re-run (§7); whether they need another independent review before
-  freeze is the lead engineer's call.
+  freeze is the lead engineer's call. *Updated by the desktop re-run (2026-10-17):* their effect on real compiler output
+  is measured (§7); the re-run's own tooling fix (Appendix E row "desktop re-run", the §4.7 idiom rule) is unreviewed
+  too and belongs to the same call.
 
 All reviews are same-family, independent-context (README, Independence; D0-10c as recorded in OWNER-ANSWERS.md: no
 other frontier family; the local Qwen3 pilot only).
@@ -1885,6 +1980,16 @@ laptop, 2026-10-17]. After the fixes all 179 unit tests pass (71 `test_judge`, 7
   §5 before data.
 Totals of the pre-freeze review: 11 findings (0 blocker, 5 major, 6 minor), 11 accepted (3 changed in part), 0 rejected
 [D: count of the row above].
+
+**Desktop re-run of 2026-10-17 (the items left pending above).** Claude, re-run track; desktop for the runs and the
+git checks, laptop for the analysis and the edits. The regression replay and the mock run of step 88 were made twice
+(§7): with the pinned scripts, which raised 50 false P3(c) flags through dependency-breaking idioms (the accumulator
+finding's DEP reading on real output), and after one pre-freeze tooling fix (§4.7 idiom rule, Appendix E), with the
+x0final revision's P3(c) outcomes exactly. D's resource-dir tree is recorded and equals its pin (the header finding).
+The freeze-point logic (the freeze-point finding) ran against a throwaway repository with real git on the desktop: 16
+of 16 scenarios accepted or refused as intended (§7). After the fix 183 unit tests pass (20 `test_loops_prefreeze`,
+the rest as listed above) and `pin_inputs.py` reports 0 differences after re-pinning [M, laptop and desktop,
+2026-10-17]. The fix is not independently reviewed.
 
 ## 13. Signature block
 
@@ -2143,7 +2248,7 @@ items reads a compiled Hearth object.
 |---|---|---|
 | D1 | `experiments/x0-census/TOOLCHAINS.md`, complete per Table 2.1 | Table 2.1 filled [M, x0prep]; `TOOLCHAINS.md` §11 mirrors it. File hash: `experiments/x0-census/FREEZE.md` |
 | D2 | Flag captures: for A, the generated `hearth_core.vcxproj` and MSBuild's design-time ClCompile lines (the build lines come from the census binlog, §2); `compile_commands.json` for A-ninja, B-cmake, C and D; `-###` and `gcc -Q` outputs. All come from configure-only runs | `experiments/x0-census/flags/prefreeze/` (20 capture files and a README) plus `flags/C-gcc.compile_commands.json` and `flags/D-clang.compile_commands.json`; hashes in `FREEZE.md` |
-| D3 | Smoke-test logs: NON-Hearth files only (§2): `smoke.c` and probes (steps 60-62), `smoke_dispatch.c` (steps 70-72), `smoke_dispatch.c` with `rv_tricky.c` and `rv_tricky2.c` (steps 71b and 72 after the §12 review), the instruction zoo (step 69), the x0final end-to-end driver runs on the census mock, the regression set and the reduce probe (steps 86 and 88; §7, and the arm P disclosure of §2), superseded by the x0final revision's runs with the rewritten mock (§7; the first mock's runs disclosed in §2); no Hearth file is compiled before freeze; `smoke_dispatch.c` carried Hearth lines until 2026-10-17 (§2 disclosure). **Pending (pre-freeze review revision):** step 88 re-run with the re-pinned scripts and the rewritten `smoke_dispatch.c` (§7) | `scripts/runbook/logs/` (`60_*`, `61_*`, `62_*`, `x0prep_*`, `x0final_*`, `x0final_rev_*`), `scripts/smoke/results/x0final/`, `scripts/smoke/results/x0final_rev/`; hashes in `FREEZE.md` |
+| D3 | Smoke-test logs: NON-Hearth files only (§2): `smoke.c` and probes (steps 60-62), `smoke_dispatch.c` (steps 70-72), `smoke_dispatch.c` with `rv_tricky.c` and `rv_tricky2.c` (steps 71b and 72 after the §12 review), the instruction zoo (step 69), the x0final end-to-end driver runs on the census mock, the regression set and the reduce probe (steps 86 and 88; §7, and the arm P disclosure of §2), superseded by the x0final revision's runs with the rewritten mock (§7; the first mock's runs disclosed in §2); no Hearth file is compiled before freeze; `smoke_dispatch.c` carried Hearth lines until 2026-10-17 (§2 disclosure). **Pending (pre-freeze review revision):** step 88 re-run with the re-pinned scripts and the rewritten `smoke_dispatch.c` (§7). **Done by the desktop re-run (2026-10-17):** first run with the pinned scripts, the §4.7 idiom fix, final run with the re-pinned scripts (§7) | `scripts/runbook/logs/` (`60_*`, `61_*`, `62_*`, `x0prep_*`, `x0final_*`, `x0final_rev_*`, `prefreeze_rerun_*`), `scripts/smoke/results/x0final/`, `scripts/smoke/results/x0final_rev/`, `scripts/smoke/results/prefreeze_rerun/`; hashes in `FREEZE.md` |
 | D4 | B-proxy and H argv for each file, written out | `flags/prefreeze/B-proxy.argv.json` and `flags/prefreeze/README.md`; hashes in `FREEZE.md` |
 | D5 | `class/fp_class.csv`, plus the commit of `classify.py`, with the review recorded in §12 | `7cabb6913437c364f7d02c988a839ed5807462a3812cacd86e68a1c72a686c2f`; input `class/xed_tables.tsv` `1db25e7f5f02b5796d06cbb94f4cb5ab7d8230ed1091bacae485fa5c517d1d13`. **Review: done, 2026-10-16** (§12, reviewer 1 of the x0prep review; Claude, same family, independent context). A seeded random sample of 50 of the 741 FP-typed iclasses plus 147 hand-picked edge cases was re-classified blind: 197/197 agree. The XED cross-check covers all 502 iclasses hit by the named attributes or exception classes, and op_class matches on all 1,995 rows. SDM citations were not re-fetched; the template-reason finding was resolved by rewording §4.4, so the CSV and its hash are unchanged; second blind review (x0final, 945 iclasses): 0 disagreements (§12) |
 | D6 | `B_iform.json`, `hand_map.csv`, stdarch commit, XML SHA-256, with the values written into §4.5 and the review recorded in §12 | `B_iform.json` `a66e1a935d887a272d5f3fb868d10a1877f8e4d7b26137a3962079b1edcb1eaa`; `hand_map.csv` `008f558ead3ee86b9484f8891470f51db0e10dbf8591a8509ca20c4219ad5d3e`; stdarch `eb9b3025937c85bd271a3ca46a681cd52739db12`; XML `6762a50652a35ef663fd532ed83b789d19bbc2ac7e94b1771f19d666d96c2c30`; values in §4.5. **Review: done, 2026-10-16** (§12, reviewer 1; Claude, same family, independent context). B_iform and hand_map were re-derived independently from the Hearth blobs and an independently downloaded XML (same SHA-256): identical. That covers 130 names (47/51/32), 23 with no single instruction, 105 XML form strings, 1 hand-mapped xed name, |B_iform| 102 and |B_mnem| 74, with 0 differences per intrinsic; second re-derivation (x0final): identical, |B_iform| 102, |B_mnem| 74 (§12) |
@@ -2151,13 +2256,14 @@ items reads a compiled Hearth object.
 | D8 | `class/objdump_norm.csv` | `d6196d60246a08733ca1581d83e81cc8be9891223e2750323b250c50dbc6e2e7` (LF bytes; validation: `class/objdump_norm_validation.json`, run on the same content with CRLF line endings) |
 | D9 | `class/loop_table.csv` | `0d94b2e636fb355e3c3c56d9b452dfef6a00925860adda05e116fe99b22a35be` |
 | D10 | Reduce-probe sources (arm P) | `scripts/probes/reduce_probe.c`; hash in `FREEZE.md` |
-| D11 | Scripts implementing §4.2, §4.7 and §8 (`judge.py`), tested only on `scripts/smoke/` and never on Hearth objects; commit hash | §4.1/§4.2 (`x0_extract.py`, `x0_decode.py`) and §8 (`judge.py`) done, revised after the §12 review and tested (56 judge unit tests; runbook step 72 regression on 24 NON-Hearth objects, 0 deviations, order-independent). **Completed by x0final (2026-10-16/17):** the build records (`x0_build.py`), the debug-info twin attribution (`x0_twin.py`; §4.6), exact P3(c) attribution, P3(d2) site selection and the peeled and interchanged tags (`x0_loops.py`; §4.7, §5), the `census.json` assembler (`x0_census.py`; Appendix C, with compiler hashes, structured errors, include lists, §6 repro and `ab_compare`) and the census driver (`x0_driver.py`, runbook steps 79-82). Tested: 113 unit tests on synthetic inputs, and the driver end to end on NON-Hearth inputs (§7: the census mock in census mode under A, A-ninja, B-cmake, C, D; the regression set in replay mode, 0 deviations; arm P; B-proxy). **Independent review done 2026-10-16/17 (§12); revised by the x0final revision (2026-10-17):** 152 unit tests (66 `test_judge`, 7 `test_flags`, 17 `test_loops`, 27 `test_loops_x0final`, 14 `test_build`, 12 `test_twin`, 2 `test_census`, 7 `test_driver_guard`) [M, laptop, 2026-10-17], the end-to-end runs repeated with the final scripts and the rewritten mock (§7). The revision's own changes are not independently reviewed. **Pre-freeze review of 2026-10-17 (§12) done and handled by the pre-freeze review revision (2026-10-17, laptop):** 179 unit tests (71 `test_judge`, 7 `test_flags`, 17 `test_loops`, 27 `test_loops_x0final`, 16 `test_loops_prefreeze`, 14 `test_build`, 12 `test_twin`, 3 `test_census`, 12 `test_driver_guard`) [M, laptop, 2026-10-17], re-pinned; the end-to-end re-run on the desktop is pending (§7), and that revision's own changes are not independently reviewed. Hashes of every script in `FREEZE.md` and `class/frozen_inputs.json` "scripts" (checked by V4; widened by x0final to every file under `scripts/` except run outputs and documentation). Commit: the commit that adds them |
+| D11 | Scripts implementing §4.2, §4.7 and §8 (`judge.py`), tested only on `scripts/smoke/` and never on Hearth objects; commit hash | §4.1/§4.2 (`x0_extract.py`, `x0_decode.py`) and §8 (`judge.py`) done, revised after the §12 review and tested (56 judge unit tests; runbook step 72 regression on 24 NON-Hearth objects, 0 deviations, order-independent). **Completed by x0final (2026-10-16/17):** the build records (`x0_build.py`), the debug-info twin attribution (`x0_twin.py`; §4.6), exact P3(c) attribution, P3(d2) site selection and the peeled and interchanged tags (`x0_loops.py`; §4.7, §5), the `census.json` assembler (`x0_census.py`; Appendix C, with compiler hashes, structured errors, include lists, §6 repro and `ab_compare`) and the census driver (`x0_driver.py`, runbook steps 79-82). Tested: 113 unit tests on synthetic inputs, and the driver end to end on NON-Hearth inputs (§7: the census mock in census mode under A, A-ninja, B-cmake, C, D; the regression set in replay mode, 0 deviations; arm P; B-proxy). **Independent review done 2026-10-16/17 (§12); revised by the x0final revision (2026-10-17):** 152 unit tests (66 `test_judge`, 7 `test_flags`, 17 `test_loops`, 27 `test_loops_x0final`, 14 `test_build`, 12 `test_twin`, 2 `test_census`, 7 `test_driver_guard`) [M, laptop, 2026-10-17], the end-to-end runs repeated with the final scripts and the rewritten mock (§7). The revision's own changes are not independently reviewed. **Pre-freeze review of 2026-10-17 (§12) done and handled by the pre-freeze review revision (2026-10-17, laptop):** 179 unit tests (71 `test_judge`, 7 `test_flags`, 17 `test_loops`, 27 `test_loops_x0final`, 16 `test_loops_prefreeze`, 14 `test_build`, 12 `test_twin`, 3 `test_census`, 12 `test_driver_guard`) [M, laptop, 2026-10-17], re-pinned; the end-to-end re-run on the desktop is pending (§7), and that revision's own changes are not independently reviewed. **Desktop re-run (2026-10-17):** done (§7); one pre-freeze tooling fix (§4.7 dependency-breaking idioms, Appendix E), 183 unit tests (20 `test_loops_prefreeze`, the others as above) [M, laptop, 2026-10-17], re-pinned; the fix is not independently reviewed. Hashes of every script in `FREEZE.md` and `class/frozen_inputs.json` "scripts" (checked by V4; widened by x0final to every file under `scripts/` except run outputs and documentation). Commit: the commit that adds them |
 | D12 | The X0 tooling track's statement on whether any Hearth object was compiled before freeze (OQ-7) | §2 "Statement on pre-freeze compilation" and `TOOLCHAINS.md` §11 [M, x0prep, 2026-10-16]; qualified by the x0final revision: no Hearth file was compiled, but Hearth helper text inside the first census mock was (§2 disclosure, E6); qualified again by the pre-freeze review revision: so were three two-line runs of Hearth text inside the regression file `smoke_dispatch.c`, from x0prep until 2026-10-17 (§2 disclosure, E6) |
 
 The hash values above were computed on 2026-10-16 by x0prep and are unchanged (recomputed by x0final and by the x0final revision of 2026-10-17, which changed `TOOLCHAINS.md` (D1: its desktop-activity account), D3's logs and records and D11's scripts, and none of the class files of D5-D9 or the D2, D4 and D10 files; and by the
 pre-freeze review revision of 2026-10-17, which changed D11's scripts, `smoke_dispatch.c` among them, added the header
 pins to `class/frozen_inputs.json` and remade `class/hearth_shingles.json`, and changed none of the D1, D2, D4-D10
-files). `FREEZE.md`
+files; and by the desktop re-run of 2026-10-17, which added D3 logs and records and changed two D11 files,
+`x0_loops.py` and `tests/test_loops_prefreeze.py`, and none of the D1, D2, D4-D10 files). `FREEZE.md`
 holds the complete list; every value is recomputed at freeze (`scripts/runbook/pin_inputs.py`), and
 `class/frozen_inputs.json` must equal it (`judge.py` checks V4 against it).
 
@@ -2224,3 +2330,5 @@ of §12.
 | §7 (pre-freeze review) | The end-to-end evidence is for the previous scripts; the desktop re-run of step 88 and what it must show | disclosure |
 | §8 item 10, Appendix C (pre-freeze review) | Freeze point and run commit; ignored files; amendment-named post-freeze changes; per-step script, commit and blob re-checks; `--frozen-db`/`--design-time` and `--freeze-commit` refused in a census run; source pin, per-configuration scripts and header pins in V4; `verdict.json` record id; new fields | stricter |
 | §12, Appendix D D11 (pre-freeze review) | Pre-freeze review logged; 179 unit tests; re-pinned | disclosure |
+| §4.7 accumulators (desktop re-run, 2026-10-17; pre-freeze tooling fix, §10) | A dependency-breaking idiom (XOR/SUB r,r; (V)XORPS/PD, (V)PXOR, VPXORD/Q, (V)PSUBB/W/D/Q, (V)PCMPGTB/W/D/Q, (V)PCMPEQB/W/D/Q x,x; no memory, immediate, write mask or merge masking) reads no value (`x0_loops.py` `dependency_breaking`, used by `uses_defs`); 4 unit tests (183 in all); re-pinned: `scripts/x0_loops.py`, `scripts/tests/test_loops_prefreeze.py`, `class/frozen_inputs.json` | precision (removes the 50 false P3(c) flags of the first re-run, 26 on the mock and 24 on the regression set, and the doubled count of the earlier enclosing loops; an idiom's result is a constant, so no partial result can be hidden; reviewer attention: unreviewed) |
+| §2, §4.7, §5 P1, §7, §9, §12, Appendix D D3/D11 (desktop re-run, 2026-10-17) | Results of the re-run of step 88 (first run, fix, final run), the decode comparison of the rewritten `smoke_dispatch.c`, the header-environment confirmation, the throwaway-repository test of the freeze point and the Hearth HEAD read recorded | disclosure |

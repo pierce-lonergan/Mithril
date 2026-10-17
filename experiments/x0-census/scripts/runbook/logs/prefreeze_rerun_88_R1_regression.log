@@ -1,0 +1,530 @@
+# Pre-freeze review revision, desktop re-run of runbook step 88 (2026-10-17), desktop DESKTOP-8RS9J1J: FINAL run with the re-pinned scripts after the pre-freeze tooling fix (record section 4.7 dependency-breaking idioms, Appendix E), sync copy D:\mithril\x0reg\x0-census, runs D:\mithril\x0reg\runs. NON-Hearth inputs only. Job logs concatenated (re-encoded from UTF-16 to UTF-8). R1: the regression set in replay mode, arm P.
+===== progress.txt (2026-10-17T03:49:22 EDT)
+X0REG START86 2026-10-17T03:42:09.7975260-04:00
+START88 2026-10-17T03:42:24.4948680-04:00
+END 2026-10-17T03:49:22.6233421-04:00
+
+===== R1_init.log (2026-10-17T03:45:51 EDT)
+{"run_id": "smoke-20261017T074551Z", "kind": "smoke", "profile": "regression", "mock": false, "source_blobs_ok": false, "scripts_match_pins": true, "freeze_commit": null, "run_commit": null, "post_freeze_changes": null}
+
+===== R1_A.log (2026-10-17T03:46:09 EDT)
+START Sat 10/17/2026  3:45:52.40 RUN=D:\mithril\x0reg\runs\R1reg CFG=A MODE=replay MORE= --set D:\mithril\x0reg\x0-census\scripts\smoke\regression_set.json
+[2026-10-17T07:45:52+00:00] compile1_smoke_dispatch.c rc=0
+[2026-10-17T07:45:52+00:00] compile1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:45:52+00:00] compile1_rv_tricky.c rc=0
+[2026-10-17T07:45:53+00:00] compile1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:45:53+00:00] compile1_rv_tricky2.c rc=0
+[2026-10-17T07:45:53+00:00] compile1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:45:53+00:00] compile2_smoke_dispatch.c rc=0
+[2026-10-17T07:45:53+00:00] compile2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:45:53+00:00] compile2_rv_tricky.c rc=0
+[2026-10-17T07:45:53+00:00] compile2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:45:54+00:00] compile2_rv_tricky2.c rc=0
+[2026-10-17T07:45:54+00:00] compile2_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:45:54+00:00] twin_smoke_dispatch.c rc=0
+[2026-10-17T07:45:54+00:00] twin_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:45:54+00:00] twin_rv_tricky.c rc=0
+[2026-10-17T07:45:54+00:00] twin_rv_tricky.c#scalar rc=0
+[2026-10-17T07:45:54+00:00] twin_rv_tricky2.c rc=0
+[2026-10-17T07:45:54+00:00] twin_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:45:55+00:00] extract_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:45:56+00:00] decode_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:45:56+00:00] attr_b1_smoke_dispatch.c_smoke_dispatch.c rc=0
+[2026-10-17T07:45:57+00:00] loops_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:45:57+00:00] extract_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:45:58+00:00] decode_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:45:58+00:00] attr_b1_smoke_dispatch.c#scalar_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:45:58+00:00] loops_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:45:58+00:00] extract_b1_rv_tricky.c rc=0
+[2026-10-17T07:45:59+00:00] decode_b1_rv_tricky.c rc=1
+[2026-10-17T07:45:59+00:00] attr_b1_rv_tricky.c_rv_tricky.c rc=0
+[2026-10-17T07:45:59+00:00] loops_b1_rv_tricky.c rc=0
+[2026-10-17T07:45:59+00:00] extract_b1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:00+00:00] decode_b1_rv_tricky.c#scalar rc=1
+[2026-10-17T07:46:00+00:00] attr_b1_rv_tricky.c#scalar_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:00+00:00] loops_b1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:00+00:00] extract_b1_rv_tricky2.c rc=0
+[2026-10-17T07:46:01+00:00] decode_b1_rv_tricky2.c rc=1
+[2026-10-17T07:46:01+00:00] attr_b1_rv_tricky2.c_rv_tricky2.c rc=0
+[2026-10-17T07:46:01+00:00] loops_b1_rv_tricky2.c rc=0
+[2026-10-17T07:46:01+00:00] extract_b1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:02+00:00] decode_b1_rv_tricky2.c#scalar rc=1
+[2026-10-17T07:46:02+00:00] attr_b1_rv_tricky2.c#scalar_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:02+00:00] loops_b1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:02+00:00] extract_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:46:03+00:00] decode_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:46:03+00:00] attr_b2_smoke_dispatch.c_smoke_dispatch.c rc=0
+[2026-10-17T07:46:04+00:00] loops_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:46:04+00:00] extract_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:05+00:00] decode_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:05+00:00] attr_b2_smoke_dispatch.c#scalar_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:06+00:00] loops_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:06+00:00] extract_b2_rv_tricky.c rc=0
+[2026-10-17T07:46:06+00:00] decode_b2_rv_tricky.c rc=1
+[2026-10-17T07:46:06+00:00] attr_b2_rv_tricky.c_rv_tricky.c rc=0
+[2026-10-17T07:46:06+00:00] loops_b2_rv_tricky.c rc=0
+[2026-10-17T07:46:07+00:00] extract_b2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:07+00:00] decode_b2_rv_tricky.c#scalar rc=1
+[2026-10-17T07:46:07+00:00] attr_b2_rv_tricky.c#scalar_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:07+00:00] loops_b2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:07+00:00] extract_b2_rv_tricky2.c rc=0
+[2026-10-17T07:46:08+00:00] decode_b2_rv_tricky2.c rc=1
+[2026-10-17T07:46:08+00:00] attr_b2_rv_tricky2.c_rv_tricky2.c rc=0
+[2026-10-17T07:46:08+00:00] loops_b2_rv_tricky2.c rc=0
+[2026-10-17T07:46:08+00:00] extract_b2_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:09+00:00] decode_b2_rv_tricky2.c#scalar rc=1
+[2026-10-17T07:46:09+00:00] attr_b2_rv_tricky2.c#scalar_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:09+00:00] loops_b2_rv_tricky2.c#scalar rc=0
+{"config": "A", "steps": 68, "failed_steps": ["decode_b1_rv_tricky.c", "decode_b1_rv_tricky.c#scalar", "decode_b1_rv_tricky2.c", "decode_b1_rv_tricky2.c#scalar", "decode_b2_rv_tricky.c", "decode_b2_rv_tricky.c#scalar", "decode_b2_rv_tricky2.c", "decode_b2_rv_tricky2.c#scalar"]}
+CONFIG_RC=0
+END Sat 10/17/2026  3:46:09.30
+
+===== R1_A-ninja.log (2026-10-17T03:46:27 EDT)
+START Sat 10/17/2026  3:46:10.13 RUN=D:\mithril\x0reg\runs\R1reg CFG=A-ninja MODE=replay MORE= --set D:\mithril\x0reg\x0-census\scripts\smoke\regression_set.json
+[2026-10-17T07:46:10+00:00] compile1_smoke_dispatch.c rc=0
+[2026-10-17T07:46:10+00:00] compile1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:10+00:00] compile1_rv_tricky.c rc=0
+[2026-10-17T07:46:10+00:00] compile1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:10+00:00] compile1_rv_tricky2.c rc=0
+[2026-10-17T07:46:11+00:00] compile1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:11+00:00] compile2_smoke_dispatch.c rc=0
+[2026-10-17T07:46:11+00:00] compile2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:11+00:00] compile2_rv_tricky.c rc=0
+[2026-10-17T07:46:11+00:00] compile2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:11+00:00] compile2_rv_tricky2.c rc=0
+[2026-10-17T07:46:12+00:00] compile2_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:12+00:00] twin_smoke_dispatch.c rc=0
+[2026-10-17T07:46:12+00:00] twin_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:12+00:00] twin_rv_tricky.c rc=0
+[2026-10-17T07:46:12+00:00] twin_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:12+00:00] twin_rv_tricky2.c rc=0
+[2026-10-17T07:46:12+00:00] twin_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:12+00:00] extract_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:46:14+00:00] decode_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:46:14+00:00] attr_b1_smoke_dispatch.c_smoke_dispatch.c rc=0
+[2026-10-17T07:46:14+00:00] loops_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:46:14+00:00] extract_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:16+00:00] decode_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:16+00:00] attr_b1_smoke_dispatch.c#scalar_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:16+00:00] loops_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:16+00:00] extract_b1_rv_tricky.c rc=0
+[2026-10-17T07:46:17+00:00] decode_b1_rv_tricky.c rc=1
+[2026-10-17T07:46:17+00:00] attr_b1_rv_tricky.c_rv_tricky.c rc=0
+[2026-10-17T07:46:17+00:00] loops_b1_rv_tricky.c rc=0
+[2026-10-17T07:46:17+00:00] extract_b1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:18+00:00] decode_b1_rv_tricky.c#scalar rc=1
+[2026-10-17T07:46:18+00:00] attr_b1_rv_tricky.c#scalar_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:18+00:00] loops_b1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:18+00:00] extract_b1_rv_tricky2.c rc=0
+[2026-10-17T07:46:18+00:00] decode_b1_rv_tricky2.c rc=1
+[2026-10-17T07:46:19+00:00] attr_b1_rv_tricky2.c_rv_tricky2.c rc=0
+[2026-10-17T07:46:19+00:00] loops_b1_rv_tricky2.c rc=0
+[2026-10-17T07:46:19+00:00] extract_b1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:19+00:00] decode_b1_rv_tricky2.c#scalar rc=1
+[2026-10-17T07:46:19+00:00] attr_b1_rv_tricky2.c#scalar_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:19+00:00] loops_b1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:20+00:00] extract_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:46:21+00:00] decode_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:46:21+00:00] attr_b2_smoke_dispatch.c_smoke_dispatch.c rc=0
+[2026-10-17T07:46:21+00:00] loops_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:46:21+00:00] extract_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:23+00:00] decode_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:23+00:00] attr_b2_smoke_dispatch.c#scalar_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:23+00:00] loops_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:23+00:00] extract_b2_rv_tricky.c rc=0
+[2026-10-17T07:46:24+00:00] decode_b2_rv_tricky.c rc=1
+[2026-10-17T07:46:24+00:00] attr_b2_rv_tricky.c_rv_tricky.c rc=0
+[2026-10-17T07:46:24+00:00] loops_b2_rv_tricky.c rc=0
+[2026-10-17T07:46:24+00:00] extract_b2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:25+00:00] decode_b2_rv_tricky.c#scalar rc=1
+[2026-10-17T07:46:25+00:00] attr_b2_rv_tricky.c#scalar_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:25+00:00] loops_b2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:25+00:00] extract_b2_rv_tricky2.c rc=0
+[2026-10-17T07:46:26+00:00] decode_b2_rv_tricky2.c rc=1
+[2026-10-17T07:46:26+00:00] attr_b2_rv_tricky2.c_rv_tricky2.c rc=0
+[2026-10-17T07:46:26+00:00] loops_b2_rv_tricky2.c rc=0
+[2026-10-17T07:46:26+00:00] extract_b2_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:26+00:00] decode_b2_rv_tricky2.c#scalar rc=1
+[2026-10-17T07:46:26+00:00] attr_b2_rv_tricky2.c#scalar_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:27+00:00] loops_b2_rv_tricky2.c#scalar rc=0
+{"config": "A-ninja", "steps": 68, "failed_steps": ["decode_b1_rv_tricky.c", "decode_b1_rv_tricky.c#scalar", "decode_b1_rv_tricky2.c", "decode_b1_rv_tricky2.c#scalar", "decode_b2_rv_tricky.c", "decode_b2_rv_tricky.c#scalar", "decode_b2_rv_tricky2.c", "decode_b2_rv_tricky2.c#scalar"]}
+CONFIG_RC=0
+END Sat 10/17/2026  3:46:27.06
+
+===== R1_B-cmake.log (2026-10-17T03:46:48 EDT)
+START Sat 10/17/2026  3:46:27.87 RUN=D:\mithril\x0reg\runs\R1reg CFG=B-cmake MODE=replay MORE= --set D:\mithril\x0reg\x0-census\scripts\smoke\regression_set.json
+[2026-10-17T07:46:28+00:00] compile1_smoke_dispatch.c rc=0
+[2026-10-17T07:46:28+00:00] compile1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:28+00:00] compile1_rv_tricky.c rc=0
+[2026-10-17T07:46:29+00:00] compile1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:29+00:00] compile1_rv_tricky2.c rc=0
+[2026-10-17T07:46:29+00:00] compile1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:29+00:00] compile2_smoke_dispatch.c rc=0
+[2026-10-17T07:46:30+00:00] compile2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:30+00:00] compile2_rv_tricky.c rc=0
+[2026-10-17T07:46:30+00:00] compile2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:30+00:00] compile2_rv_tricky2.c rc=0
+[2026-10-17T07:46:30+00:00] compile2_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:31+00:00] twin_smoke_dispatch.c rc=0
+[2026-10-17T07:46:31+00:00] twin_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:31+00:00] twin_rv_tricky.c rc=0
+[2026-10-17T07:46:31+00:00] twin_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:31+00:00] twin_rv_tricky2.c rc=0
+[2026-10-17T07:46:32+00:00] twin_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:32+00:00] cc1:smoke_dispatch.c rc=0
+[2026-10-17T07:46:32+00:00] cc1:smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:32+00:00] cc1:rv_tricky.c rc=0
+[2026-10-17T07:46:32+00:00] cc1:rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:32+00:00] cc1:rv_tricky2.c rc=0
+[2026-10-17T07:46:32+00:00] cc1:rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:32+00:00] extract_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:46:34+00:00] decode_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:46:34+00:00] attr_b1_smoke_dispatch.c_smoke_dispatch.c rc=0
+[2026-10-17T07:46:34+00:00] loops_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:46:34+00:00] extract_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:36+00:00] decode_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:36+00:00] attr_b1_smoke_dispatch.c#scalar_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:36+00:00] loops_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:36+00:00] extract_b1_rv_tricky.c rc=0
+[2026-10-17T07:46:37+00:00] decode_b1_rv_tricky.c rc=1
+[2026-10-17T07:46:37+00:00] attr_b1_rv_tricky.c_rv_tricky.c rc=0
+[2026-10-17T07:46:37+00:00] loops_b1_rv_tricky.c rc=0
+[2026-10-17T07:46:37+00:00] extract_b1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:38+00:00] decode_b1_rv_tricky.c#scalar rc=1
+[2026-10-17T07:46:38+00:00] attr_b1_rv_tricky.c#scalar_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:38+00:00] loops_b1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:39+00:00] extract_b1_rv_tricky2.c rc=0
+[2026-10-17T07:46:39+00:00] decode_b1_rv_tricky2.c rc=1
+[2026-10-17T07:46:39+00:00] attr_b1_rv_tricky2.c_rv_tricky2.c rc=0
+[2026-10-17T07:46:39+00:00] loops_b1_rv_tricky2.c rc=0
+[2026-10-17T07:46:39+00:00] extract_b1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:40+00:00] decode_b1_rv_tricky2.c#scalar rc=1
+[2026-10-17T07:46:40+00:00] attr_b1_rv_tricky2.c#scalar_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:40+00:00] loops_b1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:40+00:00] extract_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:46:42+00:00] decode_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:46:42+00:00] attr_b2_smoke_dispatch.c_smoke_dispatch.c rc=0
+[2026-10-17T07:46:43+00:00] loops_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:46:43+00:00] extract_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:44+00:00] decode_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:44+00:00] attr_b2_smoke_dispatch.c#scalar_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:45+00:00] loops_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:45+00:00] extract_b2_rv_tricky.c rc=0
+[2026-10-17T07:46:46+00:00] decode_b2_rv_tricky.c rc=1
+[2026-10-17T07:46:46+00:00] attr_b2_rv_tricky.c_rv_tricky.c rc=0
+[2026-10-17T07:46:46+00:00] loops_b2_rv_tricky.c rc=0
+[2026-10-17T07:46:46+00:00] extract_b2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:47+00:00] decode_b2_rv_tricky.c#scalar rc=1
+[2026-10-17T07:46:47+00:00] attr_b2_rv_tricky.c#scalar_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:47+00:00] loops_b2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:47+00:00] extract_b2_rv_tricky2.c rc=0
+[2026-10-17T07:46:47+00:00] decode_b2_rv_tricky2.c rc=1
+[2026-10-17T07:46:47+00:00] attr_b2_rv_tricky2.c_rv_tricky2.c rc=0
+[2026-10-17T07:46:48+00:00] loops_b2_rv_tricky2.c rc=0
+[2026-10-17T07:46:48+00:00] extract_b2_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:48+00:00] decode_b2_rv_tricky2.c#scalar rc=1
+[2026-10-17T07:46:48+00:00] attr_b2_rv_tricky2.c#scalar_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:48+00:00] loops_b2_rv_tricky2.c#scalar rc=0
+{"config": "B-cmake", "steps": 74, "failed_steps": ["decode_b1_rv_tricky.c", "decode_b1_rv_tricky.c#scalar", "decode_b1_rv_tricky2.c", "decode_b1_rv_tricky2.c#scalar", "decode_b2_rv_tricky.c", "decode_b2_rv_tricky.c#scalar", "decode_b2_rv_tricky2.c", "decode_b2_rv_tricky2.c#scalar"]}
+CONFIG_RC=0
+END Sat 10/17/2026  3:46:48.84
+
+===== R1_C.log (2026-10-17T03:47:38 EDT)
+START 2026-10-17T03:46:49-04:00 RUN=/mnt/d/mithril/x0reg/runs/R1reg CFG=C MODE=replay MORE=--set /mnt/d/mithril/x0reg/x0-census/scripts/smoke/regression_set.json
+[2026-10-17T07:46:51+00:00] compile1_smoke_dispatch.c rc=0
+[2026-10-17T07:46:52+00:00] compile1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:53+00:00] compile1_rv_tricky.c rc=0
+[2026-10-17T07:46:53+00:00] compile1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:54+00:00] compile1_rv_tricky2.c rc=0
+[2026-10-17T07:46:54+00:00] compile1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:53+00:00] compile2_smoke_dispatch.c rc=0
+[2026-10-17T07:46:55+00:00] compile2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:55+00:00] compile2_rv_tricky.c rc=0
+[2026-10-17T07:46:56+00:00] compile2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:46:56+00:00] compile2_rv_tricky2.c rc=0
+[2026-10-17T07:46:57+00:00] compile2_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:46:58+00:00] twin_smoke_dispatch.c rc=0
+[2026-10-17T07:46:59+00:00] twin_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:46:59+00:00] twin_rv_tricky.c rc=0
+[2026-10-17T07:46:59+00:00] twin_rv_tricky.c#scalar rc=0
+[2026-10-17T07:47:00+00:00] twin_rv_tricky2.c rc=0
+[2026-10-17T07:47:00+00:00] twin_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:47:00+00:00] gccq:smoke_dispatch.c rc=0
+[2026-10-17T07:47:00+00:00] gccq:smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:47:00+00:00] gccq:rv_tricky.c rc=0
+[2026-10-17T07:47:00+00:00] gccq:rv_tricky.c#scalar rc=0
+[2026-10-17T07:47:00+00:00] gccq:rv_tricky2.c rc=0
+[2026-10-17T07:47:00+00:00] gccq:rv_tricky2.c#scalar rc=0
+[2026-10-17T07:47:00+00:00] extract_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:47:06+00:00] decode_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:47:06+00:00] attr_b1_smoke_dispatch.c_smoke_dispatch.c rc=0
+[2026-10-17T07:47:07+00:00] loops_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:47:07+00:00] extract_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:47:11+00:00] decode_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:47:12+00:00] attr_b1_smoke_dispatch.c#scalar_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:47:12+00:00] loops_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:47:12+00:00] extract_b1_rv_tricky.c rc=0
+[2026-10-17T07:47:14+00:00] decode_b1_rv_tricky.c rc=1
+[2026-10-17T07:47:14+00:00] attr_b1_rv_tricky.c_rv_tricky.c rc=0
+[2026-10-17T07:47:14+00:00] loops_b1_rv_tricky.c rc=0
+[2026-10-17T07:47:14+00:00] extract_b1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:47:16+00:00] decode_b1_rv_tricky.c#scalar rc=1
+[2026-10-17T07:47:16+00:00] attr_b1_rv_tricky.c#scalar_rv_tricky.c#scalar rc=0
+[2026-10-17T07:47:16+00:00] loops_b1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:47:16+00:00] extract_b1_rv_tricky2.c rc=0
+[2026-10-17T07:47:18+00:00] decode_b1_rv_tricky2.c rc=1
+[2026-10-17T07:47:18+00:00] attr_b1_rv_tricky2.c_rv_tricky2.c rc=0
+[2026-10-17T07:47:18+00:00] loops_b1_rv_tricky2.c rc=0
+[2026-10-17T07:47:18+00:00] extract_b1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:47:20+00:00] decode_b1_rv_tricky2.c#scalar rc=1
+[2026-10-17T07:47:20+00:00] attr_b1_rv_tricky2.c#scalar_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:47:20+00:00] loops_b1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:47:20+00:00] extract_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:47:24+00:00] decode_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:47:24+00:00] attr_b2_smoke_dispatch.c_smoke_dispatch.c rc=0
+[2026-10-17T07:47:25+00:00] loops_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:47:25+00:00] extract_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:47:29+00:00] decode_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:47:29+00:00] attr_b2_smoke_dispatch.c#scalar_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:47:29+00:00] loops_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:47:29+00:00] extract_b2_rv_tricky.c rc=0
+[2026-10-17T07:47:31+00:00] decode_b2_rv_tricky.c rc=1
+[2026-10-17T07:47:31+00:00] attr_b2_rv_tricky.c_rv_tricky.c rc=0
+[2026-10-17T07:47:31+00:00] loops_b2_rv_tricky.c rc=0
+[2026-10-17T07:47:31+00:00] extract_b2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:47:33+00:00] decode_b2_rv_tricky.c#scalar rc=1
+[2026-10-17T07:47:33+00:00] attr_b2_rv_tricky.c#scalar_rv_tricky.c#scalar rc=0
+[2026-10-17T07:47:34+00:00] loops_b2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:47:34+00:00] extract_b2_rv_tricky2.c rc=0
+[2026-10-17T07:47:35+00:00] decode_b2_rv_tricky2.c rc=1
+[2026-10-17T07:47:36+00:00] attr_b2_rv_tricky2.c_rv_tricky2.c rc=0
+[2026-10-17T07:47:36+00:00] loops_b2_rv_tricky2.c rc=0
+[2026-10-17T07:47:36+00:00] extract_b2_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:47:37+00:00] decode_b2_rv_tricky2.c#scalar rc=1
+[2026-10-17T07:47:38+00:00] attr_b2_rv_tricky2.c#scalar_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:47:38+00:00] loops_b2_rv_tricky2.c#scalar rc=0
+{"config": "C", "steps": 74, "failed_steps": ["decode_b1_rv_tricky.c", "decode_b1_rv_tricky.c#scalar", "decode_b1_rv_tricky2.c", "decode_b1_rv_tricky2.c#scalar", "decode_b2_rv_tricky.c", "decode_b2_rv_tricky.c#scalar", "decode_b2_rv_tricky2.c", "decode_b2_rv_tricky2.c#scalar"]}
+CONFIG_RC=0
+END 2026-10-17T03:47:38-04:00
+
+===== R1_D.log (2026-10-17T03:48:56 EDT)
+START 2026-10-17T03:47:38-04:00 RUN=/mnt/d/mithril/x0reg/runs/R1reg CFG=D MODE=replay MORE=--set /mnt/d/mithril/x0reg/x0-census/scripts/smoke/regression_set.json
+[2026-10-17T07:47:42+00:00] compile1_smoke_dispatch.c rc=0
+[2026-10-17T07:47:44+00:00] compile1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:47:46+00:00] compile1_rv_tricky.c rc=0
+[2026-10-17T07:47:48+00:00] compile1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:47:50+00:00] compile1_rv_tricky2.c rc=0
+[2026-10-17T07:47:51+00:00] compile1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:47:53+00:00] compile2_smoke_dispatch.c rc=0
+[2026-10-17T07:47:56+00:00] compile2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:47:58+00:00] compile2_rv_tricky.c rc=0
+[2026-10-17T07:47:59+00:00] compile2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:48:01+00:00] compile2_rv_tricky2.c rc=0
+[2026-10-17T07:48:03+00:00] compile2_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:48:05+00:00] twin_smoke_dispatch.c rc=0
+[2026-10-17T07:48:07+00:00] twin_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:48:09+00:00] twin_rv_tricky.c rc=0
+[2026-10-17T07:48:10+00:00] twin_rv_tricky.c#scalar rc=0
+[2026-10-17T07:48:12+00:00] twin_rv_tricky2.c rc=0
+[2026-10-17T07:48:14+00:00] twin_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:48:14+00:00] cc1:smoke_dispatch.c rc=0
+[2026-10-17T07:48:14+00:00] cc1:smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:48:15+00:00] cc1:rv_tricky.c rc=0
+[2026-10-17T07:48:15+00:00] cc1:rv_tricky.c#scalar rc=0
+[2026-10-17T07:48:15+00:00] cc1:rv_tricky2.c rc=0
+[2026-10-17T07:48:16+00:00] cc1:rv_tricky2.c#scalar rc=0
+[2026-10-17T07:48:18+00:00] extract_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:48:24+00:00] decode_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:48:24+00:00] attr_b1_smoke_dispatch.c_smoke_dispatch.c rc=0
+[2026-10-17T07:48:22+00:00] loops_b1_smoke_dispatch.c rc=0
+[2026-10-17T07:48:22+00:00] extract_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:48:27+00:00] decode_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:48:27+00:00] attr_b1_smoke_dispatch.c#scalar_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:48:27+00:00] loops_b1_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:48:27+00:00] extract_b1_rv_tricky.c rc=0
+[2026-10-17T07:48:30+00:00] decode_b1_rv_tricky.c rc=1
+[2026-10-17T07:48:30+00:00] attr_b1_rv_tricky.c_rv_tricky.c rc=0
+[2026-10-17T07:48:30+00:00] loops_b1_rv_tricky.c rc=0
+[2026-10-17T07:48:30+00:00] extract_b1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:48:32+00:00] decode_b1_rv_tricky.c#scalar rc=1
+[2026-10-17T07:48:32+00:00] attr_b1_rv_tricky.c#scalar_rv_tricky.c#scalar rc=0
+[2026-10-17T07:48:32+00:00] loops_b1_rv_tricky.c#scalar rc=0
+[2026-10-17T07:48:32+00:00] extract_b1_rv_tricky2.c rc=0
+[2026-10-17T07:48:34+00:00] decode_b1_rv_tricky2.c rc=1
+[2026-10-17T07:48:34+00:00] attr_b1_rv_tricky2.c_rv_tricky2.c rc=0
+[2026-10-17T07:48:34+00:00] loops_b1_rv_tricky2.c rc=0
+[2026-10-17T07:48:34+00:00] extract_b1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:48:36+00:00] decode_b1_rv_tricky2.c#scalar rc=1
+[2026-10-17T07:48:36+00:00] attr_b1_rv_tricky2.c#scalar_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:48:36+00:00] loops_b1_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:48:36+00:00] extract_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:48:42+00:00] decode_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:48:42+00:00] attr_b2_smoke_dispatch.c_smoke_dispatch.c rc=0
+[2026-10-17T07:48:43+00:00] loops_b2_smoke_dispatch.c rc=0
+[2026-10-17T07:48:43+00:00] extract_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:48:47+00:00] decode_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:48:47+00:00] attr_b2_smoke_dispatch.c#scalar_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:48:48+00:00] loops_b2_smoke_dispatch.c#scalar rc=0
+[2026-10-17T07:48:48+00:00] extract_b2_rv_tricky.c rc=0
+[2026-10-17T07:48:50+00:00] decode_b2_rv_tricky.c rc=1
+[2026-10-17T07:48:50+00:00] attr_b2_rv_tricky.c_rv_tricky.c rc=0
+[2026-10-17T07:48:51+00:00] loops_b2_rv_tricky.c rc=0
+[2026-10-17T07:48:51+00:00] extract_b2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:48:53+00:00] decode_b2_rv_tricky.c#scalar rc=1
+[2026-10-17T07:48:53+00:00] attr_b2_rv_tricky.c#scalar_rv_tricky.c#scalar rc=0
+[2026-10-17T07:48:53+00:00] loops_b2_rv_tricky.c#scalar rc=0
+[2026-10-17T07:48:53+00:00] extract_b2_rv_tricky2.c rc=0
+[2026-10-17T07:48:53+00:00] decode_b2_rv_tricky2.c rc=1
+[2026-10-17T07:48:53+00:00] attr_b2_rv_tricky2.c_rv_tricky2.c rc=0
+[2026-10-17T07:48:53+00:00] loops_b2_rv_tricky2.c rc=0
+[2026-10-17T07:48:53+00:00] extract_b2_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:48:55+00:00] decode_b2_rv_tricky2.c#scalar rc=1
+[2026-10-17T07:48:55+00:00] attr_b2_rv_tricky2.c#scalar_rv_tricky2.c#scalar rc=0
+[2026-10-17T07:48:55+00:00] loops_b2_rv_tricky2.c#scalar rc=0
+{"config": "D", "steps": 74, "failed_steps": ["decode_b1_rv_tricky.c", "decode_b1_rv_tricky.c#scalar", "decode_b1_rv_tricky2.c", "decode_b1_rv_tricky2.c#scalar", "decode_b2_rv_tricky.c", "decode_b2_rv_tricky.c#scalar", "decode_b2_rv_tricky2.c", "decode_b2_rv_tricky2.c#scalar"]}
+CONFIG_RC=0
+END 2026-10-17T03:48:55-04:00
+
+===== R1_P.A.log (2026-10-17T03:48:58 EDT)
+START Sat 10/17/2026  3:48:57.59 RUN=D:\mithril\x0reg\runs\R1reg CFG=P.A MODE=probe MORE= --from-config A --from-file smoke_dispatch.c
+[2026-10-17T07:48:57+00:00] compile1_reduce_probe.c rc=0
+[2026-10-17T07:48:57+00:00] compile2_reduce_probe.c rc=0
+[2026-10-17T07:48:58+00:00] twin_reduce_probe.c rc=0
+[2026-10-17T07:48:58+00:00] extract_b1_reduce_probe.c rc=0
+[2026-10-17T07:48:58+00:00] decode_b1_reduce_probe.c rc=0
+[2026-10-17T07:48:58+00:00] attr_b1_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T07:48:58+00:00] loops_b1_reduce_probe.c rc=0
+[2026-10-17T07:48:58+00:00] extract_b2_reduce_probe.c rc=0
+[2026-10-17T07:48:58+00:00] decode_b2_reduce_probe.c rc=0
+[2026-10-17T07:48:58+00:00] attr_b2_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T07:48:58+00:00] loops_b2_reduce_probe.c rc=0
+{"config": "P.A", "steps": 13, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026  3:48:58.94
+
+===== R1_P.A-ninja.log (2026-10-17T03:49:01 EDT)
+START Sat 10/17/2026  3:48:59.84 RUN=D:\mithril\x0reg\runs\R1reg CFG=P.A-ninja MODE=probe MORE= --from-config A-ninja --from-file smoke_dispatch.c
+[2026-10-17T07:49:00+00:00] compile1_reduce_probe.c rc=0
+[2026-10-17T07:49:00+00:00] compile2_reduce_probe.c rc=0
+[2026-10-17T07:49:00+00:00] twin_reduce_probe.c rc=0
+[2026-10-17T07:49:00+00:00] extract_b1_reduce_probe.c rc=0
+[2026-10-17T07:49:00+00:00] decode_b1_reduce_probe.c rc=0
+[2026-10-17T07:49:00+00:00] attr_b1_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T07:49:00+00:00] loops_b1_reduce_probe.c rc=0
+[2026-10-17T07:49:00+00:00] extract_b2_reduce_probe.c rc=0
+[2026-10-17T07:49:01+00:00] decode_b2_reduce_probe.c rc=0
+[2026-10-17T07:49:01+00:00] attr_b2_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T07:49:01+00:00] loops_b2_reduce_probe.c rc=0
+{"config": "P.A-ninja", "steps": 13, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026  3:49:01.18
+
+===== R1_P.B-cmake.log (2026-10-17T03:49:03 EDT)
+START Sat 10/17/2026  3:49:02.01 RUN=D:\mithril\x0reg\runs\R1reg CFG=P.B-cmake MODE=probe MORE= --from-config B-cmake --from-file smoke_dispatch.c
+[2026-10-17T07:49:02+00:00] compile1_reduce_probe.c rc=0
+[2026-10-17T07:49:02+00:00] compile2_reduce_probe.c rc=0
+[2026-10-17T07:49:03+00:00] twin_reduce_probe.c rc=0
+[2026-10-17T07:49:03+00:00] cc1:reduce_probe.c rc=0
+[2026-10-17T07:49:03+00:00] extract_b1_reduce_probe.c rc=0
+[2026-10-17T07:49:03+00:00] decode_b1_reduce_probe.c rc=0
+[2026-10-17T07:49:03+00:00] attr_b1_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T07:49:03+00:00] loops_b1_reduce_probe.c rc=0
+[2026-10-17T07:49:03+00:00] extract_b2_reduce_probe.c rc=0
+[2026-10-17T07:49:03+00:00] decode_b2_reduce_probe.c rc=0
+[2026-10-17T07:49:03+00:00] attr_b2_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T07:49:03+00:00] loops_b2_reduce_probe.c rc=0
+{"config": "P.B-cmake", "steps": 14, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026  3:49:03.92
+
+===== R1_P.C.log (2026-10-17T03:49:09 EDT)
+START 2026-10-17T03:49:03-04:00 RUN=/mnt/d/mithril/x0reg/runs/R1reg CFG=P.C MODE=probe MORE=--from-config C --from-file smoke_dispatch.c
+[2026-10-17T07:49:05+00:00] compile1_reduce_probe.c rc=0
+[2026-10-17T07:49:06+00:00] compile2_reduce_probe.c rc=0
+[2026-10-17T07:49:07+00:00] twin_reduce_probe.c rc=0
+[2026-10-17T07:49:07+00:00] gccq:reduce_probe.c rc=0
+[2026-10-17T07:49:07+00:00] extract_b1_reduce_probe.c rc=0
+[2026-10-17T07:49:08+00:00] decode_b1_reduce_probe.c rc=0
+[2026-10-17T07:49:08+00:00] attr_b1_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T07:49:08+00:00] loops_b1_reduce_probe.c rc=0
+[2026-10-17T07:49:08+00:00] extract_b2_reduce_probe.c rc=0
+[2026-10-17T07:49:09+00:00] decode_b2_reduce_probe.c rc=0
+[2026-10-17T07:49:09+00:00] attr_b2_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T07:49:09+00:00] loops_b2_reduce_probe.c rc=0
+{"config": "P.C", "steps": 14, "failed_steps": []}
+CONFIG_RC=0
+END 2026-10-17T03:49:09-04:00
+
+===== R1_P.D.log (2026-10-17T03:49:21 EDT)
+START 2026-10-17T03:49:09-04:00 RUN=/mnt/d/mithril/x0reg/runs/R1reg CFG=P.D MODE=probe MORE=--from-config D --from-file smoke_dispatch.c
+[2026-10-17T07:49:12+00:00] compile1_reduce_probe.c rc=0
+[2026-10-17T07:49:15+00:00] compile2_reduce_probe.c rc=0
+[2026-10-17T07:49:18+00:00] twin_reduce_probe.c rc=0
+[2026-10-17T07:49:18+00:00] cc1:reduce_probe.c rc=0
+[2026-10-17T07:49:20+00:00] extract_b1_reduce_probe.c rc=0
+[2026-10-17T07:49:20+00:00] decode_b1_reduce_probe.c rc=0
+[2026-10-17T07:49:21+00:00] attr_b1_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T07:49:21+00:00] loops_b1_reduce_probe.c rc=0
+[2026-10-17T07:49:21+00:00] extract_b2_reduce_probe.c rc=0
+[2026-10-17T07:49:21+00:00] decode_b2_reduce_probe.c rc=0
+[2026-10-17T07:49:22+00:00] attr_b2_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T07:49:22+00:00] loops_b2_reduce_probe.c rc=0
+{"config": "P.D", "steps": 14, "failed_steps": []}
+CONFIG_RC=0
+END 2026-10-17T03:49:22-04:00
+
+===== R1_assemble.log (2026-10-17T03:49:22 EDT)
+{
+ "configs": [
+  "A",
+  "A-ninja",
+  "B-cmake",
+  "C",
+  "D",
+  "P.A",
+  "P.A-ninja",
+  "P.B-cmake",
+  "P.C",
+  "P.D"
+ ],
+ "variants": 480,
+ "builds": 70,
+ "disagreements": 32,
+ "p4_u_all": 342,
+ "p5_iclass": 36,
+ "schema_violations": []
+}
+{"outcomes": ["tooling_failure"], "validity": {"v1": false, "v2": true, "v3": false, "v4": true}, "eval_date": "2026-10-17", "conservative_resolution": false}
+x0_census.py rc=0
+judge.py rc=0
+ASSEMBLE_RC=0
+
+===== R1_judge_regprofile.log (2026-10-17T03:49:22 EDT)
+{
+ "outcomes": [
+  "tooling_failure"
+ ],
+ "validity": {
+  "v1": false,
+  "v2": true,
+  "v3": true,
+  "v4": true
+ },
+ "amber_b": [],
+ "amber_c": 0,
+ "non_gate": [],
+ "amber_a": null,
+ "v1_gaps": 184,
+ "v1_config_gaps": 0,
+ "v4": []
+}
+
+===== R1_check.log (2026-10-17T03:49:22 EDT)
+check_regression_run: 60 decode outputs, 420 variants checked, 0 deviations
+
+===== R1_summary.log (2026-10-17T03:49:22 EDT)
+{"configs": ["A", "A-ninja", "B-cmake", "C", "D", "P.A", "P.A-ninja", "P.B-cmake", "P.C", "P.D"], "verdicts": {"verdict.json": ["tooling_failure"], "verdict_regression_profile.json": ["tooling_failure"]}}
+
+===== 88_DONE.txt (2026-10-17T03:49:22 EDT)
+DONE 2026-10-17T03:49:22.6103429-04:00
+

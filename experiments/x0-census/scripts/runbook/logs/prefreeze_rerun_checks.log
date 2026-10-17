@@ -1,0 +1,474 @@
+# Pre-freeze review revision, desktop re-run of runbook step 88 (2026-10-17): the checks made around the two runs. NON-Hearth inputs only, except section 4, which reads the Hearth clone's git HEAD and the seven pinned files' blob hashes (no compile, no decode).
+# Desktop DESKTOP-8RS9J1J (sections 3-5, run over SSH); laptop DESKTOP-F441IUK (sections 1, 2, 6, on files fetched from the desktop). Tools of each section are in ../../smoke/results/prefreeze_rerun/tools/.
+
+===== 1. P3(c) flags of the FIRST run (scripts of commit 2191ff8), each loop analysed with the pinned x0_loops.py (before, SHA-256 d9ce9990...) and with the fixed one (after, 8c7ecc9e...); idioms = dependency-breaking idioms in the loop body that write a register of the counted cycles [laptop, flag_analysis.py, decodes of runs_first fetched from the desktop]. Each NEW loop is flagged in both builds; matmul[Q8]/[Q4] share the loop; sd_table matmul[3] = sd_table_global matmul[2] (sd_q8).
+R2               A:hx_kernels_scalar:act_quantize_q8          L9_90    before 2   [[["RDX"], 1], [["V1"], 1]]              after 0   []
+                   idioms writing the cycle's registers (before): 90: xorps xmm1, xmm1; 93: xor edx, edx
+R2               B-cmake:hx_kernels_scalar:act_quantize_q8    L23_761  before 5   [[["V10"], 4], [["V9"], 1]]              after 0   []
+                   idioms writing the cycle's registers (before): 768: xorps xmm9, xmm9; 79d: xorps xmm10, xmm10
+R2               B-cmake:k_avx2:matmul[Q8]                    L20_3c8  before 8   [[["V1"], 8]]                            after 0   []
+                   idioms writing the cycle's registers (before): 3f0: vpxor xmm1, xmm1, xmm1; 7c0: vpxor xmm1, xmm1, xmm1
+R2               B-cmake:k_avx2:matmul[Q4]                    L20_3c8  before 8   [[["V1"], 8]]                            after 0   []
+                   idioms writing the cycle's registers (before): 3f0: vpxor xmm1, xmm1, xmm1; 7c0: vpxor xmm1, xmm1, xmm1
+R2               C:hx_kernels_scalar:act_quantize_q8          L1_70    before 9   [[["RSI"], 4], [["V0"], 1], [["V7"], 4]] after 0   []
+                   idioms writing the cycle's registers (before): 73: pxor xmm0, xmm0; 97: pxor xmm7, xmm7; 7e7: xor esi, esi
+R2               C:k_avx2:act_quantize_q8                     L1_1e7   before 24  [[["RCX"], 8], [["V15", "V5"], 8]]       after 0   []
+                   idioms writing the cycle's registers (before): 1ec: vxorps xmm5, xmm5, xmm5; 1f0: vxorps xmm15, xmm15, xmm15; 2f4: xor ecx, ecx
+R2               D:hx_kernels_scalar:act_quantize_q8          L2_f9d   before 5   [[["V10"], 4], [["V9"], 1]]              after 0   []
+                   idioms writing the cycle's registers (before): fa4: xorps xmm9, xmm9; fdd: xorps xmm10, xmm10
+R2               D:k_avx2:matmul[Q8]                          L2_137a  before 8   [[["V1"], 8]]                            after 0   []
+                   idioms writing the cycle's registers (before): 13a3: vpxor xmm1, xmm1, xmm1; 1490: vpxor xmm1, xmm1, xmm1
+R2               D:k_avx2:matmul[Q4]                          L2_137a  before 8   [[["V1"], 8]]                            after 0   []
+                   idioms writing the cycle's registers (before): 13a3: vpxor xmm1, xmm1, xmm1; 1490: vpxor xmm1, xmm1, xmm1
+R1               B-cmake:sd_table:matmul[3]                   L9_134   before 2   [[["V2", "V3"], 1]]                      after 0   []
+                   idioms writing the cycle's registers (before): 16f: vpxor xmm2, xmm2, xmm2; 175: vpxor xmm3, xmm3, xmm3
+R1               B-cmake:sd_table:matmul[3]                   L9_126   before 2   [[["V2", "V3"], 1]]                      after 0   []
+                   idioms writing the cycle's registers (before): 150: pxor xmm2, xmm2; 156: pxor xmm3, xmm3; 251: xorps xmm2, xmm2; 263: xorps xmm2, xmm2; 275: xorps xmm2, xmm2; 2a1: xorps xmm2, xmm2; 2d0: xorps xmm2, xmm2
+R1               C:sd_table:matmul[3]                         L1_78    before 3   [[["RCX", "V0", "V8"], 1]]               after 0   []
+                   idioms writing the cycle's registers (before): 78: xor ecx, ecx; 91: vpxor xmm0, xmm0, xmm0; 387: vpxor xmm8, xmm8, xmm8; 38c: xor ecx, ecx
+R1               C:sd_table:matmul[3]                         L1_68    before 3   [[["RCX", "V0", "V1"], 1]]               after 0   []
+                   idioms writing the cycle's registers (before): 68: xor ecx, ecx; 85: pxor xmm1, xmm1; 33b: pxor xmm0, xmm0; 386: pxor xmm0, xmm0; 3a0: pxor xmm0, xmm0; 3b2: pxor xmm0, xmm0; 3c2: pxor xmm0, xmm0; 3d3: pxor xmm0, xmm0; 3e3: pxor xmm0, xmm0; 3f0: pxor xmm0, xmm0; 408: pxor xmm0, xmm0; 41d: pxor xmm0, xmm0; 426: xor ecx, ecx
+R1               D:sd_table:matmul[3]                         L2_2b1   before 2   [[["V2", "V3"], 1]]                      after 0   []
+                   idioms writing the cycle's registers (before): 2df: vpxor xmm2, xmm2, xmm2; 2e5: vpxor xmm3, xmm3, xmm3
+R1               D:sd_table:matmul[3]                         L2_283   before 2   [[["V2", "V3"], 1]]                      after 0   []
+                   idioms writing the cycle's registers (before): 2b0: pxor xmm2, xmm2; 2b6: pxor xmm3, xmm3; 3af: xorps xmm2, xmm2; 3c3: xorps xmm2, xmm2; 3d7: xorps xmm2, xmm2; 406: xorps xmm2, xmm2; 430: xorps xmm2, xmm2
+R1 earlier flag  B-cmake:sd_table:matmul[0]                   L19_2a0  before 32  [[["V0"], 16], [["V1"], 16]]             after 32  [[["V0"], 16], [["V1"], 16]]
+                   idioms writing the cycle's registers (before): none
+R1 earlier flag  B-cmake:sd_table:matmul[0]                   L19_1ca  before 32  [[["STK:RSP:160"], 16], [["V0"], 16]]    after 16  [[["STK:RSP:160"], 16]]
+                   idioms writing the cycle's registers (before): 1ca: vxorps xmm0, xmm0, xmm0
+R1 earlier flag  B-cmake:sd_table:matmul[0]                   L19_123  before 32  [[["STK:RSP:160"], 16], [["V0"], 16]]    after 16  [[["STK:RSP:160"], 16]]
+                   idioms writing the cycle's registers (before): 1ca: vxorps xmm0, xmm0, xmm0
+R1 earlier flag  D:sd_table:matmul[0]                         L2_10c0  before 32  [[["V0"], 16], [["V1"], 16]]             after 32  [[["V0"], 16], [["V1"], 16]]
+                   idioms writing the cycle's registers (before): none
+R1 earlier flag  D:sd_table:matmul[0]                         L2_f34   before 32  [[["STK:RSP:48"], 16], [["V0"], 16]]     after 16  [[["STK:RSP:48"], 16]]
+                   idioms writing the cycle's registers (before): f45: vxorps xmm0, xmm0, xmm0; f75: vxorps xmm0, xmm0, xmm0
+R1 earlier flag  D:sd_table:matmul[0]                         L2_e66   before 32  [[["STK:RSP:48"], 16], [["V0"], 16]]     after 16  [[["STK:RSP:48"], 16]]
+                   idioms writing the cycle's registers (before): f45: vxorps xmm0, xmm0, xmm0; f75: vxorps xmm0, xmm0, xmm0
+
+===== 2. Header environment of every configuration against class/frozen_inputs.json "headers" (judge.headers_mismatch), and compiler pins of every build record [laptop, headers_check.py, census.json of each run]
+--- FINAL run
+== final/r2/census.json X0-census-smoke hearth
+  A          pin=A        headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=6 compiler_pin_mismatch=none
+  A-ninja    pin=A-ninja  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=6 compiler_pin_mismatch=none
+  B-cmake    pin=B-cmake  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=322 files 5587c91b9f11 builds=6 compiler_pin_mismatch=none
+  B-proxy    pin=B-cmake  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=322 files 5587c91b9f11 builds=6 compiler_pin_mismatch=none
+  C          pin=C        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=None builds=6 compiler_pin_mismatch=none
+  D          pin=D        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=327 files 18b182d3296b builds=6 compiler_pin_mismatch=none
+  P.A        pin=A        headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=2 compiler_pin_mismatch=none
+  P.A-ninja  pin=A-ninja  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=2 compiler_pin_mismatch=none
+  P.B-cmake  pin=B-cmake  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=322 files 5587c91b9f11 builds=2 compiler_pin_mismatch=none
+  P.C        pin=C        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=None builds=2 compiler_pin_mismatch=none
+  P.D        pin=D        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=327 files 18b182d3296b builds=2 compiler_pin_mismatch=none
+== final/r1/census.json X0-census-smoke regression
+  A          pin=A        headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=12 compiler_pin_mismatch=none
+  A-ninja    pin=A-ninja  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=12 compiler_pin_mismatch=none
+  B-cmake    pin=B-cmake  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=322 files 5587c91b9f11 builds=12 compiler_pin_mismatch=none
+  C          pin=C        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=None builds=12 compiler_pin_mismatch=none
+  D          pin=D        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=327 files 18b182d3296b builds=12 compiler_pin_mismatch=none
+  P.A        pin=A        headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=2 compiler_pin_mismatch=none
+  P.A-ninja  pin=A-ninja  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=2 compiler_pin_mismatch=none
+  P.B-cmake  pin=B-cmake  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=322 files 5587c91b9f11 builds=2 compiler_pin_mismatch=none
+  P.C        pin=C        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=None builds=2 compiler_pin_mismatch=none
+  P.D        pin=D        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=327 files 18b182d3296b builds=2 compiler_pin_mismatch=none
+TOTAL_HEADER_MISMATCHES 0
+--- FIRST run
+== r2/census.json X0-census-smoke hearth
+  A          pin=A        headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=6 compiler_pin_mismatch=none
+  A-ninja    pin=A-ninja  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=6 compiler_pin_mismatch=none
+  B-cmake    pin=B-cmake  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=322 files 5587c91b9f11 builds=6 compiler_pin_mismatch=none
+  B-proxy    pin=B-cmake  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=322 files 5587c91b9f11 builds=6 compiler_pin_mismatch=none
+  C          pin=C        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=None builds=6 compiler_pin_mismatch=none
+  D          pin=D        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=327 files 18b182d3296b builds=6 compiler_pin_mismatch=none
+  P.A        pin=A        headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=2 compiler_pin_mismatch=none
+  P.A-ninja  pin=A-ninja  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=2 compiler_pin_mismatch=none
+  P.B-cmake  pin=B-cmake  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=322 files 5587c91b9f11 builds=2 compiler_pin_mismatch=none
+  P.C        pin=C        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=None builds=2 compiler_pin_mismatch=none
+  P.D        pin=D        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=327 files 18b182d3296b builds=2 compiler_pin_mismatch=none
+== r1/census.json X0-census-smoke regression
+  A          pin=A        headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=12 compiler_pin_mismatch=none
+  A-ninja    pin=A-ninja  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=12 compiler_pin_mismatch=none
+  B-cmake    pin=B-cmake  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=322 files 5587c91b9f11 builds=12 compiler_pin_mismatch=none
+  C          pin=C        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=None builds=12 compiler_pin_mismatch=none
+  D          pin=D        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=327 files 18b182d3296b builds=12 compiler_pin_mismatch=none
+  P.A        pin=A        headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=2 compiler_pin_mismatch=none
+  P.A-ninja  pin=A-ninja  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=None builds=2 compiler_pin_mismatch=none
+  P.B-cmake  pin=B-cmake  headers_mismatch=none sdk=10.0.26100.0\ ucrt=10.0.26100.0 vctools=14.44.35207 libc_dev=None resource_dir=322 files 5587c91b9f11 builds=2 compiler_pin_mismatch=none
+  P.C        pin=C        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=None builds=2 compiler_pin_mismatch=none
+  P.D        pin=D        headers_mismatch=none sdk=None ucrt=None vctools=None libc_dev=2.39-0ubuntu8.9 resource_dir=327 files 18b182d3296b builds=2 compiler_pin_mismatch=none
+TOTAL_HEADER_MISMATCHES 0
+
+===== 3. Decoded code compared with the x0final revision's run (D:\mithril\x0final-rev\runs, rewritten smoke_dispatch.c vs Hearth-line text) and between the first and the final re-run [desktop, code_compare.py, code_detail.py]
+===== code comparison: x0final revision run (D:\mithril\x0final-rev\runs) vs this re-run (D:\mithril\x0reg\runs)
+--- R1reg
+A          b1 rv_tricky.c                identical variants=6 records=314
+A          b1 rv_tricky.c#scalar         identical variants=6 records=267
+A          b1 rv_tricky2.c               identical variants=3 records=217
+A          b1 rv_tricky2.c#scalar        identical variants=3 records=224
+A          b1 smoke_dispatch.c           identical variants=12 records=2348
+A          b1 smoke_dispatch.c#scalar    identical variants=12 records=2188
+A          b2 rv_tricky.c                identical variants=6 records=314
+A          b2 rv_tricky.c#scalar         identical variants=6 records=267
+A          b2 rv_tricky2.c               identical variants=3 records=217
+A          b2 rv_tricky2.c#scalar        identical variants=3 records=224
+A          b2 smoke_dispatch.c           identical variants=12 records=2348
+A          b2 smoke_dispatch.c#scalar    identical variants=12 records=2188
+A-ninja    b1 rv_tricky.c                identical variants=6 records=314
+A-ninja    b1 rv_tricky.c#scalar         identical variants=6 records=267
+A-ninja    b1 rv_tricky2.c               identical variants=3 records=217
+A-ninja    b1 rv_tricky2.c#scalar        identical variants=3 records=224
+A-ninja    b1 smoke_dispatch.c           identical variants=12 records=2348
+A-ninja    b1 smoke_dispatch.c#scalar    identical variants=12 records=2188
+A-ninja    b2 rv_tricky.c                identical variants=6 records=314
+A-ninja    b2 rv_tricky.c#scalar         identical variants=6 records=267
+A-ninja    b2 rv_tricky2.c               identical variants=3 records=217
+A-ninja    b2 rv_tricky2.c#scalar        identical variants=3 records=224
+A-ninja    b2 smoke_dispatch.c           identical variants=12 records=2348
+A-ninja    b2 smoke_dispatch.c#scalar    identical variants=12 records=2188
+B-cmake    b1 rv_tricky.c                identical variants=6 records=342
+B-cmake    b1 rv_tricky.c#scalar         identical variants=6 records=318
+B-cmake    b1 rv_tricky2.c               identical variants=3 records=229
+B-cmake    b1 rv_tricky2.c#scalar        identical variants=3 records=218
+B-cmake    b1 smoke_dispatch.c           DIFFERENT variants=12 records=2694 differing: ['B-cmake:sd_table:matmul[0]', 'B-cmake:sd_table:matmul[1]', 'B-cmake:sd_table:matmul[2]', 'B-cmake:sd_table_global:matmul[0]', 'B-cmake:sd_table_global:matmul[1]', 'B-cmake:sd_table_global:matmul[3]']
+B-cmake    b1 smoke_dispatch.c#scalar    DIFFERENT variants=12 records=2238 differing: ['B-cmake:sd_table:matmul[0]', 'B-cmake:sd_table:matmul[1]', 'B-cmake:sd_table:matmul[2]', 'B-cmake:sd_table_global:matmul[0]', 'B-cmake:sd_table_global:matmul[1]', 'B-cmake:sd_table_global:matmul[3]']
+B-cmake    b2 rv_tricky.c                identical variants=6 records=342
+B-cmake    b2 rv_tricky.c#scalar         identical variants=6 records=318
+B-cmake    b2 rv_tricky2.c               identical variants=3 records=229
+B-cmake    b2 rv_tricky2.c#scalar        identical variants=3 records=218
+B-cmake    b2 smoke_dispatch.c           DIFFERENT variants=12 records=2694 differing: ['B-cmake:sd_table:matmul[0]', 'B-cmake:sd_table:matmul[1]', 'B-cmake:sd_table:matmul[2]', 'B-cmake:sd_table_global:matmul[0]', 'B-cmake:sd_table_global:matmul[1]', 'B-cmake:sd_table_global:matmul[3]']
+B-cmake    b2 smoke_dispatch.c#scalar    DIFFERENT variants=12 records=2238 differing: ['B-cmake:sd_table:matmul[0]', 'B-cmake:sd_table:matmul[1]', 'B-cmake:sd_table:matmul[2]', 'B-cmake:sd_table_global:matmul[0]', 'B-cmake:sd_table_global:matmul[1]', 'B-cmake:sd_table_global:matmul[3]']
+C          b1 rv_tricky.c                identical variants=6 records=284
+C          b1 rv_tricky.c#scalar         identical variants=6 records=288
+C          b1 rv_tricky2.c               identical variants=3 records=254
+C          b1 rv_tricky2.c#scalar        identical variants=3 records=224
+C          b1 smoke_dispatch.c           identical variants=12 records=2848
+C          b1 smoke_dispatch.c#scalar    identical variants=12 records=2216
+C          b2 rv_tricky.c                identical variants=6 records=284
+C          b2 rv_tricky.c#scalar         identical variants=6 records=288
+C          b2 rv_tricky2.c               identical variants=3 records=254
+C          b2 rv_tricky2.c#scalar        identical variants=3 records=224
+C          b2 smoke_dispatch.c           identical variants=12 records=2848
+C          b2 smoke_dispatch.c#scalar    identical variants=12 records=2216
+D          b1 rv_tricky.c                identical variants=6 records=392
+D          b1 rv_tricky.c#scalar         identical variants=6 records=327
+D          b1 rv_tricky2.c               identical variants=3 records=241
+D          b1 rv_tricky2.c#scalar        identical variants=3 records=230
+D          b1 smoke_dispatch.c           DIFFERENT variants=12 records=3016 differing: ['D:sd_table:matmul[0]', 'D:sd_table:matmul[1]', 'D:sd_table:matmul[2]', 'D:sd_table_global:matmul[0]', 'D:sd_table_global:matmul[1]', 'D:sd_table_global:matmul[3]']
+D          b1 smoke_dispatch.c#scalar    DIFFERENT variants=12 records=2222 differing: ['D:sd_table:matmul[0]', 'D:sd_table:matmul[1]', 'D:sd_table:matmul[2]', 'D:sd_table_global:matmul[0]', 'D:sd_table_global:matmul[1]', 'D:sd_table_global:matmul[3]']
+D          b2 rv_tricky.c                identical variants=6 records=392
+D          b2 rv_tricky.c#scalar         identical variants=6 records=327
+D          b2 rv_tricky2.c               identical variants=3 records=241
+D          b2 rv_tricky2.c#scalar        identical variants=3 records=230
+D          b2 smoke_dispatch.c           DIFFERENT variants=12 records=3016 differing: ['D:sd_table:matmul[0]', 'D:sd_table:matmul[1]', 'D:sd_table:matmul[2]', 'D:sd_table_global:matmul[0]', 'D:sd_table_global:matmul[1]', 'D:sd_table_global:matmul[3]']
+D          b2 smoke_dispatch.c#scalar    DIFFERENT variants=12 records=2222 differing: ['D:sd_table:matmul[0]', 'D:sd_table:matmul[1]', 'D:sd_table:matmul[2]', 'D:sd_table_global:matmul[0]', 'D:sd_table_global:matmul[1]', 'D:sd_table_global:matmul[3]']
+P.A        b1 reduce_probe.c             identical variants=6 records=68
+P.A        b2 reduce_probe.c             identical variants=6 records=68
+P.A-ninja  b1 reduce_probe.c             identical variants=6 records=68
+P.A-ninja  b2 reduce_probe.c             identical variants=6 records=68
+P.B-cmake  b1 reduce_probe.c             identical variants=6 records=62
+P.B-cmake  b2 reduce_probe.c             identical variants=6 records=62
+P.C        b1 reduce_probe.c             identical variants=6 records=72
+P.C        b2 reduce_probe.c             identical variants=6 records=72
+P.D        b1 reduce_probe.c             identical variants=6 records=62
+P.D        b2 reduce_probe.c             identical variants=6 records=62
+{'identical': 62, 'different': 8}
+--- R2mock
+A          b1 all                        identical variants=18 records=3718
+A          b2 all                        identical variants=18 records=3718
+A-ninja    b1 all                        identical variants=18 records=3718
+A-ninja    b2 all                        identical variants=18 records=3718
+B-cmake    b1 all                        identical variants=12 records=4991
+B-cmake    b2 all                        identical variants=12 records=4991
+B-proxy    b1 quant.c                    identical variants=6 records=2880
+B-proxy    b1 quant_avx2.c               identical variants=6 records=2113
+B-proxy    b1 quant_avx512.c             identical variants=6 records=1038
+B-proxy    b2 quant.c                    identical variants=6 records=2880
+B-proxy    b2 quant_avx2.c               identical variants=6 records=2113
+B-proxy    b2 quant_avx512.c             identical variants=6 records=1038
+C          b1 all                        identical variants=18 records=2928
+C          b2 all                        identical variants=18 records=2928
+D          b1 all                        identical variants=18 records=6069
+D          b2 all                        identical variants=18 records=6069
+P.A        b1 reduce_probe.c             identical variants=6 records=68
+P.A        b2 reduce_probe.c             identical variants=6 records=68
+P.A-ninja  b1 reduce_probe.c             identical variants=6 records=68
+P.A-ninja  b2 reduce_probe.c             identical variants=6 records=68
+P.B-cmake  b1 reduce_probe.c             identical variants=6 records=62
+P.B-cmake  b2 reduce_probe.c             identical variants=6 records=62
+P.C        b1 reduce_probe.c             identical variants=6 records=72
+P.C        b2 reduce_probe.c             identical variants=6 records=72
+P.D        b1 reduce_probe.c             identical variants=6 records=62
+P.D        b2 reduce_probe.c             identical variants=6 records=62
+{'identical': 26}
+===== code comparison: first re-run (runs_first, scripts 2191ff8) vs final re-run (runs)
+--- R1reg
+A          b1 rv_tricky.c                identical variants=6 records=314
+A          b1 rv_tricky.c#scalar         identical variants=6 records=267
+A          b1 rv_tricky2.c               identical variants=3 records=217
+A          b1 rv_tricky2.c#scalar        identical variants=3 records=224
+A          b1 smoke_dispatch.c           identical variants=12 records=2348
+A          b1 smoke_dispatch.c#scalar    identical variants=12 records=2188
+A          b2 rv_tricky.c                identical variants=6 records=314
+A          b2 rv_tricky.c#scalar         identical variants=6 records=267
+A          b2 rv_tricky2.c               identical variants=3 records=217
+A          b2 rv_tricky2.c#scalar        identical variants=3 records=224
+A          b2 smoke_dispatch.c           identical variants=12 records=2348
+A          b2 smoke_dispatch.c#scalar    identical variants=12 records=2188
+A-ninja    b1 rv_tricky.c                identical variants=6 records=314
+A-ninja    b1 rv_tricky.c#scalar         identical variants=6 records=267
+A-ninja    b1 rv_tricky2.c               identical variants=3 records=217
+A-ninja    b1 rv_tricky2.c#scalar        identical variants=3 records=224
+A-ninja    b1 smoke_dispatch.c           identical variants=12 records=2348
+A-ninja    b1 smoke_dispatch.c#scalar    identical variants=12 records=2188
+A-ninja    b2 rv_tricky.c                identical variants=6 records=314
+A-ninja    b2 rv_tricky.c#scalar         identical variants=6 records=267
+A-ninja    b2 rv_tricky2.c               identical variants=3 records=217
+A-ninja    b2 rv_tricky2.c#scalar        identical variants=3 records=224
+A-ninja    b2 smoke_dispatch.c           identical variants=12 records=2348
+A-ninja    b2 smoke_dispatch.c#scalar    identical variants=12 records=2188
+B-cmake    b1 rv_tricky.c                identical variants=6 records=342
+B-cmake    b1 rv_tricky.c#scalar         identical variants=6 records=318
+B-cmake    b1 rv_tricky2.c               identical variants=3 records=229
+B-cmake    b1 rv_tricky2.c#scalar        identical variants=3 records=218
+B-cmake    b1 smoke_dispatch.c           identical variants=12 records=2694
+B-cmake    b1 smoke_dispatch.c#scalar    identical variants=12 records=2238
+B-cmake    b2 rv_tricky.c                identical variants=6 records=342
+B-cmake    b2 rv_tricky.c#scalar         identical variants=6 records=318
+B-cmake    b2 rv_tricky2.c               identical variants=3 records=229
+B-cmake    b2 rv_tricky2.c#scalar        identical variants=3 records=218
+B-cmake    b2 smoke_dispatch.c           identical variants=12 records=2694
+B-cmake    b2 smoke_dispatch.c#scalar    identical variants=12 records=2238
+C          b1 rv_tricky.c                identical variants=6 records=284
+C          b1 rv_tricky.c#scalar         identical variants=6 records=288
+C          b1 rv_tricky2.c               identical variants=3 records=254
+C          b1 rv_tricky2.c#scalar        identical variants=3 records=224
+C          b1 smoke_dispatch.c           identical variants=12 records=2848
+C          b1 smoke_dispatch.c#scalar    identical variants=12 records=2216
+C          b2 rv_tricky.c                identical variants=6 records=284
+C          b2 rv_tricky.c#scalar         identical variants=6 records=288
+C          b2 rv_tricky2.c               identical variants=3 records=254
+C          b2 rv_tricky2.c#scalar        identical variants=3 records=224
+C          b2 smoke_dispatch.c           identical variants=12 records=2848
+C          b2 smoke_dispatch.c#scalar    identical variants=12 records=2216
+D          b1 rv_tricky.c                identical variants=6 records=392
+D          b1 rv_tricky.c#scalar         identical variants=6 records=327
+D          b1 rv_tricky2.c               identical variants=3 records=241
+D          b1 rv_tricky2.c#scalar        identical variants=3 records=230
+D          b1 smoke_dispatch.c           identical variants=12 records=3016
+D          b1 smoke_dispatch.c#scalar    identical variants=12 records=2222
+D          b2 rv_tricky.c                identical variants=6 records=392
+D          b2 rv_tricky.c#scalar         identical variants=6 records=327
+D          b2 rv_tricky2.c               identical variants=3 records=241
+D          b2 rv_tricky2.c#scalar        identical variants=3 records=230
+D          b2 smoke_dispatch.c           identical variants=12 records=3016
+D          b2 smoke_dispatch.c#scalar    identical variants=12 records=2222
+P.A        b1 reduce_probe.c             identical variants=6 records=68
+P.A        b2 reduce_probe.c             identical variants=6 records=68
+P.A-ninja  b1 reduce_probe.c             identical variants=6 records=68
+P.A-ninja  b2 reduce_probe.c             identical variants=6 records=68
+P.B-cmake  b1 reduce_probe.c             identical variants=6 records=62
+P.B-cmake  b2 reduce_probe.c             identical variants=6 records=62
+P.C        b1 reduce_probe.c             identical variants=6 records=72
+P.C        b2 reduce_probe.c             identical variants=6 records=72
+P.D        b1 reduce_probe.c             identical variants=6 records=62
+P.D        b2 reduce_probe.c             identical variants=6 records=62
+{'identical': 70}
+--- R2mock
+A          b1 all                        identical variants=18 records=3718
+A          b2 all                        identical variants=18 records=3718
+A-ninja    b1 all                        identical variants=18 records=3718
+A-ninja    b2 all                        identical variants=18 records=3718
+B-cmake    b1 all                        identical variants=12 records=4991
+B-cmake    b2 all                        identical variants=12 records=4991
+B-proxy    b1 quant.c                    identical variants=6 records=2880
+B-proxy    b1 quant_avx2.c               identical variants=6 records=2113
+B-proxy    b1 quant_avx512.c             identical variants=6 records=1038
+B-proxy    b2 quant.c                    identical variants=6 records=2880
+B-proxy    b2 quant_avx2.c               identical variants=6 records=2113
+B-proxy    b2 quant_avx512.c             identical variants=6 records=1038
+C          b1 all                        identical variants=18 records=2928
+C          b2 all                        identical variants=18 records=2928
+D          b1 all                        identical variants=18 records=6069
+D          b2 all                        identical variants=18 records=6069
+P.A        b1 reduce_probe.c             identical variants=6 records=68
+P.A        b2 reduce_probe.c             identical variants=6 records=68
+P.A-ninja  b1 reduce_probe.c             identical variants=6 records=68
+P.A-ninja  b2 reduce_probe.c             identical variants=6 records=68
+P.B-cmake  b1 reduce_probe.c             identical variants=6 records=62
+P.B-cmake  b2 reduce_probe.c             identical variants=6 records=62
+P.C        b1 reduce_probe.c             identical variants=6 records=72
+P.C        b2 reduce_probe.c             identical variants=6 records=72
+P.D        b1 reduce_probe.c             identical variants=6 records=62
+P.D        b2 reduce_probe.c             identical variants=6 records=62
+{'identical': 26}
+--- the differing function under Clang (B-cmake, D): sd_float_common, build 1, sd_table:matmul[0]
+===== D smoke_dispatch.c b1 D:sd_table:matmul[0]
+same      sd_f32                   42 instructions
+same      sd_fail                  7 instructions
+DIFFERENT sd_float_common          262 -> 262 instructions; iclass multiset equal
+    --- 
+    +++ 
+    @@ -87,15 +87,15 @@
+     vextractf32x4 xmm1, zmm0, 0x2
+    -vaddps xmm1, xmm0, xmm1
+    -vshufpd xmm2, xmm0, xmm0, 0x1
+    -vextractf64x4 ymm3, zmm0, 0x1
+    -vshufpd xmm4, xmm3, xmm3, 0x1
+    -vaddps xmm2, xmm2, xmm4
+    +vaddps xmm1, xmm1, xmm0
+    +vextractf64x4 ymm2, zmm0, 0x1
+    +vshufpd xmm3, xmm2, xmm2, 0x1
+    +vshufpd xmm4, xmm0, xmm0, 0x1
+    +vaddps xmm3, xmm3, xmm4
+    +vextractf128 xmm4, ymm2, 0x1
+     vextractf128 xmm0, ymm0, 0x1
+    -vextractf128 xmm4, ymm3, 0x1
+    -vaddps xmm4, xmm0, xmm4
+    +vaddps xmm4, xmm4, xmm0
+     vaddps xmm1, xmm1, xmm4
+    +vpermpd ymm2, ymm2, 0xff
+     vshufpd xmm0, xmm0, xmm0, 0x1
+    -vpermpd ymm3, ymm3, 0xff
+    -vaddps xmm0, xmm0, xmm3
+     vaddps xmm0, xmm2, xmm0
+    +vaddps xmm0, xmm3, xmm0
+     vaddps xmm0, xmm1, xmm0
+===== D smoke_dispatch.c#scalar b1 D:sd_table:matmul[0]
+same      sd_f32                   42 instructions
+same      sd_fail                  7 instructions
+DIFFERENT sd_float_common          178 -> 178 instructions; iclass multiset equal
+    --- 
+    +++ 
+    @@ -63,4 +63,5 @@
+     movsd xmm3, qword ptr [rsp-0x38]
+    -movsd xmm4, qword ptr [rsp-0x68]
+    -addps xmm4, xmm1
+    +movsd xmm4, qword ptr [rsp-0x30]
+    +movsd xmm5, qword ptr [rsp-0x68]
+    +addps xmm5, xmm1
+     movsd xmm1, qword ptr [rsp-0x60]
+    @@ -69,11 +70,10 @@
+     addps xmm2, xmm3
+    -addps xmm2, xmm4
+    +addps xmm2, xmm5
+     movsd xmm3, qword ptr [rsp-0x50]
+    -movsd xmm4, qword ptr [rsp-0x30]
+    -addps xmm4, xmm3
+    -addps xmm4, xmm1
+    -addps xmm4, xmm2
+    -movaps xmm1, xmm4
+    -shufps xmm1, xmm4, 0x55
+    -addss xmm1, xmm4
+    +addps xmm3, xmm4
+    +addps xmm3, xmm1
+    +addps xmm3, xmm2
+    +movaps xmm1, xmm3
+    +shufps xmm1, xmm3, 0x55
+    +addss xmm1, xmm3
+     mov r9, r11
+===== B-cmake smoke_dispatch.c b1 B-cmake:sd_table:matmul[0]
+same      sd_f32                   45 instructions
+same      sd_fail                  6 instructions
+DIFFERENT sd_float_common          229 -> 229 instructions; iclass multiset equal
+    --- 
+    +++ 
+    @@ -71,15 +71,15 @@
+     vextractf32x4 xmm1, zmm0, 0x2
+    -vaddps xmm1, xmm0, xmm1
+    -vshufpd xmm2, xmm0, xmm0, 0x1
+    -vextractf64x4 ymm3, zmm0, 0x1
+    -vshufpd xmm4, xmm3, xmm3, 0x1
+    -vaddps xmm2, xmm2, xmm4
+    +vaddps xmm1, xmm1, xmm0
+    +vextractf64x4 ymm2, zmm0, 0x1
+    +vshufpd xmm3, xmm2, xmm2, 0x1
+    +vshufpd xmm4, xmm0, xmm0, 0x1
+    +vaddps xmm3, xmm3, xmm4
+    +vextractf128 xmm4, ymm2, 0x1
+     vextractf128 xmm0, ymm0, 0x1
+    -vextractf128 xmm4, ymm3, 0x1
+    -vaddps xmm4, xmm0, xmm4
+    +vaddps xmm4, xmm4, xmm0
+     vaddps xmm1, xmm1, xmm4
+    +vpermpd ymm2, ymm2, 0xff
+     vshufpd xmm0, xmm0, xmm0, 0x1
+    -vpermpd ymm3, ymm3, 0xff
+    -vaddps xmm0, xmm0, xmm3
+     vaddps xmm0, xmm2, xmm0
+    +vaddps xmm0, xmm3, xmm0
+     vaddps xmm0, xmm1, xmm0
+===== B-cmake smoke_dispatch.c#scalar b1 B-cmake:sd_table:matmul[0]
+same      sd_f32                   45 instructions
+same      sd_fail                  6 instructions
+DIFFERENT sd_float_common          191 -> 191 instructions; iclass multiset equal
+    --- 
+    +++ 
+    @@ -67,4 +67,5 @@
+     movsd xmm3, qword ptr [rsp+0x80]
+    -movsd xmm4, qword ptr [rsp+0x50]
+    -addps xmm4, xmm1
+    +movsd xmm4, qword ptr [rsp+0x88]
+    +movsd xmm5, qword ptr [rsp+0x50]
+    +addps xmm5, xmm1
+     movsd xmm1, qword ptr [rsp+0x58]
+    @@ -73,11 +74,10 @@
+     addps xmm2, xmm3
+    -addps xmm2, xmm4
+    +addps xmm2, xmm5
+     movsd xmm3, qword ptr [rsp+0x68]
+    -movsd xmm4, qword ptr [rsp+0x88]
+    -addps xmm4, xmm3
+    -addps xmm4, xmm1
+    -addps xmm4, xmm2
+    -movaps xmm1, xmm4
+    -shufps xmm1, xmm4, 0x55
+    -addss xmm1, xmm4
+    +addps xmm3, xmm4
+    +addps xmm3, xmm1
+    +addps xmm3, xmm2
+    +movaps xmm1, xmm3
+    +shufps xmm1, xmm3, 0x55
+    +addss xmm1, xmm3
+     mov rcx, r11
+
+===== 4. Hearth source tree D:\mithril\src\hearth: Windows git, the .git/HEAD fallback and x0_driver.source_commit/source_blob_check [desktop, read only]
+date: 2026-10-17T03:51:31.2965965-04:00
+git: git version 2.45.1.windows.1
+--- git -C D:\mithril\src\hearth rev-parse HEAD (Windows git; read-only)
+  b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220
+  rc=0
+--- D:\mithril\src\hearth\.git\HEAD
+  b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220
+--- x0_driver.source_commit and source_blob_check (final tree D:\mithril\x0reg\x0-census)
+source_commit b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220
+blobs_ok True files 7
+pinned hearth_commit b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220
+  rc=0
+
+===== 5. x0_driver.py init's freeze-point logic against a THROWAWAY git repository with the Mithril layout (D:\mithril\x0reg\gitwork\repo) [desktop, gitlogic_test.py + init_one.py; S0-S14 with the Hearth source checks stubbed, S15 unstubbed on D:\mithril\src\hearth; report gitlogic_throwaway.json]
+--- fallback: x0_driver.source_commit with no git on PATH (only C:\Python313)
+git on PATH: None
+source_commit b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220
+===== throwaway-repository test of x0_driver.py init's freeze-point logic (D:\mithril\x0reg\gitwork)
+OK   S0_record_draft                        expect refuse got refuse REFUSED: the record D:\mithril\x0reg\gitwork\repo\docs\m0\prereg\X0-census.md is not FROZEN ('Status: DRAFT (to be FROZEN at the commit that first adds it with this line changed to FROZEN, and'); no c
+OK   S1_freeze_point_clean                  expect accept got accept freeze=30dd363 run=30dd363 changes=[]
+OK   S2_dirty_tracked_file                  expect refuse got refuse M experiments/x0-census/scripts/x0_loops.py
+OK   S3_untracked_file                      expect refuse got refuse ?? experiments/x0-census/scripts/untracked_note.txt
+OK   S4_ignored_pyc                         expect refuse got refuse REFUSED: ignored files under class/, scripts/ or flags/ (an ignored .pyc is importable): ['experiments/x0-census/scripts/evil.pyc']
+OK   S5_appended_amendment                  expect accept got accept freeze=30dd363 run=8e6dd1c changes=[]
+OK   S6_change_not_named                    expect refuse got refuse REFUSED: experiments/x0-census/class, experiments/x0-census/scripts, experiments/x0-census/flags changed after the freeze point 30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d without an amendment naming the
+OK   S7_changes_named                       expect accept got accept freeze=30dd363 run=610dda1 changes=['experiments/x0-census/class/frozen_inputs.json', 'experiments/x0-census/scripts/x0_loops.py']
+OK   S8_named_but_not_repinned              expect refuse got refuse REFUSED: the scripts on disk differ from class/frozen_inputs.json "scripts"
+OK   S9_in_place_edit                       expect refuse got refuse REFUSED: the record at HEAD differs from the record at the freeze point 30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d other than by an appended amendment (docs/m0/README: only a dated section appended at t
+OK   S10_in_place_edit_plus_append          expect refuse got refuse REFUSED: the record at HEAD differs from the record at the freeze point 30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d other than by an appended amendment (docs/m0/README: only a dated section appended at t
+OK   S11_unfreeze_edit_refreeze             expect refuse got refuse REFUSED: the record at HEAD differs from the record at the freeze point 30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d other than by an appended amendment (docs/m0/README: only a dated section appended at t
+OK   S12_record_elsewhere                   expect refuse got refuse REFUSED: --record D:\mithril\x0reg\gitwork\record_copy.md is not the record of the checkout D:\mithril\x0reg\gitwork\repo
+OK   S13_flags_change_not_named             expect refuse got refuse REFUSED: experiments/x0-census/class, experiments/x0-census/scripts, experiments/x0-census/flags changed after the freeze point 30dd36327ed718cabceb77f24e6e5bf4c2d7ea7d without an amendment naming the
+OK   S14_change_outside_frozen_dirs         expect accept got accept freeze=30dd363 run=eb86518 changes=['experiments/x0-census/class/frozen_inputs.json', 'experiments/x0-census/scripts/x0_loops.py']
+OK   S15_real_hearth_tree                   expect accept got accept freeze=30dd363 run=610dda1 changes=['experiments/x0-census/class/frozen_inputs.json', 'experiments/x0-census/scripts/x0_loops.py']
+ALL_OK git version 2.45.1.windows.1 python 3.13.4
+rc=0
+
+===== 6. Unit tests and pins after the tooling fix [laptop, 2026-10-17; the desktop's pin_inputs.py on the synced tree also reported 0 differences]
+Ran 183 tests in 3.168s
+OK
+0 differences; 95 script files pinned
