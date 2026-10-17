@@ -1,0 +1,78 @@
+{
+ "z3_version": "5.3.1",
+ "timeout_s": 1200,
+ "rules": [
+  {
+   "rule": "R12",
+   "what": "INT-DOT-VNNI, ONE ROW: 4 x VPDPBUSD + that row's lane total == sum_i u_i*x_i in index order (int32), and no int32 wrap (== the 48-bit sum) under DOM-ACT-Q; the red_quads / red_quad1 lane maps are the separate T lemmas of z3_int.py",
+   "z3": "NOT SOLVED (export only)",
+   "seconds": 0.0,
+   "query_sha256": "0cfc836af6195abe6b0b8e49b58b39daf25e24772ef21e25ae7c1e7913124aaa",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R13",
+   "what": "INT-DOT-MADDUBS-Q4, ONE ROW: maddubs pairs, VPADDW low+high, madd(.,1), the row's lane total (red8's lane map: z3_int T lemma) == sum n_i x_i (no saturation, no VPADDW wrap, no int32 wrap) for n in [0,15], DOM-ACT-Q",
+   "z3": "NOT SOLVED (export only)",
+   "seconds": 0.0,
+   "query_sha256": "826b8db6f0a7e002cf15a50df314160273868edaf359eb00d45e9ea45e237d02",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R14",
+   "what": "INT-DOT-SIGNTRICK-Q8, ONE ROW: maddubs(PABSB(w), PSIGNB(x, w)), madd(.,1), the row's lane total (red8: z3_int T lemma) == sum w_i x_i for any w, under DOM-ACT-Q (x != -128); no saturation (32,512)",
+   "z3": "NOT SOLVED (export only)",
+   "seconds": 0.0,
+   "query_sha256": "f08934789cae5e172f53a20f41f89df5204d3380d81544d4af5efc1399f39251",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R14/x=-128",
+   "what": "R14 without DOM-ACT-Q (expect a counterexample: x = -128, w < 0)",
+   "z3": "NOT SOLVED (export only)",
+   "seconds": 0.0,
+   "query_sha256": "b118c91a758a272e4714ae3734ed951603912abbdae6105f45695fdddb8bc231",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R15",
+   "what": "INT-BIAS-NIB: sum (n_i - 8) x_i == sum n_i x_i - 8*a.sum with a.sum = sum x_i (DOM-ACT-SUM), int32, and no int32 wrap",
+   "z3": "NOT SOLVED (export only)",
+   "seconds": 0.0,
+   "query_sha256": "f4266b2c9f2331945344cc999f40a2f81b9b0424ba43de05eeb0b5d31476a681",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R16",
+   "what": "INT-BIAS-XOR80: sum q_i x_i == sum u8(q_i xor 0x80) x_i - 128*a.sum (DOM-ACT-SUM), int32, no wrap",
+   "z3": "NOT SOLVED (export only)",
+   "seconds": 0.0,
+   "query_sha256": "8ac6f3d105c6811a04b2a35bf649e29c061b1c3b38f299a1c8285d01468c8564",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R17",
+   "what": "INT-NARROW-PACKS: packsswb(packssdw(q)) == (int8_t)q for |q| <= 127",
+   "z3": "NOT SOLVED (export only)",
+   "seconds": 0.0,
+   "query_sha256": "bd34631d2aec9a314eb3c60a508430c7694d4826a664b162bf8a9760c5bdb814",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R18",
+   "what": "INT-SUM-ACT: AVX2 (8 x VPADDD + hsum8_i32) and AVX-512 (4 x VPADDD + hsum_i32) == sequential sum, no int32 wrap, |q| <= 127",
+   "z3": "NOT SOLVED (export only)",
+   "seconds": 0.0,
+   "query_sha256": "f7aafe907bf18b955989df95bcfe255f223d9ccb25be4d181a496325f2bdae22",
+   "counterexample": null,
+   "reason_unknown": null
+  }
+ ]
+}

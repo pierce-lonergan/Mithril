@@ -1,0 +1,56 @@
+{
+ "cvc5_version": "1.4.2",
+ "timeout_s": 600.0,
+ "rules": [
+  {
+   "rule": "int_R12_P",
+   "cvc5": "PROVED",
+   "seconds": 0.075,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "int_R14_P",
+   "cvc5": "PROVED",
+   "seconds": 194.225,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "int_T_red8",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "int_T_red_quad1",
+   "cvc5": "PROVED",
+   "seconds": 0.001,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "int_T_red_quads",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  }
+ ]
+}

@@ -1,0 +1,16 @@
+; benchmark generated from python API
+(set-info :status unknown)
+(declare-fun v () (_ BitVec 32))
+(assert
+ (let ((?x2692 ((_ extract 22 0) v)))
+(let (($x2693 (and (distinct ?x2692 (_ bv0 23)) true)))
+(let ((?x2690 ((_ extract 30 23) v)))
+(let (($x2691 (= ?x2690 (_ bv255 8))))
+(let (($x2694 (and $x2691 $x2693)))
+(let (($x2696 (not $x2694)))
+(let ((?x2683 ((_ to_fp 8 24) v)))
+(let (($x2687 (fp.eq ?x2683 ?x2683)))
+(let (($x2686 (fp.lt ?x2683 ?x2683)))
+(let (($x2697 (= (or $x2686 $x2687 (fp.gt ?x2683 ?x2683)) $x2696)))
+(not $x2697))))))))))))
+(check-sat)

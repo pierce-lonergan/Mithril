@@ -1,0 +1,16 @@
+START Fri 10/16/2026 19:26:46.85
+R13/P            PROVED                 0.020 s 
+R13/W            PROVED                 0.002 s 
+R13/M            PROVED                 0.000 s 
+R14/P            PROVED               407.401 s 
+R14/P x=-128     COUNTEREXAMPLE         4.942 s {'x0': '0x96', 'x1': '0x80', 'w0': '0x57', 'w1': '0xfb'}
+R14/M            PROVED                 0.000 s 
+R12/P            PROVED                 0.056 s 
+R12/M            PROVED                 0.000 s 
+R15/P            PROVED                 0.008 s 
+R15/M            PROVED                 0.000 s 
+R16/P            PROVED                 0.013 s 
+R16/M            PROVED                 0.000 s 
+R18/M            PROVED                 0.000 s 
+INT_RC=0
+END Fri 10/16/2026 19:33:40.04

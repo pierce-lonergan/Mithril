@@ -1,0 +1,46 @@
+{
+ "z3_version": "5.3.1",
+ "timeout_s": 1200.0,
+ "results": [
+  {
+   "name": "R14/P",
+   "what": "one VPMADDUBSW(PABSB(w), PSIGNB(x, w)) word == w0*x0 + w1*x1, |.| <= 32,512, any w, x in [-127,127]",
+   "verdict": "PROVED",
+   "seconds": 472.482,
+   "counterexample": null,
+   "query_sha256": "41f3a1c1de7611e932ddf3014f980f019d2a3da0c1cbfbbbc997b9954c597618"
+  },
+  {
+   "name": "R12/P",
+   "what": "BOUND lemma: each VPDPBUSD product zext(u)*sext(x) has |u*x| <= 32,385 under DOM-ACT-Q (the lane is acc + the products by the table's definition; formula vs table lane: x2prove DIFF-DPBUSD)",
+   "verdict": "PROVED",
+   "seconds": 0.046,
+   "counterexample": null,
+   "query_sha256": "440aca4d39da78a377ae4970c20f5c0f0f7b44f2e91047386fc038661a923a42"
+  },
+  {
+   "name": "T/red8",
+   "what": "red8 (6 x VPHADDD per-128-bit-lane, VPERM2I128 0x20/0x31, VPADDD) over 8 rows x 8 free int32 partials: lane i == the sum of row i's 8 partials, mod 2^32 (R13, R14)",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null,
+   "query_sha256": "b750d559cff389e73592262af37e03b8c0570d864666ae6e258661fd76c0d60f"
+  },
+  {
+   "name": "T/red_quads",
+   "what": "red_quads (VPUNPCKLDQ/HDQ, VPADDD, VPUNPCKLQDQ/HQDQ, VPADDD) over 4 quads x 16 free int32 lanes: lane 4k+j == the sum of quad j's 128-bit lane k, mod 2^32 (R12)",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null,
+   "query_sha256": "95bb26f95bd6b6dc1c95b9ba9d24ebeef4d02b428ca0bfeae2fccf56660b347a"
+  },
+  {
+   "name": "T/red_quad1",
+   "what": "red_quad1 (VPSHUFD 0x4E, VPADDD, VPSHUFD 0xB1, VPADDD, VPERMD 0,4,8,12) over 16 free int32 lanes: lane k == the sum of 128-bit lane k, mod 2^32 (R12 tail)",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null,
+   "query_sha256": "9f3b2b9582a4a26e131a73590b9175399f5c1cbcd5646573d4389f7a2564ecb2"
+  }
+ ]
+}

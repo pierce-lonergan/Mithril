@@ -1,0 +1,76 @@
+{
+ "cvc5_version": "1.4.2",
+ "timeout_s": 600.0,
+ "rules": [
+  {
+   "rule": "fold_L1",
+   "cvc5": "PROVED",
+   "seconds": 0.058,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "fold_L1t",
+   "cvc5": "PROVED",
+   "seconds": 0.004,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "fold_L2",
+   "cvc5": "PROVED",
+   "seconds": 0.042,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "fold_L3",
+   "cvc5": "PROVED",
+   "seconds": 0.039,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "fold_L4",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "fold_L5",
+   "cvc5": "PROVED",
+   "seconds": 0.001,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "fold_L6",
+   "cvc5": "PROVED",
+   "seconds": 0.001,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  }
+ ]
+}

@@ -1,0 +1,236 @@
+{
+ "cvc5_version": "1.4.2",
+ "timeout_s": 600.0,
+ "rules": [
+  {
+   "rule": "R01",
+   "cvc5": "PROVED",
+   "seconds": 0.009,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R01_table",
+   "cvc5": "PROVED",
+   "seconds": 0.339,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R04",
+   "cvc5": "PROVED",
+   "seconds": 0.006,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R04_table",
+   "cvc5": "PROVED",
+   "seconds": 0.007,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R05",
+   "cvc5": "PROVED",
+   "seconds": 0.006,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R05_table",
+   "cvc5": "PROVED",
+   "seconds": 0.007,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R06_DAZ=0",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R06_DAZ=1",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R07_DAZ=0",
+   "cvc5": "PROVED",
+   "seconds": 0.001,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R07_DAZ=1",
+   "cvc5": "PROVED",
+   "seconds": 0.001,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R08",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R08_inst_DAZ=0",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R08_inst_DAZ=1",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R09",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R09_inst_DAZ=0",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R09_inst_DAZ=1",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R10_inst_DAZ=0",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R10_inst_DAZ=1",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R11_inst_DAZ=0",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R11_inst_DAZ=1",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R20",
+   "cvc5": "PROVED",
+   "seconds": 0.026,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R21_DAZ=0",
+   "cvc5": "PROVED",
+   "seconds": 0.001,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R21_DAZ=1",
+   "cvc5": "PROVED",
+   "seconds": 0.001,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  }
+ ]
+}

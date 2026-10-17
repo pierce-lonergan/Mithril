@@ -1,0 +1,66 @@
+{
+ "z3_version": "5.3.1",
+ "timeout_s": 1200,
+ "results": [
+  {
+   "name": "R13/P",
+   "what": "one VPMADDUBSW word on nibbles n in [0,15], x in [-127,127]: == n0*x0 + n1*x1, |.| <= 3,810 (no saturation)",
+   "verdict": "NOT SOLVED (export only)",
+   "query_sha256": "6398275fbbc6d3598fe4d8151b678a87440c580ca5c081622b5879f5df0f3de0"
+  },
+  {
+   "name": "R13/W",
+   "what": "VPADDW of two words in [-3810, 3810] does not wrap: sext(lo + hi) == sext(lo) + sext(hi)",
+   "verdict": "NOT SOLVED (export only)",
+   "query_sha256": "6db066c6fafb23212d74be6e317ec187891f605b1e0877cc5177abb9dda577f5"
+  },
+  {
+   "name": "R13/M",
+   "what": "red8 lane total of VPMADDWD(VPADDW(lo, hi), 1) == the index-order sum of the pair values, mod 2^32",
+   "verdict": "NOT SOLVED (export only)",
+   "query_sha256": "d3a8870baa5ad33b4a3eebca6cc834ee3537373efe88c078c242f1440eb4933c"
+  },
+  {
+   "name": "R14/M",
+   "what": "red8 of VPADDD(VPMADDWD(p0, 1), VPMADDWD(p1, 1)) == index-order sum of the 32 words, mod 2^32",
+   "verdict": "NOT SOLVED (export only)",
+   "query_sha256": "afc5633cfd4aa8ae0bdb80bfefa551201cdb95e8f503d057d0f201fba089d882"
+  },
+  {
+   "name": "R12/M",
+   "what": "4 chunked VPDPBUSD accumulations + lane total == index-order sum of the 16 four-product sums, mod 2^32",
+   "verdict": "NOT SOLVED (export only)",
+   "query_sha256": "2159a9b8482c112e99c28fb9427ebe442837b78999bd4cf778bbad50552c7c56"
+  },
+  {
+   "name": "R15/P",
+   "what": "(n - 8)*x == n*x - 8*x and |n*x| <= 1,905 for n in [0,15], x in [-127,127]",
+   "verdict": "NOT SOLVED (export only)",
+   "query_sha256": "b7cde8f0c1c2dcc982c53d081947b14dd05856d66d7fbac3aded6a3b9a7f03f3"
+  },
+  {
+   "name": "R15/M",
+   "what": "sum (nx_i - 8 x_i) == sum nx_i - 8 * sum x_i, mod 2^32 (the bias rewriting with a.sum = sum x_i)",
+   "verdict": "NOT SOLVED (export only)",
+   "query_sha256": "abcef36eb9b598118be183f2beab96b1ae352e2b0f5ea8d688cd60a05818336f"
+  },
+  {
+   "name": "R16/P",
+   "what": "u8(q xor 0x80) == q + 128 and q*x == u8(q xor 0x80)*x - 128*x, |u8*x| <= 32,385, x in [-127,127]",
+   "verdict": "NOT SOLVED (export only)",
+   "query_sha256": "550f2b486b59d9566dbb5fc56afecb84c16e932d354c7715b907eed6344fd250"
+  },
+  {
+   "name": "R16/M",
+   "what": "sum (ux_i - 128 x_i) == sum ux_i - 128 * sum x_i, mod 2^32",
+   "verdict": "NOT SOLVED (export only)",
+   "query_sha256": "f119b6a22e70a0e2e17449e7f679a70605ef17d73b5334604f7c3b11e50dd9be"
+  },
+  {
+   "name": "R18/M",
+   "what": "AVX2 and AVX-512 act sums (lane-parallel VPADDD, then the shuffle trees) == sequential sum, mod 2^32",
+   "verdict": "NOT SOLVED (export only)",
+   "query_sha256": "f37824da872b67ef95edb312e866887f63751d58be716a559335f0d345a4d9c8"
+  }
+ ]
+}

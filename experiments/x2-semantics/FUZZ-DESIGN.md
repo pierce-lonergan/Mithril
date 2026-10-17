@@ -1,10 +1,16 @@
 # X2: Zen 5 fuzz harness design
 
 Status: DESIGN, DRAFT, revised 2026-10-16 after two same-family reviews (review log in
-[TABLE-SCHEMA.md §15](TABLE-SCHEMA.md#15-review-log)). No vector has been generated or run. Under the
-collection rule of [docs/m0/README.md](../../docs/m0/README.md), the first native run waits for the X2
+[TABLE-SCHEMA.md §15](TABLE-SCHEMA.md#15-review-log)). **Harness built and self-tested 2026-10-16
+(x2build track; [harness/](harness/README.md), status in §9), then revised the same day after one
+same-family, independent-context review of the build (§9.6).** No vector of the budget has been
+generated for silicon or run; the only table instructions executed on silicon were a development smoke
+run on the hand vectors of `semantics/selftest.py` (§9.3) and the exhaustive engine's plumbing check
+(40 V5-eligible stubs × 4,096 fixed inputs, §9.1). Under the collection rule of
+[docs/m0/README.md](../../docs/m0/README.md), the first native run of the budget waits for the X2
 record ([docs/m0/prereg/X2-checker.md](../../docs/m0/prereg/X2-checker.md)) to be FROZEN and either
-SIGNED or covered by an explicit Owner instruction. Tags as in [TABLE-SCHEMA.md](TABLE-SCHEMA.md);
+SIGNED or covered by an explicit Owner instruction (D0-12, provisional chat answer of 2026-10-16: batch
+weekly review). Tags as in [TABLE-SCHEMA.md](TABLE-SCHEMA.md);
 "[M] X2-agent 2026-10-16" means read or measured by this track's agent (author or reviser) on that
 date.
 
@@ -423,3 +429,143 @@ Owner review time concentrates on the 12 FP families (ROADMAP §3.3 cost note).
 - Measure Bochs throughput and the C interpreter's ns per case in week 1; if the budget does not fit
   the daytime windows, the pre-registration is amended before data (never after).
 - Decide whether the Zen 4 laptop runs the vector sets as a secondary fingerprint (not a gate input).
+
+## 9. Build status (x2build track, 2026-10-16)
+
+Status of what §1-§6 specify, as built and measured on 2026-10-16 by the x2build track. Details,
+hashes and the open items are in [harness/README.md](harness/README.md) and
+[harness/bochs/README.md](harness/bochs/README.md). "[M]" here = measured by that track on the desktop
+(Ryzen 9 9950X, microcode revision 0x0B404023 from the registry value "Update Revision", which is 4 bytes
+on this machine; Windows 11 26200.9711). One review of the build has run (same family, independent
+context; two lenses: harness soundness and proof routes); the revision it led to is folded into this
+section, and §9.6 logs it.
+
+### 9.1 Built
+
+- **Stubs (§4).** `harness/stubgen.py` builds every stub from the entry's operand roles through the
+  pinned XED encoder and decodes each one back: **491 stubs over all 88 entries, 0 encode or check
+  errors** [M]. All **39 `provisional` iform keys decode exactly as written** [M]; the census still
+  decides which forms compilers emit. MASM `db` stubs, JIT-free, volatile registers only, MXCSR restored.
+  Since the review the decode-back check also verifies the **imm8 of all 288 immediate stubs**, with a
+  negative control (a wrong imm8 is reported) [M]; the manifest hash is unchanged.
+- **Driver (§4).** `harness/x2fuzz.c`, MSVC 19.44.35229: sampled mode, exhaustive mode (in-process
+  compare, mismatches, chunked stream hash independent of thread count), fingerprint (CPUID, microcode,
+  OS build, L3 groups, binary and source hashes), CPU pinning, SEH fault capture with a `PAGE_NOACCESS`
+  data page (F-MEMFAULT, **load side only**: loads folded into the arithmetic m512 forms; the store half of
+  §3.2 needs the memory-window ABI extension proposed in harness/README.md §4 before the census adds masked
+  moves or stores). A **collection guard** refuses, without `--collection-authorised`, non-development labels,
+  **any record of a budget set (V1-V4, BCAST, F-MEMFAULT) whatever its label**, and silicon sweeps; the
+  generator labels budget rows `BUDGET-v1-*` by default. Vectors with a preset sticky MXCSR flag are outside
+  the model (§2) outside VALID sets. Measured L3 groups: LPs 0-15 and 16-31, so CPU 4 and CPU 20 are on
+  different CCDs [M].
+- **Exhaustive mode, corrected after review (blocker R1-1).** The first build compared the whole output block,
+  including RAX and the old destination that the table does not model, so **every silicon execution of a V5
+  sweep would have been a mismatch** (the review measured 26,368 of 26,368, 0 observable mismatches) and a
+  2^32 sweep would have written about 128 GiB of mismatch records. The engine now compares exactly the
+  observable bytes it hashes (destination by kind, MXCSR), refuses inputs the interpreter does not model, and
+  stops with status `flood` after 10^6 mismatch records. A new self-test step runs **every V5-eligible stub
+  (40) on silicon over 4,096 fixed inputs and requires 0 mismatches and the interpreter's stream hash**:
+  PASS [M] (development check, not data under the X2 record).
+- **Reference interpreter (§4).** `harness/x2ref.c`, exact integer arithmetic. **Validated against the
+  Python reference on 1,000,006 random lane cases over all 491 stubs: 0 divergences** [M], the pre-use
+  check §4 asks for. Throughput: about 24 ns per lane case in the exhaustive engine (VCVTPS2DQ zmm, 2^28 lane cases in 6.55 s on one thread, stream hash included) and about 0.76 µs per lane case end to end in predict mode with file I/O [M]; at 24 ns the V5 sweeps need about 4 h of one thread for predictions, about 2 h on 2 threads [D] (§5 assumed 6-15 min on 32 threads).
+- **Generator (§3, §5).** `harness/gen_vectors.py`: the value classes, targeted classes, E8, V3 masks,
+  flag isolation, V4, BCAST, F-MEMFAULT, counter-based SplitMix64 per lane case. Its plan equals
+  `budget_rows` on **420 of 428 sampled rows**; the 8 others are the i32→f32 rows (open item 1 below)
+  [M]. Throughput: about 61 µs per execution on a V1 slice [M]; the full sampled budget is about 1.15 × 10^8 executions, about 2 h single-threaded (a lower bound) and a 36.7 GB vectors file [D].
+- **Comparator (§1, §6.3).** `harness/compare.py`: per-cell lane and per-execution flag mismatches,
+  C-vs-Python divergence, two-run nondeterminism, harness anomalies, the three-way verdict;
+  single-active-lane duplicates are tallied apart (§2: interpreted after F-MASKEXC). Since the review the
+  Bochs output is compared with the table on **every** record, so the "Bochs differs" row of §6.3
+  (table = silicon ≠ Bochs) is produced (the first build consulted Bochs only where silicon already
+  disagreed and could never produce it), a non-OK Bochs status is a Bochs anomaly, and every results input
+  must name the vectors file's and the manifest's sha256 and carry each vector record's index (provenance).
+- **Calibration arm (§6.4), built after review.** `harness/mutants/`: 24 seeded table mutants (the 10 of
+  §6.4 and 14 harness-path ones: zeroing, upper bits, broadcast, k-destination upper bits, GPR extension,
+  scalar upper lanes, flag-only) as anchored one-line edits of a copy of `semantics/`, and a runner that
+  predicts with the mutated table and compares against unchanged silicon results. Sealed by the sha256 of
+  `mutants.py` (harness/README.md §9), which the X2 record must name before the first native run. Calibrated
+  on development data (the review's cross-section): harness/README.md §9.
+
+### 9.2 Not built or not run
+
+- No `budget.v1` vector was generated for silicon, and no class cell, V5 sweep or Bochs budget ran
+  (collection rule).
+- The Bochs production image (vector loader, in-guest compare, stream hash) is not built (§9.4).
+- Intel SDE was not downloaded: its download requires a licence click-through. Listed for the Owner.
+- The F-MEMFAULT store side (memory-window ABI, harness/README.md §4) is not built; no table entry needs it yet.
+- The mutant arm has not run on budget silicon results (none exist); its 100% target is for the frozen budget.
+
+### 9.3 Development smoke run on the selftest.py hand vectors [M] (not data under the X2 record)
+
+299 hand vectors extracted from `semantics/selftest.py` (not retyped) in 780 lane-0 executions, plus 20
+vector-level cases (masks, broadcast, `{er}`, scalar upper lanes, full-width converts, RFLAGS), run on
+CPU 4 and CPU 20: 0 lane mismatches, 0 nondeterminism, 0 C-vs-Python divergences, 0 harness anomalies,
+**3 execution flag mismatches, all one hand vector: selftest B6, `0x00000001 / +0`. The 9950X sets ZE
+alone, while the table and the hand expectation say DE|ZE** (VDIVSS EVEX, VDIVSS VEX and DIVSS legacy
+alike). Bochs 3.1 also sets ZE alone (§9.4). This touches the F-FLAGPRI reading of TABLE-SCHEMA §4 rule 7.
+It is pre-freeze information about an uncertainty class, so the X2 record should disclose it before
+freeze. Whether the reading changes is the table owner's decision, not this track's.
+
+The revised build reproduced the smoke exactly (same vectors, same counts). The review's development
+cross-section (4,504 random executions over all 491 stubs, CPU 6 and CPU 22) shows the same flag-only
+disagreement **off the hand vector** and nowhere else [M review; re-compared by the revised comparator,
+harness/README.md §7]: VDIVSS (VEX) `0x004C24E3 / +0` under RZ, DIVSS `0x8078165D / −0` under RZ, and DIVSS
+`0x80717657 / +0` under FTZ: silicon ZE only, table DE|ZE. So the reading "DEN / ±0 raises DE and ZE" fails
+across environments and signs. These three cases belong in the record's pre-freeze disclosure with B6
+(provisional, pending the record's review; the reading is the table owner's decision).
+
+### 9.4 Second oracle: Bochs, measured (answers to §6.1)
+
+- Bochs 3.1 built from the release's own MSVC source package (GitHub asset, SHA-256 matching the
+  published digest; LGPL-2.1, no click-through). Its configuration has `BX_SUPPORT_AVX 1` and
+  `BX_SUPPORT_EVEX 1`, so the release's Windows configuration includes AVX-512 [M]. The published
+  installer was not run.
+- 33 CPU models, with `sapphire_rapids`, `arrow_lake` and `wildcat_lake` among the AVX-512 ones; no Zen 4
+  or Zen 5 model [M].
+- A bare-metal probe (`harness/bochs/boot.S`: long mode, XCR0 = 0xE7, output on port 0xE9) ran 12 cases
+  in about 0.44 s wall: every in-scope instruction tried executes, and Bochs equals the table on 11 of 12
+  [M]. The exception is B6 again: ZE alone, as on the 9950X. **The port-0xE9 hack is a bochsrc option
+  (`port_e9_hack: enabled=1`); no configure flag is needed** [M].
+- Throughput [M]: about **107 ns per (VADDPS zmm + DEC + JNZ)** iteration on one host thread with the
+  debugger compiled in, i.e. about 9.4 × 10^6 VADDPS zmm (1.5 × 10^8 f32 lane operations) per second.
+  The raw arithmetic is not the bottleneck for the 7.5 × 10^7-lane-case Bochs budget [D]; vector I/O and
+  the in-guest compare are.
+- Guest pitfall [M]: without masking the 8259 and an IDT, long runs triple-fault at a fixed emulated time
+  (an IRQ0 arriving at vector 8).
+
+### 9.5 Open items for the record (pre-freeze; not decided here)
+
+1. §3.1 says "12 integer classes" and lists 10; the i32→f32 rows (12 × 1,000 × 8 and 4 × 12 × 100 × 2)
+   cannot be met: 113,600 lane cases short over 8 rows.
+2. F-DAZ-CVT asks for RU/RD with DAZ = 0 and 1, but E8 has no RU+DAZ or RD+DAZ; only V5 reaches them.
+3. DIV ties exist only on the subnormal grid; the TIE class for DIV uses those.
+4. F-TINY's band [2^−126 − 2^−150, 2^−126) is unreachable for DIV (a quotient of 24-bit significands
+   cannot lie in it); the tininess distinction for DIV exists only under directed rounding.
+5. §3.2 lists OVF for CVTDQ2PS; no int32 overflows binary32 (the rows already omit it).
+6. F-MEMFAULT's text names single-bit and alternating masks; its row counts prefix masks only. Since the
+   review the generator also runs every prefix mask with zero masking as uncounted duplicates; proposed:
+   count them (2 × (n + 1) × n). F-MEMFAULT is load-side only until the memory-window ABI exists (§9.1).
+7. F-MASKEXC has no row of its own; V3's heterogeneous vector puts SNaN, QNaN, DEN and
+   overflow-producing values in masked-off lanes under every mask.
+8. The B6 observation of §9.3, now with the review's three further cases (RZ, FTZ, −0).
+9. (Review R1-8) No budget row runs masked broadcast (`merge_bcast`, `zero_bcast` exist and are kept);
+   proposed: a BCAST row "masked {1toN} × 144 × 10 × {merge, zero}" per EVEX memory form with EVEX.b (the
+   generator implements it). `{er}`/`{sae}` stubs exist unmasked only: add masked variants and V4 rows, or
+   state that masked embedded rounding is out of scope.
+10. (Review R1-10) The mutant list of §6.4 is built and sealed by the sha256 of `harness/mutants/mutants.py`
+    (`a74d5041…`, harness/README.md §9); the record should name it before the first native run and keep
+    the target "every §6.4 mutant detected on the frozen budget's silicon results".
+11. (Review R1-3) The record's collection procedure should state that collection runs pass
+    `--collection-authorised` and that budget vectors carry `BUDGET-v1-*` labels and budget set ids.
+
+### 9.6 Review of the build (log)
+
+| Date | Reviewer | Lens | Family | Findings | Outcome |
+|---|---|---|---|---|---|
+| 2026-10-16 | reviewer 1 | harness soundness | Claude, **same family, independent context** | 11 (1 blocker, 3 major, 7 minor) | all accepted; 10 fixed and re-run, 1 information for the record (B6 cases); details in harness/README.md §11 |
+| 2026-10-16 | reviewer 2 | proof routes (RULES.md §8) | Claude, same family, independent context | 10 (4 major, 6 minor) | all accepted; routes corrected and re-run; details in proofs/README.md §9 |
+
+The blocker (exhaustive mode compared unmodelled bytes, so a V5 sweep on silicon would have reported every
+execution as a mismatch) was found before any V5 sweep ran. Same-family review is weaker than ROADMAP's
+different-family requirement (docs/m0/README.md); that gap stays open until D0-10.

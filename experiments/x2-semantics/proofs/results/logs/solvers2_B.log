@@ -1,0 +1,115 @@
+START B Fri 10/16/2026 19:34:27.77
+R01:3.2: No set-logic command was given before this point.
+R01:3.2: cvc5 will make all theories available.
+R01:3.2: Consider setting a stricter logic for (likely) better performance.
+R01:3.2: To suppress this warning in the future use (set-logic ALL).
+R01                    PROVED                 0.009 s 
+R02-lemma-commute:3.2: No set-logic command was given before this point.
+R02-lemma-commute:3.2: cvc5 will make all theories available.
+R02-lemma-commute:3.2: Consider setting a stricter logic for (likely) better performance.
+R02-lemma-commute:3.2: To suppress this warning in the future use (set-logic ALL).
+R02-lemma-commute      PROVED                 0.020 s 
+R02-lemma-nan:3.2: No set-logic command was given before this point.
+R02-lemma-nan:3.2: cvc5 will make all theories available.
+R02-lemma-nan:3.2: Consider setting a stricter logic for (likely) better performance.
+R02-lemma-nan:3.2: To suppress this warning in the future use (set-logic ALL).
+R02-lemma-nan          PROVED                 0.003 s 
+R02-lemma-order:3.2: No set-logic command was given before this point.
+R02-lemma-order:3.2: cvc5 will make all theories available.
+R02-lemma-order:3.2: Consider setting a stricter logic for (likely) better performance.
+R02-lemma-order:3.2: To suppress this warning in the future use (set-logic ALL).
+R02-lemma-order        PROVED                 0.035 s 
+R02:3.2: No set-logic command was given before this point.
+R02:3.2: cvc5 will make all theories available.
+R02:3.2: Consider setting a stricter logic for (likely) better performance.
+R02:3.2: To suppress this warning in the future use (set-logic ALL).
+R02                    UNKNOWN(unknown (TIMEOUT))  1200.008 s 
+R03:3.2: No set-logic command was given before this point.
+R03:3.2: cvc5 will make all theories available.
+R03:3.2: Consider setting a stricter logic for (likely) better performance.
+R03:3.2: To suppress this warning in the future use (set-logic ALL).
+R03                    UNKNOWN(unknown (TIMEOUT))  1200.009 s 
+R04:3.2: No set-logic command was given before this point.
+R04:3.2: cvc5 will make all theories available.
+R04:3.2: Consider setting a stricter logic for (likely) better performance.
+R04:3.2: To suppress this warning in the future use (set-logic ALL).
+R04                    PROVED                 0.006 s 
+R05:3.2: No set-logic command was given before this point.
+R05:3.2: cvc5 will make all theories available.
+R05:3.2: Consider setting a stricter logic for (likely) better performance.
+R05:3.2: To suppress this warning in the future use (set-logic ALL).
+R05                    PROVED                 0.006 s 
+R06_DAZ=0:3.2: No set-logic command was given before this point.
+R06_DAZ=0:3.2: cvc5 will make all theories available.
+R06_DAZ=0:3.2: Consider setting a stricter logic for (likely) better performance.
+R06_DAZ=0:3.2: To suppress this warning in the future use (set-logic ALL).
+R06_DAZ=0              PROVED                 0.004 s 
+R06_DAZ=1:3.2: No set-logic command was given before this point.
+R06_DAZ=1:3.2: cvc5 will make all theories available.
+R06_DAZ=1:3.2: Consider setting a stricter logic for (likely) better performance.
+R06_DAZ=1:3.2: To suppress this warning in the future use (set-logic ALL).
+R06_DAZ=1              PROVED                 0.004 s 
+R07_DAZ=0:3.2: No set-logic command was given before this point.
+R07_DAZ=0:3.2: cvc5 will make all theories available.
+R07_DAZ=0:3.2: Consider setting a stricter logic for (likely) better performance.
+R07_DAZ=0:3.2: To suppress this warning in the future use (set-logic ALL).
+R07_DAZ=0              PROVED                 0.004 s 
+R07_DAZ=1:3.2: No set-logic command was given before this point.
+R07_DAZ=1:3.2: cvc5 will make all theories available.
+R07_DAZ=1:3.2: Consider setting a stricter logic for (likely) better performance.
+R07_DAZ=1:3.2: To suppress this warning in the future use (set-logic ALL).
+R07_DAZ=1              PROVED                 0.004 s 
+R08:3.2: No set-logic command was given before this point.
+R08:3.2: cvc5 will make all theories available.
+R08:3.2: Consider setting a stricter logic for (likely) better performance.
+R08:3.2: To suppress this warning in the future use (set-logic ALL).
+R08                    PROVED                 0.002 s 
+R08_inst:3.2: No set-logic command was given before this point.
+R08_inst:3.2: cvc5 will make all theories available.
+R08_inst:3.2: Consider setting a stricter logic for (likely) better performance.
+R08_inst:3.2: To suppress this warning in the future use (set-logic ALL).
+R08_inst               PROVED                 0.005 s 
+R09:3.2: No set-logic command was given before this point.
+R09:3.2: cvc5 will make all theories available.
+R09:3.2: Consider setting a stricter logic for (likely) better performance.
+R09:3.2: To suppress this warning in the future use (set-logic ALL).
+R09                    PROVED                 0.002 s 
+R09_inst:3.2: No set-logic command was given before this point.
+R09_inst:3.2: cvc5 will make all theories available.
+R09_inst:3.2: Consider setting a stricter logic for (likely) better performance.
+R09_inst:3.2: To suppress this warning in the future use (set-logic ALL).
+R09_inst               PROVED                 0.004 s 
+R10:3.2: No set-logic command was given before this point.
+R10:3.2: cvc5 will make all theories available.
+R10:3.2: Consider setting a stricter logic for (likely) better performance.
+R10:3.2: To suppress this warning in the future use (set-logic ALL).
+R10                    PROVED                 0.001 s 
+R10_inst:3.2: No set-logic command was given before this point.
+R10_inst:3.2: cvc5 will make all theories available.
+R10_inst:3.2: Consider setting a stricter logic for (likely) better performance.
+R10_inst:3.2: To suppress this warning in the future use (set-logic ALL).
+R10_inst               PROVED                 0.004 s 
+R11:3.2: No set-logic command was given before this point.
+R11:3.2: cvc5 will make all theories available.
+R11:3.2: Consider setting a stricter logic for (likely) better performance.
+R11:3.2: To suppress this warning in the future use (set-logic ALL).
+R11                    PROVED                 0.001 s 
+R11_inst:3.2: No set-logic command was given before this point.
+R11_inst:3.2: cvc5 will make all theories available.
+R11_inst:3.2: Consider setting a stricter logic for (likely) better performance.
+R11_inst:3.2: To suppress this warning in the future use (set-logic ALL).
+R11_inst               PROVED                 0.004 s 
+R12:3.2: No set-logic command was given before this point.
+R12:3.2: cvc5 will make all theories available.
+R12:3.2: Consider setting a stricter logic for (likely) better performance.
+R12:3.2: To suppress this warning in the future use (set-logic ALL).
+R12                    UNKNOWN(unknown (TIMEOUT))   600.007 s 
+R19                    NOT RUN (fp.to_ieee_bv)
+R20                    NOT RUN (fp.to_ieee_bv)
+R21:3.2: No set-logic command was given before this point.
+R21:3.2: cvc5 will make all theories available.
+R21:3.2: Consider setting a stricter logic for (likely) better performance.
+R21:3.2: To suppress this warning in the future use (set-logic ALL).
+R21                    PROVED                 0.004 s 
+RC_B=0
+END B Fri 10/16/2026 20:24:30.67

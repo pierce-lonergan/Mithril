@@ -1,0 +1,41 @@
+{
+ "z3_version": "5.3.1",
+ "timeout_s": 1500.0,
+ "results": [
+  {
+   "name": "L1 meaning step",
+   "verdict": "PROVED",
+   "seconds": 0.007
+  },
+  {
+   "name": "L2 chain step",
+   "verdict": "PROVED",
+   "seconds": 0.005
+  },
+  {
+   "name": "L3 tree step",
+   "verdict": "PROVED",
+   "seconds": 0.005
+  },
+  {
+   "name": "L4 closure",
+   "verdict": "PROVED",
+   "seconds": 0.004
+  },
+  {
+   "name": "L5 start value +0 is sign-0, non-NaN",
+   "verdict": "PROVED",
+   "seconds": 0.0
+  },
+  {
+   "name": "L6 abs is sign-0",
+   "verdict": "PROVED",
+   "seconds": 0.0
+  },
+  {
+   "name": "R02 concrete pattern, bit-blast+sat tactic",
+   "verdict": "UNKNOWN(timeout)",
+   "seconds": 1500.076
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+{
+ "z3_version": "5.3.1",
+ "timeout_s": 600.0,
+ "rules": [
+  {
+   "rule": "R14",
+   "what": "INT-DOT-SIGNTRICK-Q8: maddubs(PABSB(w), PSIGNB(x, w)), madd(.,1), red8 == sum w_i x_i for any w, under DOM-ACT-Q (x != -128); no saturation (32,512)",
+   "z3": "UNKNOWN(timeout)",
+   "seconds": 600.132,
+   "query_sha256": "b1d57db87a2ca987f45227019d842ac6c2a32eb46e296f8983201ae10c267073",
+   "counterexample": null,
+   "reason_unknown": "timeout"
+  },
+  {
+   "rule": "R14/x=-128",
+   "what": "R14 without DOM-ACT-Q (expect a counterexample: x = -128, w < 0)",
+   "z3": "COUNTEREXAMPLE",
+   "seconds": 68.435,
+   "query_sha256": "2904e40d65b4b287797d7e0fb6634c3366e25b8f4539976e8cfce727dc85638e",
+   "counterexample": {
+    "w0": "0x80",
+    "w1": "0x80",
+    "w10": "0xd3",
+    "w11": "0x9b",
+    "w12": "0xae",
+    "w13": "0xa6",
+    "w14": "0x7d",
+    "w15": "0x82",
+    "w16": "0x84",
+    "w17": "0x80",
+    "w18": "0xd3",
+    "w19": "0x80"
+   },
+   "reason_unknown": null
+  },
+  {
+   "rule": "R15",
+   "what": "INT-BIAS-NIB: sum (n_i - 8) x_i == sum n_i x_i - 8*a.sum with a.sum = sum x_i (DOM-ACT-SUM), int32, and no int32 wrap",
+   "z3": "PROVED",
+   "seconds": 94.828,
+   "query_sha256": "ca925427f8abc75bf9e1f35da0abd0e452156d35f2a71813694e867ae9b49462",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R16",
+   "what": "INT-BIAS-XOR80: sum q_i x_i == sum u8(q_i xor 0x80) x_i - 128*a.sum (DOM-ACT-SUM), int32, no wrap",
+   "z3": "PROVED",
+   "seconds": 107.237,
+   "query_sha256": "7788ec7f85700ca925f609e6544b0ff1a7ac7c3e55a2a49f3311a5d4d3d77132",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R17",
+   "what": "INT-NARROW-PACKS: packsswb(packssdw(q)) == (int8_t)q for |q| <= 127",
+   "z3": "PROVED",
+   "seconds": 0.001,
+   "query_sha256": "bb56ce283fa1516b253f382535470561f05d5c3f9c08ade9a3c2ee4c6c97f6cf",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R18",
+   "what": "INT-SUM-ACT: AVX2 (8 x VPADDD + hsum8_i32) and AVX-512 (4 x VPADDD + hsum_i32) == sequential sum, no int32 wrap, |q| <= 127",
+   "z3": "PROVED",
+   "seconds": 48.126,
+   "query_sha256": "e55f49f0810eeedc653833d0e3bdc87537206d557e9685a9065193d8c635c733",
+   "counterexample": null,
+   "reason_unknown": null
+  }
+ ]
+}

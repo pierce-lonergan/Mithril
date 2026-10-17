@@ -1,0 +1,22 @@
+{
+ "z3_version": "5.3.1",
+ "checks": {
+  "pabs": 256,
+  "psign": 65536,
+  "word": 151192,
+  "dpbusd_lane": 544288,
+  "packs": 151200
+ },
+ "int_ops_hashes": {
+  "HASH-PABS-PSIGN": "afab1070d067614194ca3bb9ac43235781560e880d604970648ae2107a63fb15",
+  "HASH-PACKS": "2ad3f0f56f1a85730fbeff1495b831c868313300592422d8f5d8e2650f2af22f"
+ },
+ "x2prove_hashes": {
+  "HASH-PABS-PSIGN": "afab1070d067614194ca3bb9ac43235781560e880d604970648ae2107a63fb15",
+  "HASH-PACKS": "2ad3f0f56f1a85730fbeff1495b831c868313300592422d8f5d8e2650f2af22f"
+ },
+ "total_checks": 912472,
+ "mismatches": 0,
+ "mismatch_list": [],
+ "seconds": 90.6
+}

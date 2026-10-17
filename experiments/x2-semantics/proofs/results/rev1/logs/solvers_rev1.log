@@ -1,0 +1,254 @@
+START Fri 10/16/2026 21:52:42.30
+==== 1a smt_table differential 21:52:42.30
+{"pool_values": 68, "pairs": 4624, "envs": ["default", "DAZ", "FTZ", "DAZ+FTZ", "RD", "RZ+DAZ"], "comparisons": {"cmp_pred": 887808, "comis": 55488, "cvt_h2f": 393216, "masked_lane": 6400}, "total_comparisons": 1342912, "mismatches": 0, "seconds": 8.2, "z3_version": "5.3.1"}
+SMT_TABLE_RC=0 21:52:50.59
+==== 1b trees 21:52:50.59
+{"differential_mismatches": 0, "differential_comparisons": 6000, "unit_basis_mismatches": 0, "seconds": 0.25}
+TREES_RC=0 21:52:50.90
+==== 1c integer differential (x2prove HASH entries first) 21:52:50.90
+HASH-PABS-PSIGN mxcsr 1f80  inputs        65792  cond            0  fail_in          0  fail_out          0  extra 0,0,0  afab1070d067614194ca3bb9ac43235781560e880d604970648ae2107a63fb15 0.00 s
+HASH-PACKS      mxcsr 1f80  inputs       262272  cond            0  fail_in          0  fail_out          0  extra 0,0,0  2ad3f0f56f1a85730fbeff1495b831c868313300592422d8f5d8e2650f2af22f 0.00 s
+{"checks": {"pabs": 256, "psign": 65536, "word": 151192, "dpbusd_lane": 544288, "packs": 151200}, "total_checks": 912472, "mismatches": 0, "seconds": 90.6}
+{"int_ops_hashes": {"HASH-PABS-PSIGN": "afab1070d067614194ca3bb9ac43235781560e880d604970648ae2107a63fb15", "HASH-PACKS": "2ad3f0f56f1a85730fbeff1495b831c868313300592422d8f5d8e2650f2af22f"}, "x2prove_hashes": {"HASH-PABS-PSIGN": "afab1070d067614194ca3bb9ac43235781560e880d604970648ae2107a63fb15", "HASH-PACKS": "2ad3f0f56f1a85730fbeff1495b831c868313300592422d8f5d8e2650f2af22f"}}
+INT_DIFF_RC=0 21:54:21.66
+==== 2 refactor regression: re-export the first run's integer queries without solving 21:54:21.66
+R12                  NOT SOLVED (export only)     0.000 s  
+R13                  NOT SOLVED (export only)     0.000 s  
+R14                  NOT SOLVED (export only)     0.000 s  
+R14/x=-128           NOT SOLVED (export only)     0.000 s  
+R15                  NOT SOLVED (export only)     0.000 s  
+R16                  NOT SOLVED (export only)     0.000 s  
+R17                  NOT SOLVED (export only)     0.000 s  
+R18                  NOT SOLVED (export only)     0.000 s  
+R13/P            exported 6398275fbbc6d3598fe4d8151b678a87440c580ca5c081622b5879f5df0f3de0
+R13/W            exported 6db066c6fafb23212d74be6e317ec187891f605b1e0877cc5177abb9dda577f5
+R13/M            exported d3a8870baa5ad33b4a3eebca6cc834ee3537373efe88c078c242f1440eb4933c
+R14/M            exported afc5633cfd4aa8ae0bdb80bfefa551201cdb95e8f503d057d0f201fba089d882
+R12/M            exported 2159a9b8482c112e99c28fb9427ebe442837b78999bd4cf778bbad50552c7c56
+R15/P            exported b7cde8f0c1c2dcc982c53d081947b14dd05856d66d7fbac3aded6a3b9a7f03f3
+R15/M            exported abcef36eb9b598118be183f2beab96b1ae352e2b0f5ea8d688cd60a05818336f
+R16/P            exported 550f2b486b59d9566dbb5fc56afecb84c16e932d354c7715b907eed6344fd250
+R16/M            exported f119b6a22e70a0e2e17449e7f679a70605ef17d73b5334604f7c3b11e50dd9be
+R18/M            exported f37824da872b67ef95edb312e866887f63751d58be716a559335f0d345a4d9c8
+REGRESS_RC=0 21:54:22.04
+==== 3a Z3: rebuilt FP queries 21:54:22.04
+R06/DAZ=0            PROVED                 0.000 s  
+R07/DAZ=0            PROVED                 0.000 s  
+R08/inst/DAZ=0       PROVED                 0.001 s  
+R09/inst/DAZ=0       PROVED                 0.000 s  
+R10/inst/DAZ=0       PROVED                 0.000 s  
+R11/inst/DAZ=0       PROVED                 0.000 s  
+R06/DAZ=1            PROVED                 0.000 s  
+R07/DAZ=1            PROVED                 0.000 s  
+R08/inst/DAZ=1       PROVED                 0.001 s  
+R09/inst/DAZ=1       PROVED                 0.000 s  
+R10/inst/DAZ=1       PROVED                 0.000 s  
+R11/inst/DAZ=1       PROVED                 0.000 s  
+R08                  PROVED                 0.000 s  
+R09                  PROVED                 0.000 s  
+R01                  PROVED                 0.001 s  
+R04                  PROVED                 0.003 s  
+R05                  PROVED                 0.003 s  
+R01/table            PROVED                 0.024 s  
+R04/table            PROVED                 0.003 s  
+R05/table            PROVED                 0.003 s  
+R20                  PROVED                 0.033 s  
+R21/DAZ=0            PROVED                 0.000 s  
+R21/DAZ=1            PROVED                 0.000 s  
+Z3_RC=0 21:54:22.36
+==== 3b Z3: T lemmas, R12/P, R14/P 21:54:22.36
+R14/P            PROVED               472.482 s 
+R12/P            PROVED                 0.046 s 
+T/red8           PROVED                 0.000 s 
+T/red_quads      PROVED                 0.000 s 
+T/red_quad1      PROVED                 0.000 s 
+Z3_INT_RC=0 22:02:15.59
+==== 3c Z3: R02/R03 lemmas L1-L6 22:02:15.59
+L1 meaning step                    PROVED                 0.005 s {'query_sha256': '435afbc3a40282c775f1025ec7ec6f1f0898cf3791e9773ba5d0e554a5db711b', 'smt2': 'fold_L1.smt2'}
+L2 chain step                      PROVED                 0.004 s {'query_sha256': '65622efc4747e38d1140cf9ce2cb30c67177dc336da4331e36afad489308c72f', 'smt2': 'fold_L2.smt2'}
+L3 tree step                       PROVED                 0.004 s {'query_sha256': '9bdab0dee81abdbca4ff6114f30e424761a92c9c97aa69557c346a57cfc57d84', 'smt2': 'fold_L3.smt2'}
+L4 closure                         PROVED                 0.003 s {'query_sha256': '9466ddd1c93a103a791b8b481cd9f5c116dd07ad5243c62963f2a0c9ec8104f3', 'smt2': 'fold_L4.smt2'}
+L5 start value +0 is sign-0, non-NaN PROVED                 0.000 s {'query_sha256': '10bd4d579690a94cdea3bbff72c3ab1f0c838d08e8841acd9b07fc03309dda94', 'smt2': 'fold_L5.smt2'}
+L6 abs is sign-0                   PROVED                 0.000 s {'query_sha256': '80b31edbaf60fe6cd1e84bb45d37b9cae943e66fe20546cfab9a8fbca7ae4263', 'smt2': 'fold_L6.smt2'}
+L1t meaning step, table relation   PROVED                 0.009 s {'query_sha256': '639a1c896a6cda9288ad0f74994d8320ea92791a9aba4cfa11ae690093e0d02d', 'smt2': 'fold_L1t.smt2'}
+FOLD_RC=0 22:02:15.87
+==== 4 cvc5 22:02:15.87
+R01:3.2: No set-logic command was given before this point.
+R01:3.2: cvc5 will make all theories available.
+R01:3.2: Consider setting a stricter logic for (likely) better performance.
+R01:3.2: To suppress this warning in the future use (set-logic ALL).
+R01                    PROVED                 0.009 s 
+R01_table:3.2: No set-logic command was given before this point.
+R01_table:3.2: cvc5 will make all theories available.
+R01_table:3.2: Consider setting a stricter logic for (likely) better performance.
+R01_table:3.2: To suppress this warning in the future use (set-logic ALL).
+R01_table              PROVED                 0.339 s 
+R04:3.2: No set-logic command was given before this point.
+R04:3.2: cvc5 will make all theories available.
+R04:3.2: Consider setting a stricter logic for (likely) better performance.
+R04:3.2: To suppress this warning in the future use (set-logic ALL).
+R04                    PROVED                 0.006 s 
+R04_table:3.2: No set-logic command was given before this point.
+R04_table:3.2: cvc5 will make all theories available.
+R04_table:3.2: Consider setting a stricter logic for (likely) better performance.
+R04_table:3.2: To suppress this warning in the future use (set-logic ALL).
+R04_table              PROVED                 0.007 s 
+R05:3.2: No set-logic command was given before this point.
+R05:3.2: cvc5 will make all theories available.
+R05:3.2: Consider setting a stricter logic for (likely) better performance.
+R05:3.2: To suppress this warning in the future use (set-logic ALL).
+R05                    PROVED                 0.006 s 
+R05_table:3.2: No set-logic command was given before this point.
+R05_table:3.2: cvc5 will make all theories available.
+R05_table:3.2: Consider setting a stricter logic for (likely) better performance.
+R05_table:3.2: To suppress this warning in the future use (set-logic ALL).
+R05_table              PROVED                 0.007 s 
+R06_DAZ=0:3.2: No set-logic command was given before this point.
+R06_DAZ=0:3.2: cvc5 will make all theories available.
+R06_DAZ=0:3.2: Consider setting a stricter logic for (likely) better performance.
+R06_DAZ=0:3.2: To suppress this warning in the future use (set-logic ALL).
+R06_DAZ=0              PROVED                 0.002 s 
+R06_DAZ=1:3.2: No set-logic command was given before this point.
+R06_DAZ=1:3.2: cvc5 will make all theories available.
+R06_DAZ=1:3.2: Consider setting a stricter logic for (likely) better performance.
+R06_DAZ=1:3.2: To suppress this warning in the future use (set-logic ALL).
+R06_DAZ=1              PROVED                 0.002 s 
+R07_DAZ=0:3.2: No set-logic command was given before this point.
+R07_DAZ=0:3.2: cvc5 will make all theories available.
+R07_DAZ=0:3.2: Consider setting a stricter logic for (likely) better performance.
+R07_DAZ=0:3.2: To suppress this warning in the future use (set-logic ALL).
+R07_DAZ=0              PROVED                 0.001 s 
+R07_DAZ=1:3.2: No set-logic command was given before this point.
+R07_DAZ=1:3.2: cvc5 will make all theories available.
+R07_DAZ=1:3.2: Consider setting a stricter logic for (likely) better performance.
+R07_DAZ=1:3.2: To suppress this warning in the future use (set-logic ALL).
+R07_DAZ=1              PROVED                 0.001 s 
+R08:3.2: No set-logic command was given before this point.
+R08:3.2: cvc5 will make all theories available.
+R08:3.2: Consider setting a stricter logic for (likely) better performance.
+R08:3.2: To suppress this warning in the future use (set-logic ALL).
+R08                    PROVED                 0.002 s 
+R08_inst_DAZ=0:3.2: No set-logic command was given before this point.
+R08_inst_DAZ=0:3.2: cvc5 will make all theories available.
+R08_inst_DAZ=0:3.2: Consider setting a stricter logic for (likely) better performance.
+R08_inst_DAZ=0:3.2: To suppress this warning in the future use (set-logic ALL).
+R08_inst_DAZ=0         PROVED                 0.002 s 
+R08_inst_DAZ=1:3.2: No set-logic command was given before this point.
+R08_inst_DAZ=1:3.2: cvc5 will make all theories available.
+R08_inst_DAZ=1:3.2: Consider setting a stricter logic for (likely) better performance.
+R08_inst_DAZ=1:3.2: To suppress this warning in the future use (set-logic ALL).
+R08_inst_DAZ=1         PROVED                 0.002 s 
+R09:3.2: No set-logic command was given before this point.
+R09:3.2: cvc5 will make all theories available.
+R09:3.2: Consider setting a stricter logic for (likely) better performance.
+R09:3.2: To suppress this warning in the future use (set-logic ALL).
+R09                    PROVED                 0.002 s 
+R09_inst_DAZ=0:3.2: No set-logic command was given before this point.
+R09_inst_DAZ=0:3.2: cvc5 will make all theories available.
+R09_inst_DAZ=0:3.2: Consider setting a stricter logic for (likely) better performance.
+R09_inst_DAZ=0:3.2: To suppress this warning in the future use (set-logic ALL).
+R09_inst_DAZ=0         PROVED                 0.002 s 
+R09_inst_DAZ=1:3.2: No set-logic command was given before this point.
+R09_inst_DAZ=1:3.2: cvc5 will make all theories available.
+R09_inst_DAZ=1:3.2: Consider setting a stricter logic for (likely) better performance.
+R09_inst_DAZ=1:3.2: To suppress this warning in the future use (set-logic ALL).
+R09_inst_DAZ=1         PROVED                 0.002 s 
+R10_inst_DAZ=0:3.2: No set-logic command was given before this point.
+R10_inst_DAZ=0:3.2: cvc5 will make all theories available.
+R10_inst_DAZ=0:3.2: Consider setting a stricter logic for (likely) better performance.
+R10_inst_DAZ=0:3.2: To suppress this warning in the future use (set-logic ALL).
+R10_inst_DAZ=0         PROVED                 0.002 s 
+R10_inst_DAZ=1:3.2: No set-logic command was given before this point.
+R10_inst_DAZ=1:3.2: cvc5 will make all theories available.
+R10_inst_DAZ=1:3.2: Consider setting a stricter logic for (likely) better performance.
+R10_inst_DAZ=1:3.2: To suppress this warning in the future use (set-logic ALL).
+R10_inst_DAZ=1         PROVED                 0.002 s 
+R11_inst_DAZ=0:3.2: No set-logic command was given before this point.
+R11_inst_DAZ=0:3.2: cvc5 will make all theories available.
+R11_inst_DAZ=0:3.2: Consider setting a stricter logic for (likely) better performance.
+R11_inst_DAZ=0:3.2: To suppress this warning in the future use (set-logic ALL).
+R11_inst_DAZ=0         PROVED                 0.002 s 
+R11_inst_DAZ=1:3.2: No set-logic command was given before this point.
+R11_inst_DAZ=1:3.2: cvc5 will make all theories available.
+R11_inst_DAZ=1:3.2: Consider setting a stricter logic for (likely) better performance.
+R11_inst_DAZ=1:3.2: To suppress this warning in the future use (set-logic ALL).
+R11_inst_DAZ=1         PROVED                 0.002 s 
+R20:3.2: No set-logic command was given before this point.
+R20:3.2: cvc5 will make all theories available.
+R20:3.2: Consider setting a stricter logic for (likely) better performance.
+R20:3.2: To suppress this warning in the future use (set-logic ALL).
+R20                    PROVED                 0.026 s 
+R21_DAZ=0:3.2: No set-logic command was given before this point.
+R21_DAZ=0:3.2: cvc5 will make all theories available.
+R21_DAZ=0:3.2: Consider setting a stricter logic for (likely) better performance.
+R21_DAZ=0:3.2: To suppress this warning in the future use (set-logic ALL).
+R21_DAZ=0              PROVED                 0.001 s 
+R21_DAZ=1:3.2: No set-logic command was given before this point.
+R21_DAZ=1:3.2: cvc5 will make all theories available.
+R21_DAZ=1:3.2: Consider setting a stricter logic for (likely) better performance.
+R21_DAZ=1:3.2: To suppress this warning in the future use (set-logic ALL).
+R21_DAZ=1              PROVED                 0.001 s 
+CVC5_RC=0 22:02:16.52
+int_R12_P:3.2: No set-logic command was given before this point.
+int_R12_P:3.2: cvc5 will make all theories available.
+int_R12_P:3.2: Consider setting a stricter logic for (likely) better performance.
+int_R12_P:3.2: To suppress this warning in the future use (set-logic ALL).
+int_R12_P              PROVED                 0.075 s 
+int_R14_P:3.2: No set-logic command was given before this point.
+int_R14_P:3.2: cvc5 will make all theories available.
+int_R14_P:3.2: Consider setting a stricter logic for (likely) better performance.
+int_R14_P:3.2: To suppress this warning in the future use (set-logic ALL).
+int_R14_P              PROVED               194.225 s 
+int_T_red8:3.2: No set-logic command was given before this point.
+int_T_red8:3.2: cvc5 will make all theories available.
+int_T_red8:3.2: Consider setting a stricter logic for (likely) better performance.
+int_T_red8:3.2: To suppress this warning in the future use (set-logic ALL).
+int_T_red8             PROVED                 0.002 s 
+int_T_red_quad1:3.2: No set-logic command was given before this point.
+int_T_red_quad1:3.2: cvc5 will make all theories available.
+int_T_red_quad1:3.2: Consider setting a stricter logic for (likely) better performance.
+int_T_red_quad1:3.2: To suppress this warning in the future use (set-logic ALL).
+int_T_red_quad1        PROVED                 0.001 s 
+int_T_red_quads:3.2: No set-logic command was given before this point.
+int_T_red_quads:3.2: cvc5 will make all theories available.
+int_T_red_quads:3.2: Consider setting a stricter logic for (likely) better performance.
+int_T_red_quads:3.2: To suppress this warning in the future use (set-logic ALL).
+int_T_red_quads        PROVED                 0.002 s 
+CVC5_INT_RC=0 22:05:31.08
+fold_L1:3.2: No set-logic command was given before this point.
+fold_L1:3.2: cvc5 will make all theories available.
+fold_L1:3.2: Consider setting a stricter logic for (likely) better performance.
+fold_L1:3.2: To suppress this warning in the future use (set-logic ALL).
+fold_L1                PROVED                 0.058 s 
+fold_L1t:3.2: No set-logic command was given before this point.
+fold_L1t:3.2: cvc5 will make all theories available.
+fold_L1t:3.2: Consider setting a stricter logic for (likely) better performance.
+fold_L1t:3.2: To suppress this warning in the future use (set-logic ALL).
+fold_L1t               PROVED                 0.004 s 
+fold_L2:3.2: No set-logic command was given before this point.
+fold_L2:3.2: cvc5 will make all theories available.
+fold_L2:3.2: Consider setting a stricter logic for (likely) better performance.
+fold_L2:3.2: To suppress this warning in the future use (set-logic ALL).
+fold_L2                PROVED                 0.042 s 
+fold_L3:3.2: No set-logic command was given before this point.
+fold_L3:3.2: cvc5 will make all theories available.
+fold_L3:3.2: Consider setting a stricter logic for (likely) better performance.
+fold_L3:3.2: To suppress this warning in the future use (set-logic ALL).
+fold_L3                PROVED                 0.039 s 
+fold_L4:3.2: No set-logic command was given before this point.
+fold_L4:3.2: cvc5 will make all theories available.
+fold_L4:3.2: Consider setting a stricter logic for (likely) better performance.
+fold_L4:3.2: To suppress this warning in the future use (set-logic ALL).
+fold_L4                PROVED                 0.002 s 
+fold_L5:3.2: No set-logic command was given before this point.
+fold_L5:3.2: cvc5 will make all theories available.
+fold_L5:3.2: Consider setting a stricter logic for (likely) better performance.
+fold_L5:3.2: To suppress this warning in the future use (set-logic ALL).
+fold_L5                PROVED                 0.001 s 
+fold_L6:3.2: No set-logic command was given before this point.
+fold_L6:3.2: cvc5 will make all theories available.
+fold_L6:3.2: Consider setting a stricter logic for (likely) better performance.
+fold_L6:3.2: To suppress this warning in the future use (set-logic ALL).
+fold_L6                PROVED                 0.001 s 
+CVC5_FOLD_RC=0 22:05:31.40
+END Fri 10/16/2026 22:05:31.40

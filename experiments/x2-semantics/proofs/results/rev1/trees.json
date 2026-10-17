@@ -1,0 +1,20 @@
+{
+ "differential": {
+  "random_inputs_per_tree": 2000,
+  "comparisons": 6000,
+  "mismatches": 0,
+  "mismatch_list": []
+ },
+ "unit_basis": {
+  "unit_vectors": 144,
+  "mismatches": 0,
+  "mismatch_list": [],
+  "linearity": "every operation of the three trees is a lane move (VPHADDD pairing, VPERM2I128, VPUNPCK*, VPSHUFD, VPERMD) or a wrapping 32-bit add, so each output lane is a Z/2^32-linear form in the input lanes and the unit vectors determine it"
+ },
+ "z3_negative_controls": {
+  "T/red8 (lanes 0/1 swapped)": "REFUTED (as required)",
+  "T/red_quads (lanes 0/1 swapped)": "REFUTED (as required)",
+  "T/red_quad1 (lanes 0/1 swapped)": "REFUTED (as required)"
+ },
+ "seconds": 0.3
+}

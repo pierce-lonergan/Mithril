@@ -1,0 +1,55 @@
+{
+ "z3_version": "5.3.1",
+ "timeout_s": 600.0,
+ "results": [
+  {
+   "name": "L1 meaning step",
+   "verdict": "PROVED",
+   "seconds": 0.005,
+   "query_sha256": "435afbc3a40282c775f1025ec7ec6f1f0898cf3791e9773ba5d0e554a5db711b",
+   "smt2": "fold_L1.smt2"
+  },
+  {
+   "name": "L2 chain step",
+   "verdict": "PROVED",
+   "seconds": 0.004,
+   "query_sha256": "65622efc4747e38d1140cf9ce2cb30c67177dc336da4331e36afad489308c72f",
+   "smt2": "fold_L2.smt2"
+  },
+  {
+   "name": "L3 tree step",
+   "verdict": "PROVED",
+   "seconds": 0.004,
+   "query_sha256": "9bdab0dee81abdbca4ff6114f30e424761a92c9c97aa69557c346a57cfc57d84",
+   "smt2": "fold_L3.smt2"
+  },
+  {
+   "name": "L4 closure",
+   "verdict": "PROVED",
+   "seconds": 0.003,
+   "query_sha256": "9466ddd1c93a103a791b8b481cd9f5c116dd07ad5243c62963f2a0c9ec8104f3",
+   "smt2": "fold_L4.smt2"
+  },
+  {
+   "name": "L5 start value +0 is sign-0, non-NaN",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "10bd4d579690a94cdea3bbff72c3ab1f0c838d08e8841acd9b07fc03309dda94",
+   "smt2": "fold_L5.smt2"
+  },
+  {
+   "name": "L6 abs is sign-0",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "80b31edbaf60fe6cd1e84bb45d37b9cae943e66fe20546cfab9a8fbca7ae4263",
+   "smt2": "fold_L6.smt2"
+  },
+  {
+   "name": "L1t meaning step, table relation",
+   "verdict": "PROVED",
+   "seconds": 0.009,
+   "query_sha256": "639a1c896a6cda9288ad0f74994d8320ea92791a9aba4cfa11ae690093e0d02d",
+   "smt2": "fold_L1t.smt2"
+  }
+ ]
+}

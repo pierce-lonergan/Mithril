@@ -1,0 +1,18 @@
+; benchmark generated from python API
+(set-info :status unknown)
+(declare-fun x0 () (_ BitVec 8))
+(declare-fun w0 () (_ BitVec 8))
+(declare-fun x1 () (_ BitVec 8))
+(declare-fun w1 () (_ BitVec 8))
+(assert
+ (let ((?x178 ((_ sign_extend 24) (ite (bvslt w0 (_ bv0 8)) (bvneg x0) (ite (= w0 (_ bv0 8)) (_ bv0 8) x0)))))
+(let ((?x175 ((_ sign_extend 24) (ite (bvslt w1 (_ bv0 8)) (bvneg x1) (ite (= w1 (_ bv0 8)) (_ bv0 8) x1)))))
+(let ((?x180 (bvadd (bvmul ((_ zero_extend 24) (ite (bvslt w1 (_ bv0 8)) (bvneg w1) w1)) ?x175) (bvmul ((_ zero_extend 24) (ite (bvslt w0 (_ bv0 8)) (bvneg w0) w0)) ?x178))))
+(let ((?x184 (ite (bvslt (_ bv32767 32) ?x180) (_ bv32767 32) (ite (bvsgt (_ bv4294934528 32) ?x180) (_ bv4294934528 32) ?x180))))
+(let ((?x189 (bvadd (bvmul ((_ sign_extend 24) w0) ((_ sign_extend 24) x0)) (bvmul ((_ sign_extend 24) w1) ((_ sign_extend 24) x1)))))
+(let (($x191 (= ?x184 ?x189)))
+(let (($x34 (and (bvsge x1 (_ bv129 8)) (bvsle x1 (_ bv127 8)))))
+(let (($x31 (and (bvsge x0 (_ bv129 8)) (bvsle x0 (_ bv127 8)))))
+(let (($x197 (=> (and $x31 $x34) (and $x191 (bvsle ?x184 (_ bv32512 32)) (bvsge ?x184 (_ bv4294934784 32))))))
+(not $x197)))))))))))
+(check-sat)

@@ -1,0 +1,33 @@
+x2prove.c
+x2ref.c
+D:\mithril\x2\src\proofs\x2prove.c(252): warning C4457: declaration of 'p' hides function parameter
+D:\mithril\x2\src\proofs\x2prove.c(109): note: see declaration of 'p'
+D:\mithril\x2\src\proofs\x2prove.c(276): warning C4456: declaration of 'x' hides previous local declaration
+D:\mithril\x2\src\proofs\x2prove.c(112): note: see declaration of 'x'
+D:\mithril\x2\src\proofs\x2prove.c(283): warning C4456: declaration of 'x' hides previous local declaration
+D:\mithril\x2\src\proofs\x2prove.c(112): note: see declaration of 'x'
+CL_RC=0
+de0b45cb4580ce91b6c64f3d7ae6d6e13e1c7cefd2863d05c533c7e75b63f87e
+START Fri 10/16/2026 18:09:47.40
+R04     inputs   4294967296  cond   4278190082  fail_in          0  fail_out   16777214  extra 0,0,0  9.16 s
+R05     inputs   4294967296  cond   4278190082  fail_in          0  fail_out   16777214  extra 0,0,0  8.51 s
+R06     inputs   4294967296  cond   4294967296  fail_in          0  fail_out          0  extra 0,0,0  7.86 s
+R07     inputs   4294967296  cond   4294967296  fail_in          0  fail_out          0  extra 0,0,0  5.25 s
+R08     inputs   4294967296  cond   4294967296  fail_in          0  fail_out          0  extra 0,0,0  5.41 s
+R09     inputs   4294967296  cond   4294967296  fail_in          0  fail_out          0  extra 0,0,0  5.23 s
+R10     inputs   4294967296  cond   4294967296  fail_in          0  fail_out          0  extra 0,0,0  5.22 s
+R11     inputs   4294967296  cond   4294967296  fail_in          0  fail_out          0  extra 0,0,0  5.22 s
+R12     inputs   4294967296  cond   4294967296  fail_in          0  fail_out          0  extra 0,0,0  4.34 s
+R13     inputs     16646400  cond     16646400  fail_in          0  fail_out          0  extra 4294963486,4294971106,0  0.02 s
+R14     inputs   4261478400  cond   4261478400  fail_in          0  fail_out          0  extra 128,4294934784,4294999808  3.43 s
+R15     inputs         4080  cond         4080  fail_in          0  fail_out          0  extra 0,0,0  0.00 s
+R16     inputs        65280  cond        65280  fail_in          0  fail_out          0  extra 0,0,0  0.00 s
+R17     inputs   4294967296  cond          255  fail_in          0  fail_out 4278189826  extra 16777470,0,0  2.02 s
+R19     inputs   4294967296  cond   2247884802  fail_in          0  fail_out   14630912  extra 0,1249902594,0  60.09 s
+R19-RD  inputs   4294967296  cond   2247884802  fail_in          0  fail_out   18825216  extra 0,1249902593,0  64.67 s
+R19-RU  inputs   4294967296  cond   2247884802  fail_in          0  fail_out   14630912  extra 0,1249902593,0  64.35 s
+R19-RZ  inputs   4294967296  cond   2247884802  fail_in 1123942273  fail_out  136396927  extra 1245708288,1,0  64.81 s
+R20     inputs        65536  cond        65536  fail_in          0  fail_out          0  extra 0,0,0  0.00 s
+R21     inputs   4294967296  cond   4294967296  fail_in          0  fail_out          0  extra 0,0,0  5.66 s
+PROVE_RC=0
+END Fri 10/16/2026 18:15:08.68

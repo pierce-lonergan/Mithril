@@ -1,0 +1,94 @@
+{
+ "z3_version": "5.3.1",
+ "timeout_s": 600.0,
+ "results": [
+  {
+   "name": "R13/P",
+   "what": "one VPMADDUBSW word on nibbles n in [0,15], x in [-127,127]: == n0*x0 + n1*x1, |.| <= 3,810 (no saturation)",
+   "verdict": "PROVED",
+   "seconds": 0.02,
+   "counterexample": null,
+   "query_sha256": "6398275fbbc6d3598fe4d8151b678a87440c580ca5c081622b5879f5df0f3de0"
+  },
+  {
+   "name": "R13/W",
+   "what": "VPADDW of two words in [-3810, 3810] does not wrap: sext(lo + hi) == sext(lo) + sext(hi)",
+   "verdict": "PROVED",
+   "seconds": 0.003,
+   "counterexample": null,
+   "query_sha256": "6db066c6fafb23212d74be6e317ec187891f605b1e0877cc5177abb9dda577f5"
+  },
+  {
+   "name": "R13/M",
+   "what": "red8 lane total of VPMADDWD(VPADDW(lo, hi), 1) == the index-order sum of the pair values, mod 2^32",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null,
+   "query_sha256": "d3a8870baa5ad33b4a3eebca6cc834ee3537373efe88c078c242f1440eb4933c"
+  },
+  {
+   "name": "R14/M",
+   "what": "red8 of VPADDD(VPMADDWD(p0, 1), VPMADDWD(p1, 1)) == index-order sum of the 32 words, mod 2^32",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null,
+   "query_sha256": "afc5633cfd4aa8ae0bdb80bfefa551201cdb95e8f503d057d0f201fba089d882"
+  },
+  {
+   "name": "R12/P",
+   "what": "one VPDPBUSD lane (acc + 4 products, wrapping) == acc + the exact products; each |u*x| <= 32,385 under DOM-ACT-Q",
+   "verdict": "PROVED",
+   "seconds": 0.029,
+   "counterexample": null,
+   "query_sha256": "ab94b6b15570b578bd442430dd2e3ba372072cc9624c9c5cba89af984a619cdb"
+  },
+  {
+   "name": "R12/M",
+   "what": "4 chunked VPDPBUSD accumulations + lane total == index-order sum of the 16 four-product sums, mod 2^32",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null,
+   "query_sha256": "e727f824fcad27018a277f9f63edbf00c6715b556a60a3f0cb7062abd380b3f1"
+  },
+  {
+   "name": "R15/P",
+   "what": "(n - 8)*x == n*x - 8*x and |n*x| <= 1,905 for n in [0,15], x in [-127,127]",
+   "verdict": "PROVED",
+   "seconds": 0.008,
+   "counterexample": null,
+   "query_sha256": "0c78cb707f05470d0f29dc1b85f7994684e9fb9ae512f1baaeb8e6aea4a51bd1"
+  },
+  {
+   "name": "R15/M",
+   "what": "sum (nx_i - 8 x_i) == sum nx_i - 8 * sum x_i, mod 2^32 (the bias rewriting with a.sum = sum x_i)",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null,
+   "query_sha256": "8cc1ddc80e9acd460503e16ba91ebe2a8c0c3a6d4f25ab3d2beb760d5f064a85"
+  },
+  {
+   "name": "R16/P",
+   "what": "u8(q xor 0x80) == q + 128 and q*x == u8(q xor 0x80)*x - 128*x, |u8*x| <= 32,385, x in [-127,127]",
+   "verdict": "PROVED",
+   "seconds": 0.007,
+   "counterexample": null,
+   "query_sha256": "149c8039506ee5f5898b7b5720b330c0cf458c18d862a9ae7872339bc27a7fc7"
+  },
+  {
+   "name": "R16/M",
+   "what": "sum (ux_i - 128 x_i) == sum ux_i - 128 * sum x_i, mod 2^32",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null,
+   "query_sha256": "bce16d6c8b8773cf43bd79c111c67e95116995d6dca39537e944fc2b502bf36c"
+  },
+  {
+   "name": "R18/M",
+   "what": "AVX2 and AVX-512 act sums (lane-parallel VPADDD, then the shuffle trees) == sequential sum, mod 2^32",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null,
+   "query_sha256": "f16e05c005688a41e82b62c2492cd5c41a10c7665a58646116ebd10b9e473d67"
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+# bochsrc for the X2 Bochs probe (FUZZ-DESIGN.md sec. 6.1). IMAGE is substituted by run_probe.ps1.
+megs: 32
+romimage: file=D:/mithril/src/bochs-3.1-msvc/bochs-3.1/bios/BIOS-bochs-latest
+vgaromimage: file=D:/mithril/src/bochs-3.1-msvc/bochs-3.1/bios/VGABIOS-lgpl/VGABIOS-lgpl-latest.bin
+floppya: 1_44=IMAGE, status=inserted
+boot: floppy
+cpu: model=MODEL, count=1
+display_library: nogui
+port_e9_hack: enabled=1
+log: LOGFILE
+panic: action=fatal
+error: action=report
+info: action=report
+debug: action=ignore
+clock: sync=none, time0=local

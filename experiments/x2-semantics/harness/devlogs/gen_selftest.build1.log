@@ -1,0 +1,68 @@
+{
+ "targeted_checked": 5400,
+ "plan_vs_budget": {
+  "rows_checked": 428,
+  "plan_total": 399683714,
+  "budget_total": 399797314,
+  "mismatching_rows": [
+   {
+    "iform": "VCVTDQ2PS_XMMf32_MASKmskw_XMMi32_AVX512",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   },
+   {
+    "iform": "VCVTDQ2PS_YMMf32_MASKmskw_YMMi32_AVX512",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   },
+   {
+    "iform": "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   },
+   {
+    "iform": "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512",
+    "set": "V4",
+    "class": "{er} 4 modes x 12 x 100",
+    "row": 9600,
+    "plan": 8000
+   },
+   {
+    "iform": "VCVTDQ2PS_XMMdq_XMMdq",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   },
+   {
+    "iform": "VCVTDQ2PS_YMMqq_YMMqq",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   },
+   {
+    "iform": "CVTSI2SS_XMMss_GPR32d",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   },
+   {
+    "iform": "VCVTSI2SS_XMMdq_XMMdq_GPR32d",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   }
+  ]
+ },
+ "determinism_rows": 7
+}
+gen_vectors selftest: PASS (0 failures)

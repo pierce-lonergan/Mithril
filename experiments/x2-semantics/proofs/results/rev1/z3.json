@@ -1,0 +1,213 @@
+{
+ "z3_version": "5.3.1",
+ "timeout_s": 600.0,
+ "rules": [
+  {
+   "rule": "R06/DAZ=0",
+   "what": "ISNAN-UNORD: table CMP(v, v, UNORD_Q) lane (smt_table.cmp_pred) == isnan(v), DAZ=0",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "604fbeda421a508bef7000db2553dfc7f72ec701e441813c033098370969489d",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R07/DAZ=0",
+   "what": "NOTNAN-ORD: table CMP(v, v, ORD_Q) lane == not isnan(v), DAZ=0",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "541bb8c2eae57b708bd3be5de2fd030c27ee455e504e74763d46c26afdaf7c79",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R08/inst/DAZ=0",
+   "what": "ANDMASK-SELECT act_q8 instance: and(p, table CMP(p,p,ORD_Q) lane) == isnan(p) ? +0 : p, AND transliterated, DAZ=0",
+   "z3": "PROVED",
+   "seconds": 0.001,
+   "query_sha256": "d4433145a23bb2c0689ce6ae55762348aaafa97b047e1670e6e24224267e86d9",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R09/inst/DAZ=0",
+   "what": "BLENDV-SELECT canon8 instance: blendv(v, 0x7FC00000, table CMP(v,v,UNORD_Q)) == isnan(v) ? canon : v, BLENDVPS transliterated, DAZ=0",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "9e0ed8fd6e18126343a5612c73f0311b575a5ba17a2b8e5f7ee624e061927093",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R10/inst/DAZ=0",
+   "what": "MASKMOV-SELECT canon16 instance: k = table VCMPPS-into-k bit (UNORD_Q), merge-masked move int_ops.masked(canon, v, k, z=0) == isnan(v) ? canon : v, DAZ=0",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "1ed01422dbc939343898df58b6337e6aaa197ae7f8f726c33434e393b932a7d3",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R11/inst/DAZ=0",
+   "what": "MASKZMOV-SELECT act_q8 instance: k = table VCMPPS-into-k bit (ORD_Q), zero-masked move int_ops.masked(p, ., k, z=1) == isnan(p) ? +0 : p, DAZ=0",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "ac7151cd9a40f3c9e64213ae6f2c228b1fe63a9747536fbf9ac58ea774f00ebd",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R06/DAZ=1",
+   "what": "ISNAN-UNORD: table CMP(v, v, UNORD_Q) lane (smt_table.cmp_pred) == isnan(v), DAZ=1",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "8bd952b6cc0f83b37a2cdb2329bf234efa79c70ea737be24db0f8dc7a2b4df8a",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R07/DAZ=1",
+   "what": "NOTNAN-ORD: table CMP(v, v, ORD_Q) lane == not isnan(v), DAZ=1",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "5514cae7cd1b8d94519e4a399a2de4ad38a1d39bde85a1674f540379ab5d1381",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R08/inst/DAZ=1",
+   "what": "ANDMASK-SELECT act_q8 instance: and(p, table CMP(p,p,ORD_Q) lane) == isnan(p) ? +0 : p, AND transliterated, DAZ=1",
+   "z3": "PROVED",
+   "seconds": 0.001,
+   "query_sha256": "e4cc36c9eac29393d99e8167f1e828a6b98f2a041544c2ecff5b1ebced011be4",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R09/inst/DAZ=1",
+   "what": "BLENDV-SELECT canon8 instance: blendv(v, 0x7FC00000, table CMP(v,v,UNORD_Q)) == isnan(v) ? canon : v, BLENDVPS transliterated, DAZ=1",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "39ef9ce1a3d2ae9e118f1e9d503f8cd592ccbe0cbf5a3173cd479683a120716f",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R10/inst/DAZ=1",
+   "what": "MASKMOV-SELECT canon16 instance: k = table VCMPPS-into-k bit (UNORD_Q), merge-masked move int_ops.masked(canon, v, k, z=0) == isnan(v) ? canon : v, DAZ=1",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "283086ddd33a231fa58314f62aef853476d109e4f4170757fcea461d4e28d4ab",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R11/inst/DAZ=1",
+   "what": "MASKZMOV-SELECT act_q8 instance: k = table VCMPPS-into-k bit (ORD_Q), zero-masked move int_ops.masked(p, ., k, z=1) == isnan(p) ? +0 : p, DAZ=1",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "be8772cfe3720ac70fbbaea9b101d6799b6df2906a2fa882377d56870fd2cffd",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R08",
+   "what": "DEFINITIONAL lemma (VANDPS/VPAND has no table entry; not table evidence): and(x, cmpmask(c)) == select(c, x, +0.0)",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "afdc86736b04afd97b8ad91798158e93b3fbd187dab05788bdb4ce2f9dcd0b1a",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R09",
+   "what": "DEFINITIONAL lemma (BLENDVPS has no table entry; not table evidence): blendv(a, b, cmpmask(c)) == select(c, b, a)",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "eb90a31b25e1e6fe222287284dbc700146cfe1142426b97d1853966bf1f4b8e5",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R01",
+   "what": "SEL-MAX: (a > b ? a : b) == MAXPS(a, b), all bits",
+   "z3": "PROVED",
+   "seconds": 0.001,
+   "query_sha256": "983af74ab0179b9bff4ea71fcb8b6d35663dbd7331369038d32132317d950412",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R04",
+   "what": "MIN-SEL-127 for non-NaN v",
+   "z3": "PROVED",
+   "seconds": 0.003,
+   "query_sha256": "81f305483c07ba556bb9fa00e421b9a73818afdc4652fd1296fce8e0e93b57f0",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R05",
+   "what": "MAX-SEL-M127 for non-NaN v",
+   "z3": "PROVED",
+   "seconds": 0.003,
+   "query_sha256": "354c307be88b52e240022be6972cfd9a7093f82c7e4ae4cf5eb92628a3912c38",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R01/table",
+   "what": "SEL-MAX with the table relation: (rel(a, b) == GT ? a : b) == MAXPS(a, b), all bits, DAZ = 0",
+   "z3": "PROVED",
+   "seconds": 0.024,
+   "query_sha256": "e6d1d876b27ffffe393541234c1ce04b8610549bb4b9b5a66466f15c39c5d61f",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R04/table",
+   "what": "MIN-SEL-127 with the table relation, non-NaN v, DAZ = 0",
+   "z3": "PROVED",
+   "seconds": 0.003,
+   "query_sha256": "3d352ef038e702a00e0377dcc64296b1e8b9d3802d2cb4d308ea504426b26c26",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R05/table",
+   "what": "MAX-SEL-M127 with the table relation, non-NaN v, DAZ = 0",
+   "z3": "PROVED",
+   "seconds": 0.003,
+   "query_sha256": "8829b8ef4a44efe90c1578790dadc5b5f6843ac41ea36669b526417e34ce95d7",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R20",
+   "what": "F16-WIDEN: Hearth q_f16(h) (integer code; (float)m * 2^-24 for subnormals, through FPA) == table VCVTPH2PS lane (smt_table.cvt_h2f, pure BV), all 2^16 h",
+   "z3": "PROVED",
+   "seconds": 0.033,
+   "query_sha256": "7335f8fe5aead6429f7f505c039df437c61e9a03f08c9de0398bd7e4f38a7720",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R21/DAZ=0",
+   "what": "ISNAN-UCOMI: (ZF == 0 or PF == 1) of the table's UCOMISS(v, v) == isnan(v), DAZ=0",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "eee21188bc36307993e7f95d78293aa1be9a67d9337941dfda1092e573b78785",
+   "counterexample": null,
+   "reason_unknown": null
+  },
+  {
+   "rule": "R21/DAZ=1",
+   "what": "ISNAN-UCOMI: (ZF == 0 or PF == 1) of the table's UCOMISS(v, v) == isnan(v), DAZ=1",
+   "z3": "PROVED",
+   "seconds": 0.0,
+   "query_sha256": "72a6fd948a6a875a2c5520cdd8b2d6b45d92498ad371f43b2c4f41dce50b943d",
+   "counterexample": null,
+   "reason_unknown": null
+  }
+ ]
+}

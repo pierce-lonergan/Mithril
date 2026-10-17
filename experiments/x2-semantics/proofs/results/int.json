@@ -1,0 +1,102 @@
+{
+ "z3_version": "5.3.1",
+ "timeout_s": 1200.0,
+ "results": [
+  {
+   "name": "R13/P",
+   "what": "one VPMADDUBSW word on nibbles n in [0,15], x in [-127,127]: == n0*x0 + n1*x1, |.| <= 3,810 (no saturation)",
+   "verdict": "PROVED",
+   "seconds": 0.02,
+   "counterexample": null
+  },
+  {
+   "name": "R13/W",
+   "what": "VPADDW of two words in [-3810, 3810] does not wrap: sext(lo + hi) == sext(lo) + sext(hi)",
+   "verdict": "PROVED",
+   "seconds": 0.002,
+   "counterexample": null
+  },
+  {
+   "name": "R13/M",
+   "what": "red8 lane total of VPMADDWD(VPADDW(lo, hi), 1) == the index-order sum of the pair values, mod 2^32",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null
+  },
+  {
+   "name": "R14/P",
+   "what": "one VPMADDUBSW(PABSB(w), PSIGNB(x, w)) word == w0*x0 + w1*x1, |.| <= 32,512, any w, x in [-127,127]",
+   "verdict": "PROVED",
+   "seconds": 407.401,
+   "counterexample": null
+  },
+  {
+   "name": "R14/P x=-128",
+   "what": "R14/P without DOM-ACT-Q (expect a counterexample: x = -128, w < 0)",
+   "verdict": "COUNTEREXAMPLE",
+   "seconds": 4.942,
+   "counterexample": {
+    "x0": "0x96",
+    "x1": "0x80",
+    "w0": "0x57",
+    "w1": "0xfb"
+   }
+  },
+  {
+   "name": "R14/M",
+   "what": "red8 of VPADDD(VPMADDWD(p0, 1), VPMADDWD(p1, 1)) == index-order sum of the 32 words, mod 2^32",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null
+  },
+  {
+   "name": "R12/P",
+   "what": "one VPDPBUSD lane (acc + 4 products, wrapping) == acc + the exact products; each |u*x| <= 32,385 under DOM-ACT-Q",
+   "verdict": "PROVED",
+   "seconds": 0.056,
+   "counterexample": null
+  },
+  {
+   "name": "R12/M",
+   "what": "4 chunked VPDPBUSD accumulations + lane total == index-order sum of the 16 four-product sums, mod 2^32",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null
+  },
+  {
+   "name": "R15/P",
+   "what": "(n - 8)*x == n*x - 8*x and |n*x| <= 1,905 for n in [0,15], x in [-127,127]",
+   "verdict": "PROVED",
+   "seconds": 0.008,
+   "counterexample": null
+  },
+  {
+   "name": "R15/M",
+   "what": "sum (nx_i - 8 x_i) == sum nx_i - 8 * sum x_i, mod 2^32 (the bias rewriting with a.sum = sum x_i)",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null
+  },
+  {
+   "name": "R16/P",
+   "what": "u8(q xor 0x80) == q + 128 and q*x == u8(q xor 0x80)*x - 128*x, |u8*x| <= 32,385, x in [-127,127]",
+   "verdict": "PROVED",
+   "seconds": 0.013,
+   "counterexample": null
+  },
+  {
+   "name": "R16/M",
+   "what": "sum (ux_i - 128 x_i) == sum ux_i - 128 * sum x_i, mod 2^32",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null
+  },
+  {
+   "name": "R18/M",
+   "what": "AVX2 and AVX-512 act sums (lane-parallel VPADDD, then the shuffle trees) == sequential sum, mod 2^32",
+   "verdict": "PROVED",
+   "seconds": 0.0,
+   "counterexample": null
+  }
+ ]
+}

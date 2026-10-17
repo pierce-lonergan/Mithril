@@ -1,0 +1,52 @@
+START Z3 Fri 10/16/2026 18:19:33.09
+R02                  UNKNOWN(timeout)    1200.063 s  
+R03                  UNKNOWN(timeout)    1200.069 s  
+R06/DAZ=0            PROVED                 0.000 s  
+R07/DAZ=0            PROVED                 0.000 s  
+R06/DAZ=1            PROVED                 0.005 s  
+R07/DAZ=1            PROVED                 0.003 s  
+R08                  PROVED                 0.000 s  
+R08/inst             PROVED                 0.003 s  
+R09                  PROVED                 0.000 s  
+R09/inst             PROVED                 0.000 s  
+R10                  PROVED                 0.000 s  
+R10/inst             PROVED                 0.000 s  
+R11                  PROVED                 0.000 s  
+R11/inst             PROVED                 0.000 s  
+R01                  PROVED                 0.001 s  
+R04                  PROVED                 0.003 s  
+R05                  PROVED                 0.003 s  
+R19                  PROVED                 0.219 s  
+R02-lemma-commute    PROVED                 0.009 s  
+R02-lemma-nan        PROVED                 0.000 s  
+R02-lemma-order      PROVED                 0.003 s  
+R20                  PROVED                 0.041 s  
+R21                  PROVED                 0.003 s  
+R12                  PROVED                30.097 s  
+R13                  UNKNOWN(timeout)    1200.090 s  
+Z3_RC=-1 19:34:27.60
+START CVC5 Fri 10/16/2026 19:34:27.60
+R01:3.2: No set-logic command was given before this point.
+R01:3.2: cvc5 will make all theories available.
+R01:3.2: Consider setting a stricter logic for (likely) better performance.
+R01:3.2: To suppress this warning in the future use (set-logic ALL).
+R01                    PROVED                 0.010 s 
+R02-lemma-commute:3.2: No set-logic command was given before this point.
+R02-lemma-commute:3.2: cvc5 will make all theories available.
+R02-lemma-commute:3.2: Consider setting a stricter logic for (likely) better performance.
+R02-lemma-commute:3.2: To suppress this warning in the future use (set-logic ALL).
+R02-lemma-commute      PROVED                 0.021 s 
+R02-lemma-nan:3.2: No set-logic command was given before this point.
+R02-lemma-nan:3.2: cvc5 will make all theories available.
+R02-lemma-nan:3.2: Consider setting a stricter logic for (likely) better performance.
+R02-lemma-nan:3.2: To suppress this warning in the future use (set-logic ALL).
+R02-lemma-nan          PROVED                 0.003 s 
+R02-lemma-order:3.2: No set-logic command was given before this point.
+R02-lemma-order:3.2: cvc5 will make all theories available.
+R02-lemma-order:3.2: Consider setting a stricter logic for (likely) better performance.
+R02-lemma-order:3.2: To suppress this warning in the future use (set-logic ALL).
+R02-lemma-order        PROVED                 0.035 s 
+R02:3.2: No set-logic command was given before this point.
+R02:3.2: cvc5 will make all theories available.
+R02:3.2: Consider setting a stricter logic for (likely) better performance.
+R02:3.2: To suppress this warning in the future use (set-logic ALL).

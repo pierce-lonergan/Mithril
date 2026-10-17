@@ -1,0 +1,9 @@
+START A Fri 10/16/2026 19:34:27.76
+R14                  UNKNOWN(timeout)     600.132 s  
+R14/x=-128           COUNTEREXAMPLE        68.435 s  {'w0': '0x80', 'w1': '0x80', 'w10': '0xd3', 'w11': '0x9b', 'w12': '0xae', 'w13': '0xa6', 'w14': '0x7d', 'w15': '0x82', 'w16': '0x84', 'w17': '0x80', 'w18': '0xd3', 'w19': '0x80'}
+R15                  PROVED                94.828 s  
+R16                  PROVED               107.237 s  
+R17                  PROVED                 0.001 s  
+R18                  PROVED                48.126 s  
+RC_A=0
+END A Fri 10/16/2026 19:49:47.88

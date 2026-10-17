@@ -1,0 +1,198 @@
+==== BUILD Fri 10/16/2026 21:51:40.78
+START Fri 10/16/2026 21:51:41.73
+{
+ "n_stubs": 491,
+ "errors": 0,
+ "provisional_key_mismatches": 0,
+ "imm_stubs_checked": 288,
+ "imm_check_negative_control_detected": true,
+ "manifest_sha256": "03fe7a69abc7281279a4815d8291f83ddbcc637189adea4e0d2ec1aa4421a529",
+ "semantics_bundle": "4c48899cb3cad78c5bba6e29129d1eb9391cb8160148b33e1ba91c7968a3ea31"
+}
+STUBGEN_RC=0
+interp_src_sha256 80ad6745bbb8a05013c28c25e4a963bca49325aac3799d903313ccf5cd0703c0
+harness_src_sha256 a18b07eecea415fc63ff7a47b8fdaa335e2b2dcdf3d3e09b040871571b7e633e
+ML64_STUBS_RC=0
+ Assembling: D:\mithril\x2\src\harness\x2probe.asm
+ML64_PROBE_RC=0
+x2fuzz.c
+x2ref.c
+x2sha256.c
+stubs_table.c
+Generating Code...
+CL_RC=0
+Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64
+END Fri 10/16/2026 21:51:47.12
+==== SELFTESTS 21:51:47.13
+==== 1 x2fuzz selftest 21:51:47.13
+== x2fuzz selftest (scratch directory D:\mithril\jobs\x2build\selftest_scratch)
+stubs: 491, decoded iform == entry key: 491, manifest 03fe7a69abc7281279a4815d8291f83ddbcc637189adea4e0d2ec1aa4421a529
+fingerprint: {"vendor": "AuthenticAMD", "brand": "AMD Ryzen 9 9950X 16-Core Processor            ", "family": 26, "model": 68, "stepping": 0, "cpuid1_eax": "0x00b40f40", "microcode_update_revision_raw": "2340400b", "microcode_lo32": "0x0b404023", "microcode_hi32": "0x00000000", "os_build": "26200.9711 (25H2)", "features": {"avx2": 1, "avx512f": 1, "avx512bw": 1, "avx512vl": 1, "avx512vnni": 1, "f16c": 1, "os_zmm_state": 1}, "l3_groups": "0xffff,0xffff0000", "cpu": 4, "harness_exe_sha256": "2348e97f890d8ec10a599a054ee5b06eee33860d5e00f359232daef7270b78cb", "harness_src_sha256": "a18b07eecea415fc63ff7a47b8fdaa335e2b2dcdf3d3e09b040871571b7e633e", "interp_src_sha256": "80ad6745bbb8a05013c28c25e4a963bca49325aac3799d903313ccf5cd0703c0", "stub_manifest_sha256": "03fe7a69abc7281279a4815d8291f83ddbcc637189adea4e0d2ec1aa4421a529", "semantics_bundle": "4c48899cb3cad78c5bba6e29129d1eb9391cb8160148b33e1ba91c7968a3ea31", "compiler": "MSVC _MSC_FULL_VER=194435229"}
+exhaustive self-test: stream 0bc9da37cc098e9dc059b159c229c09257e2b20229f938fd84dec416400c0cde, mutant mismatches 256, cap test status flood
+exhaustive silicon plumbing check (development): 40 V5-eligible stubs x 4,096 inputs, 0 disagreeing
+selftest: PASS (0 failures)
+X2FUZZ_SELFTEST_RC=0
+==== 2 semantics selftest (reference) 21:51:47.36
+SEMANTICS_SELFTEST_RC=0
+checks: 706   failures: 0
+semantics bundle sha256: 4c48899cb3cad78c5bba6e29129d1eb9391cb8160148b33e1ba91c7968a3ea31
+==== 3 compare selftest 21:51:50.04
+compare selftest: PASS (0 failures)
+COMPARE_SELFTEST_RC=0
+==== 4 gen_vectors selftest 21:51:50.08
+GEN_SELFTEST_RC=0
+{
+ "targeted_checked": 5400,
+ "plan_vs_budget": {
+  "rows_checked": 428,
+  "plan_total": 399683714,
+  "budget_total": 399797314,
+  "mismatching_rows": [
+   {
+    "iform": "VCVTDQ2PS_XMMf32_MASKmskw_XMMi32_AVX512",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   },
+   {
+    "iform": "VCVTDQ2PS_YMMf32_MASKmskw_YMMi32_AVX512",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   },
+   {
+    "iform": "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   },
+   {
+    "iform": "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512",
+    "set": "V4",
+    "class": "{er} 4 modes x 12 x 100",
+    "row": 9600,
+    "plan": 8000
+   },
+   {
+    "iform": "VCVTDQ2PS_XMMdq_XMMdq",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   },
+   {
+    "iform": "VCVTDQ2PS_YMMqq_YMMqq",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   },
+   {
+    "iform": "CVTSI2SS_XMMss_GPR32d",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   },
+   {
+    "iform": "VCVTSI2SS_XMMdq_XMMdq_GPR32d",
+    "set": "V1",
+    "class": "12 classes x 1000",
+    "row": 96000,
+    "plan": 80000
+   }
+  ]
+ },
+ "determinism_rows": 7,
+ "memfault_rows": 4,
+ "memfault_zero_mask_duplicates": 34,
+ "masked_bcast_synthetic_row": {
+  "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+  "lane_cases": 46080,
+  "executions": 2880
+ }
+}
+gen_vectors selftest: PASS (0 failures)
+{"records": 111595, "vectors_sha256": "ebed8cfed4f7216bc723e99829f7c8eb86b2baaa49ddd7b2b9ec76ef9c12e3e4"}
+{"records": 111595, "vectors_sha256": "ebed8cfed4f7216bc723e99829f7c8eb86b2baaa49ddd7b2b9ec76ef9c12e3e4"}
+PREDICT_RC=0 21:51:57.35
+{"records": 111595}
+PYREF_RC=0 21:52:00.58
+{"records": 111595, "lane_cases": 1000006, "divergences": 0, "unmodeled_both": 1613}
+VALIDATE_RC=0
+==== END 21:52:01.06
+==== GUARDS 21:52:01.06
+---- G1 budget rows under the default BUDGET label: x2fuzz run refuses the label
+{"records": 34, "rows": 1, "vectors_sha256": "70951b3dab7d85585cb27b0ea0e9887225aa3240188736ff1986d5afd4717876"}
+x2fuzz: refusing to execute a non-development vector set without --collection-authorised (X2 collection rule)
+G1_RC=2 want 2
+---- G2 the same rows under a DEV label (--dev): x2fuzz run refuses the budget set ids
+{"records": 34, "rows": 1, "vectors_sha256": "9441d3bb92646b6aaa1529e08f4d6f0bbcd44b0c4809ae22b934fc453b150ba3"}
+x2fuzz: record 0 has budget set id 6
+x2fuzz: refusing to execute budget-set records (V1-V4, BCAST, F-MEMFAULT) without --collection-authorised (X2 collection rule); development vectors use the sets DEV or VALID
+G2_RC=2 want 2
+---- G3 a DEV label without --dev: the generator refuses
+usage: gen_vectors.py [-h] --sem-root SEM_ROOT --manifest MANIFEST [--out OUT]
+                      [--iform IFORM] [--set SET] [--class CLS]
+                      [--limit LIMIT] [--label LABEL] [--dev] [--selftest]
+gen_vectors.py: error: a development label (DEV, SELFTEST, VALID) needs --dev; budget-row vectors carry BUDGET labels
+G3_RC=2 want 2
+---- G4 --dev without --limit: the generator refuses
+usage: gen_vectors.py [-h] --sem-root SEM_ROOT --manifest MANIFEST [--out OUT]
+                      [--iform IFORM] [--set SET] [--class CLS]
+                      [--limit LIMIT] [--label LABEL] [--dev] [--selftest]
+gen_vectors.py: error: --dev needs --limit between 1 and 100000
+G4_RC=2 want 2
+---- G5 exhaustive on silicon without --collection-authorised: refused
+x2fuzz: refusing a silicon exhaustive sweep without --collection-authorised (X2 collection rule)
+G5_RC=2 want 2
+---- G6 exhaustive with a preset sticky flag (MXCSR 1F81), self oracle: refused
+x2fuzz: --mxcsr must mask every exception (bits 12:7 set), have no reserved bit and no sticky flag (bits 5:0 clear)
+G6_RC=2 want 2
+---- G7 exhaustive with an unmasked exception (MXCSR 1F00), self oracle: refused
+x2fuzz: --mxcsr must mask every exception (bits 12:7 set), have no reserved bit and no sticky flag (bits 5:0 clear)
+G7_RC=2 want 2
+---- END guards
+==== DEVSMOKE 21:52:01.35
+==== build 21:52:01.35
+[A arithmetic, rounding, signed zero, NaN, FTZ/DAZ]
+[B MAX/MIN operand order]
+[C comparisons]
+[D conversions]
+{"hand_vectors_extracted": 299, "vector_level_cases": 20, "records": 800, "vectors_sha256": "8e71505bdeae699b5c44591306a1892fe0506686dee4b1974bb3b1ee6dd004cc"}
+BUILD_RC=0
+{"records": 800, "vectors_sha256": "8e71505bdeae699b5c44591306a1892fe0506686dee4b1974bb3b1ee6dd004cc"}
+PREDICT_RC=0
+{"records": 800}
+PYREF_RC=0
+==== silicon run 1 (CPU 4) 21:52:01.54
+{"records": 800, "vectors_sha256": "8e71505bdeae699b5c44591306a1892fe0506686dee4b1974bb3b1ee6dd004cc"}
+RUN1_RC=0
+==== silicon run 2 (CPU 20) 21:52:01.56
+{"records": 800, "vectors_sha256": "8e71505bdeae699b5c44591306a1892fe0506686dee4b1974bb3b1ee6dd004cc"}
+RUN2_RC=0
+{"vendor": "AuthenticAMD", "brand": "AMD Ryzen 9 9950X 16-Core Processor            ", "family": 26, "model": 68, "stepping": 0, "cpuid1_eax": "0x00b40f40", "microcode_update_revision_raw": "2340400b", "microcode_lo32": "0x0b404023", "microcode_hi32": "0x00000000", "os_build": "26200.9711 (25H2)", "features": {"avx2": 1, "avx512f": 1, "avx512bw": 1, "avx512vl": 1, "avx512vnni": 1, "f16c": 1, "os_zmm_state": 1}, "l3_groups": "0xffff,0xffff0000", "cpu": 4, "harness_exe_sha256": "2348e97f890d8ec10a599a054ee5b06eee33860d5e00f359232daef7270b78cb", "harness_src_sha256": "a18b07eecea415fc63ff7a47b8fdaa335e2b2dcdf3d3e09b040871571b7e633e", "interp_src_sha256": "80ad6745bbb8a05013c28c25e4a963bca49325aac3799d903313ccf5cd0703c0", "stub_manifest_sha256": "03fe7a69abc7281279a4815d8291f83ddbcc637189adea4e0d2ec1aa4421a529", "semantics_bundle": "4c48899cb3cad78c5bba6e29129d1eb9391cb8160148b33e1ba91c7968a3ea31", "compiler": "MSVC _MSC_FULL_VER=194435229"}
+{"vendor": "AuthenticAMD", "brand": "AMD Ryzen 9 9950X 16-Core Processor            ", "family": 26, "model": 68, "stepping": 0, "cpuid1_eax": "0x00b40f40", "microcode_update_revision_raw": "2340400b", "microcode_lo32": "0x0b404023", "microcode_hi32": "0x00000000", "os_build": "26200.9711 (25H2)", "features": {"avx2": 1, "avx512f": 1, "avx512bw": 1, "avx512vl": 1, "avx512vnni": 1, "f16c": 1, "os_zmm_state": 1}, "l3_groups": "0xffff,0xffff0000", "cpu": 20, "harness_exe_sha256": "2348e97f890d8ec10a599a054ee5b06eee33860d5e00f359232daef7270b78cb", "harness_src_sha256": "a18b07eecea415fc63ff7a47b8fdaa335e2b2dcdf3d3e09b040871571b7e633e", "interp_src_sha256": "80ad6745bbb8a05013c28c25e4a963bca49325aac3799d903313ccf5cd0703c0", "stub_manifest_sha256": "03fe7a69abc7281279a4815d8291f83ddbcc637189adea4e0d2ec1aa4421a529", "semantics_bundle": "4c48899cb3cad78c5bba6e29129d1eb9391cb8160148b33e1ba91c7968a3ea31", "compiler": "MSVC _MSC_FULL_VER=194435229"}
+==== report 21:52:01.57
+{"records": 800, "lane_mismatches": 0, "flag_mismatch_executions": 3, "interpreter_divergences": 0, "nondeterminism": 0, "harness_anomalies": 0}
+{"checked": 780, "silicon_eq_hand": 777, "c_eq_hand": 780, "py_eq_hand": 780} disagreements: 3
+HAND {"record": 275, "label": "B MAX/MIN operand order / B6 den / +0: DE and ZE both recorded", "stub": "x2stub_0342", "variant": "plain", "want": ["0x7f800000", 6], "silicon": ["0x7f800000", 4], "c": ["0x7f800000", 6], "agree": {"silicon": false, "c": true, "py": true}}
+HAND {"record": 276, "label": "B MAX/MIN operand order / B6 den / +0: DE and ZE both recorded", "stub": "x2stub_0370", "variant": "plain", "want": ["0x7f800000", 6], "silicon": ["0x7f800000", 4], "c": ["0x7f800000", 6], "agree": {"silicon": false, "c": true, "py": true}}
+HAND {"record": 277, "label": "B MAX/MIN operand order / B6 den / +0: DE and ZE both recorded", "stub": "x2stub_0446", "variant": "plain", "want": ["0x7f800000", 6], "silicon": ["0x7f800000", 4], "c": ["0x7f800000", 6], "agree": {"silicon": false, "c": true, "py": true}}
+TABLE/SILICON {"stub": "x2stub_0342", "variant": "plain", "lanes": [], "silicon": {}, "table": {}, "mxcsr_silicon": "0x1f84", "mxcsr_table": "0x1f86"}
+TABLE/SILICON {"stub": "x2stub_0370", "variant": "plain", "lanes": [], "silicon": {}, "table": {}, "mxcsr_silicon": "0x1f84", "mxcsr_table": "0x1f86"}
+TABLE/SILICON {"stub": "x2stub_0446", "variant": "plain", "lanes": [], "silicon": {}, "table": {}, "mxcsr_silicon": "0x1f84", "mxcsr_table": "0x1f86"}
+REPORT_RC=0
+==== END 21:52:01.64
+==== THROUGHPUT: C interpreter, predict mode on the validation vectors (1,000,006 lane cases) 21:52:01.64
+predict_seconds=0.6015849
+==== THROUGHPUT: exhaustive engine, interpreter as oracle, VCVTPS2DQ zmm, 228 inputs, 1 thread 21:52:02.37
+{"stream_sha256": "2ccba7c97080d750ba43a065c2de101ef93ecf30ff98ce492b38550ffdcc3911", "mismatches": 0, "status": "complete"}
+{"stub": "x2stub_0301", "iform": "VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512", "variant": "plain", "mxcsr": "0x1f80", "lo": "0x0", "hi": "0x10000000", "oracle": "self", "threads": 1, "executions": 16777216, "mismatches": 0, "status": "complete", "max_mismatch_records": 1000000, "stream_sha256": "2ccba7c97080d750ba43a065c2de101ef93ecf30ff98ce492b38550ffdcc3911", "stream_complete": true, "chunk": 16777216, "seconds": 6.672, "fingerprint": {"vendor": "AuthenticAMD", "brand": "AMD Ryzen 9 9950X 16-Core Processor            ", "family": 26, "model": 68, "stepping": 0, "cpuid1_eax": "0x00b40f40", "microcode_update_revision_raw": "2340400b", "microcode_lo32": "0x0b404023", "microcode_hi32": "0x00000000", "os_build": "26200.9711 (25H2)", "features": {"avx2": 1, "avx512f": 1, "avx512bw": 1, "avx512vl": 1, "avx512vnni": 1, "f16c": 1, "os_zmm_state": 1}, "l3_groups": "0xffff,0xffff0000", "cpu": -1, "harness_exe_sha256": "2348e97f890d8ec10a599a054ee5b06eee33860d5e00f359232daef7270b78cb", "harness_src_sha256": "a18b07eecea415fc63ff7a47b8fdaa335e2b2dcdf3d3e09b040871571b7e633e", "interp_src_sha256": "80ad6745bbb8a05013c28c25e4a963bca49325aac3799d903313ccf5cd0703c0", "stub_manifest_sha256": "03fe7a69abc7281279a4815d8291f83ddbcc637189adea4e0d2ec1aa4421a529", "semantics_bundle": "4c48899cb3cad78c5bba6e29129d1eb9391cb8160148b33e1ba91c7968a3ea31", "compiler": "MSVC _MSC_FULL_VER=194435229"}}
+==== THROUGHPUT: Python generator, V1 of VADDPS zmm, first 20000 executions 21:52:09.05
+{"records": 20000, "rows": 1, "vectors_sha256": "329a800b1ab8eec30f0ebec17c15fa4fb2c09d5a6df019c0a6d672b91cfbbf13"}
+gen_seconds=1.0903757
+==== END Fri 10/16/2026 21:52:10.42

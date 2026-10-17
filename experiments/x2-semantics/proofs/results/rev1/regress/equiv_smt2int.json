@@ -1,0 +1,12 @@
+{
+ "int_R12_M.smt2": "equal modulo let-variable names",
+ "int_R13_M.smt2": "identical",
+ "int_R13_P.smt2": "identical",
+ "int_R13_W.smt2": "identical",
+ "int_R14_M.smt2": "identical",
+ "int_R15_M.smt2": "equal modulo let-variable names",
+ "int_R15_P.smt2": "equal modulo let-variable names",
+ "int_R16_M.smt2": "equal modulo let-variable names",
+ "int_R16_P.smt2": "equal modulo let-variable names",
+ "int_R18_M.smt2": "equal modulo let-variable names"
+}

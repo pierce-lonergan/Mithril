@@ -1,0 +1,234 @@
+{
+ "cvc5_version": "1.4.2",
+ "timeout_s": 600.0,
+ "rules": [
+  {
+   "rule": "R01",
+   "cvc5": "PROVED",
+   "seconds": 0.009,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R02-lemma-commute",
+   "cvc5": "PROVED",
+   "seconds": 0.02,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R02-lemma-nan",
+   "cvc5": "PROVED",
+   "seconds": 0.003,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R02-lemma-order",
+   "cvc5": "PROVED",
+   "seconds": 0.035,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R02",
+   "cvc5": "UNKNOWN(unknown (TIMEOUT))",
+   "seconds": 1200.008,
+   "timeout_s": 1200.0,
+   "output": [
+    "unknown (TIMEOUT)"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R03",
+   "cvc5": "UNKNOWN(unknown (TIMEOUT))",
+   "seconds": 1200.009,
+   "timeout_s": 1200.0,
+   "output": [
+    "unknown (TIMEOUT)"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R04",
+   "cvc5": "PROVED",
+   "seconds": 0.006,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R05",
+   "cvc5": "PROVED",
+   "seconds": 0.006,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R06_DAZ=0",
+   "cvc5": "PROVED",
+   "seconds": 0.004,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R06_DAZ=1",
+   "cvc5": "PROVED",
+   "seconds": 0.004,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R07_DAZ=0",
+   "cvc5": "PROVED",
+   "seconds": 0.004,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R07_DAZ=1",
+   "cvc5": "PROVED",
+   "seconds": 0.004,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R08",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R08_inst",
+   "cvc5": "PROVED",
+   "seconds": 0.005,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R09",
+   "cvc5": "PROVED",
+   "seconds": 0.002,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R09_inst",
+   "cvc5": "PROVED",
+   "seconds": 0.004,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R10",
+   "cvc5": "PROVED",
+   "seconds": 0.001,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R10_inst",
+   "cvc5": "PROVED",
+   "seconds": 0.004,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R11",
+   "cvc5": "PROVED",
+   "seconds": 0.001,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R11_inst",
+   "cvc5": "PROVED",
+   "seconds": 0.004,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R12",
+   "cvc5": "UNKNOWN(unknown (TIMEOUT))",
+   "seconds": 600.007,
+   "timeout_s": 600.0,
+   "output": [
+    "unknown (TIMEOUT)"
+   ],
+   "error": null
+  },
+  {
+   "rule": "R19",
+   "cvc5": "NOT RUN (query uses Z3's fp.to_ieee_bv)"
+  },
+  {
+   "rule": "R20",
+   "cvc5": "NOT RUN (query uses Z3's fp.to_ieee_bv)"
+  },
+  {
+   "rule": "R21",
+   "cvc5": "PROVED",
+   "seconds": 0.004,
+   "timeout_s": 600.0,
+   "output": [
+    "unsat"
+   ],
+   "error": null
+  }
+ ]
+}

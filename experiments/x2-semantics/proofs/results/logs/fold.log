@@ -1,0 +1,10 @@
+START Fri 10/16/2026 18:44:48.27
+L1 meaning step                    PROVED                 0.007 s 
+L2 chain step                      PROVED                 0.005 s 
+L3 tree step                       PROVED                 0.005 s 
+L4 closure                         PROVED                 0.004 s 
+L5 start value +0 is sign-0, non-NaN PROVED                 0.000 s 
+L6 abs is sign-0                   PROVED                 0.000 s 
+R02 concrete pattern, bit-blast+sat tactic UNKNOWN(timeout)    1500.076 s 
+FOLD_RC=-1
+END Fri 10/16/2026 19:10:06.74

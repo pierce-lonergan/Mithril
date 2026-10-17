@@ -11,7 +11,10 @@ This file proposes the list (`rules.v1` draft 2), its counting rule, side condit
 and proof routes, re-derives the T2 bounds and the domain predicates, and states the loop rule. Tags
 as in [TABLE-SCHEMA.md](TABLE-SCHEMA.md). Z3 timings are single runs on the laptop (Ryzen 9 7940HS)
 with z3-solver 5.3.1 from PyPI via `python -B -m semantics.smt_encoding`: [M] X2 author 2026-10-16
-for the v0 probes, [M] X2 reviser 2026-10-16 for the probes marked "rev".
+for the v0 probes, [M] X2 reviser 2026-10-16 for the probes marked "rev". **The proofs this list marked
+"not yet run" were run on 2026-10-16 by the x2build track on the desktop (exhaustive, Z3, cvc5), reviewed
+the same day (same family, independent context) and partly re-run with corrected routes; their status is
+§8 and [proofs/README.md](proofs/README.md).**
 
 ---
 
@@ -127,26 +130,26 @@ DAZ = FTZ = 0 (MXCSR 0x1F80). "v0" gives the v0 row the draft-2 row came from.
 | ID | v0 | Rule (LHS ↔ RHS) | Side conditions | Env | Needed by | Primary proof, status | Second route |
 |---|---|---|---|---|---|---|---|
 | R01 SEL-MAX | new | `select(gt(a, b), a, b) ↔ MAX(a, b)` (MAXPS/MAXSS, src1 = a) | none: equal for all bits, NaN and ±0 included (SDM MAXPS pseudocode returns SRC2 on NaN or both zeros, as the C select does) | DAZ = 0 (any RC, FTZ): under DAZ MAXPS returns the flushed zero (F-DAZ-SEL), the select the original bits | act_q8 AVX2, AVX-512 (meaning `if (a > amax) amax = a`); base step of R02/R03 | Z3 all bits: **PROVED 0.00 s** [M] rev | case-exhaustive NaN/±0 layer (self-test B7 spot vectors) + IEEE comparison; second solver |
-| R02 MAX-FOLD-8x8 | R16 | sequential 64-step chain of R01 over `\|x_i\|` from +0.0 ↔ 8 lane chains of 8 `MAXPS(\|v\|, m)` then `hmax8` | every element enters as **src1**, the running max as src2; running max starts at +0.0; every element's sign bit is 0 by a BV fact (`andnot(signmask, v)`); tree steps combine running maxima only | DAZ = 0 | act_q8 AVX2 | Z3 on the concrete 64-input pattern: not yet run. Lemmas: MAXPS commutes on sign-0 non-NaN **PROVED 0.01 s**; `MAXPS(NaN, m) = m` **PROVED 0.00 s**; sign-0 non-NaN order = unsigned BV order **PROVED 0.00 s** [M] v0 and rev | written proof from the lemmas (NaN elements become +0.0, then unsigned integer max is associative and commutative); second solver |
+| R02 MAX-FOLD-8x8 | R16 | sequential 64-step chain of R01 over `\|x_i\|` from +0.0 ↔ 8 lane chains of 8 `MAXPS(\|v\|, m)` then `hmax8` | every element enters as **src1**, the running max as src2; running max starts at +0.0; every element's sign bit is 0 by a BV fact (`andnot(signmask, v)`); tree steps combine running maxima only | DAZ = 0 | act_q8 AVX2 | Z3 on the concrete 64-input pattern: run 2026-10-16, see §8. Lemmas: MAXPS commutes on sign-0 non-NaN **PROVED 0.01 s**; `MAXPS(NaN, m) = m` **PROVED 0.00 s**; sign-0 non-NaN order = unsigned BV order **PROVED 0.00 s** [M] v0 and rev | written proof from the lemmas (NaN elements become +0.0, then unsigned integer max is associative and commutative); second solver |
 | R03 MAX-FOLD-16x4 | R16 | as R02 with 16 lane chains of 4 and `hmax16` | as R02 (`_mm512_abs_ps` = sign-bit clear) | DAZ = 0 | act_q8 AVX-512 | as R02 | as R02 |
 | R04 MIN-SEL-127 | R17 | `select(gt(v, c), c, v) ↔ MIN(v, c)`, c = 127.0 | **value fact: v is not NaN**, established by T2/dataflow because v is the output of an R08/R11 NaN → 0 select (v0 called this "dominated by an erasing node", which mixed a value fact with payload erasure; finding R1-13); c non-NaN and nonzero | DAZ = 0 | act_q8 clamp, AVX2 and AVX-512 | Z3 (c = 127, non-NaN v): **PROVED 0.00 s** [M] v0; with NaN v: COUNTEREXAMPLE (e.g. `0xFF813EFB`) [M] rev, so the side condition is load-bearing | exhaustive 2^32 over v |
 | R05 MAX-SEL-M127 | R18 | `select(lt(v, c), c, v) ↔ MAX(v, c)`, c = −127.0 | as R04 | DAZ = 0 | act_q8 clamp | Z3 (c = −127, non-NaN v): **PROVED 0.00 s** [M] rev | exhaustive 2^32 over v |
-| R06 ISNAN-UNORD | R15 (part) | `CMP(v, v, UNORD_Q) ↔ isnan(v)` (lane all-ones / k bit set iff NaN) | none | any | `canon8`, `canon16`, `canon4` in F32, Q4, Q8, both ISAs (6 variants) | table entry evaluation + Z3: not yet run | exhaustive 2^32 over v |
-| R07 NOTNAN-ORD | R15 (part) | `CMP(v, v, ORD_Q) ↔ not(isnan(v))` | none | any | act_q8 NaN zeroing, both ISAs | not yet run | exhaustive 2^32 over v |
-| R08 ANDMASK-SELECT | R13 | `and(x, cmpmask(c)) ↔ select(c, x, +0.0)` (VEX compare lanes are all-ones or zero) | the mask is the output of a compare entry | any | AVX2 act_q8 NaN zeroing | BV lemma: not yet run | exhaustive per lane (x × {true, false}) |
-| R09 BLENDV-SELECT | R14 (part) | `blendv(a, b, cmpmask(c)) ↔ select(c, b, a)` | mask from a compare entry | any | AVX2 `canon8`, `canon4` (F32, Q4, Q8) | BV lemma: not yet run | exhaustive per lane |
-| R10 MASKMOV-SELECT | R14 (part) | `mask_mov(a, k, b) ↔ select(k, b, a)` | k from a compare-into-mask entry | any | AVX-512 `canon16`, `canon4` | BV lemma: not yet run | exhaustive per lane |
-| R11 MASKZMOV-SELECT | R14 (part) | `maskz_mov(k, p) ↔ select(k, p, +0.0)` | k from a compare-into-mask entry | any | AVX-512 act_q8 NaN zeroing | BV lemma: not yet run | exhaustive per lane |
-| R12 INT-DOT-VNNI | R21 (instance) | 4 × VPDPBUSD per quad, `red_quads` / `red_quad1` ↔ Σ_i u_i·x_i in index order (int32) | T2: no int32 wrap (`64·255·127 = 2,072,640`) | any | AVX-512 Q4, Q8 | Z3 QF_BV per instance: not yet run | per-product exhaustive (u8 × s8, 2^16) + additivity; second solver |
-| R13 INT-DOT-MADDUBS-Q4 | R21 (instance) | `maddubs(n, x)` pairs, VPADDW of low and high, `madd(·, 1)`, `red8` ↔ Σ n_i·x_i | T2: no saturation (3,810), no VPADDW wrap (7,620), red8 sum ≤ 121,920 | any | AVX2 Q4 | not yet run | per-product exhaustive (16 × 255, `bounds.py`) |
+| R06 ISNAN-UNORD | R15 (part) | `CMP(v, v, UNORD_Q) ↔ isnan(v)` (lane all-ones / k bit set iff NaN) | none | any | `canon8`, `canon16`, `canon4` in F32, Q4, Q8, both ISAs (6 variants) | table entry evaluation + Z3: run 2026-10-16, see §8 | exhaustive 2^32 over v |
+| R07 NOTNAN-ORD | R15 (part) | `CMP(v, v, ORD_Q) ↔ not(isnan(v))` | none | any | act_q8 NaN zeroing, both ISAs | run 2026-10-16, see §8 | exhaustive 2^32 over v |
+| R08 ANDMASK-SELECT | R13 | `and(x, cmpmask(c)) ↔ select(c, x, +0.0)` (VEX compare lanes are all-ones or zero) | the mask is the output of a compare entry | any | AVX2 act_q8 NaN zeroing | BV lemma: run 2026-10-16, see §8 | exhaustive per lane (x × {true, false}) |
+| R09 BLENDV-SELECT | R14 (part) | `blendv(a, b, cmpmask(c)) ↔ select(c, b, a)` | mask from a compare entry | any | AVX2 `canon8`, `canon4` (F32, Q4, Q8) | BV lemma: run 2026-10-16, see §8 | exhaustive per lane |
+| R10 MASKMOV-SELECT | R14 (part) | `mask_mov(a, k, b) ↔ select(k, b, a)` | k from a compare-into-mask entry | any | AVX-512 `canon16`, `canon4` | BV lemma: run 2026-10-16, see §8 | exhaustive per lane |
+| R11 MASKZMOV-SELECT | R14 (part) | `maskz_mov(k, p) ↔ select(k, p, +0.0)` | k from a compare-into-mask entry | any | AVX-512 act_q8 NaN zeroing | BV lemma: run 2026-10-16, see §8 | exhaustive per lane |
+| R12 INT-DOT-VNNI | R21 (instance) | 4 × VPDPBUSD per quad, `red_quads` / `red_quad1` ↔ Σ_i u_i·x_i in index order (int32) | T2: no int32 wrap (`64·255·127 = 2,072,640`) | any | AVX-512 Q4, Q8 | Z3 QF_BV per instance: run 2026-10-16, see §8 | per-product exhaustive (u8 × s8, 2^16) + additivity; second solver |
+| R13 INT-DOT-MADDUBS-Q4 | R21 (instance) | `maddubs(n, x)` pairs, VPADDW of low and high, `madd(·, 1)`, `red8` ↔ Σ n_i·x_i | T2: no saturation (3,810), no VPADDW wrap (7,620), red8 sum ≤ 121,920 | any | AVX2 Q4 | run 2026-10-16, see §8 | per-product exhaustive (16 × 255, `bounds.py`) |
 | R14 INT-DOT-SIGNTRICK-Q8 | R22 (part) | `maddubs(PABSB(w), PSIGNB(x, w))`, `madd`, `red8` ↔ Σ w_i·x_i | **DOM-ACT-Q** (x ≠ −128); no saturation (32,512) | any | AVX2 Q8 | per-product identity exhaustive over 256 × 255 pairs: holds; fails for x = −128, w < 0 [D] (`bounds.py`, self-test H2, G6) | Z3 QF_BV per instance |
-| R15 INT-BIAS-NIB | R22 (part) | Σ (n_i − 8)·x_i ↔ Σ n_i·x_i − 8·a.sum | **DOM-ACT-SUM**; no wrap | any | AVX2 Q4, AVX-512 Q4 | Z3 QF_BV: not yet run | per-element algebra; self-test G5 on 30 blocks; G7 shows DOM-ACT-SUM is load-bearing |
-| R16 INT-BIAS-XOR80 | R22 (part) | Σ q_i·x_i ↔ Σ (q_i xor 0x80)·x_i − 128·a.sum (u8(q xor 0x80) = q + 128) | **DOM-ACT-SUM**; no wrap | any | AVX-512 Q8 | Z3 QF_BV: not yet run | exhaustive over q (2^8) for the byte identity; G5, G7 |
-| R17 INT-NARROW-PACKS | new | `packsswb(packssdw(q))` lane ↔ `(int8_t)q` | T2: \|q\| ≤ 127 | any | AVX2 act_q8 store | not yet run | exhaustive over q ∈ [−2^31, 2^31) restricted by the fact (255 values) |
-| R18 INT-SUM-ACT | R21 (instance) | lane-parallel `padd` over k, then the horizontal int32 tree ↔ Σ q_i sequential | T2: \|Σ q\| ≤ 8,128, no wrap | any | act_q8 AVX2, AVX-512 (`sum`) | not yet run | Z3 QF_BV; per-instance |
+| R15 INT-BIAS-NIB | R22 (part) | Σ (n_i − 8)·x_i ↔ Σ n_i·x_i − 8·a.sum | **DOM-ACT-SUM**; no wrap | any | AVX2 Q4, AVX-512 Q4 | Z3 QF_BV: run 2026-10-16, see §8 | per-element algebra; self-test G5 on 30 blocks; G7 shows DOM-ACT-SUM is load-bearing |
+| R16 INT-BIAS-XOR80 | R22 (part) | Σ q_i·x_i ↔ Σ (q_i xor 0x80)·x_i − 128·a.sum (u8(q xor 0x80) = q + 128) | **DOM-ACT-SUM**; no wrap | any | AVX-512 Q8 | Z3 QF_BV: run 2026-10-16, see §8 | exhaustive over q (2^8) for the byte identity; G5, G7 |
+| R17 INT-NARROW-PACKS | new | `packsswb(packssdw(q))` lane ↔ `(int8_t)q` | T2: \|q\| ≤ 127 | any | AVX2 act_q8 store | run 2026-10-16, see §8 | exhaustive over q ∈ [−2^31, 2^31) restricted by the fact (255 values) |
+| R18 INT-SUM-ACT | R21 (instance) | lane-parallel `padd` over k, then the horizontal int32 tree ↔ Σ q_i sequential | T2: \|Σ q\| ≤ 8,128, no wrap | any | act_q8 AVX2, AVX-512 (`sum`) | run 2026-10-16, see §8 | Z3 QF_BV; per-instance |
 | R19 RINT-MAGIC | R19 | `cvtt((v + M) − M) ↔ round_ne_to_int(v)`, M = 1.5·2^23 | T2: \|v\| ≤ 127 (provable up to \|v\| ≤ 2^22) | **RNE only** as used. With the same RC on both sides it also holds for RD and RU (Z3 **PROVED**, 0.26-0.31 s over two runs [M] rev) but **fails for RZ** on negative non-integers (COUNTEREXAMPLE, e.g. `0xC12D829E`, −10.84...: LHS −11, RHS −10 [M] rev), which is the cross-ISA defect Hearth's council review of 2026-10-04 reported | B: scalar act_q8 (`q_rint` then `(int)`) | Z3 for \|v\| ≤ 127: **PROVED 0.28 s** [M] v0 | exhaustive 2^32 |
-| R20 F16-WIDEN | R10 | Hearth's `q_f16(h)` (integer bit code, plus `(float)m · 2^−24` for subnormals) ↔ KIR `f16_to_f32(h)` | none | any (both sides exact on normal f32 values) | B: scalar `mm_f16`, scalar Q4/Q8 block scales | not yet run | **exhaustive 2^16** |
-| R21 ISNAN-UCOMI | R15 (part) | `UCOMISS(v, v)` with ZF = 0 or PF = 1 (C `v != v`) ↔ isnan(v) | none | any | B: scalar `q_canon`, scalar act_q8 `v != v` | not yet run | exhaustive 2^32 |
+| R20 F16-WIDEN | R10 | Hearth's `q_f16(h)` (integer bit code, plus `(float)m · 2^−24` for subnormals) ↔ KIR `f16_to_f32(h)` | none | any (both sides exact on normal f32 values) | B: scalar `mm_f16`, scalar Q4/Q8 block scales | run 2026-10-16, see §8 | **exhaustive 2^16** |
+| R21 ISNAN-UCOMI | R15 (part) | `UCOMISS(v, v)` with ZF = 0 or PF = 1 (C `v != v`) ↔ isnan(v) | none | any | B: scalar `q_canon`, scalar act_q8 `v != v` | run 2026-10-16, see §8 | exhaustive 2^32 |
 
 **Count [D: rows above + loop rules].** Strict default: **21 rows + 1 loop rule = 22 ≤ 30**
 [target]: 11 FP/bridging rows (R01-R11) + 7 integer rows (R12-R18) needed by the gating variants, +3
@@ -391,3 +394,62 @@ labelled as such, with the gap visible in the review log (docs/m0/README.md).
    (03 §6.3), count 0.
 5. **RQ-3 (Owner): does a Z3 QF_BV proof satisfy ROADMAP's "Z3 FPA or exhaustive binary32" for
    integer rows?** Provisional: only together with an agreeing exhaustive or second-solver route.
+
+## 8. Proof runs of 2026-10-16 (x2build track), revised after review
+
+The rows marked "not yet run" in §3.1, and the second routes of rows whose primary was already proved,
+were run on 2026-10-16 on the desktop (AMD Ryzen 9 9950X, Windows 11 26200.9711). A same-family,
+independent-context review of that run (proofs/README.md §9; 10 findings, all accepted) showed that several
+routes did not evaluate the table where this section said they did: the R10/R11 "generic BV lemma" queries
+were the tautology `t == t`; the C "generic" loops of R08-R11 compared transliterations with their own
+definitions; the Z3 queries of R06, R07, the R08-R11 instances, R20 and R21 used SMT-LIB's `fp.isNaN`,
+`fp.eq` and `fp.to_fp` in place of the table's VCMPPS, UCOMISS and VCVTPH2PS (a check of the IEEE
+definition); no route modelled the reduction trees of R12-R14; the exhaustive routes ran under MXCSR 0x1F80
+only; R15/R16's "exhaustive" routes contain no table operation. The routes were corrected and re-run the same
+evening ("rev1"). Method, run time [M], result and artefact hash per route: [proofs/README.md](proofs/README.md);
+artefacts in `proofs/results/` (first run) and `proofs/results/rev1/`.
+
+Routes after the revision: exhaustive enumeration through the C reference interpreter of the table
+(`proofs/x2prove.c`; lane functions, or whole instructions through `x2_predict` and the EVEX masking function
+`x2_masked`; every entry states its route kind and MXCSR); Z3 5.3.1 on encodings that are either
+`semantics/smt_encoding.py` (arithmetic, MAX/MIN, CVT) or the new pure-BV table encodings of
+`proofs/smt_table.py` (compare relation and its 32 predicates, COMIS, VCVTPH2PS, masked lane), `proofs/int_lanes.py`
+(integer lane formulas) and `proofs/trees.py` (reduction trees), each checked against the Python reference by a
+recorded differential (1,342,912 + 912,472 + 6,000 comparisons and 144 unit vectors, 0 mismatches); cvc5 1.4.2
+replaying every exported query. A route that checks an IEEE definition, a transliteration against itself or an
+algebraic identity without table operations is labelled so and is not counted as a table route. "Proved" is
+§1's definition. Nothing here freezes `rules.v1` or counts toward the gate before the verdict run; every review
+is **same family, independent context** until D0-10 names another family.
+
+| Row | Primary route, result [M] | Second route, result [M] | Status by §1 |
+|---|---|---|---|
+| R01 SEL-MAX | Z3 all bits: PROVED (0.001 s); rev1 also with the C `>` as the table's relation: PROVED (0.024 s) | cvc5 on both queries: PROVED | **PROVED** |
+| R02 MAX-FOLD-8x8 | Z3 on the concrete 64-input pattern: **UNKNOWN (timeout 1,200 s)**; bit-blast + SAT tactic: **UNKNOWN (timeout 1,500 s)**; cvc5: UNKNOWN (1,200 s) | the written proof [proofs/R02-R03-proof.md](proofs/R02-R03-proof.md) from lemmas L1-L6 and L1t (the meaning step with the table's relation), **Z3 and cvc5 PROVED on every lemma, each exported with its hash** (rev1; the first run had Z3 only and no hashes) | **not proved**: the primary did not succeed. Whether a written proof whose every lemma two solvers checked may serve as the primary is a counting-rule question (Owner, with RQ-3) |
+| R03 MAX-FOLD-16x4 | Z3 concrete pattern: **UNKNOWN (timeout 1,200 s)**; cvc5: UNKNOWN (1,200 s) | the same written proof (it does not depend on the lane count) | **not proved**, as R02 |
+| R04 MIN-SEL-127 | Z3 (non-NaN v): PROVED, with `fp.gt` and with the table's relation | exhaustive 2^32 through the table: 0 failures on the non-NaN v; the 16,777,214 NaN v all fail (side condition load-bearing); **under the 7 other MXCSR values: 0 failures whenever DAZ = 0; with DAZ = 1 exactly 16,777,214 in-condition failures (every denormal v), so the Env column's DAZ = 0 is load-bearing**; cvc5: PROVED | **PROVED** for its Env (DAZ = 0) |
+| R05 MAX-SEL-M127 | as R04 | as R04 | **PROVED** for its Env (DAZ = 0) |
+| R06 ISNAN-UNORD | Z3 on the table's compare lane (`smt_table.cmp_pred`, predicate 3), DAZ = 0 and 1: PROVED | exhaustive 2^32 through VCMPPS ymm (`x2_predict`) under all 8 MXCSR values: 0 failures; cvc5: PROVED | **PROVED** (the first run's Z3 query checked the IEEE definition and is superseded) |
+| R07 NOTNAN-ORD | as R06 (predicate 7) | as R06 | **PROVED** |
+| R08 ANDMASK-SELECT | Z3 on the act_q8 instance with the table's compare lane, AND transliterated (VANDPS has no entry), DAZ = 0 and 1: PROVED | exhaustive 2^32 (VCMPPS ymm through `x2_predict`, AND) under 8 MXCSR values: 0 failures; cvc5: PROVED. The generic `and(x, cmpmask(c))` lemma is definitional (no table entry) and not counted | **PROVED** for the Hearth instance |
+| R09 BLENDV-SELECT | as R08, canon8 instance, BLENDVPS transliterated | as R08 | **PROVED** for the Hearth instance |
+| R10 MASKMOV-SELECT | Z3 on the canon16 instance: k from the table's compare lane (UNORD_Q), merge-masked move as `int_ops.masked`, DAZ = 0 and 1: PROVED | exhaustive 2^32: VCMPPS zmm into k through `x2_predict`, the move through `x2_masked`, under 8 MXCSR values: 0 failures; cvc5: PROVED. The first run's generic query was `t == t` and is **withdrawn**; the generic form is the definition of EVEX merge masking (§1, "not rules") | **PROVED** for the Hearth instance |
+| R11 MASKZMOV-SELECT | as R10, act_q8 instance, zero masking (ORD_Q) | as R10 | **PROVED** for the Hearth instance |
+| R12 INT-DOT-VNNI | Z3 QF_BV, monolithic one-row query with no-wrap: PROVED, 30.1 s; decomposed: R12/M PROVED, R12/P (now a bound lemma) PROVED; **tree lemmas T/red_quads and T/red_quad1** (rev1): PROVED | exhaustive through `x2_dpbusd_lane`: pairs at byte positions (0,1) and (2,3), 2^33, and every product at all 4 positions with 8 accumulators: 0 failures; cvc5: R12/M, R12/P, T lemmas PROVED, monolithic UNKNOWN (600 s); the tree maps also by unit-basis evaluation of the table compositions | **PROVED** (QF_BV primary with an agreeing exhaustive route, the provisional RQ-3 reading) |
+| R13 INT-DOT-MADDUBS-Q4 | exhaustive pair level through the table's VPMADDUBSW word (16,646,400): 0 failures; pair sums exactly [−3,810, 3,810] | Z3 QF_BV decomposed (P, W, M) and **T/red8** (rev1): PROVED; cvc5: P, W, M PROVED, T/red8 PROVED; monolithic: UNKNOWN in Z3 (1,200 s) | **PROVED** |
+| R14 INT-DOT-SIGNTRICK-Q8 | exhaustive pair level (4,261,478,400 under DOM-ACT-Q; PABSB/PSIGNB transliterated and tied to `int_ops` by hash): 0 failures; pair range exactly [−32,512, 32,512]; per product over x ∈ [−128, 127]: exactly 128 failures, all x = −128, w < 0 | Z3 QF_BV decomposed: P PROVED (407 s first run, 472 s rev1), M PROVED, T/red8 PROVED; without DOM-ACT-Q a counterexample (x = −128, w = −5); cvc5: M PROVED, **P (exported and hashed in rev1) PROVED (194.2 s)**, T/red8 PROVED; monolithic: UNKNOWN (600 s) | **PROVED** |
+| R15 INT-BIAS-NIB | Z3 QF_BV monolithic, including the no-wrap conjunct: PROVED, 94.8 s | Z3 decomposed (P, M): PROVED; cvc5 on P, M: PROVED. The per-element enumeration (4,080) is the **algebraic identity with no table operation** and is not a table route; the overflow obligation of `a->sum*8` is a §4.3 T2 fact | **PROVED** |
+| R16 INT-BIAS-XOR80 | Z3 QF_BV monolithic with no wrap: PROVED, 107.2 s | Z3 decomposed (P, M) and cvc5 on P, M: PROVED; per-element enumeration algebraic (as R15); `a->sum*bias` overflow: §4.3 | **PROVED** |
+| R17 INT-NARROW-PACKS | exhaustive 2^32 (packs transliterated; the transliteration equals `int_ops` on [−2^17, 2^17) and the int32 extremes, by hash): 0 failures on the 255 values with \|q\| ≤ 127 | Z3 QF_BV: PROVED, 0.001 s; cvc5: PROVED; the Z3 packs formula equals `int_ops` on 151,200 inputs | **PROVED** |
+| R18 INT-SUM-ACT | Z3 QF_BV decomposed (order lemma M with the AVX2 and AVX-512 shuffle trees modelled, PROVED) with the bound \|Σq\| ≤ 8,128 [D]; monolithic: PROVED with no wrap, 48.1 s | cvc5: on M PROVED; on the monolithic query UNKNOWN (timeout 600 s) | **PROVED**; the second solver agreed on the decomposed form |
+| R19 RINT-MAGIC | Z3 (RNE, \|v\| ≤ 127): PROVED (0.22 s) | exhaustive 2^32 through the table: 0 failures on 2,247,884,802 in-range v; 0 failures up to \|v\| ≤ 2^22; RD and RU on both sides: 0 failures; **RZ on both sides: 1,123,942,273 failures** (the refutation §3.1 records); **RNE with DAZ, FTZ and DAZ+FTZ (rev1): 0 failures in the condition** | **PROVED** for the Env of the row (RNE, any DAZ/FTZ) |
+| R20 F16-WIDEN | Z3, all 2^16 h, against the table's VCVTPH2PS (`smt_table.cvt_h2f`, pure BV): PROVED (0.033 s); the first run compared with `fp.to_fp` and is superseded | exhaustive 2^16 through the table under 8 MXCSR values: 0 failures; **cvc5 (now replayable without `fp.to_ieee_bv`): PROVED** | **PROVED** |
+| R21 ISNAN-UCOMI | Z3 on the table's UCOMISS (`smt_table.comis`), DAZ = 0 and 1: PROVED | exhaustive 2^32 through `x2_comis` under 8 MXCSR values: 0 failures; cvc5: PROVED | **PROVED** |
+
+**Count under §1's definition [D from the rows above], on the corrected routes:** **19 of the 21 rows are
+proved; R02 and R03 are not**, because their primary route timed out in both solvers. R08-R11 are proved for
+the Hearth instances the rows name (their generic form is evaluation of table entries, §1). The count itself is
+unchanged (22 under the strict default: 21 rows + LOOP-LOCKSTEP). With R02, R03 and LOOP-LOCKSTEP not proved,
+P2a's "every counted row and loop rule proved" is not met today. The act_q8 SIMD variants need R02/R03 (§7
+question 1). LOOP-LOCKSTEP's written proof was not part of this run; it stays to be written and reviewed (§5).
+For R01 (two inputs, no exhaustive route), the RC and FTZ independence of its Env column rests on the encoding
+(MAX/MIN have no RC or FTZ input), which the differential of §3.2 checks under four environments only.

@@ -1,0 +1,23 @@
+{
+ "pool_values": 68,
+ "pairs": 4624,
+ "envs": [
+  "default",
+  "DAZ",
+  "FTZ",
+  "DAZ+FTZ",
+  "RD",
+  "RZ+DAZ"
+ ],
+ "comparisons": {
+  "cmp_pred": 887808,
+  "comis": 55488,
+  "cvt_h2f": 393216,
+  "masked_lane": 6400
+ },
+ "total_comparisons": 1342912,
+ "mismatches": 0,
+ "mismatch_list": [],
+ "seconds": 8.2,
+ "z3_version": "5.3.1"
+}
