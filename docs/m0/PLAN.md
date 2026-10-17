@@ -1448,7 +1448,7 @@ Plan B. "Gates" names the collection or step that the row unblocks.
 | S02 | D0-10a–d signed (budget, cadence, families, windows) | Owner | a, c, d answered in chat 10-16 ("No metered API"; "Local Qwen3 via Hearth"; "4 pilot nights, then a rule"), and b's signing slots ("Sunday evening"); ratify at sitting 1 (10-18); b's hours blocked: Owner | W0 / W0 | cadence, nights; the families and windows are settled pending ratification | [D0_BRIEF §0](../D0_BRIEF.md) | 10-16 |
 | S03 | D0-11b signed (role split) | Owner | not due: M1 (D0_BRIEF Q1); revision 2 had W0 | M1 / M1 | sealed specs at M1 | — | 10-16 |
 | S04 | D0-12 signed | Owner | answered in chat 10-16 ("Batch weekly review"; X0 exception), ratify at sitting 1 | W0 / W0 | every Gatekeeper verdict; every collection except X0's | [D0_BRIEF §0](../D0_BRIEF.md) | 10-16 |
-| S05 | D0-9a signature form | Owner | blocked: Owner | sitting 1 (10-18) / same | ratifying the chat answers, X0's signature and every later one | — | 10-16 |
+| S05 | D0-9a signature form | Owner | blocked: Owner; the mechanics (signed tags with a PASS or HW key, or an interim chat form) are in the sitting-1 packet (packet track, 10-16 evening) | sitting 1 (10-18) / same | ratifying the chat answers, X0's signature and every later one | [HOW-TO-SIGN](sittings/2026-10-18/HOW-TO-SIGN.md) | 10-16 |
 | S06 | D0-7a (or Q1 consent) for unattended nights | Owner | blocked: Owner | W1 / W1 (10-18, or 10-25 at the latest) | noise pilot, X3 A/B, calibration | — | 10-16 |
 | S07 | D0-9b Owner key | Owner | blocked: Owner; per D0_BRIEF no M0 step blocks on it if D0-9a's tags are accepted for the kit freeze | X4 / X4 | ledger AUTHORITY facts (M3) | — | 10-16 |
 | S08 | Q1–Q6, Q9, Q17 answered | Owner | blocked: Owner | W0 / W0 | toolchains, store, windows, X2-gate rules, reference binary | §13 | 10-16 |
@@ -1457,18 +1457,18 @@ Plan B. "Gates" names the collection or step that the row unblocks.
 | S11 | Hygiene settings applied by Pierce | Owner | blocked: Owner (checklist from X4) | W1 / W1 | a valid noise pilot | — | 10-16 |
 | S12 | Second family provisioned (keys, pinned versions) | Owner | **will not happen in M0** (chat answers 10-16): no frontier family B; the local Qwen3 is the only other family. Replaced by S69 and S71 | — | — | [D0_BRIEF §0](../D0_BRIEF.md) | 10-16 |
 | S13 | Desktop job wrapper (8 tokens, window refusal, stamps) | X4 | todo | W1 / W1 | all multi-thread desktop jobs from W1 | — | 10-16 |
-| S14 | X0 record | X0 | draft [M, plan] | freeze W0, sign W1 / same | X0 compiles; X0 verdict | [X0-census](prereg/X0-census.md) | 10-16 |
+| S14 | X0 record | X0 | draft; freeze kit landed in commit `6fa2931`: Appendix D items D1–D10 and D12 filled, D11 incomplete (the `census.json` assembler and twin attribution) [M, record Appendix D, read 10-16 evening]; the lead engineer freezes it before sitting 1 | freeze W0, sign W1 / same | X0 compiles; X0 verdict | [X0-census](prereg/X0-census.md) | 10-16 |
 | S15 | X0 toolchains (LLVM, XED) and TOOLCHAINS.md | X0 | doing [M, brief]; TOOLCHAINS.md absent at 11:40 PT [M, plan]; present at 14:38 PT, tools listed as working [M, owner track] | W0 / W0 | X0 compiles | [TOOLCHAINS.md](../../experiments/x0-census/TOOLCHAINS.md) | 10-16 |
-| S16 | X0 scripts | X0 | doing [M, plan] | W0 / W0 | — | `experiments/x0-census/scripts/` | 10-16 |
+| S16 | X0 scripts | X0 | doing: `judge.py` with 56 unit tests, reworked extract and decode, regression on 24 non-Hearth objects with 0 deviations; no Hearth source compiled or decoded; `census.json` assembler not written [commit `6fa2931` message, as reported by x0prep] | W0 / W0 | — | `experiments/x0-census/scripts/` | 10-16 |
 | S17 | X0 `census.json`, REPORT.md, re-derivation | X0 | blocked: S14 freeze, S15 | W1 / W1 | X0 verdict | — | 10-16 |
 | S18 | Census handoff (hash + FP-sensitivity classification) | X0 → X2 | blocked: S17 | W1 / W1 | X2 fuzz vectors, table scope | — | 10-16 |
 | S19 | M0-verdict record and mapping script | verdict | blocked: Q7 (or "pending Q7" lines as written) | W1 / W1 | mapping verdicts to §4 rows | §3.8 | 10-16 |
-| S20 | Lark grammar v0 | X1 | todo | W1 / W2 | cards | — | 10-16 |
+| S20 | Lark grammar v0 | X1 | draft (commit `dcd4c87`, not frozen): parses every snippet; 150/150 mutants agree with `mithi`'s parse [commit message, as reported by the X1 build track] | W1 / W2 | cards | `experiments/x1-harness/` | 10-16 |
 | S21 | Tier 0 and Tier 1 cards | X1 | todo | W1 / W3 | card iteration | — | 10-16 |
-| S22 | `mithi` | X1 | blocked: Q4 (Rust toolchain location) | W2 / W5 | precondition | — | 10-16 |
+| S22 | `mithi` | X1 | draft v0 (commit `dcd4c87`, not frozen; Rust toolchain installed, OWNER-QUEUE A07 to confirm): agrees with the core-calculus note's hand verdicts on 35/35 canonical and derived snippets, 6/6 gate negatives and 33/33 supplementary items, not blind (same family, verdicts visible); 39 tests pass; revised after two reviews (39 findings, 9 blockers) [commit message] | W2 / W5 | precondition | `crates/mithi/` | 10-16 |
 | S23 | M0 tooling kit | X1 | blocked: Q4 | W3 / W9 | tooling arm | — | 10-16 |
 | S24 | X1 harness (six arms, sandbox, resumable) | X1 | todo | W2 / W5 | all X1 attempts | `experiments/x1-harness/` | 10-16 |
-| S25 | X1 power simulation | X1 | draft (results present [M, plan]) | W2 / W5 | X1-heldout n rule | `experiments/x1-harness/power/` | 10-16 |
+| S25 | X1 power simulation | X1 | draft; F = 1 blocks 14–19 added and run (packet track, 10-16 evening): planned n_final 136 with one kill-carrying family, against 96 with two [S]; blocks 1, 12 and 13 re-run and reproduced [M] | W2 / W5 | X1-heldout n rule | `experiments/x1-harness/power/` | 10-16 |
 | S26 | X1-card-iteration record (+ Rust arm if approved) | X1 | todo | W2 → W3 / W5 → W6 | card-iteration attempts | — | 10-16 |
 | S27 | X1-heldout rules freeze, then fill-in | X1 | todo | W2 → W4 / W5 → W10 | held-out runs | — | 10-16 |
 | S28 | X1-precondition record | X1 | todo | W3 / W9 | precondition run | — | 10-16 |
@@ -1481,10 +1481,10 @@ Plan B. "Gates" names the collection or step that the row unblocks.
 | S35 | Held-out runs and Gatekeeper analysis | X1 | blocked: S27, S34 | W5 / W11 | X1 verdict | — | 10-16 |
 | S36 | Local pilot | X1 | blocked: S29 | W5 / W10 | (reported only) | — | 10-16 |
 | S37 | Semantics table | X2 | doing [M, plan: files present] | W5 / W9 | T1 | `experiments/x2-semantics/semantics/` | 10-16 |
-| S38 | X2-fuzz record; Zen 5 fuzz and Bochs | X2 | blocked: S18 (or amendment rule) | W1 / W1 | vectors on silicon | — | 10-16 |
+| S38 | X2-fuzz record; Zen 5 fuzz and Bochs | X2 | harness built and self-tested (commit `cce9911`): 491 XED-encoded stubs over 88 entries; exact-integer C reference, 10^6 lane cases, 0 divergences against Python; Bochs 3.1 oracle; the dev smoke found one table error (DIVSS-class flags). No pre-registered fuzz budget run [commit message]. Record: blocked: S18 (or amendment rule) | W1 / W1 | vectors on silicon | `experiments/x2-semantics/harness/` | 10-16 |
 | S39 | `numerics_v1` ≥ 200 sealed; X2-mutants record | X2 | blocked: Q5 (store) | W2 → W3 / W6 → W7 | kill-rate measurement | — | 10-16 |
 | S40 | X2-gate rules freeze; record signed | X2 | blocked: Q9 | W2 → W5 / W2 → W10 | X2 verdict run | — | 10-16 |
-| S41 | `mithcheck` T1/T2 spike and rule proofs | X2 | todo | W4 / W9 | X2 verdict | — | 10-16 |
+| S41 | `mithcheck` T1/T2 spike and rule proofs | X2 | doing: rule proofs started (commit `cce9911`), 23 rule queries proved in both Z3 and cvc5; R02 and R03 not yet proved [commit message]; the T1/T2 spike is todo | W4 / W9 | X2 verdict | `experiments/x2-semantics/proofs/` | 10-16 |
 | S42 | Lockstep proof, different-family Prover (R-local under D0_BRIEF Q17) | X2 | blocked: S17; D0_BRIEF Q17 | W4 / W8 | X2 verdict, X0 narrowing | — | 10-16 |
 | S43 | X2 report and verdict | X2 | todo | W6 / W11 (W6 under B-cal) | M0 verdict | — | 10-16 |
 | S44 | X3-parity: counting rule, rules, fill-in | X3 | todo | W1, W2 → W3 / W1, W3 → W4 | A/B sessions | — | 10-16 |
@@ -1492,8 +1492,8 @@ Plan B. "Gates" names the collection or step that the row unblocks.
 | S46 | Generator and scratch Hearth | X3 | todo (from W1) | W2 / W4 | A/B | — | 10-16 |
 | S47 | X3 A/B nights | X3 | blocked: S10, S06, Q2, S44 | W3 / W4 | X3 verdict | — | 10-16 |
 | S48 | X3 report (final after planted regression) | X3 | todo | W5 / W7 | M0 verdict | — | 10-16 |
-| S49 | Measurement service v0 | X4 | todo | W1 / W1 | every quiet-night run | — | 10-16 |
-| S50 | Sandbox (Job Object) | X4 | todo | W2 / W3 | hacks; X1 harness isolation | — | 10-16 |
+| S49 | Measurement service v0 | X4 | doing, not usable yet (commit `93f67a8`, "inconsistent state"): the C harness and Rust orchestrator were built and unit-tested on the desktop; two reviews found 26 issues, 3 of them blockers; the C side is on protocol v2 and the orchestrator still on v1, so every orchestrated run fails closed [commit message] | W1 / W1 | every quiet-night run; the first pilot night | `experiments/x4-integrity/service/` | 10-16 |
+| S50 | Sandbox (Job Object) | X4 | doing (commit `93f67a8`): sandbox and probes in progress, same state as S49 [commit message] | W2 / W3 | hacks; X1 harness isolation | `experiments/x4-integrity/sandbox/` | 10-16 |
 | S51 | X4-noise-pilot record; pilot nights; σ_d published | X4 | blocked: S06, S11; the record split out of the X4 DRAFT and frozen (signed 10-18, or 10-25 at the latest for W1 nights) | W1 / W1 | N and c; night rate | — | 10-16 |
 | S52 | `mithc profile measure` (one quiet night) | X4 | blocked: Q2, Q3, S10 | W2 / W2 | phys/emp bounds | — | 10-16 |
 | S53 | X4-calibration rules, fill-in, sessions; time-to-pass, σ_d, throughput published | X4 | blocked: S06, S10, S04, Q15 | W2 → W3, nights W3–W6 / W2 → W4, nights W4–W10 | X3 finality; X4 verdict | — | 10-16 |
@@ -1503,7 +1503,7 @@ Plan B. "Gates" names the collection or step that the row unblocks.
 | S57 | Tombstone import, revisit prototype, replay tests | X4 | todo | W4 / W7 | X4 verdict | — | 10-16 |
 | S58 | Prune pilot reproduced | X4 | todo | W4 / W7 | X4 verdict | — | 10-16 |
 | S59 | X4 report | X4 | todo | W6 / W11 | M0 verdict (may wait) | — | 10-16 |
-| S60 | Core-calculus note | CC | doing [M, plan: file present, 11:38 PT] | W3 / W8 | CC gate | [core-calculus.md](core-calculus.md) | 10-16 |
+| S60 | Core-calculus note | CC | doing: round 2 landed (commit `5e16fbb`); a second same-family Prover and Adversary review found 32 defects (11 blockers), all fixed as F-60..F-88 (provisional); supplementary counterexamples N-11..N-69 [commit message] | W3 / W8 | CC gate | [core-calculus.md](core-calculus.md) | 10-16 |
 | S61 | CC X1-subset rules frozen | CC | todo | W3 / W9 | `mithi` precondition | — | 10-16 |
 | S62 | CC-gate record; different-family review; signature | CC | blocked: D0_BRIEF Q17; CC Q6 | W5 / W11 | M0 verdict | — | 10-16 |
 | S63 | Different-family review backlog (§9 step 5; R-local under D0_BRIEF Q17) | reviewers | blocked: D0_BRIEF Q17 | week after each signature | M0 verdict signature | — | 10-16 |
@@ -1512,9 +1512,10 @@ Plan B. "Gates" names the collection or step that the row unblocks.
 | S66 | S0: R3 commit, ADR-0010, port base, corpus | Hearth / Owner | blocked: R3 commit, D0-2, D0-3 | not an M0 gate | M1's S1 | — | 10-16 |
 | S67 | M0 verdict signed | Owner | blocked: S14–S63, S69 | W6 / W12 | M0 outcome | — | 10-16 |
 | S68 | Owner queue (`OWNER-QUEUE.md`) | owner | draft, revised after one same-family review (2026-10-16); carries sitting 1's agenda | living | the weekly sittings' agendas | [OWNER-QUEUE.md](OWNER-QUEUE.md) | 10-16 |
-| S69 | X1 restructure chosen (D0_BRIEF Q16–Q18) and folded into the X1 record | Owner, then X1 | Q16 answered in chat 10-16 (Claude kills, pass provisional; amendment record to draft and sign); Q17, Q18 and OWNER-QUEUE A20 blocked: Owner (sitting 1) | W0 / W0–W1 | all X1 sealed content and attempts | [X1 record](prereg/X1-writability.md) | 10-16 |
-| S70 | Claude Code runner smoke run on public items (tokens and window share per attempt [M]) | X1 | todo; development, not collection | W1 / W1 | sizing X1 under the plan (R29) | — | 10-16 |
+| S69 | X1 restructure chosen (D0_BRIEF Q16–Q18) and folded into the X1 record | Owner, then X1 | Q16 answered in chat 10-16; X1-amendment-1 drafted (packet track, 10-16 evening) and revised after one same-family review (11 findings across the packet's files, all accepted): F = 1, planned n 136 [S], a Claude Code runner with a signed effort level, pacing, and a sequential plan-capacity feasibility gate, because the estimate is ≈ 13–55 weekly windows [D, rough]; no recommendation on Q18. Q17, Q18 and OWNER-QUEUE A20 blocked: Owner; A20 comes before Q16's ratification and before the smoke run; the packet leaves Q17 and Q18 until after the smoke run | W0 / W0–W1 | all X1 sealed content and attempts | [X1-amendment-1](prereg/X1-amendment-1.md) | 10-16 |
+| S70 | Claude Code runner smoke run on public items (tokens and window share per attempt [M]) | X1 | todo; development, not collection. Waits for A20 (Owner) and the pinned effort level; runs on a quiet account (agent team paused) as X1-amendment-1 §6.2's sequential gate: 5 attempts, then batches of 20 up to 65, at most ≈ 10 points of one weekly window [D] | W1 / W1 | sizing X1 under the plan (R29) | [X1-amendment-1 §6.2](prereg/X1-amendment-1.md) | 10-16 |
 | S71 | Local Qwen3 serving on the desktop: checkpoint located, tok/s under 8 threads measured (daytime), tool-call support checked | X1 / Owner | blocked: D0-10c checkpoint, Q3, Q18 | W1 / W1 | every Qwen3 job; X1-local-pilot | — | 10-16 |
+| S72 | Sitting-1 packet (agenda, signing mechanics) | packet | draft (packet track, 10-16 evening), revised after one same-family review: agenda ≈ 105–135 min with the key made before Sunday and two records signed on their summaries, up to ≈ 210 min otherwise [inference]; item 6 optional; item 7's checklist now follows the X4 track's draft X4-noise-pilot §11; three freeze-hash placeholders for the lead engineer to fill by Sat 10-17 night | W0 / W0 | sitting 1 (Sun 10-18) | [PACKET](sittings/2026-10-18/PACKET.md) | 10-16 |
 
 **Checkpoint review.** At each checkpoint (§5.1 or §5.2), the plan track:
 - compares the status table with the checkpoint row;

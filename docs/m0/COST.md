@@ -139,6 +139,7 @@ simulation not yet run and a §4.3 change Pierce would sign).
 | One Claude attempt (X1) | ≈ 0.26–0.92 M | — | — | [D from G: X1 DESIGN §12.1's formula, 10–20 turns, 10–15k prefix, 5–20k output] |
 | X1, one kill-carrying family, n = 96: 2,856 attempts (2,016 held-out + 600 card iteration + 240 calibration) | ≈ 0.73–2.63 B | — | — | [D] |
 | X1, one kill-carrying family, n = 160: 3,816 attempts | ≈ 0.97–3.51 B | — | — | [D] |
+| X1, one kill-carrying family, **n = 136**, the planned n_final of [X1-amendment-1](prereg/X1-amendment-1.md) §4 [S]: 3,456 attempts (2,616 held-out + 600 card iteration + 240 calibration) | ≈ 0.90–3.18 B ≈ 13–55 full weekly windows at ≈ 58–71 M tokens per window [D, rough; note on rows 7–8] | — | — | [D] |
 | X1 option 1 (Claude and Qwen3 both carry the kill; Qwen3 writes whole items). Contradicts D0-10c's option text and the X1 rule; for comparison only | ≈ 0.73–2.63 B | ≈ 288–788 | ≈ 0 | [D from G and inference] |
 | X1 option 4b (the X1 rule), Qwen3 templates (D0_BRIEF Q18 = GEN_QWEN3), ≤ 1 held-out item per template | ≈ 0.73–2.63 B, plus 5–20 M for the generator | ≈ 44–378 | ≈ 1–5 | [D from G and inference] |
 | — the same, 2–3 per template | as above | ≈ 30–190 | ≈ 1–5 | [D from G and inference] |
@@ -236,6 +237,8 @@ and Machine h are as in §2.
 | 4 | 2026-10-16 | **Workflow 1** (the week-0 build): 30 agents, the track authors, reviewers and revisers for the D0 brief, PLAN and COST, the X0–X4 records and designs and the core-calculus note. It contains the agents of rows 2 and 3; do not add those rows to it | all | $0 (Claude Code plan; no metered API, D0-10a chat answer) | **10,248,932 subagent tokens** [M, workflow report]; excludes the orchestrating host session (row 1) | not logged (Pierce to fill) | laptop: light, not metered; desktop: not metered (job wrapper not yet live) | M | workflow 1 report, as relayed to the owner track |
 | 5 | 2026-10-16 | **Toolchain setup agent** (X0): LLVM 23.1.3 for Windows and Linux, XED v2026.08.23, CMake, the Hearth source on D:, smoke and probe compiles ([TOOLCHAINS.md](../../experiments/x0-census/TOOLCHAINS.md)) | X0 | $0 (Claude Code plan) | **400,363 tokens** [M] | 0 | desktop: downloads, builds and smoke compiles, not metered (TOOLCHAINS.md lists them) | M | agent report, as relayed to the owner track |
 | 6 | 2026-10-16 | **Build round** (this round: the owner track's integration of the chat answers, the X1 restructure section and OWNER-QUEUE.md, plus whatever other tracks run in the same round) | all | $0 (Claude Code plan) | *to be filled from the round's report* | 0 | owner track: laptop, `calc.py` and a brief-parsing check, each < 1 s [M] | — | to be filled |
+| 7 | 2026-10-16 | **Build round, report** (fills row 6; it does not add to it): 22 agents. Their work most likely landed in commits `1e5ddd6` to `6b14b35`, all made at 19:39 PT [inference: the commit times; the report itself was not seen]: `mithi` v0 and the grammar, CC round 2, the X0 freeze kit, the X2 harness and proofs, X4 service v0 work in progress, and the owner-answer integration. It contains row 6's owner track | all | $0 (Claude Code plan) | **9,871,258 subagent tokens** [M, workflow report, as relayed by the lead engineer]; excludes the orchestrating session. Plan readings, weekly all-models: **22% at 14:40 PT (21:40Z) and 39% at 19:40 PT (02:40Z, 10-17)** [M, lead engineer's usage readings] | not logged (Pierce to fill) | desktop builds and unit tests by the X0, X2 and X4 tracks, not metered (job wrapper not yet live) | M | build-round report, as relayed to the packet track |
+| 8 | 2026-10-16 | **Packet round** (this round: the sitting-1 packet and HOW-TO-SIGN, X1-amendment-1 and the F = 1 power blocks, plus whatever other tracks run in the same round) | all | $0 (Claude Code plan) | *to be filled from the round's report* | 0 | packet track, laptop: power simulation, F = 1 blocks 91.8 s and 230.8 s, reproduction re-run of blocks 1, 12 and 13 41.8 s, quick test 2.4 s [M, script output]; arithmetic and doc checks < 1 s each [M]. Packet reviser: the reviewer's simulator re-checks ≈ 20 s and ≈ 31 s, `--recompute --families 1` at 2,000 and 20,000 replicates 17 s and 121 s, the gate simulation in `calc_packet.py` a few seconds [M]. Desktop: none (thread budget 0). **Plan reading by the packet reviser, 2026-10-17T03:27Z (20:27 PT on 10-16): 5-hour 49% (resets 04:00Z), weekly all-models 43% (resets 2026-10-23T12:00Z, Fri 05:00 PT), weekly Fable 0%; extra usage disabled [M, `get_usage`]** | M / — | `get_usage`, 2026-10-17T03:27Z; tokens to be filled |
 
 **Note on row 2** [D]: the 5-hour window rose 5 points in 12 minutes (18:17Z to 18:29Z). At that rate
 the remaining 92 points would last ≈ 3.7 h, against a reset 4.5 h away (23:00Z). Parallel track agents
@@ -256,6 +259,36 @@ from the first hour of track start-up, so this is still a burst figure, not a pa
 tokens (row 1) are not reported. No plan-window reading from the end of workflow 1 is recorded
 here, so the tokens-to-window conversion that X1's sizing needs (§1.6) is still unmeasured.
 
+**Note on rows 7–8** (packet track, 2026-10-16 evening; revised the same night after one review,
+Claude, same family, independent context, logged in [X1-amendment-1 §11](prereg/X1-amendment-1.md#11-review-log)).
+- **Totals.** The reported totals are now 20,520,553 tokens [D: 10,248,932 + 400,363 + 9,871,258], all
+  on the plan, with metered spend $0. Per build-round agent the mean is 448,694 tokens [D: 9,871,258 / 22].
+- **A first, rough tokens-to-window conversion**, from the readings recorded in this ledger:
+  - From 10% (18:17Z, row 1) to 39% (02:40Z, row 7), 29 points, the reported subagent tokens were
+    20,120,190 (rows 4 and 7), or 20,520,553 with row 5, whose timing is not recorded: ≈ 0.69–0.71 M
+    tokens per point [D, rough].
+  - The build round alone moved it 17 points (22% to 39%) for 9,871,258 tokens: ≈ 0.58 M per point
+    [D, rough].
+  - So a full weekly window ≈ 58–71 M subagent tokens [D, rough].
+  - The first version of this note used "0% to 39% on 10-16" (≈ 0.50 M per point, lead engineer). The
+    window did start 10-16 near 0% (it resets Fri 05:00 PT, below), but 10 points were already used by
+    18:17Z, before nearly all of the subagent tokens (the 5-hour window then read 3%). That figure
+    counted other use as subagent use, and is withdrawn.
+- **Why it is rough, and which way it leans.** It assumes:
+  - that no other use (the host session, Pierce) moved the window. Other use makes the true tokens per
+    point larger, so the figures are pessimistic for X1;
+  - that the build round ran between its two readings;
+  - that "subagent tokens" count the same things as X1's per-attempt estimate (cumulative processed
+    tokens, including cache reads). That is not verified.
+- **Use.** X1-amendment-1 §6 applies it, and finds X1's Claude attempts ≈ 13–55 weekly windows at
+  n = 136 [D, rough]. The X1 smoke run's gate (PLAN S70; X1-amendment-1 §6.2) measures the deciding
+  input.
+- **Pacing signal.** The weekly window resets at 12:00Z, Fri 05:00 PT [M, row 8's reading]; with a
+  7-day window [inference], 10-16 was its first day. On §5's rule (reading > (days elapsed / 7) × 100
+  + 15 points) the signal has fired at every reading since: 22% against a line of 20.8% at 21:40Z, 39%
+  against 23.7% at 02:40Z, and 43% against 24.2% at 03:27Z [D]. §5's action: pace the tracks; extra
+  usage stays disabled (D23). At 43% with 6.4 days left, 57 points remain for the rest of the week [D].
+
 ---
 
 ## 4. Totals against budget
@@ -267,12 +300,12 @@ amount.
 |---|---|---|---|---|---|
 | API $ (metered) | $16–36k [inference] as ROADMAP's estimate; **stated by Pierce: $0** (approved once D0-10a is ratified) | $0 [G] | 0% | 0% | [G] until the first provider export |
 | of which family B authoring and reviews | no Family B under the chat answers; PLAN Q19 moot | $0 [G] | — | — | [G] |
-| Claude Code plan tokens (reported totals) | not a ROADMAP line; X1's Claude attempts estimated at ≈ 0.73–2.63 B at n = 96 (§1.6) | 10,649,295 [D: rows 4 + 5]; row 6 to come | — | — | [D] |
+| Claude Code plan tokens (reported totals) | not a ROADMAP line; X1's Claude attempts estimated at ≈ 0.73–2.63 B at n = 96, ≈ 0.90–3.18 B at the F = 1 planned n = 136 (§1.6) | 20,520,553 [D: rows 4 + 5 + 7]; row 8 to come | — | — | [D] |
 | Daytime desktop hours, local Qwen3 | not a ROADMAP line except the pilot; ≈ 12–378 h for X1 depending on D0_BRIEF Q18 and the template count, plus ≈ 2–38 h for the Q17 roles (§1.6) | 0 [M: no Qwen3 job run yet] | — | — | [M] |
 | Owner hours | ~195 h [inference] | not logged | — | — | — |
 | Quiet-machine hours | ≈ 60–215 h [inference]; reconstruction 60.3–333.4 h [D] | 0 h [M: no quiet window agreed yet] | 0% | 0% | [M] |
 | Desktop daytime hours | X1 pilot 5–10 h [inference]; the rest unbudgeted | not metered (job wrapper due W1) | — | — | — |
-| Subscription, weekly all-models window | not a ROADMAP line | 13% at 18:45Z on day 0 [M] | — | — | [M] |
+| Subscription, weekly all-models window | not a ROADMAP line | 13% at 18:45Z on day 0 [M]; 22% at 14:40 PT and 39% at 19:40 PT on 10-16 [M, lead engineer's readings]; 43% at 20:27 PT (03:27Z), resets Fri 10-23 05:00 PT [M, row 8]; COST §5's weekly signal fired [D] | — | — | [M] |
 
 ---
 

@@ -5,6 +5,13 @@ Status: DRAFT instrument for docs/m0/prereg/X1-writability.md (ROADMAP §3.2, DR
 Revised 2026-10-16 after an independent same-family review (prereg §12): new blocks 9-13, the
 model-family x arm interaction, the CABW "undefined family" rule, template-cluster degrees of
 freedom, observed within-family SDs, and the §6.3 recomputation procedure (--recompute).
+Extended 2026-10-16 (evening) by the packet track for docs/m0/prereg/X1-amendment-1.md (the Owner's
+X1 rule "Claude kills; pass provisional"): blocks 14-19 simulate ONE kill-carrying model family
+(F = 1). With F = 1 the item x model-family terms (tau_if) and the three-way item x arm x family
+term (tau_iaf) are no longer averaged over two families: they become part of the one family's item
+difficulty and item x arm interaction, so the effective item x arm logit SD is
+sqrt(tau_ia^2 + tau_iaf^2) = 1.118 x the scenario value [D]. --recompute takes --families 1 and
+--cap. Blocks 1-13 are unchanged (same keys, same streams).
 
 What it does
 ------------
@@ -73,6 +80,9 @@ Run
   python x1_power_sim.py --out results --quick                # smoke test (few reps)
   python x1_power_sim.py --recompute --vp-ref 0.42 --cabw-ref 0.18 --sd-d-up 0.31 --sd-e-up 0.40          --recompute-out recompute.json                       # prereg §6.3 steps 3-4 (20,000 reps per point);
                                                               # the inputs shown are placeholders, not data
+  python x1_power_sim.py --out results --blocks f1_oc,f1_surface,f1_confirm,f1_templates,f1_attempts,f1_base_rates,f1_calib --merge
+                                                              # the F = 1 blocks 14-19 (X1-amendment-1)
+  python x1_power_sim.py --recompute --families 1 --cap 256 ...   # §6.3 steps 3-4 with one kill-carrying family
 Requires numpy only (run with numpy 2.5.4, Python 3.12.10). The seed is fixed (MASTER_SEED); each
 configuration's stream is derived from the seed and a CRC32 of its key, so adding configurations
 never changes existing results, and a block can be re-run alone with --merge.
@@ -552,13 +562,19 @@ def simulate_chunked(P, targets, m, n, reps, rng, chunk=5000):
 def oc_point(P, scen, n, g, h, reps, block, base=None):
     vr, cr = base if base else (P.vp_ref, P.cabw_ref)
     key = f"{block}|{scen}|n={n}|m={(5, 5)}|g={g:.3f}|h={h:.3f}|{json.dumps({'base': [vr, cr]}, sort_keys=True)}"
+    if P.n_fam != 2:                       # F = 1 (X1-amendment-1); F = 2 keys are unchanged
+        key += f"|F={P.n_fam}"
     S = simulate_chunked(P, [(vr, cr), (vr - g, cr + h)], (5, 5), n, reps, cfg_rng(key))
     return summarise(S, g, h), key
 
 
 # ---------------------------------------------------------------- experiment grid
 BLOCK_ORDER = ["vp", "cabw", "sens", "items_vs_attempts", "amber_b", "templates", "pilot", "bootstrap",
-               "surface", "base_rates", "famxarm", "calib_check", "confirm"]
+               "surface", "base_rates", "famxarm", "calib_check", "confirm",
+               # F = 1 (one kill-carrying family; X1-amendment-1), added 2026-10-16 evening
+               "f1_oc", "f1_surface", "f1_confirm", "f1_templates", "f1_attempts", "f1_base_rates", "f1_calib"]
+F1_BLOCKS = ("f1_oc", "f1_surface", "f1_confirm", "f1_templates", "f1_attempts", "f1_base_rates", "f1_calib")
+F1_CONFIRM_SCENARIOS = ("high", "stress")   # "high" is the planning floor (§6.3); "stress" is reported only
 SIDE_BLOCKS = ("sens", "items_vs_attempts", "amber_b", "templates", "pilot", "base_rates", "famxarm")
 
 
@@ -571,7 +587,8 @@ def run(out_dir, reps, quick, blocks, merge, scen_filter=None):
     def replaced(r):
         if r["block"] not in blocks:
             return False
-        return r["block"] != "surface" or scen_filter is None or r["scenario"] in scen_filter
+        return (r["block"] not in ("surface", "f1_surface") or scen_filter is None
+                or r["scenario"] in scen_filter)
 
     if merge and os.path.exists(path_json):
         with open(path_json, encoding="utf-8") as fh:
@@ -581,6 +598,8 @@ def run(out_dir, reps, quick, blocks, merge, scen_filter=None):
     boot = old.get("bootstrap_check") if old else None
     calib = old.get("calibration_check") if old else None
     confirm = old.get("confirm") if old else None
+    f1_confirm = old.get("f1_confirm") if old else None
+    f1_calib = old.get("f1_calibration_check") if old else None
 
     n_grid = [60, 64, 80, 96, 100, 120]
     reps_side = max(reps // 2, 100)     # sensitivity, ambers, pilot and side blocks use half the replicates
@@ -597,7 +616,7 @@ def run(out_dir, reps, quick, blocks, merge, scen_filter=None):
             nrep=None):
         key = f"{block}|{scen}|n={n}|m={m}|g={true_gap:.3f}|h={true_cgap:.3f}|{json.dumps(extra, sort_keys=True)}"
         if nrep is None:
-            nrep = reps if block in ("vp", "cabw", "surface") else reps_side
+            nrep = reps if block in ("vp", "cabw", "surface", "f1_oc", "f1_surface") else reps_side
         S = simulate(P, targets, m, n, nrep, cfg_rng(key))
         r = dict(block=block, scenario=scen, n=n, m=list(m), true_gap=true_gap, true_cgap=true_cgap,
                  extra=extra or {}, key=key, reps=nrep)
@@ -720,25 +739,97 @@ def run(out_dir, reps, quick, blocks, merge, scen_filter=None):
             confirm = recompute_n(PLAN_SCENARIO, LADDER[PLAN_SCENARIO], (ref["vp_ref"], ref["cabw_ref"]),
                                   n_list=[96, 104, 112, 120] if not quick else [96],
                                   reps=20000 if not quick else 400, stop_at_first=True, label="confirm")
+        # ------------------------------------------------------------ F = 1 (X1-amendment-1)
+        elif block == "f1_oc":
+            # 14. one kill-carrying family: P(K1), P(K2), P(K1 or K2) at true VP gaps 0..25 points (CABW gap 0)
+            f1_n = [60, 96, 128, 160, 192, 224] if not quick else [96]
+            for scen, sd in SCENARIOS.items():
+                P = Params(sd, n_fam=1)
+                for n in f1_n:
+                    for g in vp_gaps:
+                        add("f1_oc", scen, P, [(ref["vp_ref"], ref["cabw_ref"]), (ref["vp_ref"] - g, ref["cabw_ref"])],
+                            (5, 5), n, g, 0.0, {"F": 1})
+        elif block == "f1_surface":
+            # 15. one family: block 9's surface (R-VP, R-CABW, R-JOINT) over a grid that runs past the cap of 160
+            f1_surf_n = {"low": list(range(64, 193, 16)), "mid": list(range(64, 257, 16)),
+                         "high": list(range(64, 257, 16)), "stress": list(range(64, 257, 16))}
+            if quick:
+                f1_surf_n = {s: [96] for s in SCENARIOS}
+            for scen in (scen_filter or list(SCENARIOS)):
+                P = Params(SCENARIOS[scen], n_fam=1)
+                for n in f1_surf_n[scen]:
+                    for g, h in SURFACE_POINTS:
+                        add("f1_surface", scen, P,
+                            [(ref["vp_ref"], ref["cabw_ref"]), (ref["vp_ref"] - g, ref["cabw_ref"] + h)],
+                            (5, 5), n, g, h, {"F": 1})
+        elif block == "f1_confirm":
+            # 16. one family: the §6.3 step-4 rule (20,000 replicates, MC bounds), n = 96, 104, ... upward
+            f1_confirm = {}
+            for scen in (F1_CONFIRM_SCENARIOS if not quick else ("high",)):
+                f1_confirm[scen] = recompute_n(scen, LADDER[scen], (ref["vp_ref"], ref["cabw_ref"]),
+                                               n_list=list(range(96, 321, 8)) if not quick else [96],
+                                               reps=20000 if not quick else 400, stop_at_first=True,
+                                               label="f1_confirm", n_fam=1)
+        elif block == "f1_templates" and not quick:
+            # 17. one family, items generated as parametric variants of shared templates (2-3 per template)
+            for scen in ("mid", "high"):
+                for k, sh in ((2, 0.5), (3, 0.5), (2, 0.8)):
+                    P = Params(SCENARIOS[scen], n_fam=1, k_tmpl=k, s_tmpl=sh)
+                    for n in (96, 128, 160, 192, 224):
+                        for g, h in SURFACE_POINTS:
+                            add("f1_templates", scen, P,
+                                [(ref["vp_ref"], ref["cabw_ref"]), (ref["vp_ref"] - g, ref["cabw_ref"] + h)],
+                                (5, 5), n, g, h, {"F": 1, "k_tmpl": k, "s_tmpl": sh})
+        elif block == "f1_attempts" and not quick:
+            # 18. one family: attempts per primary cell m = 3, 5 (ROADMAP §10) or 10, high scenario
+            P = Params(SCENARIOS["high"], n_fam=1)
+            for m in (3, 5, 10):
+                for n in (96, 128, 160, 192):
+                    for g, h in SURFACE_POINTS:
+                        add("f1_attempts", "high", P,
+                            [(ref["vp_ref"], ref["cabw_ref"]), (ref["vp_ref"] - g, ref["cabw_ref"] + h)],
+                            (m, m), n, g, h, {"F": 1, "m": m})
+        elif block == "f1_base_rates" and not quick:
+            # 19a. one family: base-rate sensitivity (Rust VP@1 0.30; Rust CABW 0.35), high scenario
+            for name, over in (("vp_ref_0.30", dict(vp_ref=0.30)), ("cabw_ref_0.35", dict(cabw_ref=0.35))):
+                P = Params(SCENARIOS["high"], n_fam=1, **over)
+                vr, cr = P.vp_ref, P.cabw_ref
+                for n in (128, 160, 192, 224, 256):
+                    for g, h in SURFACE_POINTS:
+                        add("f1_base_rates", "high", P, [(vr, cr), (vr - g, cr + h)], (5, 5), n, g, h,
+                            {"F": 1, "base": name})
+        elif block == "f1_calib" and not quick:
+            # 19b. one family: the §6.3 calibration procedure (24 calibration items, m = 5: 240 attempts)
+            f1_calib = calibration_check(n_cal=24, reps=4000, n_fam=1)
         else:
             continue
-        bname = block if not (block == "surface" and scen_filter) else f"surface[{','.join(scen_filter)}]"
+        bname = (block if not (block in ("surface", "f1_surface") and scen_filter)
+                 else f"{block}[{','.join(scen_filter)}]")
         block_runs[bname] = dict(elapsed_s=round(time.perf_counter() - t0, 1),
                                  run_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
-                                 reps=(20000 if block == "confirm" else
-                                       4000 if block == "calib_check" else
+                                 reps=(20000 if block in ("confirm", "f1_confirm") else
+                                       4000 if block in ("calib_check", "f1_calib") else
                                        200 if block == "bootstrap" else
-                                       reps if block in ("vp", "cabw", "surface") else reps_side))
+                                       reps if block in ("vp", "cabw", "surface", "f1_oc", "f1_surface")
+                                       else reps_side))
 
     rows.sort(key=lambda r: BLOCK_ORDER.index(r["block"]) if r["block"] in BLOCK_ORDER else 99)
     recs = recommend(rows, n_grid)
     recs_surface = recommend_surface(rows)
+    f1_reqs = dict(
+        f1_oc=requirements_vp_only(rows, "f1_oc"),
+        f1_surface=requirements_grouped(rows, "f1_surface"),
+        f1_templates=requirements_grouped(rows, "f1_templates", ("k_tmpl", "s_tmpl")),
+        f1_attempts=requirements_grouped(rows, "f1_attempts", ("m",)),
+        f1_base_rates=requirements_grouped(rows, "f1_base_rates", ("base",)),
+    )
     elapsed = time.perf_counter() - t_all
     meta = dict(
         script="experiments/x1-harness/power/x1_power_sim.py", master_seed=MASTER_SEED, reps=reps,
         quick=quick, numpy=np.__version__, python=sys.version.split()[0], platform=platform.platform(),
-        machine_note=("shared laptop, run while the Owner's benchmark was also running; blocks may be run "
-                      "separately (--blocks/--merge) to keep each invocation under about one CPU-minute; "
+        machine_note=("shared laptop; blocks 1-13 were run while the Owner's benchmark was also running, the "
+                      "F = 1 blocks 14-19 after it had ended (19:00 PT, 2026-10-16); blocks may be run "
+                      "separately (--blocks/--merge) to keep each invocation short; "
                       "runtimes are indicative only"),
         elapsed_s_last_invocation=round(elapsed, 1), block_runs=block_runs, common_params=COMMON,
         scenarios_tau_ia=SCENARIOS, ladder_tau_ia=LADDER, plan_scenario=PLAN_SCENARIO,
@@ -748,9 +839,12 @@ def run(out_dir, reps, quick, blocks, merge, scen_filter=None):
     os.makedirs(out_dir, exist_ok=True)
     with open(path_json, "w", encoding="utf-8") as fh:
         json.dump(dict(meta=meta, rows=rows, recommendations=recs, recommendations_surface=recs_surface,
-                       bootstrap_check=boot, calibration_check=calib, confirm=confirm), fh, indent=1)
+                       bootstrap_check=boot, calibration_check=calib, confirm=confirm,
+                       f1_requirements=f1_reqs, f1_confirm=f1_confirm, f1_calibration_check=f1_calib),
+                  fh, indent=1)
     with open(os.path.join(out_dir, "x1_power_tables.md"), "w", encoding="utf-8") as fh:
         fh.write(render(meta, rows, recs, recs_surface, boot, calib, confirm))
+        fh.write(render_f1(rows, f1_reqs, f1_confirm, f1_calib))
     print(f"done: {len(rows)} rows ({', '.join(blocks)}), {elapsed:.1f} s")
 
 
@@ -777,17 +871,18 @@ def bootstrap_check(P, n, reps, B, rng):
                 mean_bootstrap_se=float(boot_se.mean()), empirical_sd_of_gap=float(S["gap"].std(ddof=1)))
 
 
-def ladder_reference(base, reps=300, n=480):
-    """Observed within-family SDs of d_i and e_i (m = 5, both families) per ladder level, at base rates.
+def ladder_reference(base, reps=300, n=480, n_fam=2):
+    """Observed within-family SDs of d_i and e_i (m = 5, n_fam families) per ladder level, at base rates.
 
     These are what the calibration bounds are matched against (prereg §6.3 step 3). Evaluated at a
     VP gap of 10 points and a CABW gap of 0 [G], with many items so that they are population values.
+    n_fam = 1 for one kill-carrying family (X1-amendment-1); the calibration run then has one family too.
     """
     vr, cr = base
     out = {}
     for name, sd in LADDER.items():
-        P = Params(sd, vp_ref=vr, cabw_ref=cr)
-        key = f"ladder_ref|{name}|base={vr:.4f},{cr:.4f}"
+        P = Params(sd, vp_ref=vr, cabw_ref=cr, n_fam=n_fam)
+        key = f"ladder_ref|{name}|base={vr:.4f},{cr:.4f}" + ("" if n_fam == 2 else f"|F={n_fam}")
         S = simulate(P, [(vr, cr), (vr - 0.10, cr)], (5, 5), n, reps, cfg_rng(key))
         out[name] = dict(tau_ia=sd, sd_d=S["sd_d_within_obs"], sd_e=S["sd_e_within_obs"],
                          sigma_ta_within=float(S["sig_ta_within"]))
@@ -804,8 +899,9 @@ def select_scenario(ref, sd_d_up, sd_e_up, floor=PLAN_SCENARIO):
     return None     # beyond the ladder: custom parameters fitted to the bounds are needed (prereg §6.3 step 3)
 
 
-def calibration_check(n_cal, reps):
-    """Block 12: do the step-2 upper-80% bounds from n_cal calibration items reach the true dispersion?
+def calibration_check(n_cal, reps, n_fam=2):
+    """Block 12 (and 19b with n_fam = 1): do the step-2 upper-80% bounds from n_cal calibration items reach
+    the true dispersion?
 
     For each true scenario, simulate the calibration run (Rust and Mithril, m = 5, both families) and
     compute the pooled within-family SDs s_d, s_e (df = n_cal - 8) and their upper-80% chi-square
@@ -814,15 +910,15 @@ def calibration_check(n_cal, reps):
     calibration set exists to avoid it.
     """
     base = (COMMON["vp_ref"], COMMON["cabw_ref"])
-    ref = ladder_reference(base)
+    ref = ladder_reference(base, n_fam=n_fam)
     df = n_cal - N_TF
     fac = math.sqrt(df / chi2_ppf(0.20, df))
     names = list(LADDER)
     out = dict(n_cal=n_cal, df=df, chi2_20=chi2_ppf(0.20, df), factor=fac, reps=reps, base=list(base),
-               ladder_reference=ref, scenarios={})
+               n_fam=n_fam, ladder_reference=ref, scenarios={})
     for scen in ("mid", "high", "stress"):
-        P = Params(SCENARIOS[scen])
-        key = f"calib_check|{scen}|n={n_cal}"
+        P = Params(SCENARIOS[scen], n_fam=n_fam)
+        key = f"calib_check|{scen}|n={n_cal}" + ("" if n_fam == 2 else f"|F={n_fam}")
         S = simulate(P, [base, (base[0] - 0.10, base[1])], (5, 5), n_cal, reps, cfg_rng(key), return_items=True)
         d_up = S["sd_d_obs_rep"] * fac
         e_up = S["sd_e_obs_rep"] * fac
@@ -838,10 +934,14 @@ def calibration_check(n_cal, reps):
     return out
 
 
-def recompute_n(scen_name, tau_ia, base, n_list, reps, stop_at_first=True, label="recompute"):
-    """Prereg §6.3 step 4: smallest n in n_list meeting R-VP, R-CABW and R-JOINT with Monte Carlo bounds."""
-    P = Params(tau_ia, vp_ref=base[0], cabw_ref=base[1])
-    res = dict(scenario=scen_name, tau_ia=tau_ia, base=list(base), reps=reps, points={}, n_final=None)
+def recompute_n(scen_name, tau_ia, base, n_list, reps, stop_at_first=True, label="recompute", n_fam=2):
+    """Prereg §6.3 step 4: smallest n in n_list meeting R-VP, R-CABW and R-JOINT with Monte Carlo bounds.
+
+    n_fam = 1 for one kill-carrying family (X1-amendment-1); the default 2 reproduces block 13.
+    """
+    P = Params(tau_ia, vp_ref=base[0], cabw_ref=base[1], n_fam=n_fam)
+    res = dict(scenario=scen_name, tau_ia=tau_ia, base=list(base), reps=reps, n_fam=n_fam, points={},
+               n_final=None)
     for n in n_list:
         pts = {}
         for g, h in SURFACE_POINTS:
@@ -935,6 +1035,207 @@ def recommend_surface(rows):
                 min_mc = n
         out[scen] = dict(per_n=per_n, min_n_point_rule=min_pt, min_n_mc_rule_at_these_reps=min_mc)
     return out
+
+
+# ---------------------------------------------------------------- F = 1 summaries (X1-amendment-1)
+def requirements_grouped(rows, block, group_keys=()):
+    """Per (scenario, extra[group_keys], m, n) of `block`: R-VP, R-CABW and R-JOINT on the point
+    estimate and with the Monte Carlo 95% bounds at the block's replicate count, plus the decisive
+    probabilities. Groups missing a surface point are skipped. Rows keep their generation order."""
+    groups = {}
+    for r in rows:
+        if r["block"] != block:
+            continue
+        gk = (r["scenario"],) + tuple(r["extra"].get(k) for k in group_keys) + (tuple(r["m"]), r["n"])
+        groups.setdefault(gk, {})[(round(r["true_gap"], 3), round(r["true_cgap"], 3))] = r
+    out = []
+    for gk, sel in groups.items():
+        if any((round(g, 3), round(h, 3)) not in sel for g, h in SURFACE_POINTS):
+            continue
+        reps = next(iter(sel.values()))["reps"]
+
+        def get(g, h, col, sel=sel):
+            return sel[(round(g, 3), round(h, 3))][col]
+
+        d = dict(scenario=gk[0])
+        d.update({k: v for k, v in zip(group_keys, gk[1:-2])})
+        d.update(m=list(gk[-2]), n=gk[-1], reps=reps,
+                 point_rule=check_requirements(get, reps, mc=False),
+                 mc_rule=check_requirements(get, reps, mc=True),
+                 max_p_k2_null=max(get(g, 0.0, "p_kill_cabw") for g in SURFACE_G),
+                 min_p_k2_alt=min(get(g, 0.10, "p_kill_cabw") for g in SURFACE_G),
+                 p_any_joint_null=get(0.05, 0.0, "p_kill_any"),
+                 p_k1_5=get(0.05, 0.0, "p_kill_vp"), p_k1_25=get(0.25, 0.0, "p_kill_vp"),
+                 sd_gap_at_25=get(0.25, 0.0, "sd_gap"), sd_cgap_at_15_10=get(0.15, 0.10, "sd_cgap"))
+        out.append(d)
+    return out
+
+
+def min_n_by_group(reqs, group_keys=()):
+    """Smallest n per (scenario, group) meeting every requirement: point rule, and MC rule at the block's reps."""
+    out = {}
+    for d in reqs:
+        k = " / ".join([d["scenario"]] + [f"{g}={d[g]}" for g in group_keys])
+        e = out.setdefault(k, dict(point=None, mc=None, n_max_simulated=0))
+        e["n_max_simulated"] = max(e["n_max_simulated"], d["n"])
+        if d["point_rule"]["all"] and (e["point"] is None or d["n"] < e["point"]):
+            e["point"] = d["n"]
+        if d["mc_rule"]["all"] and (e["mc"] is None or d["n"] < e["mc"]):
+            e["mc"] = d["n"]
+    return out
+
+
+def requirements_vp_only(rows, block):
+    """ROADMAP §3.2's own requirement (R-VP only): P(K1 | gap 5) <= 0.10 and P(K1 | gap 25) >= 0.90 (CABW gap 0)."""
+    sel = {}
+    for r in rows:
+        if r["block"] == block and abs(r["true_cgap"]) < 1e-9:
+            sel.setdefault((r["scenario"], r["n"]), {})[round(r["true_gap"], 3)] = r
+    out = []
+    for (scen, n), by_g in sel.items():
+        if 0.05 not in by_g or 0.25 not in by_g:
+            continue
+        reps = by_g[0.05]["reps"]
+        p5, p25 = by_g[0.05]["p_kill_vp"], by_g[0.25]["p_kill_vp"]
+        out.append(dict(scenario=scen, n=n, reps=reps, p_k1_5=p5, p_k1_25=p25,
+                        r_vp_point=p5 <= 0.10 and p25 >= 0.90,
+                        r_vp_mc=mc_bounds(p5, reps)[1] <= 0.10 and mc_bounds(p25, reps)[0] >= 0.90))
+    return out
+
+
+def render_f1(rows, reqs, f1_confirm, f1_calib):
+    """Markdown for blocks 14-19 (F = 1, one kill-carrying model family; X1-amendment-1)."""
+    if not any(r["block"] in F1_BLOCKS for r in rows) and not f1_confirm and not f1_calib:
+        return ""
+    L = ["## 14-19. One kill-carrying model family (F = 1; new 2026-10-16, evening; X1-amendment-1)\n",
+         "Every number is **[S]** under the **[G]** inputs above, with one model family instead of two: the item x "
+         "model-family and three-way terms are no longer averaged over families, so the effective item x arm "
+         "logit SD is 1.118 x the scenario value [D]. Base rates 0.50 / 0.20 unless stated; m = 5 attempts per "
+         "primary cell unless stated. Kill rules as above (point estimates). 'pt' = the point estimates meet the "
+         "requirement; 'mc' = the Monte Carlo 95% bounds meet it at the block's replicate count.\n"]
+    oc = [r for r in rows if r["block"] == "f1_oc"]
+    if oc:
+        L.append(f"### 14. P(kill) by true VP@1 gap, CABW gap 0 ({oc[0]['reps']:,} replicates per point)\n")
+        L.append("| scenario | n | P(K1) at gap 0 / 5 / 10 / 15 / 20 / 25 | P(K1 or K2) at gap 0 / 5 / 10 / 15 / 20 / 25 | "
+                 "SD of gap est. at 10 (pts) | SD of CABW gap est. at 10 (pts) | ROADMAP R-VP pt / mc |")
+        L.append("|---|---|---|---|---|---|---|")
+        vpo = {(d["scenario"], d["n"]): d for d in reqs.get("f1_oc", [])}
+        keys = []
+        for r in oc:
+            if (r["scenario"], r["n"]) not in keys:
+                keys.append((r["scenario"], r["n"]))
+        for scen, n in keys:
+            by_g = {round(r["true_gap"], 3): r for r in oc if r["scenario"] == scen and r["n"] == n}
+            gs = sorted(by_g)
+            k1 = " / ".join(fmt(by_g[g]["p_kill_vp"]) for g in gs)
+            ka = " / ".join(fmt(by_g[g]["p_kill_any"]) for g in gs)
+            r10 = by_g.get(0.1)
+            sdg = fmt(100 * r10["sd_gap"], 1) if r10 else "-"
+            sdc = fmt(100 * r10["sd_cgap"], 1) if r10 and r10.get("sd_cgap") is not None else "-"
+            v = vpo.get((scen, n))
+            rv = f"{'yes' if v['r_vp_point'] else 'no'} / {'yes' if v['r_vp_mc'] else 'no'}" if v else "-"
+            L.append(f"| {scen} | {n} | {k1} | {ka} | {sdg} | {sdc} | {rv} |")
+        L.append("")
+        L.append("ROADMAP §3.2's own requirement (R-VP: P(K1) <= 0.10 at a true 5-point gap and >= 0.90 at 25), "
+                 "smallest n in this grid meeting it on the point estimate / with MC bounds:\n")
+        L.append("| scenario | min n (pt) | min n (mc) |")
+        L.append("|---|---|---|")
+        for scen in SCENARIOS:
+            ds = [d for d in reqs.get("f1_oc", []) if d["scenario"] == scen]
+            if not ds:
+                continue
+            pt = min([d["n"] for d in ds if d["r_vp_point"]], default=None)
+            mc = min([d["n"] for d in ds if d["r_vp_mc"]], default=None)
+            L.append(f"| {scen} | {fmt(pt)} | {fmt(mc)} |")
+        L.append("")
+
+    def req_table(title, block, group_keys, note):
+        ds = reqs.get(block, [])
+        if not ds:
+            return
+        L.append(f"### {title} ({ds[0]['reps']:,} replicates per point)\n")
+        if note:
+            L.append(note + "\n")
+        hdr = ["scenario"] + list(group_keys) + ["n", "max P(K2 | h=0) over g", "min P(K2 | h=10) over g",
+                                                   "P(K1 or K2) at (5,0)", "P(K1) at (5,0) / (25,0)",
+                                                   "SD CABW gap at (15,10) (pts)", "pt", "mc"]
+        L.append("| " + " | ".join(hdr) + " |")
+        L.append("|" + "---|" * len(hdr))
+        for d in ds:
+            vals = [d["scenario"]] + [str(d[k]) for k in group_keys] + [
+                str(d["n"]), fmt(d["max_p_k2_null"]), fmt(d["min_p_k2_alt"]), fmt(d["p_any_joint_null"]),
+                f"{fmt(d['p_k1_5'])} / {fmt(d['p_k1_25'])}",
+                fmt(100 * d["sd_cgap_at_15_10"], 1) if d["sd_cgap_at_15_10"] is not None else "-",
+                "yes" if d["point_rule"]["all"] else "no", "yes" if d["mc_rule"]["all"] else "no"]
+            L.append("| " + " | ".join(vals) + " |")
+        L.append("")
+        mins = min_n_by_group(ds, group_keys)
+        L.append("Smallest n meeting R-VP, R-CABW and R-JOINT (blank = none up to the largest n simulated):\n")
+        L.append("| group | point rule | MC rule at this block's replicates | largest n simulated |")
+        L.append("|---|---|---|---|")
+        for k, v in mins.items():
+            L.append(f"| {k} | {fmt(v['point'])} | {fmt(v['mc'])} | {v['n_max_simulated']} |")
+        L.append("")
+
+    req_table("15. OC surface with one family", "f1_surface", (),
+              "R-CABW is checked at every g in {0, 5, 10, 15}; R-JOINT at (5, 0).")
+    if f1_confirm:
+        for scen, c in f1_confirm.items():
+            L.append(f"### 16. Step-4 rule with one family: scenario {scen} ({c['reps']:,} replicates per point)\n")
+            L.append(f"Item x arm logit SD {c['tau_ia']}, base rates {c['base'][0]:.2f} / {c['base'][1]:.2f}. "
+                     "A requirement is met when the MC 95% upper bound of P(kill | null) <= 0.10 and the MC 95% "
+                     "lower bound of P(kill | alt) >= 0.90. Only the last two n tried are tabulated in full. "
+                     f"**n_final at these inputs: {fmt(c['n_final'])}.**\n")
+            ns = list(c["points"])
+            L.append("| n | R-VP | R-CABW | R-JOINT | max P(K2 | h=0) over g | min P(K2 | h=10) over g | "
+                     "P(K1 or K2) at (5,0) | P(K1) at (25,0) |")
+            L.append("|---|---|---|---|---|---|---|---|")
+            for n in ns:
+                v = c["points"][n]
+                p = v["points"]
+                mx0 = max(p[f"{g:.2f},0.00"]["p_kill_cabw"] for g in SURFACE_G)
+                mn10 = min(p[f"{g:.2f},0.10"]["p_kill_cabw"] for g in SURFACE_G)
+                L.append(f"| {n} | {v['mc_rule']['r_vp']} | {v['mc_rule']['r_cabw']} | {v['mc_rule']['r_joint']} | "
+                         f"{fmt(mx0, 4)} | {fmt(mn10, 4)} | {fmt(p['0.05,0.00']['p_kill_any'], 4)} | "
+                         f"{fmt(p['0.25,0.00']['p_kill_vp'], 4)} |")
+            L.append("")
+            for n in ns[-2:]:
+                L.append(f"Full points at n = {n}:\n")
+                L.append("| point (g, h) | P(K1) | P(K2) | P(K1 or K2) | SD CABW gap (pts) |")
+                L.append("|---|---|---|---|---|")
+                for k, p in c["points"][n]["points"].items():
+                    L.append(f"| ({k}) | {fmt(p['p_kill_vp'], 4)} | {fmt(p['p_kill_cabw'], 4)} | "
+                             f"{fmt(p['p_kill_any'], 4)} | "
+                             f"{fmt(100 * p['sd_cgap'], 2) if p['sd_cgap'] is not None else '-'} |")
+                L.append("")
+    req_table("17. One family, templates shared by 2-3 held-out items", "f1_templates",
+              ("k_tmpl", "s_tmpl"),
+              "k = held-out items per template; s = share of the item-level variance at the template level. "
+              "Kill decisions use point estimates, so template clustering changes the OC only through the "
+              "estimator's variance.")
+    req_table("18. One family, attempts per primary cell (high scenario)", "f1_attempts",
+              ("m",), "m = attempts per (item, arm) cell in both primary arms; ROADMAP §10 plans m = 5.")
+    req_table("19a. One family, base-rate sensitivity (high scenario)", "f1_base_rates",
+              ("base",), "")
+    if f1_calib:
+        c = f1_calib
+        L.append("### 19b. The §6.3 calibration procedure with one family\n")
+        L.append(f"{c['n_cal']} calibration items, m = 5, one family ({c['n_cal'] * 5 * 2} attempts [D]); "
+                 f"{c['reps']} replicates; bound factor {c['factor']:.3f} (df = {c['df']}).\n")
+        L.append("| level | item x arm logit SD | SD of d_i (pts) | SD of e_i (pts) | sigma_ta within |")
+        L.append("|---|---|---|---|---|")
+        for name, v in c["ladder_reference"].items():
+            L.append(f"| {name} | {v['tau_ia']} | {100 * v['sd_d']:.1f} | {100 * v['sd_e']:.1f} | "
+                     f"{v['sigma_ta_within']:.3f} |")
+        L.append("")
+        L.append("| true scenario | P(d bound >= true) | P(e bound >= true) | P(selected level >= true) | same, with the "
+                 "floor at high |")
+        L.append("|---|---|---|---|---|")
+        for scen, v in c["scenarios"].items():
+            L.append(f"| {scen} | {v['p_d_bound_covers']:.3f} | {v['p_e_bound_covers']:.3f} | "
+                     f"{v['p_selected_at_least_true']:.3f} | {v['p_selected_at_least_true_with_floor_high']:.3f} |")
+        L.append("")
+    return "\n".join(L) + "\n"
 
 
 def fmt(x, d=3):
@@ -1169,21 +1470,27 @@ def main():
     ap.add_argument("--sd-e-up", type=float, help="upper-80%% bound of the within-family SD of e_i (fraction)")
     ap.add_argument("--recompute-reps", type=int, default=20000)
     ap.add_argument("--recompute-out", default=None, help="write the recomputation JSON here (UTF-8) instead of stdout")
+    ap.add_argument("--families", type=int, default=2, choices=(1, 2),
+                    help="--recompute only: kill-carrying model families (1 under X1-amendment-1)")
+    ap.add_argument("--cap", type=int, default=160,
+                    help="--recompute only: largest n tried (multiple of 8; the record's budget cap, 160 by default)")
     a = ap.parse_args()
     if a.recompute:
         out = {}
         for label, base in (("calibration", (a.vp_ref, a.cabw_ref)), ("base_case", (COMMON["vp_ref"], COMMON["cabw_ref"]))):
-            ref = ladder_reference(base)
+            ref = ladder_reference(base, n_fam=a.families)
             scen = select_scenario(ref, a.sd_d_up, a.sd_e_up)
             if scen is None:
                 out[label] = dict(base=list(base), scenario=None, note="bounds beyond the ladder: fit custom parameters")
                 continue
-            out[label] = recompute_n(scen, LADDER[scen], base, n_list=list(range(96, 161, 8)),
-                                     reps=a.recompute_reps, stop_at_first=True, label=f"recompute_{label}")
+            out[label] = recompute_n(scen, LADDER[scen], base, n_list=list(range(96, a.cap + 1, 8)),
+                                     reps=a.recompute_reps, stop_at_first=True, label=f"recompute_{label}",
+                                     n_fam=a.families)
         finals = [v.get("n_final") for v in out.values()]
         out["n_final"] = None if any(f is None for f in finals) else max(finals)
         out["inputs"] = dict(vp_ref=a.vp_ref, cabw_ref=a.cabw_ref, sd_d_up=a.sd_d_up, sd_e_up=a.sd_e_up,
-                             reps=a.recompute_reps, floor=PLAN_SCENARIO, n_list="96..160 step 8")
+                             reps=a.recompute_reps, floor=PLAN_SCENARIO, n_list=f"96..{a.cap} step 8",
+                             families=a.families)
         if a.recompute_out:
             with open(a.recompute_out, "w", encoding="utf-8") as fh:
                 json.dump(out, fh, indent=1)
