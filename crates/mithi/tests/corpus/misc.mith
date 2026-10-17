@@ -1,0 +1,181 @@
+// Ordinary Rust-shaped code the X1 subset should accept with Rust's meaning: traits with static
+// dispatch, generics with bounds, closures capturing by reference and by mutable reference,
+// iterator chains, Option/Result and `?`, matches!, while let, labelled loops, shadowing, tuple
+// destructuring, struct update, derives, Default, sorting with a key.
+trait Shape {
+    fn area(&self) -> u64;
+    fn name(&self) -> u32 { 0 }
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Default)]
+struct Rect { w: u64, h: u64 }
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+struct Square(u64);
+
+impl Shape for Rect {
+    fn area(&self) -> u64 { self.w * self.h }
+}
+
+impl Shape for Square {
+    fn area(&self) -> u64 { self.0 * self.0 }
+    fn name(&self) -> u32 { 4 }
+}
+
+fn total_area<S: Shape>(xs: &[S]) -> u64 {
+    let mut t = 0u64;
+    for x in xs {
+        t += x.area();
+    }
+    t
+}
+
+fn apply_twice<F: Fn(u32) -> u32>(f: F, x: u32) -> u32 {
+    f(f(x))
+}
+
+fn count_where<F: FnMut(u32) -> bool>(xs: &[u32], mut keep: F) -> usize {
+    let mut n = 0;
+    for x in xs {
+        if keep(*x) {
+            n += 1;
+        }
+    }
+    n
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+enum Op { Push(u32), Pop, Clear }
+
+fn run_ops(ops: &[Op]) -> Result<Vec<u32>, u32> uses { alloc(Global) } {
+    let mut st: Vec<u32> = Vec::new();
+    for (i, op) in ops.iter().enumerate() {
+        match op {
+            Op::Push(v) => st.push(*v),
+            Op::Pop => {
+                if st.pop().is_none() {
+                    return Err(i as u32);
+                }
+            }
+            Op::Clear => st.clear(),
+        }
+    }
+    Ok(st)
+}
+
+fn first_even(xs: &[u32]) -> Option<u32> {
+    let i = xs.iter().position(|x| *x % 2 == 0)?;
+    Some(xs[i])
+}
+
+fn parse_digit(c: u8) -> Result<u32, u32> {
+    if c >= 48 && c <= 57 { Ok((c - 48) as u32) } else { Err(c as u32) }
+}
+
+fn parse_number(s: &[u8]) -> Result<u32, u32> {
+    let mut v: u32 = 0;
+    for c in s {
+        let d = parse_digit(*c)?;
+        v = v.checked_mul(10).ok_or(0u32)?;
+        v = v.checked_add(d).ok_or(0u32)?;
+    }
+    Ok(v)
+}
+
+#[test]
+fn traits_and_generics() {
+    let rs = [Rect { w: 2, h: 3 }, Rect { w: 1, h: 1 }];
+    assert_eq!(total_area(&rs), 7);
+    let sq = [Square(3)];
+    assert_eq!(total_area(&sq), 9);
+    assert_eq!(sq[0].name(), 4);
+    assert_eq!(rs[0].name(), 0);
+    let d = Rect::default();
+    assert_eq!(d, Rect { w: 0, h: 0 });
+    let r2 = Rect { w: 5, ..rs[0] };
+    assert_eq!(r2.h, 3);
+}
+
+#[test]
+fn closures() {
+    let k = 3u32;
+    assert_eq!(apply_twice(|x| x + k, 1), 7);
+    let mut seen = 0u32;
+    let n = count_where(&[1u32, 2, 3, 4, 5], |x| {
+        seen += 1;
+        x > 2
+    });
+    assert_eq!(n, 3);
+    assert_eq!(seen, 5);
+    let v = vec![5u32, 1, 4];
+    let mut pairs: Vec<(u32, usize)> = v.iter().enumerate().map(|(i, x)| (*x, i)).collect();
+    pairs.sort_by_key(|p| p.0);
+    assert_eq!(pairs[0].1, 1);
+    let total: u32 = v.iter().copied().filter(|x| *x > 1).sum();
+    assert_eq!(total, 9);
+    let mx = v.iter().max().unwrap();
+    assert_eq!(*mx, 5);
+}
+
+#[test]
+fn results_and_options() {
+    assert_eq!(run_ops(&[Op::Push(1), Op::Push(2), Op::Pop]), Ok(vec![1u32]));
+    assert_eq!(run_ops(&[Op::Pop]), Err(0));
+    assert_eq!(first_even(&[3u32, 5, 8, 10]), Some(8));
+    assert_eq!(first_even(&[3u32]), None);
+    assert_eq!(parse_number(&[49u8, 50, 51]), Ok(123));
+    assert_eq!(parse_number(&[49u8, 120]), Err(120));
+    assert!(matches!(run_ops(&[Op::Clear]), Ok(_)));
+}
+
+#[test]
+fn control_flow() {
+    let mut stack = vec![1u32, 2, 3];
+    let mut sum = 0;
+    while let Some(x) = stack.pop() {
+        sum += x;
+    }
+    assert_eq!(sum, 6);
+    let mut found = (0usize, 0usize);
+    'outer: for i in 0..4usize {
+        for j in 0..4usize {
+            if i * j == 6 {
+                found = (i, j);
+                break 'outer;
+            }
+        }
+    }
+    let (a, b) = found;
+    assert_eq!(a, 2);
+    assert_eq!(b, 3);
+    let x = 5;
+    let x = x * 2;
+    let label = if x > 5 { "big" } else { "small" };
+    assert_eq!(label, "big");
+    let c = loop {
+        break 42u32;
+    };
+    assert_eq!(c, 42);
+}
+
+#[test]
+fn integers_and_floats_have_rust_meaning() {
+    let a: i32 = -7;
+    assert_eq!(a / 2, -3);
+    assert_eq!(a % 2, -1);
+    assert_eq!((300i32) as u8, 44);
+    assert_eq!((-1i32) as u32, 4294967295);
+    assert_eq!((2.9f32) as i32, 2);
+    assert_eq!((-2.9f32) as i32, -2);
+    assert_eq!(f32::NAN as i32, 0);
+    assert_eq!((1.0e20f32) as i32, 2147483647);
+    assert_eq!((2.5f32).round(), 3.0);
+    assert_eq!((2.5f32).round_ties_even(), 2.0);
+    assert_eq!(250u8.wrapping_add(10), 4);
+    assert_eq!(250u8.checked_add(10), None);
+    assert_eq!(250u8.saturating_add(10), 255);
+    assert_eq!((0.1f32 + 0.2f32).to_bits(), 0x3e99999a);
+    assert_eq!(f32::from_bits(0x7fc00000).is_nan(), true);
+    assert_eq!(canon::nan(0.0f32 / 0.0f32).to_bits(), 0x7fc00000);
+    assert_eq!((1u32 << 31), 2147483648);
+}

@@ -1,0 +1,102 @@
+// The canonical prelude: a transcription of docs/m0/core-calculus/derivations.md section P into
+// the surface mithi parses. mithi is judged on "prelude plus snippet" (note section 9, Q5).
+//
+// Transcription rules:
+// - The std and std_platform parts of section P are in mithi's own std (crates/mithi/std).
+// - A signature in section P is a signature here (no body). Where section P states a body
+//   (IndexMut::index_mut's "assumed body") or a derived snippet gives one (Matrix::row, D-D02),
+//   the body is written out, so that kcall and E-FOOTPRINT are decided by mithi, not assumed.
+// - Accessors such as Matrix::rows get the one-line body their `ensures` fixes, so that snippets
+//   can run under mithi; each `ensures` is then checked by mithi like any other.
+// - `…` keeps section P's "further fields elided" meaning: such a struct is partial and cannot be
+//   constructed.
+// - Additions beyond section P are marked [mithi addition] with the reason.
+// - A snippet that defines an item with the same path replaces the prelude's item (D-D05 Lease,
+//   D-D08 ActQ8, D-D02 Matrix::row).
+
+// ---------- Hearth-shaped declarations the snippets assume ----------
+struct ActQ8 { d: f32, sum: i32, #[range(-127..=127)] q: [i8; 64] }          // 01 §9.1; hx_act_q8
+invariant ActQ8 { sum == q.iter().map(|v| *v as i32).sum::<i32>() }          // 01 §9.1
+
+// Buf<B>: an owned std buffer (note OP-1)
+struct Matrix<B> { rows: usize, blocks_per_row: usize, blocks: Buf<B> }
+invariant Matrix { blocks.len() == rows * blocks_per_row }                   // note F-3
+
+impl<B> Matrix<B> {
+    pub fn rows(&self) -> usize            ensures result == self.rows { self.rows }
+    pub fn blocks_per_row(&self) -> usize  ensures result == self.blocks_per_row { self.blocks_per_row }
+    pub fn cols(&self) -> usize            ensures result == self.blocks_per_row { self.blocks_per_row }   // D-D11
+    // as 01 §5.3: derivation D-D02 (the body is D-D02's)
+    pub fn row(&self, r: usize) -> &[B]
+        requires r < self.rows()
+        ensures result.len() == self.blocks_per_row()
+    {
+        &self.blocks[r * self.blocks_per_row .. (r + 1) * self.blocks_per_row]
+    }
+}
+
+impl std::ops::IndexMut<usize> for Matrix<f32> {
+    type Output = [f32];
+    // a declared footprint (note §5.6, F-25), discharged statically at this definition (F-45)
+    fn index_mut(&mut self, t: usize) -> &mut [f32]
+        requires t < self.rows
+        ensures footprint(result) == self.blocks[t * self.blocks_per_row .. (t + 1) * self.blocks_per_row]
+    {
+        // section P's assumed body
+        &mut self.blocks[t * self.blocks_per_row .. (t + 1) * self.blocks_per_row]
+    }
+}
+
+#[derive(Copy, Clone)] struct SlotId(u32);
+#[view] #[derive(Copy, Clone)] struct Tick(pub u64);   // #[view]: (t3) needs it for pick_victim's `now`
+#[view] #[derive(Copy, Clone)]
+struct SlotView { pub id: SlotId, pub idx: usize, pub pinned: bool, pub refs: u32, pub last_use: Tick }
+#[derive(Copy, Clone)] struct ExpertId(u32);
+#[derive(Copy, Clone)] struct ExpertKey(u32);
+
+mod store {                           // mith.toml: declare_deterministic = ["store"] (01 §11)
+    pub struct Store { state: Mutex<StoreState>, … }
+    // [mithi addition] `heat` (01 §5.8's heat_view reads s.heat; section P elides further fields)
+    // and `counter` (item N-33 adds a u32 field `counter`).
+    struct StoreState { count_f: Buf<f32>, heat: Buf<u32>, counter: u32, … }
+    impl StoreState { fn touch(&mut self, k: ExpertKey); }                     // row ∅
+    impl Store {
+        fn acquire_inner(&self, id: ExpertId) -> Result<Frozen<SlabBuf>, IoError>
+            uses { io, spawn, nondet };                                     // may_trap false
+        pub fn lease(&self, id: ExpertId) -> Result<Lease, IoError>  uses { io, spawn };
+        pub fn release(&self, l: Lease)                                uses { io, spawn };
+        pub fn n_heat(&self) -> usize;
+    }
+    // read_slab, acquire (D-C5), heat_into (D-D22), note_use (D-D06) and Lease (D-D05) live here.
+    // [mithi addition] Lease is declared here as D-D05 declares it, because Store::lease names it;
+    // D-D05 replaces it when it is the snippet under check.
+    linear struct Lease { slot: SlotId, slab: Frozen<SlabBuf> }
+    impl Lease {
+        pub fn bytes(&self) -> &[u8] { self.slab.bytes() }
+    }
+}
+
+kernel fn ffn_q4(w: &[u8], x: &[f32], y: &mut [f32]);         // D-D05; no requires assumed
+
+struct ExpertEntry { offset: u64, nbytes: u64 }
+enum FormatError { Overflow { entry: usize }, OutOfBounds { entry: usize } }
+struct GBps; struct Measured; struct Simulated;
+// phantom U and O; Copy; Add only for equal U and equal O
+#[derive(Copy, Clone)] struct Quantity<U, O>(f64);
+impl<U, O> std::ops::Add for Quantity<U, O> {
+    type Output = Quantity<U, O>;
+    fn add(self, rhs: Quantity<U, O>) -> Quantity<U, O> { Quantity(self.0 + rhs.0) }
+}
+struct MachineProfile { pub dram_read_all_core: Quantity<GBps, Measured>, … }
+fn snippet_c7(profile: &MachineProfile) { /* D-C7's two lines are this body */ }
+
+// [mithi addition] D-D20's derivation: "forward_token is a prelude-level stub".
+fn forward_token();
+
+// ---------- declarations outside MCore ----------
+// An X1 fixture standing in for the ledger fact (note §12). The subject is one definition whose
+// whole body is the det block (F-33).
+evidence golden::scheduling_independence { kind: deterministic, subject: store::acquire, grade: tested }
+schedule q4_matvec_avx2 for q4_matvec on x86_64(avx2) { … }          // D-C6 refers to it
+seam hearth_c_ref { fn mm_q4_avx512; fn forward_token; }              // external C reference symbols
+target x86_64 features { avx2, avxvnni, avx512f, avx512bw, avx512vl, avx512vnni, avx512bf16 }

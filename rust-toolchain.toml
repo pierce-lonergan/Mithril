@@ -1,0 +1,7 @@
+# Pinned to the toolchain mithi was built and tested with [M: rustc 1.99.1 (58cf8f9c3 2026-10-13),
+# installed 2026-10-16 by rustup from static.rust-lang.org, host x86_64-pc-windows-gnu].
+# The MSVC host (x86_64-pc-windows-msvc) should build the same sources, since mithi has no
+# dependencies [inference: not built on MSVC].
+[toolchain]
+channel = "1.99.1"
+profile = "minimal"

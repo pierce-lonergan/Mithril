@@ -1,0 +1,68 @@
+// Deterministic traps (note section 6.3; 01 section 12): each function below traps at a named
+// site. tests/interp.rs runs them and checks the trap kind and anchor.
+fn t_ovf_add() -> u8 { let x: u8 = 200; x + 100 }
+fn t_ovf_sub() -> u32 { let a: u32 = 1; a - 2 }
+fn t_ovf_mul() -> i32 { let a: i32 = 65536; a * 65536 }
+fn t_div0() -> u32 { let z: u32 = 0; 7 / z }
+fn t_divovf() -> i32 { let m: i32 = -2147483648; let n: i32 = -1; m / n }
+fn t_shift() -> u32 { let s: u32 = 32; 1u32 << s }
+fn t_idx() -> u32 { let v = [1u32, 2, 3]; let i: usize = 3; v[i] }
+fn t_slice() -> usize { let v = [1u32, 2, 3]; let s = &v[1..4]; s.len() }
+fn t_unwrap() -> u32 { let o: Option<u32> = None; o.unwrap() }
+fn t_hole() -> u32 { todo!("later") }
+fn t_assert() -> u32 { assert!(1 + 1 == 3, "arithmetic"); 0 }
+fn t_unreachable() -> u32 { unreachable!() }
+
+fn checked(xs: &[u32]) -> Result<u32, usize> {
+    // par for: the lowest failing index wins, at any thread count (01 section 12.3)
+    par for i in 0..xs.len() {
+        if xs[i] == 0 { return Err(i); }
+    }
+    Ok(0)
+}
+
+fn t_par_lowest() -> usize {
+    match checked(&[1u32, 0, 5, 0, 7]) {
+        Err(i) => i,
+        Ok(_) => 99,
+    }
+}
+
+fn t_par_trap_lowest() -> u32 {
+    // iterations 2 and 4 both overflow; the serial projection reports index 2
+    let xs = [1u32, 1, 4294967295, 1, 4294967295];
+    let mut out = [0u32; 5];
+    par for i in 0..xs.len() {
+        out[i] = xs[i] + 1;
+    }
+    out[0]
+}
+
+linear struct Token { id: u32 }
+
+fn consume(t: Token) -> u32 {
+    let Token { id } = t;
+    id
+}
+
+fn t_abandon() -> u32 {
+    let a = Token { id: 1 };
+    let b = Token { id: 2 };
+    let z: u32 = 0;
+    let q = 10 / z;
+    consume(a) + consume(b) + q
+}
+
+fn mk(i: u32) -> Token {
+    Token { id: i }
+}
+
+fn two(a: Token, b: Token) -> u32 {
+    consume(a) + consume(b)
+}
+
+fn t_abandon_temp() -> u32 {
+    // the first argument is a Linear temporary when the second traps (F-42)
+    let z: u32 = 0;
+    two(mk(7), mk(10 / z))
+}

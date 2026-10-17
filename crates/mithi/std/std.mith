@@ -1,0 +1,461 @@
+// mithi std and std_platform signatures for the X1 subset.
+//
+// Bodies marked #[builtin(..)] are implemented natively by mithi's interpreter; their checker facts
+// (rows, NaN rule, observers, grade transfers, C-EXACT-STD membership) are in src/stdfacts.rs.
+// Signatures follow core-calculus derivations section P where it gives one; everything else is
+// Rust's std signature, restricted to what mithi implements. ?Local / ?Linear appear only here
+// (note section 5.1: only std signatures may relax the implicit bounds).
+
+mod std {
+    // Everything a program sees unqualified lives in std::prelude; user and prelude items with the
+    // same name shadow it (name resolution falls back to std::prelude last).
+    mod prelude {
+        #[lang = "Option"]
+        #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
+        pub enum Option<T: ?Local + ?Linear> { None, Some(T) }
+
+        #[lang = "Result"]
+        #[derive(Copy, Clone, PartialEq, Eq, Debug, Hash)]
+        pub enum Result<T: ?Local + ?Linear, E: ?Local + ?Linear> { Ok(T), Err(E) }
+
+        use std::prelude::Option::None;
+        use std::prelude::Option::Some;
+        use std::prelude::Result::Ok;
+        use std::prelude::Result::Err;
+
+        // C-ALLOC [prov]: Vec and String allocate from the std arena Global.
+        #[lang = "Vec"] #[builtin_type]
+        pub struct Vec<T: ?Local + ?Linear>;
+        #[lang = "String"] #[builtin_type]
+        pub struct String;
+
+        #[lang = "Copy"] pub trait Copy: Clone {}
+        #[lang = "Clone"] pub trait Clone { #[builtin(clone)] fn clone(&self) -> Self; }
+        #[lang = "PartialEq"] pub trait PartialEq<Rhs> {
+            #[builtin(eq)] fn eq(&self, other: &Rhs) -> bool;
+            #[builtin(ne)] fn ne(&self, other: &Rhs) -> bool;
+        }
+        #[lang = "Eq"] pub trait Eq: PartialEq<Self> {}
+        #[lang = "PartialOrd"] pub trait PartialOrd<Rhs> {
+            #[builtin(partial_cmp)] fn partial_cmp(&self, other: &Rhs) -> Option<std::cmp::Ordering>;
+        }
+        #[lang = "Ord"] pub trait Ord: Eq + PartialOrd<Self> {
+            #[builtin(cmp)] fn cmp(&self, other: &Self) -> std::cmp::Ordering;
+            #[builtin(ord_max)] fn max(self, other: Self) -> Self;
+            #[builtin(ord_min)] fn min(self, other: Self) -> Self;
+        }
+        #[lang = "Hash"] pub trait Hash {}
+        #[lang = "Debug"] pub trait Debug {}
+        #[lang = "Default"] pub trait Default { #[builtin(default)] fn default() -> Self; }
+        #[lang = "Send"] pub trait Send {}
+        #[lang = "Sync"] pub trait Sync {}
+        #[lang = "Sized"] pub trait Sized {}
+        #[lang = "Fn"] pub trait Fn {}
+        #[lang = "FnMut"] pub trait FnMut {}
+        #[lang = "FnOnce"] pub trait FnOnce {}
+        #[lang = "From"] pub trait From<T> { fn from(value: T) -> Self; }
+        #[lang = "Into"] pub trait Into<T> { #[builtin(into)] fn into(self) -> T; }
+
+        // drop keeps the implicit ¬Linear bound (F-41): drop(lease) is E-LINEAR-INSTANTIATE.
+        #[builtin(drop)] pub fn drop<T>(x: T) {}
+
+        // targets of the built-in forms vec![..], vec![x; n] and write!(..) (C-MACROS)
+        #[builtin(vec_from_array)] pub fn __vec_from_array<T: ?Linear, const N: usize>(a: [T; N]) -> Vec<T> uses { alloc(Global) };
+        #[builtin(vec_repeat)] pub fn __vec_repeat<T: Clone>(x: T, n: usize) -> Vec<T> uses { alloc(Global) };
+        #[builtin(string_write_fmt)] pub fn __write_fmt(dest: &mut String, s: String) -> Result<(), ()> uses { alloc(Global) };
+
+        use std::iter::Iterator;
+        use std::iter::Iter;
+
+        // ---------------------------------------------------------------- primitive methods
+        #[lang = "Int"] pub trait Int {}
+
+        impl<T> [T] {
+            #[builtin(slice_len)] #[exact_std] pub fn len(&self) -> usize ensures result <= isize::MAX as usize;
+            #[builtin(slice_is_empty)] #[exact_std] pub fn is_empty(&self) -> bool;
+            // std adapter: result loan = the loan on *self (T-Ret (b))
+            #[builtin(slice_iter)] pub fn iter(&self) -> Iter<&T>;
+            #[builtin(slice_iter_mut)] pub fn iter_mut(&mut self) -> Iter<&mut T>;
+            #[builtin(slice_first)] pub fn first(&self) -> Option<&T>;
+            #[builtin(slice_last)] pub fn last(&self) -> Option<&T>;
+            #[builtin(slice_get)] pub fn get(&self, i: usize) -> Option<&T>;
+            #[builtin(slice_get_mut)] pub fn get_mut(&mut self, i: usize) -> Option<&mut T>;
+
+            #[builtin(slice_swap)] pub fn swap(&mut self, a: usize, b: usize);
+            #[builtin(slice_reverse)] pub fn reverse(&mut self);
+            #[builtin(slice_fill)] pub fn fill(&mut self, v: T);
+            #[builtin(slice_copy_from_slice)] pub fn copy_from_slice(&mut self, src: &[T]);
+
+            #[builtin(slice_sort_by)] pub fn sort_by<F: FnMut(&T, &T) -> std::cmp::Ordering>(&mut self, f: F);
+            #[builtin(slice_sort_by)] pub fn sort_unstable_by<F: FnMut(&T, &T) -> std::cmp::Ordering>(&mut self, f: F);
+            #[builtin(slice_sort_by_key)] pub fn sort_by_key<K: Ord, F: FnMut(&T) -> K>(&mut self, f: F);
+            #[builtin(slice_split_at)] pub fn split_at(&self, mid: usize) -> (&[T], &[T]);
+            #[builtin(slice_split_at_mut)] pub fn split_at_mut(&mut self, mid: usize) -> (&mut [T], &mut [T]);
+            #[builtin(slice_chunks)] pub fn chunks(&self, n: usize) -> Iter<&[T]>;
+            #[builtin(slice_windows)] pub fn windows(&self, n: usize) -> Iter<&[T]>;
+        }
+        // methods with Rust's bounds on T (review 2026-10-16: sorting f32 or an unordered T, and
+        // `contains` / `to_vec` without PartialEq / Clone, were accepted)
+        impl<T: Ord> [T] {
+            #[builtin(slice_sort)] pub fn sort(&mut self);
+            #[builtin(slice_sort)] pub fn sort_unstable(&mut self);
+        }
+        impl<T: PartialEq<T>> [T] {
+            #[builtin(slice_contains)] pub fn contains(&self, x: &T) -> bool;
+        }
+        impl<T: Clone> [T] {
+            #[builtin(slice_to_vec)] pub fn to_vec(&self) -> Vec<T> uses { alloc(Global) };
+        }
+
+        impl<T> Vec<T> {
+            #[builtin(vec_new)] pub fn new() -> Vec<T>;
+            #[builtin(vec_with_capacity)] pub fn with_capacity(n: usize) -> Vec<T> uses { alloc(Global) };
+            #[builtin(vec_push)] pub fn push(&mut self, x: T) uses { alloc(Global) };
+            #[builtin(vec_pop)] pub fn pop(&mut self) -> Option<T>;
+            #[builtin(vec_clear)] pub fn clear(&mut self);
+            #[builtin(vec_truncate)] pub fn truncate(&mut self, n: usize);
+            #[builtin(vec_insert)] pub fn insert(&mut self, i: usize, x: T) uses { alloc(Global) };
+            #[builtin(vec_remove)] pub fn remove(&mut self, i: usize) -> T;
+            #[builtin(vec_swap_remove)] pub fn swap_remove(&mut self, i: usize) -> T;
+            #[builtin(vec_retain)] pub fn retain<F: FnMut(&T) -> bool>(&mut self, f: F);
+            #[builtin(vec_extend_from_slice)] pub fn extend_from_slice(&mut self, s: &[T]) uses { alloc(Global) };
+            #[builtin(vec_resize)] pub fn resize(&mut self, n: usize, v: T) uses { alloc(Global) };
+            #[builtin(vec_as_slice)] pub fn as_slice(&self) -> &[T];
+            #[builtin(vec_as_mut_slice)] pub fn as_mut_slice(&mut self) -> &mut [T];
+            #[builtin(vec_into_iter)] pub fn into_iter(self) -> Iter<T>;
+        }
+
+        impl String {
+            #[builtin(string_new)] pub fn new() -> String;
+            #[builtin(string_len)] pub fn len(&self) -> usize;
+            #[builtin(string_push_str)] pub fn push_str(&mut self, s: &str) uses { alloc(Global) };
+            #[builtin(string_as_str)] pub fn as_str(&self) -> &str;
+        }
+        impl str {
+            #[builtin(str_len)] pub fn len(&self) -> usize;
+            #[builtin(str_bytes)] pub fn bytes(&self) -> Iter<u8>;
+            #[builtin(str_to_string)] pub fn to_string(&self) -> String uses { alloc(Global) };
+        }
+
+        impl<T> Option<T> {
+            #[builtin(opt_is_some)] pub fn is_some(&self) -> bool;
+            #[builtin(opt_is_none)] pub fn is_none(&self) -> bool;
+            #[builtin(opt_unwrap)] pub fn unwrap(self) -> T;
+            #[builtin(opt_expect)] pub fn expect(self, msg: &str) -> T;
+            #[builtin(opt_unwrap_or)] pub fn unwrap_or(self, d: T) -> T;
+            #[builtin(opt_unwrap_or_else)] pub fn unwrap_or_else<F: FnOnce() -> T>(self, f: F) -> T;
+            #[builtin(opt_map_or)] pub fn map_or<U, F: FnOnce(T) -> U>(self, d: U, f: F) -> U;
+            #[builtin(opt_ok_or_else)] pub fn ok_or_else<E, F: FnOnce() -> E>(self, f: F) -> Result<T, E>;
+            // θ_ret = α_self ⊔ Θ_f.θ_ret(α_self) (note section 5.7)
+            #[builtin(opt_map)] pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> Option<U>;
+            #[builtin(opt_and_then)] pub fn and_then<U, F: FnOnce(T) -> Option<U>>(self, f: F) -> Option<U>;
+            #[builtin(opt_ok_or)] pub fn ok_or<E>(self, e: E) -> Result<T, E>;
+            #[builtin(opt_take)] pub fn take(&mut self) -> Option<T>;
+            #[builtin(opt_as_ref)] pub fn as_ref(&self) -> Option<&T>;
+        }
+
+        impl<T, E> Result<T, E> {
+            #[builtin(res_is_ok)] pub fn is_ok(&self) -> bool;
+            #[builtin(res_is_err)] pub fn is_err(&self) -> bool;
+            #[builtin(res_unwrap)] pub fn unwrap(self) -> T;
+            #[builtin(res_expect)] pub fn expect(self, msg: &str) -> T;
+            #[builtin(res_ok)] pub fn ok(self) -> Option<T>;
+            #[builtin(res_map_err)] pub fn map_err<F2, O: FnOnce(E) -> F2>(self, op: O) -> Result<T, F2>;
+            #[builtin(res_unwrap_or)] pub fn unwrap_or(self, d: T) -> T;
+            #[builtin(res_unwrap_or_else)] pub fn unwrap_or_else<F: FnOnce(E) -> T>(self, f: F) -> T;
+        }
+
+        impl<T: Int> T {
+            #[builtin(int_checked_add)] #[exact_std] pub fn checked_add(self, rhs: T) -> Option<T>;
+            #[builtin(int_checked_sub)] #[exact_std] pub fn checked_sub(self, rhs: T) -> Option<T>;
+            #[builtin(int_checked_mul)] #[exact_std] pub fn checked_mul(self, rhs: T) -> Option<T>;
+            #[builtin(int_checked_div)] #[exact_std] pub fn checked_div(self, rhs: T) -> Option<T>;
+            #[builtin(int_wrapping_add)] #[exact_std] pub fn wrapping_add(self, rhs: T) -> T;
+            #[builtin(int_wrapping_sub)] #[exact_std] pub fn wrapping_sub(self, rhs: T) -> T;
+            #[builtin(int_wrapping_mul)] #[exact_std] pub fn wrapping_mul(self, rhs: T) -> T;
+            #[builtin(int_saturating_add)] #[exact_std] pub fn saturating_add(self, rhs: T) -> T;
+            #[builtin(int_saturating_sub)] #[exact_std] pub fn saturating_sub(self, rhs: T) -> T;
+            #[builtin(int_saturating_mul)] #[exact_std] pub fn saturating_mul(self, rhs: T) -> T;
+            #[builtin(int_min)] #[exact_std] pub fn min(self, rhs: T) -> T;
+            #[builtin(int_max)] #[exact_std] pub fn max(self, rhs: T) -> T;
+            #[builtin(int_abs)] #[exact_std] pub fn abs(self) -> T;
+            #[builtin(int_pow)] pub fn pow(self, e: u32) -> T;
+            #[builtin(int_count_ones)] #[exact_std] pub fn count_ones(self) -> u32;
+            #[builtin(int_leading_zeros)] #[exact_std] pub fn leading_zeros(self) -> u32;
+            #[builtin(int_trailing_zeros)] #[exact_std] pub fn trailing_zeros(self) -> u32;
+            #[builtin(int_is_power_of_two)] #[exact_std] pub fn is_power_of_two(self) -> bool;
+        }
+        impl u16 {
+            #[builtin(u16_from_le_bytes)] pub fn from_le_bytes(b: [u8; 2]) -> u16;
+            #[builtin(u16_to_le_bytes)] pub fn to_le_bytes(self) -> [u8; 2];
+        }
+        impl u32 {
+            #[builtin(u32_from_le_bytes)] pub fn from_le_bytes(b: [u8; 4]) -> u32;
+            #[builtin(u32_to_le_bytes)] pub fn to_le_bytes(self) -> [u8; 4];
+        }
+        impl u64 {
+            #[builtin(u64_from_le_bytes)] pub fn from_le_bytes(b: [u8; 8]) -> u64;
+            #[builtin(u64_to_le_bytes)] pub fn to_le_bytes(self) -> [u8; 8];
+        }
+
+        // IEEE basic operations and the payload-blind and observer functions are primitives in the
+        // calculus (note section 5.3), so kernels may call them (k3); FF rows still apply.
+        impl f32 {
+            #[builtin(f32_to_bits)] #[exact_std] pub fn to_bits(self) -> u32;
+            #[builtin(f32_from_bits)] #[exact_std] pub fn from_bits(b: u32) -> f32;
+            #[builtin(f32_is_nan)] #[exact_std] pub fn is_nan(self) -> bool;
+            #[builtin(f32_is_finite)] #[exact_std] pub fn is_finite(self) -> bool;
+            #[builtin(f32_is_infinite)] #[exact_std] pub fn is_infinite(self) -> bool;
+            #[builtin(f32_is_sign_negative)] #[exact_std] pub fn is_sign_negative(self) -> bool;
+            #[builtin(f32_is_sign_positive)] #[exact_std] pub fn is_sign_positive(self) -> bool;
+            #[builtin(f32_abs)] #[exact_std] pub fn abs(self) -> f32;
+            #[builtin(f32_sqrt)] #[exact_std] pub fn sqrt(self) -> f32;
+            #[builtin(f32_max)] #[exact_std] pub fn max(self, o: f32) -> f32;
+            #[builtin(f32_min)] #[exact_std] pub fn min(self, o: f32) -> f32;
+            #[builtin(f32_mul_add)] #[exact_std] pub fn mul_add(self, a: f32, b: f32) -> f32;
+            #[builtin(f32_round)] #[exact_std] pub fn round(self) -> f32;
+            #[builtin(f32_round_ties_even)] #[exact_std] pub fn round_ties_even(self) -> f32;
+            #[builtin(f32_floor)] #[exact_std] pub fn floor(self) -> f32;
+            #[builtin(f32_ceil)] #[exact_std] pub fn ceil(self) -> f32;
+            #[builtin(f32_trunc)] #[exact_std] pub fn trunc(self) -> f32;
+            #[builtin(f32_recip)] #[exact_std] pub fn recip(self) -> f32;
+            #[builtin(f32_copysign)] #[exact_std] pub fn copysign(self, s: f32) -> f32;
+            #[builtin(f32_clamp)] #[exact_std] pub fn clamp(self, lo: f32, hi: f32) -> f32;
+            #[builtin(f32_total_cmp)] #[exact_std] pub fn total_cmp(&self, o: &f32) -> std::cmp::Ordering;
+            #[builtin(f32_partial_cmp)] #[exact_std] pub fn partial_cmp(&self, o: &f32) -> Option<std::cmp::Ordering>;
+            // FF-EXP / FF-POWI: C in default code (meaning cr::), Dc in exact code
+            #[builtin(f32_exp)] pub fn exp(self) -> f32;
+            #[builtin(f32_ln)] pub fn ln(self) -> f32;
+            #[builtin(f32_sin)] pub fn sin(self) -> f32;
+            #[builtin(f32_cos)] pub fn cos(self) -> f32;
+            #[builtin(f32_tanh)] pub fn tanh(self) -> f32;
+            #[builtin(f32_powf)] pub fn powf(self, e: f32) -> f32;
+            #[builtin(f32_powi)] pub fn powi(self, e: i32) -> f32;
+        }
+        impl f64 {
+            #[builtin(f64_to_bits)] #[exact_std] pub fn to_bits(self) -> u64;
+            #[builtin(f64_from_bits)] #[exact_std] pub fn from_bits(b: u64) -> f64;
+            #[builtin(f64_is_nan)] #[exact_std] pub fn is_nan(self) -> bool;
+            #[builtin(f64_is_finite)] #[exact_std] pub fn is_finite(self) -> bool;
+            #[builtin(f64_abs)] #[exact_std] pub fn abs(self) -> f64;
+            #[builtin(f64_sqrt)] #[exact_std] pub fn sqrt(self) -> f64;
+            #[builtin(f64_max)] #[exact_std] pub fn max(self, o: f64) -> f64;
+            #[builtin(f64_min)] #[exact_std] pub fn min(self, o: f64) -> f64;
+            #[builtin(f64_round)] #[exact_std] pub fn round(self) -> f64;
+            #[builtin(f64_floor)] #[exact_std] pub fn floor(self) -> f64;
+            #[builtin(f64_total_cmp)] #[exact_std] pub fn total_cmp(&self, o: &f64) -> std::cmp::Ordering;
+            #[builtin(f64_partial_cmp)] #[exact_std] pub fn partial_cmp(&self, o: &f64) -> Option<std::cmp::Ordering>;
+            #[builtin(f64_exp)] pub fn exp(self) -> f64;
+        }
+        impl f16 {
+            // exact widening; nanrule raw (01 section 2.5 FF-F16)
+            #[builtin(f16_to_f32)] #[exact_std] pub fn to_f32(self) -> f32;
+            #[builtin(f16_from_bits)] pub fn from_bits(b: u16) -> f16;
+            #[builtin(f16_to_bits)] pub fn to_bits(self) -> u16;
+        }
+        impl bf16 {
+            #[builtin(bf16_to_f32)] #[exact_std] pub fn to_f32(self) -> f32;
+            #[builtin(bf16_from_bits)] pub fn from_bits(b: u16) -> bf16;
+            #[builtin(bf16_to_bits)] pub fn to_bits(self) -> u16;
+        }
+
+        // ---------------------------------------------------------------- canon.v1 (02 section 5)
+        mod canon {
+            #[builtin(canon_nan)] #[exact_std] pub fn nan(x: f32) -> f32;                 // nanrule canon
+            #[builtin(canon_sum16)] #[exact_std] pub fn sum16(a: &[f32]) -> f32;          // nanrule raw
+            #[builtin(canon_dot16)] #[exact_std] pub fn dot16(w: &[f32], x: &[f32]) -> f32 requires w.len() == x.len();
+            #[builtin(canon_sum_seq)] #[exact_std] pub fn sum_seq(a: &[f32]) -> f32;
+        }
+        mod canon_v1 {
+            // fixed op-DAG (DR-014); its definition is pending Hearth ADR-0010 and D0-2, so mithi types
+            // it and does not run it.
+            #[builtin(canon_v1_expf)] #[exact_std] pub fn expf(x: f32) -> f32;
+        }
+        mod cr {
+            // correctly rounded (DR-014); typed, not run by mithi v0
+            #[builtin(cr_expf)] #[exact_std] pub fn expf(x: f32) -> f32;
+            #[builtin(cr_sinf)] #[exact_std] pub fn sinf(x: f32) -> f32;
+            #[builtin(cr_cosf)] #[exact_std] pub fn cosf(x: f32) -> f32;
+        }
+
+        // ---------------------------------------------------------------- std_platform (derivations P)
+        #[lang = "Hint"] #[builtin_type]
+        pub struct Hint<T>;
+        impl<T> Hint<T> {
+            // row ∅, total, ⊢_to-callable
+            #[builtin(hint_none)] pub fn none() -> Hint<T>;
+            #[builtin(hint_some)] pub fn some(x: T) -> Hint<T>;
+            #[builtin(hint_get)] pub fn get(&self) -> Option<&T>;
+        }
+
+        // Copy if T is; the value is a multiple of N
+        #[lang = "Aligned"] #[derive(Copy, Clone, PartialEq, Eq, Debug)]
+        pub struct Aligned<T, const N: u64>(pub T);
+
+        // capability type, affine (note C-CAP)
+        #[lang = "BlobFile"] #[builtin_type]
+        pub struct BlobFile;
+        impl BlobFile {
+            // θ_mut(buf) = (⊥, {self, off}, canon); may_trap false; Err only when the environment faults
+            #[builtin(blobfile_read_at)]
+            pub fn read_at(&self, off: Aligned<u64, 4096>, buf: &mut [u8]) -> Result<(), IoError>
+                uses { io }
+                requires buf.len() % 4096 == 0;
+        }
+
+        // 4096-aligned; length a multiple of 4096 (04 section 9.2)
+        #[lang = "SlabBuf"] #[builtin_type]
+        linear struct SlabBuf;
+        impl SlabBuf {
+            #[builtin(slabbuf_bytes_mut)] pub fn bytes_mut(&mut self) -> &mut [u8] ensures result.len() % 4096 == 0;
+            #[builtin(slabbuf_bytes)] pub fn bytes(&self) -> &[u8];
+        }
+
+        // Linear iff T is (note C-FROZEN); Send + Sync iff T is
+        #[lang = "Frozen"] #[builtin_type]
+        pub struct Frozen<T: ?Linear>;
+        impl Frozen<SlabBuf> {
+            #[builtin(frozen_bytes)] pub fn bytes(&self) -> &[u8];
+        }
+
+        #[lang = "Mutex"] #[builtin_type]
+        pub struct Mutex<T>;
+        impl<T> Mutex<T> {
+            #[builtin(mutex_new)] pub fn new(v: T) -> Mutex<T>;
+            // R carries the implicit ¬Local bound; f's parameter is declared at the shared grade γ_sh;
+            // θ_ret = Θ_f.θ_ret(γ_sh) ⊔ γ(f); θ_inv,f = ⊥ (note section 5.7)
+            #[builtin(mutex_with_lock)] pub fn with_lock<R, F: FnOnce(&mut T) -> R>(&self, f: F) -> R uses { nondet };
+        }
+
+        #[lang = "IoError"] #[derive(Copy, Clone, PartialEq, Eq, Debug)]
+        pub enum IoError { Fault, NotFound, Short }
+
+        // An owned std buffer (note OP-1): read access only, plus truncate (item N-28).
+        #[lang = "Buf"] #[builtin_type]
+        pub struct Buf<T>;
+        impl<T> Buf<T> {
+            #[builtin(buf_from_vec)] pub fn from_vec(v: Vec<T>) -> Buf<T>;
+            #[builtin(vec_truncate)] pub fn truncate(&mut self, n: usize);
+        }
+
+        // A clock capability (01 section 4); reads carry `time` and therefore nondet.
+        #[lang = "Clock"] #[builtin_type]
+        pub struct Clock;
+        impl Clock {
+            #[builtin(clock_now_ns)] pub fn now_ns(&self) -> u64 uses { time };
+        }
+    }
+
+    
+
+    mod iter {
+        #[lang = "Iterator"]
+        pub trait Iterator {
+            type Item;
+            fn next(&mut self) -> Option<Self::Item>;
+            // lazy adapters store their closure (note section 5.7)
+            #[builtin(iter_filter)] fn filter<P: FnMut(&Self::Item) -> bool>(self, p: P) -> Iter<Self::Item>;
+            #[builtin(iter_map)] fn map<U, F: FnMut(Self::Item) -> U>(self, f: F) -> Iter<U>;
+            #[builtin(iter_filter_map)] fn filter_map<U, F: FnMut(Self::Item) -> Option<U>>(self, f: F) -> Iter<U>;
+            #[builtin(iter_enumerate)] fn enumerate(self) -> Iter<(usize, Self::Item)>;
+            #[builtin(iter_zip)] fn zip<J: Iterator>(self, other: J) -> Iter<(Self::Item, J::Item)>;
+            #[builtin(iter_rev)] fn rev(self) -> Iter<Self::Item>;
+            #[builtin(iter_take)] fn take(self, n: usize) -> Iter<Self::Item>;
+            #[builtin(iter_skip)] fn skip(self, n: usize) -> Iter<Self::Item>;
+            #[builtin(iter_step_by)] fn step_by(self, n: usize) -> Iter<Self::Item>;
+            #[builtin(iter_chain)] fn chain<J: Iterator>(self, other: J) -> Iter<Self::Item>;
+            #[builtin(iter_copied)] fn copied<T: Copy>(self) -> Iter<T>;
+            #[builtin(iter_cloned)] fn cloned<T: Clone>(self) -> Iter<T>;
+            // consumers
+            #[builtin(iter_count)] fn count(self) -> usize;
+            #[builtin(iter_last)] fn last(self) -> Option<Self::Item>;
+            #[builtin(iter_nth)] fn nth(&mut self, n: usize) -> Option<Self::Item>;
+            #[builtin(iter_sum)] fn sum<S>(self) -> S;
+            #[builtin(iter_product)] fn product<S>(self) -> S;
+            #[builtin(iter_fold)] fn fold<B, F: FnMut(B, Self::Item) -> B>(self, init: B, f: F) -> B;
+            #[builtin(iter_for_each)] fn for_each<F: FnMut(Self::Item)>(self, f: F);
+            #[builtin(iter_any)] fn any<F: FnMut(Self::Item) -> bool>(&mut self, f: F) -> bool;
+            #[builtin(iter_all)] fn all<F: FnMut(Self::Item) -> bool>(&mut self, f: F) -> bool;
+            #[builtin(iter_position)] fn position<F: FnMut(Self::Item) -> bool>(&mut self, f: F) -> Option<usize>;
+            #[builtin(iter_find)] fn find<F: FnMut(&Self::Item) -> bool>(&mut self, f: F) -> Option<Self::Item>;
+            #[builtin(iter_max)] fn max(self) -> Option<Self::Item>;
+            #[builtin(iter_min)] fn min(self) -> Option<Self::Item>;
+            #[builtin(iter_max_by_key)] fn max_by_key<B: Ord, F: FnMut(&Self::Item) -> B>(self, f: F) -> Option<Self::Item>;
+            #[builtin(iter_min_by_key)] fn min_by_key<B: Ord, F: FnMut(&Self::Item) -> B>(self, f: F) -> Option<Self::Item>;
+            #[builtin(iter_max_by)] fn max_by<F: FnMut(&Self::Item, &Self::Item) -> std::cmp::Ordering>(self, f: F) -> Option<Self::Item>;
+            #[builtin(iter_min_by)] fn min_by<F: FnMut(&Self::Item, &Self::Item) -> std::cmp::Ordering>(self, f: F) -> Option<Self::Item>;
+            // collecting builds a Vec or String (C-ALLOC)
+            #[builtin(iter_collect)] fn collect<B>(self) -> B uses { alloc(Global) };
+        }
+        // Every std iterator and adapter is one native type; its item type is the parameter.
+        // Iter is ?Local: an adapter over a borrow is Local (note section 5.7).
+        #[lang = "Iter"] #[builtin_type]
+        pub struct Iter<T: ?Local + ?Linear>;
+        impl<T> Iterator for Iter<T> {
+            type Item = T;
+            #[builtin(iter_next)] fn next(&mut self) -> Option<T>;
+        }
+    }
+
+    mod ops {
+        #[lang = "Range"] #[derive(Clone, PartialEq, Eq, Debug)]
+        pub struct Range<T> { pub start: T, pub end: T }
+        #[lang = "RangeInclusive"] #[derive(Clone, PartialEq, Eq, Debug)]
+        pub struct RangeInclusive<T> { pub start: T, pub end: T }
+        impl<T: Int> Iterator for Range<T> {
+            type Item = T;
+            #[builtin(range_next)] fn next(&mut self) -> Option<T>;
+        }
+        impl<T: Int> Iterator for RangeInclusive<T> {
+            type Item = T;
+            #[builtin(range_incl_next)] fn next(&mut self) -> Option<T>;
+        }
+        impl<T: Int> Range<T> {
+            #[builtin(range_len)] pub fn len(&self) -> usize;
+            #[builtin(range_contains)] pub fn contains(&self, x: &T) -> bool;
+        }
+        #[lang = "Add"] pub trait Add<Rhs> { type Output; fn add(self, rhs: Rhs) -> Self::Output; }
+        #[lang = "Sub"] pub trait Sub<Rhs> { type Output; fn sub(self, rhs: Rhs) -> Self::Output; }
+        #[lang = "Mul"] pub trait Mul<Rhs> { type Output; fn mul(self, rhs: Rhs) -> Self::Output; }
+        #[lang = "Div"] pub trait Div<Rhs> { type Output; fn div(self, rhs: Rhs) -> Self::Output; }
+        #[lang = "Rem"] pub trait Rem<Rhs> { type Output; fn rem(self, rhs: Rhs) -> Self::Output; }
+        #[lang = "Neg"] pub trait Neg { type Output; fn neg(self) -> Self::Output; }
+        #[lang = "Index"] pub trait Index<Idx> { type Output; fn index(&self, index: Idx) -> &Self::Output; }
+        #[lang = "IndexMut"] pub trait IndexMut<Idx> { type Output; fn index_mut(&mut self, index: Idx) -> &mut Self::Output; }
+        #[lang = "Drop"] pub trait Drop { fn drop(&mut self); }
+    }
+
+    mod cmp {
+        #[lang = "Ordering"] #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
+        pub enum Ordering { Less, Equal, Greater }
+        impl Ordering {
+            #[builtin(ordering_reverse)] pub fn reverse(self) -> Ordering;
+            #[builtin(ordering_then)] pub fn then(self, other: Ordering) -> Ordering;
+            #[builtin(ordering_is_eq)] pub fn is_eq(self) -> bool;
+            #[builtin(ordering_is_lt)] pub fn is_lt(self) -> bool;
+            #[builtin(ordering_is_gt)] pub fn is_gt(self) -> bool;
+        }
+        // std::cmp::Reverse reverses Ord (derivations section P)
+        #[lang = "Reverse"] #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
+        pub struct Reverse<T>(pub T);
+        #[builtin(cmp_min)] pub fn min<T: Ord>(a: T, b: T) -> T;
+        #[builtin(cmp_max)] pub fn max<T: Ord>(a: T, b: T) -> T;
+    }
+
+    mod mem {
+        // swap and replace are ?Linear (note section 5.1); take and drop are not.
+        #[builtin(mem_swap)] pub fn swap<T: ?Linear + ?Local>(a: &mut T, b: &mut T);
+        #[builtin(mem_replace)] pub fn replace<T: ?Linear + ?Local>(dest: &mut T, src: T) -> T;
+        #[builtin(mem_take)] pub fn take<T: Default>(dest: &mut T) -> T;
+        #[builtin(drop)] pub fn drop<T>(x: T);
+        #[builtin(mem_forget)] pub fn forget<T>(x: T);
+    }
+
+    mod time {
+        // FF-CLOCK: a clock read needs `uses { time }` and carries nondet (note section 5.3).
+        #[builtin_type] pub struct Instant;
+        impl Instant {
+            #[builtin(instant_now)] pub fn now() -> Instant uses { time };
+        }
+    }
+}

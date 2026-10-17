@@ -1,0 +1,62 @@
+// Std methods added after the first corpus round (get_mut, split_at_mut, windows, retain,
+// swap_remove, unwrap_or_else, map_or, ok_or_else, filter_map, is_power_of_two) and the method
+// probing rule for `clone` through a reference.
+
+fn names(v: &[String]) -> Vec<String> {
+    v.iter().map(|s| s.clone()).collect()
+}
+
+fn parse_digit(b: u8) -> Option<u32> {
+    if b >= 48 && b <= 57 { Some((b - 48) as u32) } else { None }
+}
+
+#[test]
+fn clone_through_a_reference_is_the_referent_clone() {
+    let mut v: Vec<String> = Vec::new();
+    v.push(String::new());
+    let w = names(&v);
+    assert_eq!(w.len(), 1);
+}
+
+#[test]
+fn slices_and_vecs() {
+    let mut a = [1u32, 2, 3, 4];
+    if let Some(x) = a.get_mut(2) {
+        *x = 30;
+    }
+    assert_eq!(a[2], 30);
+    assert!(a.get_mut(4).is_none());
+    let (l, r) = a.split_at_mut(2);
+    l[0] = r[1];
+    assert_eq!(a[0], 4);
+    let mut sums: Vec<u32> = Vec::new();
+    for w in a.windows(2) {
+        sums.push(w[0] + w[1]);
+    }
+    assert_eq!(sums.len(), 3);
+    assert_eq!(sums[1], 32);
+    let mut v = vec![5u32, 1, 7, 2, 9];
+    v.retain(|x| *x > 2);
+    assert_eq!(v.len(), 3);
+    assert_eq!(v[1], 7);
+    let y = v.swap_remove(0);
+    assert_eq!(y, 5);
+    assert_eq!(v[0], 9);
+    assert_eq!(v.len(), 2);
+}
+
+#[test]
+fn option_and_result_helpers() {
+    let none: Option<u32> = None;
+    assert_eq!(none.unwrap_or_else(|| 7), 7);
+    assert_eq!(Some(3u32).map_or(0, |x| x * 2), 6);
+    assert_eq!(none.map_or(1, |x| x * 2), 1);
+    let r: Result<u32, u32> = none.ok_or_else(|| 9);
+    assert_eq!(r.unwrap_or_else(|e| e + 1), 10);
+    let digits: Vec<u32> = [49u8, 120, 51].iter().filter_map(|b| parse_digit(*b)).collect();
+    assert_eq!(digits.len(), 2);
+    assert_eq!(digits[1], 3);
+    assert!(64u32.is_power_of_two());
+    assert!(!0u32.is_power_of_two());
+    assert!(!12u32.is_power_of_two());
+}

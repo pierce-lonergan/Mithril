@@ -1,0 +1,79 @@
+// S-Q4-0 shape (X1 design 5.2): the canonical q4_row_dot (from the prelude context) on blocks
+// built in Mithril; Hearth's layout: byte j holds element j in its low nibble and j+32 in its
+// high nibble, stored as q+8 (FF-Q4: not llama.cpp's j+16).
+fn block(d_bits: u16, bytes: [u8; 32]) -> BlockQ4 {
+    BlockQ4 { d: f16::from_bits(d_bits), q: Nib64o8 { b: bytes } }
+}
+
+fn act(d: f32, q: [i8; 64]) -> ActQ8 {
+    let mut s: i32 = 0;
+    for i in 0..64 {
+        s += q[i] as i32;
+    }
+    ActQ8 { d: d, sum: s, q: q }
+}
+
+// the meaning written out by hand, element by element
+fn naive(w: &[BlockQ4], a: &[ActQ8]) -> f32 {
+    let mut acc: f32 = 0.0;
+    for g in 0..w.len() {
+        let mut isum: i32 = 0;
+        for j in 0..64 {
+            let byte = if j < 32 { w[g].q.b[j] } else { w[g].q.b[j - 32] };
+            let nib = if j < 32 { byte & 15 } else { byte >> 4 };
+            isum += ((nib as i32) - 8) * (a[g].q[j] as i32);
+        }
+        acc = acc + (isum as f32) * (w[g].d.to_f32() * a[g].d);
+    }
+    canon::nan(acc)
+}
+
+#[test]
+fn high_nibble_is_element_j_plus_32() {
+    let mut bytes = [0x88u8; 32];
+    bytes[0] = 0xF8; // element 0 = 0, element 32 = 7
+    let mut q = [0i8; 64];
+    q[32] = 1;
+    let w = [block(0x3c00, bytes)];
+    let a = [act(1.0, q)];
+    assert_eq!(q4_row_dot(&w, &a), 7.0);
+    let mut q16 = [0i8; 64];
+    q16[16] = 1; // llama.cpp's j+16 position must not see element 32's nibble
+    let a16 = [act(1.0, q16)];
+    assert_eq!(q4_row_dot(&w, &a16), 0.0);
+}
+
+#[test]
+fn matches_the_naive_meaning_on_varied_blocks() {
+    let mut ws: Vec<BlockQ4> = Vec::new();
+    let mut acts: Vec<ActQ8> = Vec::new();
+    let mut seed: u32 = 12345;
+    for g in 0..5 {
+        let mut bytes = [0u8; 32];
+        for j in 0..32 {
+            seed = seed.wrapping_mul(1103515245).wrapping_add(12345);
+            bytes[j] = (seed >> 16) as u8;
+        }
+        let mut q = [0i8; 64];
+        for j in 0..64 {
+            seed = seed.wrapping_mul(1103515245).wrapping_add(12345);
+            q[j] = (((seed >> 16) % 255) as i32 - 127) as i8;
+        }
+        // f16 scales 0.5, 1.0, 1.5, 2.0, 2.5 (0x3800, 0x3c00, 0x3e00, 0x4000, 0x4100)
+        let scales = [0x3800u16, 0x3c00, 0x3e00, 0x4000, 0x4100];
+        ws.push(block(scales[g], bytes));
+        acts.push(act(0.25 + (g as f32) * 0.125, q));
+    }
+    let got = q4_row_dot(&ws, &acts);
+    let want = naive(&ws, &acts);
+    assert_eq!(got.to_bits(), want.to_bits());
+}
+
+#[test]
+fn subnormal_f16_scale_is_exact() {
+    // f16 0x0001 is 2^-24, a subnormal: the widening is exact
+    let w = [block(0x0001, [0x98u8; 32])];
+    let a = [act(1.0, [1i8; 64])];
+    // isum = 32 * (0 * 1) + 32 * (1 * 1) = 32; 32 * 2^-24 = 2^-19
+    assert_eq!(q4_row_dot(&w, &a).to_bits(), (0.0000019073486f32).to_bits());
+}

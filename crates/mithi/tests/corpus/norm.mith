@@ -1,0 +1,90 @@
+// S-NORM-0 shape (X1 design 5.2, public smoke set): RMSNorm with the canonical sum.
+// ms = sum16(x_i * x_i) / n; r = 1 / sqrt(ms + eps); y_i = (x_i * r) * w_i.
+kernel fn rmsnorm(y: &mut [f32], x: &[f32], w: &[f32], eps: f32)
+    requires x.len() == y.len() && w.len() == x.len() && x.len() > 0
+{
+    let n = x.len();
+    let ms = canon::dot16(x, x) / (n as f32);
+    let r = 1.0 / (ms + eps).sqrt();
+    for i in 0..n {
+        y[i] = canon::nan((x[i] * r) * w[i]);
+    }
+}
+
+// A max-subtracted scale (softmax's first steps, without the transcendental).
+kernel fn shift_by_max(x: &mut [f32])
+    requires x.len() > 0
+{
+    let mut m: f32 = x[0];
+    for i in 1..x.len() {
+        if x[i] > m { m = x[i]; }
+    }
+    for i in 0..x.len() {
+        x[i] = canon::nan(x[i] - m);
+    }
+}
+
+fn reference_rms(x: &[f32], w: &[f32], eps: f32, out: &mut Vec<f32>) {
+    // the same order, written without the kernel: lanes 16, then the 8-4-2-1 tree
+    let mut lanes = [0.0f32; 16];
+    let mut i = 0;
+    while i < x.len() {
+        lanes[i % 16] = lanes[i % 16] + x[i] * x[i];
+        i += 1;
+    }
+    let mut s = 8;
+    while s > 0 {
+        for j in 0..s {
+            lanes[j] = lanes[j] + lanes[j + s];
+        }
+        s = s / 2;
+    }
+    let ms = lanes[0] / (x.len() as f32);
+    let r = 1.0 / (ms + eps).sqrt();
+    for k in 0..x.len() {
+        out.push((x[k] * r) * w[k]);
+    }
+}
+
+#[test]
+fn rmsnorm_matches_reference_bits() {
+    let mut x: Vec<f32> = Vec::new();
+    let mut w: Vec<f32> = Vec::new();
+    for i in 0..37 {
+        x.push((i as f32) * 0.37 - 5.0);
+        w.push(1.0 + (i as f32) * 0.01);
+    }
+    let mut y = vec![0.0f32; 37];
+    rmsnorm(&mut y, &x, &w, 0.00001);
+    let mut want: Vec<f32> = Vec::new();
+    reference_rms(&x, &w, 0.00001, &mut want);
+    for i in 0..37 {
+        assert_eq!(y[i].to_bits(), want[i].to_bits());
+    }
+}
+
+#[test]
+fn shift_by_max_makes_the_max_zero() {
+    let mut x = vec![1.5f32, -2.0, 3.25, 0.0];
+    shift_by_max(&mut x);
+    assert_eq!(x[2], 0.0);
+    assert_eq!(x[0], -1.75);
+}
+
+#[test]
+fn sum16_is_not_a_left_fold() {
+    // 1e8 then 31 ones: a left fold absorbs every one (ulp(1e8) = 8); the 16-lane tree adds the
+    // ones together first, so they survive: 100000024 against 100000000
+    let mut v: Vec<f32> = Vec::new();
+    v.push(1.0e8);
+    for _i in 0..31 {
+        v.push(1.0);
+    }
+    let tree = canon::sum16(&v);
+    let mut seq = 0.0f32;
+    for x in v.iter() {
+        seq = seq + *x;
+    }
+    assert_eq!(seq, 100000000.0);
+    assert_eq!(tree, 100000024.0);
+}

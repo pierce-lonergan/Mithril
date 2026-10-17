@@ -1,0 +1,200 @@
+// mithril_v0.lark: the X1 surface subset of Mithril. Status: v0 DRAFT (PLAN S20), not frozen.
+// Sources: 05 §3 (keyword-first items, explicit whitespace terminals, no %ignore, only
+// %import common), X1 DESIGN §10.1, core-calculus note §12 (the X1 subset). Parse with Lark's
+// Earley parser (lexer="dynamic"). Start symbols: `start` (a file) and `loose` (documentation
+// statements such as D-C7). Keywords are contextual (T0-26) except those NAME excludes.
+// Whitespace is explicit: _WS where it is required, _s where it is optional.
+// Tags: [not in X1] = parsed only so that mithi can report E-OUT-OF-SCOPE-<KW>;
+// [typed later] = parsed so that the checker can name the rule (E-DYN, E-LOCAL-RETURN).
+// A keyword needs _WS before a following word; `if(x)` and `&mut[T]` are rejected here
+// (mithi's parser accepts them: crates/mithi/README.md, "Grammar and parser").
+// Revised 2026-10-16 after review (same family, independent context): labelled blocks (note §12),
+// `matches!` with a pattern and guard, `2.` floats, one level of nested block comments, and
+// `\u{..}` escapes limited to Unicode scalar values.
+
+start      : _s ((item | ";") _s)*
+loose      : _s (stmt _s)*
+
+// ---------------------------------------------------------------- items
+item       : (attr _s)* (vis _WS)? decl
+?decl      : fn_item | struct_item | enum_item | trait_item | impl_item | type_item | const_item
+           | use_item | mod_item | format_item | invariant_item | schedule_item | spec_item
+           | flow_item | store_item | evolve_item | export_item | comptime_item
+attr       : "#" _s "[" _s path (_s attr_args)? _s "]"
+attr_args  : "(" _s (expr_list _s)? ")" | "=" _s literal
+vis        : "pub" (_s "(" _s path _s ")")?
+
+fn_item    : (FN_KIND _WS)? "fn" _WS fn_rest
+FN_KIND    : "kernel" | "policy"
+fn_rest    : NAME (_s generics)? _s params (_s "->" _s type)? (_s fn_clause)* _s (block | ";")
+?fn_clause : effects | contract | where_clause
+effects    : "uses" _s "{" _s (effect (_s "," _s effect)* (_s ",")? _s)? "}"
+effect     : NAME (_s "(" _s NAME _s ")")?
+contract   : ("requires" | "ensures") _WS expr
+where_clause: "where" _WS wpred (_s "," _s wpred)* (_s ",")?
+wpred      : type _s ":" _s bounds
+generics   : "<" _s gparam (_s "," _s gparam)* (_s ",")? _s ">"
+gparam     : NAME (_s ":" _s bounds)? (_s "=" _s type)?
+           | "const" _WS NAME _s ":" _s type
+bounds     : bound (_s "+" _s bound)*
+bound      : ("?" _s)? path_type
+           | path _s "(" _s (type_list _s)? ")" (_s "->" _s type)?   // Fn(A) -> B
+params     : "(" _s ((self_param | param) (_s "," _s param)* (_s ",")? _s)? ")"
+self_param : "&" _s ("mut" _WS)? "self" | ("mut" _WS)? "self" (_s ":" _s type)?
+param      : (attr _s)* pat _s ":" _s type
+
+struct_item: ("linear" _WS)? "struct" _WS NAME (_s generics)? _s (fields | tuple_fields _s ";" | ";")
+fields     : "{" _s (field (_s "," _s field)* (_s ",")? _s)? "}"
+field      : (attr _s)* (vis _WS)? NAME _s ":" _s type
+tuple_fields: "(" _s (tfield (_s "," _s tfield)* (_s ",")? _s)? ")"
+tfield     : (attr _s)* (vis _WS)? type
+enum_item  : "enum" _WS NAME (_s generics)? _s "{" _s (variant (_s "," _s variant)* (_s ",")? _s)? "}"
+variant    : (attr _s)* NAME (_s (fields | tuple_fields))? (_s "=" _s expr)?
+trait_item : "trait" _WS NAME (_s generics)? (_s ":" _s bounds)? (_s where_clause)? _s "{" _s (assoc_item _s)* "}"
+impl_item  : "impl" (_s generics)? _WS (path_type _WS "for" _WS)? type (_s where_clause)? _s "{" _s (assoc_item _s)* "}"
+assoc_item : (attr _s)* (vis _WS)? (fn_item | type_item | const_item)
+type_item  : "type" _WS NAME (_s generics)? (_s ":" _s bounds)? (_s "=" _s type)? _s ";"
+const_item : ("const" | "static") _WS ("mut" _WS)? NAME _s ":" _s type (_s "=" _s expr)? _s ";"
+use_item   : "use" _WS use_tree _s ";"
+use_tree   : ("::" _s)? (pname _s "::" _s)* (pname (_WS "as" _WS NAME)? | "*" | "{" _s (use_tree (_s "," _s use_tree)* (_s ",")? _s)? "}")
+mod_item   : "mod" _WS NAME _s (";" | "{" _s ((item | ";") _s)* "}")
+
+// Mithril items: format (02 §7.1), invariant (01 §9.1), schedule (02 §8), spec (01 §9.3)
+format_item: "format" _WS NAME _s "{" _s (ffield (_s "," _s ffield)* (_s ",")? _s)? "}"
+ffield     : NAME _s ":" _s fcode
+fcode      : NAME (_s "<" _s fcarg (_s "," _s fcarg)* (_s ",")? _s ">")?   // nibbles<64, offset = 8>
+           | "[" _s fcode _s ";" _s expr _s "]"
+fcarg      : (NAME _s "=" _s)? ("-" _s)? (INT | path)
+invariant_item: "invariant" _WS path _s "{" _s expr _s "}"
+schedule_item: "schedule" _WS NAME _WS "for" _WS path _WS "on" _WS NAME (_s "(" _s NAME (_s "," _s NAME)* (_s ",")? _s ")")? _s "{" _s (directive _s)* "}"
+directive  : WORD (_WS (WORD ("." WORD)* | INT))* _s ";"          // tile r by 16;
+spec_item  : "spec" _WS NAME _WS "for" _WS path _s "{" _s (claim _s)* "}"
+claim      : "claim" _WS NAME _s "(" _s (path (_s "," _s path)* _s)? ")" _WS "requires" _WS NAME (_WS qualifier)? _s ";"
+qualifier  : NAME _s "(" _s qarg (_s "," _s qarg)* _s ")"      // noninferior(to: f, margin: 3%)
+qarg       : NAME _s ":" _s (path | (INT | FLOAT) "%"?)
+
+// [not in X1] items: recognised, then rejected by the checker with E-OUT-OF-SCOPE-<KW>
+flow_item  : "flow" _WS fn_rest
+store_item : "store" _WS NAME _s oos_block
+evolve_item: "evolve" _WS "slot" (_WS oos_tok)* _s oos_block
+export_item: "export" _WS "abi" (_WS oos_tok)* _s (oos_block | ";")
+comptime_item: "comptime" _s oos_block
+oos_block  : "{" _s ((oos_tok | oos_block | ";") _s)* "}"
+?oos_tok   : WORD | INT | FLOAT | ESCAPED_STRING | OOS_PUNCT
+           | "(" _s ((oos_tok | ";") _s)* ")" | "[" _s ((oos_tok | ";") _s)* "]"
+
+// ---------------------------------------------------------------- types and paths
+?type      : path_type
+           | "&" _s ("mut" _WS)? type                                   -> ref_type
+           | "[" _s type _s (";" _s expr _s)? "]"                 -> slice_type
+           | "(" _s (type_list _s)? ")"                               -> tuple_type
+           | "!"                                                          -> never_type
+           | "impl" _WS bounds                                            -> impl_type
+           | "dyn" _WS bounds                                             -> dyn_type   // [typed later]
+           | "fn" _s "(" _s (type_list _s)? ")" (_s "->" _s type)? -> fn_type
+type_list  : type (_s "," _s type)* (_s ",")?
+path_type  : ("::" _s)? tseg (_s "::" _s tseg)*
+tseg       : pname (_s ("::" _s)? generic_args)?
+generic_args: "<" _s (garg (_s "," _s garg)* (_s ",")? _s)? ">"
+?garg      : type | NAME _s "=" _s type -> binding | ("-" _s)? INT | block
+path       : ("::" _s)? pname (_s "::" _s pname)*
+path_expr  : ("::" _s)? eseg (_s "::" _s eseg)*
+eseg       : pname (_s "::" _s generic_args)?                        // turbofish only
+pname      : NAME | "self" | "Self" | "crate" | "super"
+
+// ---------------------------------------------------------------- patterns
+?pattern   : ("|" _s)? pat (_s "|" _s pat)*
+?pat       : lit_pat | path_expr | ".."
+           | ("ref" _WS)? "mut" _WS NAME | "ref" _WS NAME | NAME _s "@" _s pat
+           | "&" _s ("mut" _WS)? pat                                    -> ref_pat
+           | "(" _s (pat_list _s)? ")"                                -> tuple_pat
+           | "[" _s (pat_list _s)? "]"                                -> slice_pat
+           | path_expr _s "(" _s (pat_list _s)? ")"                 -> tuple_struct_pat
+           | path_expr _s "{" _s (fpats _s)? "}"                    -> struct_pat
+           | (lit_pat | path_expr) _s ("..=" | "..") _s (lit_pat | path_expr) -> range_pat
+pat_list   : pattern (_s "," _s pattern)* (_s ",")?
+fpats      : fpat (_s "," _s fpat)* (_s "," (_s "..")?)? | ".."
+fpat       : NAME _s ":" _s pattern | ("ref" _WS)? ("mut" _WS)? NAME
+lit_pat    : ("-" _s)? (INT | FLOAT) | ESCAPED_STRING | CHAR | "true" | "false"
+
+// ---------------------------------------------------------------- statements
+block      : "{" _s (stmt _s)* (expr _s)? "}"
+?stmt      : let_stmt | expr _s ";" | blocklike | item | ";"
+let_stmt   : "let" _WS pattern (_s ":" _s type)? (_s "=" _s expr (_s "else" _s block)?)? _s ";"
+?blocklike : block | if_expr | match_expr | loop_expr | while_expr | for_expr | det_expr | comptime_expr | labeled_block
+
+// ---------------------------------------------------------------- expressions (Rust's precedence)
+?expr      : assign | closure
+           | "return" (_WS expr)?                                         -> return_expr
+           | "break" (_WS LABEL)? (_WS expr)?                             -> break_expr
+           | "continue" (_WS LABEL)?                                      -> continue_expr
+closure    : ("move" _s)? ("||" | "|" _s cparam (_s "," _s cparam)* (_s ",")? _s "|") _s (expr | "->" _s type _s block)
+cparam     : pat (_s ":" _s type)?
+?assign    : range (_s ASSIGN_OP _s expr)?
+?range     : or_expr | or_expr _s RANGE (_s or_expr)? | RANGE (_s or_expr)?
+?or_expr   : and_expr (_s "||" _s and_expr)*
+?and_expr  : cmp_expr (_s "&&" _s cmp_expr)*
+?cmp_expr  : bor_expr (_s CMP _s bor_expr)?                           // not associative
+?bor_expr  : bxor_expr (_s BOR _s bxor_expr)*
+?bxor_expr : band_expr (_s BXOR _s band_expr)*
+?band_expr : shift_expr (_s BAND _s shift_expr)*
+?shift_expr: sum_expr (_s SHIFT _s sum_expr)*
+?sum_expr  : prod_expr (_s ADD _s prod_expr)*
+?prod_expr : cast_expr (_s MUL _s cast_expr)*
+?cast_expr : unary (_s "as" _WS type)*
+?unary     : postfix | UNOP _s unary | "&" _s ("mut" _WS)? unary
+?postfix   : primary (_s suffix)*
+suffix     : "?" | args | "[" _s expr _s "]"
+           | "." _s (NAME (_s "::" _s generic_args)? | TUPLE_IDX)
+args       : "(" _s (expr_list _s)? ")"
+expr_list  : expr (_s "," _s expr)* (_s ",")?
+?primary   : literal | path_expr | struct_lit | blocklike | macro_call
+           | "(" _s expr _s ")"
+           | "(" _s (expr _s "," _s (expr_list _s)?)? ")"         -> tuple
+           | "[" _s (expr_list _s)? "]"                               -> array
+           | "[" _s expr _s ";" _s expr _s "]"                    -> array_repeat
+literal    : INT | FLOAT | ESCAPED_STRING | CHAR | "true" | "false"
+struct_lit : path_expr _s "{" _s (sfields _s)? "}"
+sfields    : sfield (_s "," _s sfield)* (_s "," (_s ".." _s expr)?)? | ".." _s expr
+sfield     : (NAME | TUPLE_IDX) (_s ":" _s expr)?
+if_expr    : "if" _WS cond _s block (_s "else" (_WS if_expr | _s block))?
+cond       : ("let" _WS pattern _s "=" _s)? expr
+match_expr : "match" _WS expr _s "{" _s (arm_sep _s)* (arm _s)? "}"
+arm_sep    : arm _s "," | arm_head _s blocklike
+arm        : arm_head _s expr
+arm_head   : (attr _s)* pattern (_WS "if" _WS expr)? _s "=>"
+loop_expr  : (label _s)? "loop" _s block
+while_expr : (label _s)? "while" _WS cond _s block
+for_expr   : (label _s)? ("par" _WS)? "for" _WS pattern _WS "in" _WS expr _s block
+label      : LABEL _s ":"
+labeled_block: label _s block                                          // 'a: { .. break 'a v; .. } (note section 3.2)
+det_expr   : "deterministic" _s "(" _s "by" _s ":" _s path _s ")" _s block
+comptime_expr: "comptime" _s block                                       // [not in X1]
+macro_call : NAME "!" _s ("(" _s (margs _s)? ")" | "[" _s (margs _s)? "]")   // todo!("name") is the typed hole
+margs      : expr_list | expr _s ";" _s expr                          // vec![x; n]
+           | expr _s "," _s pattern (_WS "if" _WS expr)?                 // matches!(e, P if g)
+
+// ---------------------------------------------------------------- terminals
+NAME       : /(?!(?:as|async|await|break|const|continue|crate|dyn|else|enum|extern|false|fn|for|if|impl|in|let|loop|match|mod|move|mut|pub|ref|return|self|Self|static|struct|super|trait|true|type|unsafe|use|where|while)(?![A-Za-z0-9_]))[A-Za-z_][A-Za-z0-9_]*/
+WORD       : /[A-Za-z_][A-Za-z0-9_]*/
+INT        : /(?:0x[0-9a-fA-F_]+|0o[0-7_]+|0b[01_]+|[0-9][0-9_]*)(?:[iu](?:8|16|32|64|128|size))?(?![0-9A-Za-z_]|\.[0-9])/
+FLOAT      : /[0-9][0-9_]*(?:\.[0-9][0-9_]*(?:[eE][+-]?[0-9_]+)?|[eE][+-]?[0-9_]+)(?:f16|f32|f64)?(?![0-9A-Za-z_])|[0-9][0-9_]*(?:f16|f32|f64)(?![0-9A-Za-z_])|[0-9][0-9_]*\.(?![.0-9A-Za-z_])/
+TUPLE_IDX  : /[0-9]+(?![0-9A-Za-z_])/
+CHAR       : /b?'(?:[^'\\\n]|\\(?:[nrt0\\'"]|x[0-9a-fA-F]{2}|u\{0*(?:[0-9a-fA-F]{1,3}|(?![dD][89a-fA-F])[0-9a-fA-F]{4}|[0-9a-fA-F]{5}|10[0-9a-fA-F]{4})\}))'/   // Unicode scalar values only
+LABEL      : /'[A-Za-z_][A-Za-z0-9_]*(?!')/
+RANGE      : /\.\.(?:=|(?![.=]))/
+ASSIGN_OP  : /(?:[-+*\/%^&|]|<<|>>)?=(?![=>])/
+CMP        : /==|!=|<=|>=|<(?![<=])|>(?![>=])/
+SHIFT      : /<<(?!=)|>>(?!=)/
+ADD        : /\+(?!=)|-(?![=>])/
+MUL        : /\*(?!=)|%(?!=)|\/(?![\/*=])/
+BAND       : /&(?![&=])/
+BOR        : /\|(?![|=])/
+BXOR       : /\^(?!=)/
+UNOP       : /[-!*]/
+OOS_PUNCT  : /(?:[-+*%^!&|=<>@.,:?#$~]|\/(?![\/*]))+/
+COMMENT    : /\/\/[^\n]*/ | /\/\*(?:[^*\/]|\*(?!\/)|\/(?!\*)|\/\*(?:[^*]|\*(?!\/))*\*\/)*\*\//   // one level of nesting
+_WS        : (WS | COMMENT)+
+_s         : _WS?                // optional whitespace as one nullable rule: Earley runs ~8x faster
+%import common.WS
+%import common.ESCAPED_STRING

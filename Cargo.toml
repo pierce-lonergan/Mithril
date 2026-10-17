@@ -1,0 +1,29 @@
+# Mithril Cargo workspace (M0). Members are added by the track that owns them.
+# Build outputs go outside the repository: set CARGO_TARGET_DIR (see crates/mithi/README.md).
+[workspace]
+resolver = "2"
+members = ["crates/mithi"]
+
+[workspace.package]
+edition = "2021"
+license = "Apache-2.0"
+publish = false
+
+[profile.dev]
+# Interpreter tests run snippets in loops; a little optimisation keeps them fast without
+# slowing the build much.
+opt-level = 1
+overflow-checks = true
+
+[profile.release]
+overflow-checks = true
+
+# The build whose hash is frozen at the X1 checker precondition (DESIGN section 9.3): no debug
+# information (it embeds absolute source paths), stripped, one codegen unit. Build it with the
+# source paths remapped (crates/mithi/README.md, "Freeze build").
+[profile.freeze]
+inherits = "release"
+debug = 0
+strip = true
+codegen-units = 1
+overflow-checks = true

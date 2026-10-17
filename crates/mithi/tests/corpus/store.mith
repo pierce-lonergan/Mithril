@@ -1,0 +1,135 @@
+// S-STORE-0 shape (X1 design 5.2): a fixed-capacity slab arena with pins. Lowest free index
+// allocation; fresh slabs read as zero; free of a pinned slot is Pinned; double free is
+// NotAllocated; pins nest; unpin at zero is NotPinned; out-of-range offsets are OutOfRange.
+#[derive(Copy, Clone, PartialEq, Debug)]
+enum ArenaError { BadConfig, NotAllocated, Pinned, NotPinned, OutOfRange }
+
+struct SlabArena {
+    used: Vec<bool>,
+    pins: Vec<u32>,
+    data: Vec<u8>,
+    slab_bytes: usize,
+}
+
+impl SlabArena {
+    pub fn new(n_slots: u32, slab_bytes: usize) -> Result<SlabArena, ArenaError> uses { alloc(Global) } {
+        if slab_bytes == 0 || slab_bytes % 4096 != 0 || n_slots == 0 {
+            return Err(ArenaError::BadConfig);
+        }
+        let n = n_slots as usize;
+        let total = match n.checked_mul(slab_bytes) {
+            Some(t) => t,
+            None => return Err(ArenaError::BadConfig),
+        };
+        Ok(SlabArena { used: vec![false; n], pins: vec![0u32; n], data: vec![0u8; total], slab_bytes: slab_bytes })
+    }
+
+    pub fn alloc(&mut self) -> Option<u32> {
+        for i in 0..self.used.len() {
+            if !self.used[i] {
+                self.used[i] = true;
+                let base = i * self.slab_bytes;
+                for k in 0..self.slab_bytes {
+                    self.data[base + k] = 0;
+                }
+                return Some(i as u32);
+            }
+        }
+        None
+    }
+
+    fn slot(&self, id: u32) -> Result<usize, ArenaError> {
+        let i = id as usize;
+        if i >= self.used.len() || !self.used[i] {
+            return Err(ArenaError::NotAllocated);
+        }
+        Ok(i)
+    }
+
+    pub fn free(&mut self, id: u32) -> Result<(), ArenaError> {
+        let i = self.slot(id)?;
+        if self.pins[i] > 0 {
+            return Err(ArenaError::Pinned);
+        }
+        self.used[i] = false;
+        Ok(())
+    }
+
+    pub fn pin(&mut self, id: u32) -> Result<(), ArenaError> {
+        let i = self.slot(id)?;
+        self.pins[i] += 1;
+        Ok(())
+    }
+
+    pub fn unpin(&mut self, id: u32) -> Result<(), ArenaError> {
+        let i = self.slot(id)?;
+        if self.pins[i] == 0 {
+            return Err(ArenaError::NotPinned);
+        }
+        self.pins[i] -= 1;
+        Ok(())
+    }
+
+    pub fn write(&mut self, id: u32, off: usize, src: &[u8]) -> Result<(), ArenaError> {
+        let i = self.slot(id)?;
+        if off > self.slab_bytes || src.len() > self.slab_bytes - off {
+            return Err(ArenaError::OutOfRange);
+        }
+        let base = i * self.slab_bytes + off;
+        for k in 0..src.len() {
+            self.data[base + k] = src[k];
+        }
+        Ok(())
+    }
+
+    pub fn read(&self, id: u32, off: usize, dst: &mut [u8]) -> Result<(), ArenaError> {
+        let i = self.slot(id)?;
+        if off > self.slab_bytes || dst.len() > self.slab_bytes - off {
+            return Err(ArenaError::OutOfRange);
+        }
+        let base = i * self.slab_bytes + off;
+        for k in 0..dst.len() {
+            dst[k] = self.data[base + k];
+        }
+        Ok(())
+    }
+}
+
+#[test]
+fn lowest_free_index_and_zeroing() {
+    let mut a = SlabArena::new(3, 4096).unwrap();
+    assert_eq!(a.alloc(), Some(0));
+    assert_eq!(a.alloc(), Some(1));
+    a.write(0, 10, &[7u8, 8, 9]).unwrap();
+    a.free(0).unwrap();
+    assert_eq!(a.alloc(), Some(0));
+    let mut buf = [1u8; 3];
+    a.read(0, 10, &mut buf).unwrap();
+    assert_eq!(buf[0], 0);
+    assert_eq!(buf[2], 0);
+}
+
+#[test]
+fn pins_nest_and_errors_are_precise() {
+    let mut a = SlabArena::new(2, 4096).unwrap();
+    let id = a.alloc().unwrap();
+    a.pin(id).unwrap();
+    a.pin(id).unwrap();
+    assert_eq!(a.free(id), Err(ArenaError::Pinned));
+    a.unpin(id).unwrap();
+    a.unpin(id).unwrap();
+    assert_eq!(a.unpin(id), Err(ArenaError::NotPinned));
+    a.free(id).unwrap();
+    assert_eq!(a.free(id), Err(ArenaError::NotAllocated));
+    assert_eq!(a.write(1, 0, &[1u8]), Err(ArenaError::NotAllocated));
+    let j = a.alloc().unwrap();
+    assert_eq!(a.write(j, 4095, &[1u8, 2]), Err(ArenaError::OutOfRange));
+}
+
+#[test]
+fn bad_config_is_rejected() {
+    match SlabArena::new(4, 100) {
+        Err(e) => assert_eq!(e, ArenaError::BadConfig),
+        Ok(_) => panic!("100 is not a multiple of 4096"),
+    }
+}

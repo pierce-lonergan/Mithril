@@ -1,0 +1,50 @@
+// S-ROUTE-0 shape (X1 design 5.2), simplified to plain top-k: descending by value, ties to the
+// lower index, NaN after every number (lower index first among NaNs). An exact kernel: no float
+// sort, no max_by (FF-TIES); an explicit selection with a strict comparison.
+kernel fn topk(sel: &[f32], k: usize, ids: &mut [u32], taken: &mut [bool])
+    requires ids.len() == k && taken.len() == sel.len() && k <= sel.len() && sel.len() <= 4096
+{
+    for i in 0..taken.len() {
+        taken[i] = false;
+    }
+    for r in 0..k {
+        // the best candidate's value is kept in a local: an index carried across iterations has
+        // no provable bound without a loop invariant (DR-012), so `sel[best]` would be an
+        // undischarged obligation in a kernel
+        let mut best: usize = 0;
+        let mut best_v: f32 = 0.0;
+        let mut have = false;
+        for i in 0..sel.len() {
+            if taken[i] { continue; }
+            if !have || ranks_before(sel[i], best_v) {
+                best = i;
+                best_v = sel[i];
+                have = true;
+            }
+        }
+        if have && best < taken.len() {
+            taken[best] = true;
+            ids[r] = best as u32;
+        }
+    }
+}
+
+// a before b: larger value first; a number before NaN; equal values keep index order (the caller
+// scans in index order and replaces only on strict precedence)
+fn ranks_before(a: f32, b: f32) -> bool {
+    if a.is_nan() { return false; }
+    if b.is_nan() { return true; }
+    a > b
+}
+
+#[test]
+fn ties_go_to_the_lower_index_and_nan_is_last() {
+    let sel = [0.5f32, 2.0, f32::NAN, 2.0, -1.0];
+    let mut ids = [0u32; 4];
+    let mut taken = [false; 5];
+    topk(&sel, 4, &mut ids, &mut taken);
+    assert_eq!(ids[0], 1);
+    assert_eq!(ids[1], 3);
+    assert_eq!(ids[2], 0);
+    assert_eq!(ids[3], 4);
+}

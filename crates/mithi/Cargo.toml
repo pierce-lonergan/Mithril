@@ -1,0 +1,15 @@
+[package]
+name = "mithi"
+version = "0.1.0"
+description = "Independent tree-walking interpreter and MCore checker for Mithril's X1 subset (DR-010)"
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+# No dependencies, on purpose: mithi is the differential oracle (DR-010) and is hash-frozen at the
+# X1 checker precondition (ROADMAP 3.2). SHA-256, JSON and the TOML subset it needs are in-tree.
+[dependencies]
+
+[[bin]]
+name = "mithi"
+path = "src/main.rs"

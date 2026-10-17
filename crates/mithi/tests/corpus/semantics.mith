@@ -1,0 +1,86 @@
+// Rust's meaning for casts, integer and float operations, formatting and ordering, which the X1
+// subset keeps (01 section 2.1). Expected values are Rust's documented results, written by
+// mithi's author; rustc was not run on this file [inference].
+#[test]
+fn casts() {
+    assert_eq!((-1i32) as u32, 4294967295);
+    assert_eq!(300u32 as u8, 44);
+    assert_eq!((-1.5f32) as i32, -1);
+    assert_eq!((-1.5f32) as u32, 0);
+    assert_eq!(f32::NAN as u8, 0);
+    assert_eq!((3.99f64) as u8, 3);
+    assert_eq!((-128i8) as u8, 128);
+    assert_eq!((200u8) as i8, -56);
+    assert_eq!((1u64 << 40) as u32, 0);
+    assert_eq!((16777217u32) as f32, 16777216.0);
+    assert_eq!(u64::MAX as f32, 18446744073709551616.0);
+}
+#[test]
+fn int_ops() {
+    assert_eq!(-7i32 / 2, -3);
+    assert_eq!(-7i32 % 2, -1);
+    assert_eq!(-8i32 >> 1, -4);
+    assert_eq!(1u32 << 31, 2147483648);
+    assert_eq!(0xF0u8 >> 4, 15);
+    assert_eq!(!0u8, 255);
+    assert_eq!(!5i32, -6);
+    assert_eq!(5u32.pow(3), 125);
+    assert_eq!(i32::MAX.wrapping_add(1), i32::MIN);
+    assert_eq!((-5i32).abs(), 5);
+    assert_eq!(usize::MAX, 18446744073709551615);
+    assert_eq!(7u32.checked_sub(8), None);
+    assert_eq!(250u8.saturating_add(10), 255);
+}
+#[test]
+fn floats() {
+    assert_eq!(f32::max(f32::NAN, 1.0), 1.0);
+    assert_eq!((1.0f32 / 3.0).to_bits(), 0x3eaaaaab);
+    assert_eq!((2.0f32).sqrt().to_bits(), 0x3fb504f3);
+    assert!((0.0f32 / 0.0).is_nan());
+    assert_eq!((-0.0f32).to_bits(), 0x80000000);
+    assert_eq!((1.5f32).floor(), 1.0);
+    assert_eq!((-1.5f32).round(), -2.0);
+    assert_eq!((1e30f32 * 1e10f32), f32::INFINITY);
+    assert_eq!(f32::MAX.to_bits(), 0x7f7fffff);
+}
+#[test]
+fn strings() {
+    assert_eq!(format!("{}", 1.5f32), "1.5");
+    assert_eq!(format!("{}", 1.0f32), "1");
+    assert_eq!(format!("{:?}", 1.0f32), "1.0");
+    assert_eq!(format!("{}-{}", 3u32, -4i32), "3--4");
+    assert_eq!(format!("{:?}", Some(2u32)), "Some(2)");
+    assert_eq!(format!("{:5}|", 42u32), "   42|");
+    assert_eq!(format!("{:<5}|", 42u32), "42   |");
+    assert_eq!(format!("{:.2}", 3.14159f32), "3.14");
+    assert_eq!(format!("{:x}", 255u32), "ff");
+    assert_eq!(format!("{:08b}", 5u8), "00000101");
+}
+#[test]
+fn ordering() {
+    let mut v = vec![(2u32, 1u32), (1, 2), (2, 0), (1, 1)];
+    v.sort_by_key(|p| p.0);
+    assert_eq!(v[0], (1, 2));
+    assert_eq!(v[1], (1, 1));
+    assert_eq!(v[2], (2, 1));
+    let m = [3u32, 9, 9, 1].iter().enumerate().max_by_key(|p| *p.1).unwrap();
+    assert_eq!(m.0, 2);
+    let n = [3u32, 1, 1].iter().enumerate().min_by_key(|p| *p.1).unwrap();
+    assert_eq!(n.0, 1);
+    let r: Vec<u32> = (0..5u32).rev().step_by(2).collect();
+    assert_eq!(r, vec![4, 2, 0]);
+}
+#[test]
+fn radix() {
+    assert_eq!(format!("{:x}", -1i8), "ff");
+    assert_eq!(format!("{:#06x}", 255u32), "0x00ff");
+    assert_eq!(format!("{:X}", 3054u32), "BEE");
+    assert_eq!(format!("{:o}", 8u32), "10");
+    assert_eq!(format!("{:#b}", 5u8), "0b101");
+}
+#[test]
+fn zero_pad_sign() {
+    assert_eq!(format!("{:05}", -42i32), "-0042");
+    assert_eq!(format!("{:>6.2}", 3.14159f32), "  3.14");
+    assert_eq!(format!("{:^7}|", 1u8), "   1   |");
+}

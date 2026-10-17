@@ -1,0 +1,119 @@
+// S-FMT-0 shape (X1 design 5.2): a routing-trace parser. Six little-endian u32 (magic "HRTR"
+// 0x52545248, version 1, n_layers, n_experts, top_k, n_moe_layers), then n_moe_layers * top_k
+// u16 ids per token. Checks in the brief's order.
+#[derive(Copy, Clone, PartialEq, Debug)]
+enum TraceError { Truncated, BadMagic, BadVersion, Mismatch, BadId }
+
+struct ModelDims { n_experts: u32, top_k: u32, n_moe_layers: u32 }
+
+#[derive(Debug)]
+struct TraceHeader { n_layers: u32, n_experts: u32, top_k: u32, n_moe_layers: u32, n_tokens: u64 }
+
+fn u32_at(buf: &[u8], off: usize) -> u32 {
+    u32::from_le_bytes([buf[off], buf[off + 1], buf[off + 2], buf[off + 3]])
+}
+
+fn parse_trace(buf: &[u8], m: &ModelDims, ids: &mut Vec<u16>) -> Result<TraceHeader, TraceError> uses { alloc(Global) } {
+    if buf.len() < 24 {
+        return Err(TraceError::Truncated);
+    }
+    if u32_at(buf, 0) != 0x52545248 {
+        return Err(TraceError::BadMagic);
+    }
+    if u32_at(buf, 4) != 1 {
+        return Err(TraceError::BadVersion);
+    }
+    let n_layers = u32_at(buf, 8);
+    let n_experts = u32_at(buf, 12);
+    let top_k = u32_at(buf, 16);
+    let n_moe = u32_at(buf, 20);
+    if n_experts != m.n_experts || top_k != m.top_k || n_moe != m.n_moe_layers {
+        return Err(TraceError::Mismatch);
+    }
+    if n_layers < n_moe {
+        return Err(TraceError::Mismatch);
+    }
+    let rec = (n_moe as usize) * (top_k as usize) * 2;
+    let body = buf.len() - 24;
+    if rec == 0 || body % rec != 0 {
+        return Err(TraceError::Truncated);
+    }
+    let mut off = 24;
+    while off < buf.len() {
+        let id = u16::from_le_bytes([buf[off], buf[off + 1]]);
+        if (id as u32) >= n_experts {
+            return Err(TraceError::BadId);
+        }
+        ids.push(id);
+        off += 2;
+    }
+    Ok(TraceHeader { n_layers: n_layers, n_experts: n_experts, top_k: top_k, n_moe_layers: n_moe, n_tokens: (body / rec) as u64 })
+}
+
+fn put32(v: &mut Vec<u8>, x: u32) uses { alloc(Global) } {
+    let b = x.to_le_bytes();
+    for i in 0..4 {
+        v.push(b[i]);
+    }
+}
+
+fn sample(magic: u32, ids: &[u16]) -> Vec<u8> uses { alloc(Global) } {
+    let mut v: Vec<u8> = Vec::new();
+    put32(&mut v, magic);
+    put32(&mut v, 1);
+    put32(&mut v, 4);
+    put32(&mut v, 8);
+    put32(&mut v, 2);
+    put32(&mut v, 1);
+    for id in ids {
+        let b = id.to_le_bytes();
+        v.push(b[0]);
+        v.push(b[1]);
+    }
+    v
+}
+
+#[test]
+fn parses_a_valid_trace() {
+    let m = ModelDims { n_experts: 8, top_k: 2, n_moe_layers: 1 };
+    let buf = sample(0x52545248, &[1u16, 7, 3, 0]);
+    let mut ids: Vec<u16> = Vec::new();
+    let h = parse_trace(&buf, &m, &mut ids).unwrap();
+    assert_eq!(h.n_tokens, 2);
+    assert_eq!(ids.len(), 4);
+    assert_eq!(ids[1], 7);
+}
+
+#[test]
+fn errors_in_order() {
+    let m = ModelDims { n_experts: 8, top_k: 2, n_moe_layers: 1 };
+    let mut ids: Vec<u16> = Vec::new();
+    let short = [0u8; 10];
+    assert_eq!(parse_trace(&short, &m, &mut ids).unwrap_err_code(), 0);
+    let bad = sample(0x11111111, &[1u16, 2]);
+    match parse_trace(&bad, &m, &mut ids) {
+        Err(e) => assert_eq!(e, TraceError::BadMagic),
+        Ok(_) => panic!("magic"),
+    }
+    let badid = sample(0x52545248, &[9u16, 2]);
+    match parse_trace(&badid, &m, &mut ids) {
+        Err(e) => assert_eq!(e, TraceError::BadId),
+        Ok(_) => panic!("id"),
+    }
+    let odd = sample(0x52545248, &[1u16, 2, 3]);
+    match parse_trace(&odd, &m, &mut ids) {
+        Err(e) => assert_eq!(e, TraceError::Truncated),
+        Ok(_) => panic!("partial record"),
+    }
+}
+
+trait ErrCode { fn unwrap_err_code(self) -> u32; }
+impl ErrCode for Result<TraceHeader, TraceError> {
+    fn unwrap_err_code(self) -> u32 {
+        match self {
+            Err(TraceError::Truncated) => 0,
+            Err(_) => 1,
+            Ok(_) => 2,
+        }
+    }
+}

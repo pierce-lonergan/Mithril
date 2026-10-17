@@ -1,0 +1,50 @@
+// S-EVICT-0 shape (X1 design 5.2): LRU victim as a timing_only policy. Candidates are slots that
+// are not pinned and have no references; the largest age wins, including age 0; ties go to the
+// lower id; no candidate gives no hint.
+policy fn lru_victim(slots: &[SlotView], now: Tick) -> Hint<SlotId> {
+    let mut best: Option<SlotView> = None;
+    for s in slots {
+        if s.pinned || s.refs > 0 { continue; }
+        if s.last_use.0 > now.0 { continue; }
+        let age = now.0 - s.last_use.0;
+        match best {
+            None => best = Some(*s),
+            Some(b) => {
+                let b_age = now.0 - b.last_use.0;
+                if age > b_age || (age == b_age && s.id.0 < b.id.0) {
+                    best = Some(*s);
+                }
+            }
+        }
+    }
+    match best {
+        Some(b) => Hint::some(b.id),
+        None => Hint::none(),
+    }
+}
+
+fn view(id: u32, pinned: bool, refs: u32, last: u64) -> SlotView {
+    SlotView { id: SlotId(id), idx: id as usize, pinned: pinned, refs: refs, last_use: Tick(last) }
+}
+
+#[test]
+fn picks_largest_age_including_zero() {
+    let s = [view(4, false, 0, 10)];
+    match lru_victim(&s, Tick(10)).get() {
+        Some(id) => assert_eq!(id.0, 4),
+        None => panic!("age 0 must still be a candidate"),
+    }
+}
+
+#[test]
+fn ties_go_to_the_lower_id() {
+    let s = [view(9, false, 0, 3), view(2, false, 0, 3), view(5, true, 0, 0)];
+    let h = lru_victim(&s, Tick(8));
+    assert_eq!(h.get().unwrap().0, 2);
+}
+
+#[test]
+fn no_candidate_no_hint() {
+    let s = [view(1, true, 0, 0), view(2, false, 3, 0)];
+    assert!(lru_victim(&s, Tick(5)).get().is_none());
+}
