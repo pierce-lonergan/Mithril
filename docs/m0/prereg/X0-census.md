@@ -1,7 +1,7 @@
 # X0: instruction census of Hearth's quant kernels
 
-Status: DRAFT (to be FROZEN at the commit that first adds it with this line changed to FROZEN, and
-not before every item of Appendix D is done)
+Status: FROZEN (2026-10-17, by the lead engineer; the freeze point is the commit that first carries this line;
+not yet SIGNED: the Owner signs at the weekly sitting, D0-12)
 ROADMAP anchor: [§3.1](../../ROADMAP.md#31-x0-instruction-census-weeks-015); DR-008; G02 open question 6
 Owner authorisation: **answered on both parts of OQ-6, pending ratification at sitting 1 (Sunday 2026-10-18)**:
 the instruction part through D0-12 ([OWNER-QUEUE.md](../OWNER-QUEUE.md) R3, "D0-12i CONFIRMED") and the spend part
