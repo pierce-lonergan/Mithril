@@ -1,9 +1,8 @@
 # Sitting 1: Sunday 2026-10-18, evening
 
-Status: **DRAFT packet**, prepared Fri 2026-10-16 by the packet track (a Claude agent) and revised the
-same night after one review (Claude, same family, independent context; [Review log](#review-log)).
-The lead engineer finalises it by Sat 2026-10-17, night. He fills the three `<<FILL: …>>` freeze
-hashes and drops any record that is not FROZEN by then.
+Status: **FINAL packet** (lead engineer, Sat 2026-10-17, 08:50 PT). Drafted Fri 2026-10-16 by the packet track and
+revised after one review (Claude, same family, independent context; [Review log](#review-log)). X0 is FROZEN and
+its census has run (item 5). Items 4 (X4 noise pilot) and 6 (X1 amendment) are not FROZEN and move to sitting 2.
 
 **Time** [inference; sums D]. The core items (0–3, 7 and 8) take about **75–105 minutes if your
 signing key exists before Sunday**, and 90–165 minutes if you create it at the sitting. Each record you
