@@ -1,0 +1,74 @@
+{
+ "B_iform.json": "a66e1a935d887a272d5f3fb868d10a1877f8e4d7b26137a3962079b1edcb1eaa",
+ "_provenance": {
+  "compilers": "Table 2.1 compiler binaries per configuration (TOOLCHAINS.md section 11; full hashes [M, x0prep, steps 70 and 71, 2026-10-16]); every census build record's compiler_sha256 must equal its configuration's map",
+  "scripts": "SHA-256 of every census script, test, smoke input and runbook file of FREEZE.md items D5, D6, D8, D10 and D11, by path under experiments/x0-census; judge.py V4 compares the files on disk and census.json record.scripts_sha256 with this map",
+  "written": "2026-10-16 by x0prep (scripts and compilers maps added by the x0prep reviser after the review of 2026-10-16); recompute and compare with FREEZE.md before freezing",
+  "x86-intel.xml": "rust-lang/stdarch eb9b3025937c85bd271a3ca46a681cd52739db12 intrinsics_data/x86-intel.xml (not stored in this repository)"
+ },
+ "compilers": {
+  "A": {
+   "c1.dll": "6176d88c3e682f64ef960e29ecde0ff431785da664eba854e571e280dba6604b",
+   "c2.dll": "b057a18570f712ffb535e227825a291706620f3337e5b13d896d6586fb6b3cec",
+   "cl.exe": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619"
+  },
+  "A-ninja": {
+   "c1.dll": "6176d88c3e682f64ef960e29ecde0ff431785da664eba854e571e280dba6604b",
+   "c2.dll": "b057a18570f712ffb535e227825a291706620f3337e5b13d896d6586fb6b3cec",
+   "cl.exe": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619"
+  },
+  "B-cmake": {
+   "clang-cl.exe": "9584244d83bb095c5a2983f814692cb50e0b8d2916585516cad8f3e8596d8261"
+  },
+  "C": {
+   "cc1": "5d1679131184e2de4435b426eb264bf13472fe026db8e5c6bc97445814e8e2f4",
+   "x86_64-linux-gnu-gcc-13": "1b99826121ae6682a634e5efe09bd3e3df58ce58e0b28f849114ab5b89139c26"
+  },
+  "D": {
+   "clang-23": "913453afb492abab17025139852413ba7fd7a52b4fb75fcce58ff3fe399d0a9e"
+  }
+ },
+ "fp_class.csv": "7cabb6913437c364f7d02c988a839ed5807462a3812cacd86e68a1c72a686c2f",
+ "fp_flag_patterns.txt": "181ab6e8b9cffbe12dd2d7bbeb4bf7a6aeed36161bc8e4ec2692261bf8a42dbc",
+ "hand_map.csv": "008f558ead3ee86b9484f8891470f51db0e10dbf8591a8509ca20c4219ad5d3e",
+ "loop_table.csv": "0d94b2e636fb355e3c3c56d9b452dfef6a00925860adda05e116fe99b22a35be",
+ "objdump_norm.csv": "d6196d60246a08733ca1581d83e81cc8be9891223e2750323b250c50dbc6e2e7",
+ "scripts": {
+  "scripts/baseline.py": "6245e3017d43d550679e1ebb86e36837e85fd613b63a4e775d5c07a1cd67a9e6",
+  "scripts/classify.py": "9f094eff8cb12551ea0b5a7f4b41cd68dca3ece161e8ab273336076e065e1b4c",
+  "scripts/judge.py": "2e8ab045e737f896e5b75aff68af9241a7870a54820c5ca649df49ded928fe2e",
+  "scripts/probes/reduce_probe.c": "1c04d4157d733a6dc5f8c0e7d5284973e7855345345ffbd4366680965b5d7888",
+  "scripts/runbook/68_xed_tables_win.cmd": "eced4c0ea8ad74fec4999283247c5cdbb8bd7992c6fe5031c345a1b97e98c403",
+  "scripts/runbook/69_zoo_norm_check_win.cmd": "41f021b2ded6b9e7ad51ff5a585b819a0dc24bad6c3a495613c7949ae154b9b7",
+  "scripts/runbook/70_prefreeze_win.cmd": "85364237aeeb1d63cdd2cc297535655ea1190ffcd994baab2c31934575cd856d",
+  "scripts/runbook/70b_a_vs_design_time.cmd": "4f3f7900439307bdcb3bb0319bd83698cd995e7f7f5769571f3c625e73a7b5e0",
+  "scripts/runbook/71_prefreeze_wsl.sh": "8f83ecb6517c26ee5c43fa4ef850d47a5eb42c71c58fa219763ffd7579efe351",
+  "scripts/runbook/71b_regression_compile_wsl.sh": "4fd3bc705875458d76dc8ec43d420d118e5173674e981855c1579b1d0f501c60",
+  "scripts/runbook/72_smoke_dispatch_check.cmd": "7e5b85f13499ffe19a71f14cbb6221d33b03df563f47bd66a7db77e757c0ed26",
+  "scripts/runbook/gen_norm_csv.py": "8b9f6f441b89881565d3dc24dd0de8dd594e8267592c09c4a7647115a1dfa0ef",
+  "scripts/runbook/negtest_dispatch.py": "09471e5ae80a9e87758f401c1a11ea8f044529e64e2e13af3b1de2d5621689a4",
+  "scripts/runbook/summarize_regression.py": "c6de989cb8e91f2747dbf19f7524313ae4a4ebe65a0b6b672eb732e0b7bc1a92",
+  "scripts/runbook/zoo_fix.py": "39750be8f32133e6e42f8025fc251ce219ba5f8674fe3b70ea6f03ba56722426",
+  "scripts/smoke/check_smoke.py": "ccf1978fdc5caa538ba18d1a9d0c64862f2b50c6a97cef9c51249bf1b7f371c4",
+  "scripts/smoke/gen_zoo.py": "78e87c4a14b34b87f852d601a56f750788f63d07fbe3437069bc1c81cbe63382",
+  "scripts/smoke/norm_check.py": "e1b3e1872512da4505a540a46c56879281739ae071252fba9ba7d4229781743b",
+  "scripts/smoke/rv_tricky.c": "121e60b05a0898dff90b2820f55bb56c03637c770478aae4826412ae916499e8",
+  "scripts/smoke/rv_tricky2.c": "0045a5a968fa308e2ac1f19a9a8aeeebe395ce9e2808c1e589cca4b01059a9b5",
+  "scripts/smoke/smoke.c": "e43e2690a45b958994c3ebdbe3301a11f494fc1989e5a8365d3d9f33d3bd99a7",
+  "scripts/smoke/smoke_dispatch.c": "a59508a6bf989d6b264b4716c3bd77abc759b3b75b200243aae93f525bee55a2",
+  "scripts/smoke/smoke_loop_table.csv": "0ee7ee7da78eacd1331ef59204b67e72ddc71e1fcb2b7de97cb73b6e0a266681",
+  "scripts/smoke/tricky_expect.json": "c5aa1f8c8a2ca82babffbb603012e02fbac5b5f5f7f303af36e0fa5733928a61",
+  "scripts/tests/test_flags.py": "358209c1edafebcaefb4d39da26bf5ff177c4c284364bdc7712dd4be10e84112",
+  "scripts/tests/test_judge.py": "829a10cc3f95e979cb76b4c09cac76c1e2efb7c31af3ccf58c8364207303d741",
+  "scripts/tests/test_loops.py": "1f8c5e9c2c343f138a65342a1525834bc063f1214b1c32cb3e383da22967f811",
+  "scripts/x0_decode.py": "44dd9b33f9ba06d7c150e711928b45472edcd9bb9f23cfbecfffb23e69c0e4f9",
+  "scripts/x0_extract.py": "c045ed3a8839fa420b6947a603b27746e5bd23ad02d9bb33d79261f1ed6053aa",
+  "scripts/x0_flags.py": "60b1e74da0560cbb95ba4016fc38fd0c23b6381a05dc3a06f70280a32c059233",
+  "scripts/x0_loops.py": "2a0f250003e40b19cc833918e169307b157efe7bafcad0124af5e89368de1b5a",
+  "scripts/x0_norm.py": "a165b3572c91ffc544c8bd4b54f8475f2769b6b1e5888bc6a660464cd11fc0a6",
+  "scripts/x0obj.py": "dbd4e07c836cfd189a1f10dfca2535b9de3c4142b733aee7b32d594c5fbbe981",
+  "scripts/xed_tables.c": "8190b2504589a94a0c7007692877818283059e5ea6ca7b1cfa28dfae53a097d0"
+ },
+ "x86-intel.xml": "6762a50652a35ef663fd532ed83b789d19bbc2ac7e94b1771f19d666d96c2c30",
+ "xed_tables.tsv": "1db25e7f5f02b5796d06cbb94f4cb5ab7d8230ed1091bacae485fa5c517d1d13"
+}

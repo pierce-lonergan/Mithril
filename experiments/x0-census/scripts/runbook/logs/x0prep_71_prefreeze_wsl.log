@@ -1,0 +1,59 @@
+START 2026-10-16T18:08:45-04:00
+==== Ubuntu / kernel
+PRETTY_NAME="Ubuntu 24.04.3 LTS"
+VERSION_ID="24.04"
+VERSION_CODENAME=noble
+6.6.87.2-microsoft-standard-WSL2
+==== GCC (C)
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+/usr/bin/x86_64-linux-gnu-gcc-13
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 
+dumpspecs sha256: 3a269a0e5ee21101352e1f276f347d289e4152854796704a46416964b170e0dc
+cc1: /usr/libexec/gcc/x86_64-linux-gnu/13/cc1
+5d1679131184e2de4435b426eb264bf13472fe026db8e5c6bc97445814e8e2f4  /usr/libexec/gcc/x86_64-linux-gnu/13/cc1
+1b99826121ae6682a634e5efe09bd3e3df58ce58e0b28f849114ab5b89139c26  /usr/bin/x86_64-linux-gnu-gcc-13
+binutils 2.42-4ubuntu2.8
+cpp-13 13.3.0-6ubuntu2~24.04.1
+gcc-13 13.3.0-6ubuntu2~24.04.1
+libc6 2.39-0ubuntu8.9
+libc6-dev 2.39-0ubuntu8.9
+libgcc-13-dev 13.3.0-6ubuntu2~24.04.1
+linux-libc-dev 6.8.0-142.142
+==== LLVM for Linux (D)
+clang version 23.1.3 (https://github.com/llvm/llvm-project 0d261d1ca552c95a8f007e061c787ac7132fbcbc)
+913453afb492abab17025139852413ba7fd7a52b4fb75fcce58ff3fe399d0a9e  /mnt/d/mithril/tools/llvm-linux-23.1.3/bin/clang-23
+3fec78d88dcb975ad2b475b2e4f98575222c21ab8a94670aec25de418a05b3c7  /mnt/d/mithril/tools/llvm-linux-23.1.3/bin/llvm-objdump
+17b5b01c5ee6cba225c24adf7f05178cd70fbd025d89c2f60fda6814c718972c  /mnt/d/mithril/tools/llvm-linux-23.1.3/bin/llvm-readobj
+9d3875ff4d903fde04ae2f3401a3f508d6499c0cdeea4534a86c040207dfa43a  /mnt/d/mithril/tools/llvm-linux-23.1.3/bin/llvm-dwarfdump
+resource-dir=/mnt/d/mithril/tools/llvm-linux-23.1.3/lib/clang/23
+resource-dir include tree: 327 files, sha256 18b182d3296bb6fdb75800eadbf1f57419c7ce414a5bf1bc35c86dc015e2f31c
+==== CMake (Linux)
+cmake version 4.4.3
+==== C effective flags: gcc -Q --help=common,optimizers and gcc -### per census file (source -> dummy)
+C quant.c gccq rc=0 lines=260
+C quant.c -### rc=0
+D quant.c -### rc=0
+C quant_avx2.c gccq rc=0 lines=260
+C quant_avx2.c -### rc=0
+D quant_avx2.c -### rc=0
+C quant_avx512.c gccq rc=0 lines=260
+C quant_avx512.c -### rc=0
+D quant_avx512.c -### rc=0
+==== smoke (NOT Hearth): smoke_dispatch.c with the C and D lines of quant_avx512.c and quant.c
+{"directory": "/mnt/d/mithril/x0/cfg/C-gcc", "argv": ["/usr/bin/gcc", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-mavx512f", "-mavx512bw", "-mavx512vl", "-mavx512vnni", "-mavx2", "-mfma", "-mf16c", "-c", "-o", "/mnt/d/mithril/x0prep/smoke/C/smoke_dispatch.o", "/mnt/d/mithril/x0prep/x0/scripts/smoke/smoke_dispatch.c"]}
+C_SMOKE_AVX512_RC=0
+{"directory": "/mnt/d/mithril/x0/cfg/C-gcc", "argv": ["/usr/bin/gcc", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-c", "-o", "/mnt/d/mithril/x0prep/smoke/C-scalar/smoke_dispatch.o", "/mnt/d/mithril/x0prep/x0/scripts/smoke/smoke_dispatch.c"]}
+C_SMOKE_SCALAR_RC=0
+{"directory": "/mnt/d/mithril/x0/cfg/C-gcc", "argv": ["/usr/bin/gcc", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-mavx512f", "-mavx512bw", "-mavx512vl", "-mavx512vnni", "-mavx2", "-mfma", "-mf16c", "-fsyntax-only", "-c", "-o", "/mnt/d/mithril/x0prep/dummy_wsl.o", "/mnt/d/mithril/x0prep/x0/scripts/probes/reduce_probe.c"]}
+C_PROBE_SYNTAX_RC=0
+{"directory": "/mnt/d/mithril/x0/cfg/D-clang", "argv": ["/mnt/d/mithril/tools/llvm-linux-23.1.3/bin/clang", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-mavx512f", "-mavx512bw", "-mavx512vl", "-mavx512vnni", "-mavx2", "-mfma", "-mf16c", "-c", "-o", "/mnt/d/mithril/x0prep/smoke/D/smoke_dispatch.o", "/mnt/d/mithril/x0prep/x0/scripts/smoke/smoke_dispatch.c"]}
+D_SMOKE_AVX512_RC=0
+{"directory": "/mnt/d/mithril/x0/cfg/D-clang", "argv": ["/mnt/d/mithril/tools/llvm-linux-23.1.3/bin/clang", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-c", "-o", "/mnt/d/mithril/x0prep/smoke/D-scalar/smoke_dispatch.o", "/mnt/d/mithril/x0prep/x0/scripts/smoke/smoke_dispatch.c"]}
+D_SMOKE_SCALAR_RC=0
+clang: warning: argument unused during compilation: '-c' [-Wunused-command-line-argument]
+{"directory": "/mnt/d/mithril/x0/cfg/D-clang", "argv": ["/mnt/d/mithril/tools/llvm-linux-23.1.3/bin/clang", "-DHEARTH_BUILD_DLL", "-I/mnt/d/mithril/src/hearth/engine/include", "-I/mnt/d/mithril/src/hearth/engine/src", "-O3", "-DNDEBUG", "-std=gnu11", "-fPIC", "-ffp-contract=off", "-Wall", "-Wextra", "-Wno-unused-parameter", "-mavx512f", "-mavx512bw", "-mavx512vl", "-mavx512vnni", "-mavx2", "-mfma", "-mf16c", "-fsyntax-only", "-c", "-o", "/mnt/d/mithril/x0prep/dummy_wsl.o", "/mnt/d/mithril/x0prep/x0/scripts/probes/reduce_probe.c"]}
+D_PROBE_SYNTAX_RC=0
+UNEXPECTED: dummy_wsl.o exists
+END 2026-10-16T18:08:56-04:00

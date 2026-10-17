@@ -1,0 +1,2 @@
+intrinsic,instruction_name,form,xml_xed,iform,reason
+_mm256_extractf128_ps,VEXTRACTF128,"xmm, ymm, imm8",VEXTRACTF128_XMMdq_YMMdq_IMMb,VEXTRACTF128_XMMdq_YMMqq_IMMb,"The XML's xed attribute names an iform that the pinned XED v2026.08.23 does not define (XED iform table, class/xed_tables.tsv). XED defines exactly two VEXTRACTF128 iforms: VEXTRACTF128_MEMdq_YMMqq_IMMb and VEXTRACTF128_XMMdq_YMMqq_IMMb. The XML form 'xmm, ymm, imm8' has a register destination, so it is the latter. Same iclass (VEXTRACTF128), so B_mnem is unaffected."

@@ -1,0 +1,7 @@
+START Fri 10/16/2026 17:58:48.34
+{"objects": ["D:\\mithril\\x0prep\\zoo\\zoo_avx.obj", "D:\\mithril\\x0prep\\zoo\\zoo_sse.obj", "D:\\mithril\\x0prep\\zoo\\zoo_asm.obj", "D:\\mithril\\x0\\smoke\\A-msvc\\smoke.obj", "D:\\mithril\\x0\\smoke\\B-clangcl\\smoke.obj", "D:\\mithril\\x0\\smoke\\C-gcc\\smoke.o", "D:\\mithril\\x0\\smoke\\D-clang\\smoke.o"], "instructions_compared": 26553, "xed_undecodable": 0, "boundary_disagreements": 1, "iclass_disagreements": 0, "fp_sensitive_disagreements": 0, "distinct_pairs": 1111, "distinct_xed_iclasses": 982, "distinct_fp_sensitive_xed_iclasses": 320}
+NORM_RC=0
+SHA256 hash of D:\mithril\x0prep\x0\scripts\..\class\objdump_norm.csv:
+a98852af55112781d9a368af88d5ca8887d5d257ce5b4dac00e7786b61cb3f92
+CertUtil: -hashfile command completed successfully.
+END Fri 10/16/2026 17:59:29.38

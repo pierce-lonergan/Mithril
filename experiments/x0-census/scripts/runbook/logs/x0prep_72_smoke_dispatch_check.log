@@ -1,0 +1,401 @@
+START Fri 10/16/2026 18:41:39.58
+==== A: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+A_EXTRACT_RC=0
+==== A: decode
+A_DECODE_RC=0
+A variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 99 anomalies {}
+==== A: loops, P3(c), canary d1
+A_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 68,
+ "p3c_flagged": [],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "tags": {
+  "lockstep": 50,
+  "software-pipelined": 14,
+  "spilled": 12,
+  "rotated": 4
+ }
+}
+==== A-scalar: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+A-scalar_EXTRACT_RC=0
+==== A-scalar: decode
+A-scalar_DECODE_RC=0
+A-scalar variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 90 anomalies {}
+==== A-scalar: loops, P3(c), canary d1
+A-scalar_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 62,
+ "p3c_flagged": [],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "tags": {
+  "lockstep": 32,
+  "rotated": 16,
+  "software-pipelined": 14,
+  "spilled": 12
+ }
+}
+==== B: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+B_EXTRACT_RC=0
+==== B: decode
+B_DECODE_RC=0
+B variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 149 anomalies {}
+==== B: loops, P3(c), canary d1
+B_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 66,
+ "p3c_flagged": [
+  [
+   "B",
+   "sd_table",
+   "matmul[0]",
+   [
+    "L19_2a0",
+    "L19_1ca",
+    "L19_123"
+   ]
+  ],
+  [
+   "B",
+   "sd_table",
+   "matmul[1]",
+   [
+    "L19_2a0",
+    "L19_1ca",
+    "L19_123"
+   ]
+  ],
+  [
+   "B",
+   "sd_table",
+   "matmul[2]",
+   [
+    "L19_2a0",
+    "L19_1ca",
+    "L19_123"
+   ]
+  ],
+  [
+   "B",
+   "sd_table_global",
+   "matmul[0]",
+   [
+    "L19_2a0",
+    "L19_1ca",
+    "L19_123"
+   ]
+  ],
+  [
+   "B",
+   "sd_table_global",
+   "matmul[1]",
+   [
+    "L19_2a0",
+    "L19_1ca",
+    "L19_123"
+   ]
+  ],
+  [
+   "B",
+   "sd_table_global",
+   "matmul[3]",
+   [
+    "L19_2a0",
+    "L19_1ca",
+    "L19_123"
+   ]
+  ]
+ ],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "tags": {
+  "lockstep": 44,
+  "rotated": 8,
+  "software-pipelined": 14,
+  "spilled": 12
+ }
+}
+==== B-scalar: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+B-scalar_EXTRACT_RC=0
+==== B-scalar: decode
+B-scalar_DECODE_RC=0
+B-scalar variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 121 anomalies {}
+==== B-scalar: loops, P3(c), canary d1
+B-scalar_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 40,
+ "p3c_flagged": [],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "tags": {
+  "rotated": 8,
+  "software-pipelined": 16,
+  "spilled": 12,
+  "lockstep": 16
+ }
+}
+==== C: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+C_EXTRACT_RC=0
+==== C: decode
+C_DECODE_RC=0
+C variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 148 anomalies {}
+==== C: loops, P3(c), canary d1
+C_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 62,
+ "p3c_flagged": [],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "tags": {
+  "rotated": 14,
+  "lockstep": 26,
+  "spilled": 20,
+  "software-pipelined": 14
+ }
+}
+==== C-scalar: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+C-scalar_EXTRACT_RC=0
+==== C-scalar: decode
+C-scalar_DECODE_RC=0
+C-scalar variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 99 anomalies {}
+==== C-scalar: loops, P3(c), canary d1
+C-scalar_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 44,
+ "p3c_flagged": [],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "tags": {
+  "rotated": 6,
+  "lockstep": 22,
+  "software-pipelined": 14,
+  "spilled": 14
+ }
+}
+==== D: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+D_EXTRACT_RC=0
+==== D: decode
+D_DECODE_RC=0
+D variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 140 anomalies {}
+==== D: loops, P3(c), canary d1
+D_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 78,
+ "p3c_flagged": [
+  [
+   "D",
+   "sd_table",
+   "matmul[0]",
+   [
+    "L2_10c0",
+    "L2_f34",
+    "L2_e66"
+   ]
+  ],
+  [
+   "D",
+   "sd_table",
+   "matmul[1]",
+   [
+    "L2_10c0",
+    "L2_f34",
+    "L2_e66"
+   ]
+  ],
+  [
+   "D",
+   "sd_table",
+   "matmul[2]",
+   [
+    "L2_10c0",
+    "L2_f34",
+    "L2_e66"
+   ]
+  ],
+  [
+   "D",
+   "sd_table_global",
+   "matmul[0]",
+   [
+    "L2_10c0",
+    "L2_f34",
+    "L2_e66"
+   ]
+  ],
+  [
+   "D",
+   "sd_table_global",
+   "matmul[1]",
+   [
+    "L2_10c0",
+    "L2_f34",
+    "L2_e66"
+   ]
+  ],
+  [
+   "D",
+   "sd_table_global",
+   "matmul[3]",
+   [
+    "L2_10c0",
+    "L2_f34",
+    "L2_e66"
+   ]
+  ]
+ ],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "tags": {
+  "lockstep": 54,
+  "rotated": 8,
+  "software-pipelined": 16,
+  "spilled": 12
+ }
+}
+==== D-scalar: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+D-scalar_EXTRACT_RC=0
+==== D-scalar: decode
+D-scalar_DECODE_RC=0
+D-scalar variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 118 anomalies {}
+==== D-scalar: loops, P3(c), canary d1
+D-scalar_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 44,
+ "p3c_flagged": [],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "tags": {
+  "rotated": 8,
+  "software-pipelined": 18,
+  "spilled": 12,
+  "lockstep": 18
+ }
+}
+==== negative test: slot entries moved by one byte (A and C); decode must report gaps
+A_NEG_RC=1 (expect 1)
+A NEG gaps {'other': 4, 'fp_trust_dep': 4} xdis 12
+C_NEG_RC=1 (expect 1)
+C NEG gaps {'other': 34, 'unresolved_indirect': 2} xdis 12
+END Fri 10/16/2026 18:41:48.91

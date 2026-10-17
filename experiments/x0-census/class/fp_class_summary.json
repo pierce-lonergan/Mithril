@@ -1,0 +1,99 @@
+{
+ "by_rule": {
+  "amd_3dnow_fp:yes": 21,
+  "amx_fp:yes": 14,
+  "approx:yes": 32,
+  "blend:no": 17,
+  "cvt:yes": 166,
+  "fma:yes": 122,
+  "fma_4:yes": 4,
+  "fma_complex:yes": 8,
+  "fp_arith:yes": 55,
+  "fp_cmp:yes": 11,
+  "fp_comi:yes": 17,
+  "fp_dot:yes": 4,
+  "fp_dot_lowp:yes": 2,
+  "fp_frcz:yes": 4,
+  "fp_horiz:yes": 12,
+  "fp_logic:no": 18,
+  "fp_minmax:yes": 22,
+  "fp_minmax_new:yes": 7,
+  "fp_special:yes": 58,
+  "int_vector:no": 425,
+  "kmask:no": 47,
+  "move:no": 95,
+  "mxcsr_env:yes": 4,
+  "non_fp:no": 588,
+  "shuffle:no": 128,
+  "state:no": 16,
+  "test_sign:no": 2,
+  "x87:no": 19,
+  "x87:yes": 61,
+  "x87_env:no": 12,
+  "zero:no": 4
+ },
+ "fp_class_csv_sha256": "7cabb6913437c364f7d02c988a839ed5807462a3812cacd86e68a1c72a686c2f",
+ "fp_operand_default": [],
+ "n_fp_sensitive": 624,
+ "n_iclasses": 1995,
+ "sdm_no_but_xed_fp": [
+  {
+   "iclass": "LDMXCSR",
+   "rule": "mxcsr_env",
+   "xed": [
+    "attr MXCSR"
+   ]
+  },
+  {
+   "iclass": "STMXCSR",
+   "rule": "mxcsr_env",
+   "xed": [
+    "attr MXCSR_RD"
+   ]
+  },
+  {
+   "iclass": "VLDMXCSR",
+   "rule": "mxcsr_env",
+   "xed": [
+    "attr MXCSR"
+   ]
+  },
+  {
+   "iclass": "VSTMXCSR",
+   "rule": "mxcsr_env",
+   "xed": [
+    "attr MXCSR_RD"
+   ]
+  }
+ ],
+ "self_check_problems": [],
+ "xed_names_confirmed": {
+  "attributes": {
+   "FIXED_ROUNDING_RNE": true,
+   "FLUSH_INPUT_DENORM": true,
+   "FLUSH_OUTPUT_DENORM": true,
+   "MXCSR": true,
+   "MXCSR_RD": true,
+   "USES_DAZ": true,
+   "USES_FTZ": true
+  },
+  "exceptions": {
+   "AVX512_E2": true,
+   "AVX512_E3": true,
+   "AVX512_E3NF": true,
+   "AVX_TYPE_2": true,
+   "AVX_TYPE_2D": true,
+   "AVX_TYPE_3": true,
+   "SSE_TYPE_2": true,
+   "SSE_TYPE_2D": true,
+   "SSE_TYPE_3": true
+  },
+  "mxcsr_rd_iclasses": [
+   "STMXCSR",
+   "VSTMXCSR"
+  ],
+  "record_extensions_missing": []
+ },
+ "xed_tables_sha256": "1db25e7f5f02b5796d06cbb94f4cb5ab7d8230ed1091bacae485fa5c517d1d13",
+ "xed_version": "v2026.08.23"
+}

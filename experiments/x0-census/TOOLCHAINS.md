@@ -366,3 +366,68 @@ then runs `x0_extract.py` and `x0_decode.py` on `CMakeFiles/hearth_core.dir/engi
      configuration change, so it is left to Pierce.
 5. NMake (A, B) builds serially. That is within the CPU cap, just slower.
 6. WSL has no zstd and no ninja, and `sudo` needs a password. Everything X0 needs is on D: instead.
+
+How the record now handles items 1 to 3 (x0prep, 2026-10-16; record §3, §5 P1, §8): B-cmake and C are censused
+exactly as Hearth's CMake configures them. A compile failure of `quant_avx512.c` under B-cmake is a genuine
+`compile_failed` gap of that configuration (rows N1 and N2, build-defect draft), not a tooling failure, and its
+effective flags are still screened by P3(a). B-cmake's `-ffp-contract=on` is a P3(a1) match. C's hidden hardening
+defaults are recorded in the effective flags and its hardening code is listed as a lift blocker.
+
+## 11. Pre-freeze pins and captures (x0prep, 2026-10-16)
+
+Runbook steps 68 to 72 (`scripts/runbook/`, logs `scripts/runbook/logs/x0prep_*.log`), desktop, 18:00 to 18:30
+EDT. All [M]. One thread per job, at most two jobs at once; `CUDA_VISIBLE_DEVICES=-1`; files on D: only. WSL was
+started once for step 71 with a detached keepalive (`wsl.exe -d Ubuntu --exec sleep 43200`, none was running
+before), which adds one WSLg trace file on C: (see section 9).
+
+Mirror of record Table 2.1:
+
+| Item | Value [M] |
+|---|---|
+| MSVC `cl` | banner "Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64"; toolset 14.44.35207 (`VCToolsInstallDir`); SHA-256 `bin\Hostx64\x64\cl.exe` `fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619`, `c1.dll` `6176d88c3e682f64ef960e29ecde0ff431785da664eba854e571e280dba6604b`, `c2.dll` `b057a18570f712ffb535e227825a291706620f3337e5b13d896d6586fb6b3cec` |
+| Windows SDK, UCRT, MSBuild | `WindowsSDKVersion` 10.0.26100.0, `UCRTVersion` 10.0.26100.0, `msbuild -version` 17.14.60.43110; CMake's VS generator selected SDK 10.0.26100.0 "to target Windows 10.0.26200" |
+| LLVM for Windows | `clang-cl --version` and `clang --version`: "clang version 23.1.3 (https://github.com/llvm/llvm-project 0d261d1ca552c95a8f007e061c787ac7132fbcbc)", target x86_64-pc-windows-msvc; `clang-cl.exe` and `clang.exe` have the same SHA-256 `9584244d83bb095c5a2983f814692cb50e0b8d2916585516cad8f3e8596d8261`; `llvm-objdump.exe` `226901b358d1056441eb0b8acaed920d9ca9751d953939bc34162b0f75f83494`, `llvm-readobj.exe` `422bf4a863e703c71f7eafcc0f6107475c83bed3eec0b07ef291a20761b90e90`, `llvm-dwarfdump.exe` `403747cb0629cbcb9a14e405f28c1be088869a6458fb254ab8cc2943ee27ac0f`; resource-dir `lib\clang\23\include`: 322 files, tree hash `5587c91b9f11abacb950bb82cdd5b4f854180c04d0bfc04e5fbea5c243a61a12` (sha256 over sorted relative path + NUL + file sha256) |
+| LLVM for Linux (D) | `clang --version` as above (same commit), `clang-23` `913453afb492abab17025139852413ba7fd7a52b4fb75fcce58ff3fe399d0a9e`, `llvm-objdump` `3fec78d88dcb975ad2b475b2e4f98575222c21ab8a94670aec25de418a05b3c7`, `llvm-readobj` `17b5b01c5ee6cba225c24adf7f05178cd70fbd025d89c2f60fda6814c718972c`, `llvm-dwarfdump` `9d3875ff4d903fde04ae2f3401a3f508d6499c0cdeea4534a86c040207dfa43a`; resource-dir include: 327 files, tree hash `18b182d3296bb6fdb75800eadbf1f57419c7ce414a5bf1bc35c86dc015e2f31c` |
+| GCC (C) | "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0", `/usr/bin/gcc` -> `/usr/bin/x86_64-linux-gnu-gcc-13` (SHA-256 `1b99826121ae6682a634e5efe09bd3e3df58ce58e0b28f849114ab5b89139c26`); `gcc -dumpspecs` SHA-256 `3a269a0e5ee21101352e1f276f347d289e4152854796704a46416964b170e0dc`; `cc1` `/usr/libexec/gcc/x86_64-linux-gnu/13/cc1` `5d1679131184e2de4435b426eb264bf13472fe026db8e5c6bc97445814e8e2f4`; configured with `--enable-default-pie --enable-cet` (full `gcc -v` in `flags/prefreeze/C-gcc.*.cc1.txt`) |
+| glibc, Ubuntu | `libc6`, `libc6-dev` 2.39-0ubuntu8.9; `linux-libc-dev` 6.8.0-142.142; `binutils` 2.42-4ubuntu2.8; `cpp-13`, `gcc-13`, `libgcc-13-dev` 13.3.0-6ubuntu2~24.04.1; Ubuntu 24.04.3 LTS (noble); WSL kernel 6.6.87.2-microsoft-standard-WSL2 |
+| CMake, Ninja | CMake 4.4.3 (Windows and Linux); Ninja 1.12.1, the copy bundled with VS 2022 (`Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe`, SHA-256 `5020138b3757035df9dca9a2243624d5810ffa6ae24444bd95f752cbd1b89123`) |
+| XED | tag v2026.08.23, commit 0bcb6237345c5066726dcc08b3d87928df3b5b26 (section 3); Windows `xed.exe` SHA-256 `f10d268012be8c4958bf4eb632b342481e509dd9051b3cf39a9e2bde09846368`, `xed -version` "[v2026.08.23]"; build options in section 3; decode mode `-64 -cet` |
+| stdarch XML | rust-lang/stdarch `main` at `eb9b3025937c85bd271a3ca46a681cd52739db12` on 2026-10-16 (`git ls-remote`); `intrinsics_data/x86-intel.xml` 6,673,004 bytes, SHA-256 `6762a50652a35ef663fd532ed83b789d19bbc2ac7e94b1771f19d666d96c2c30`, `<intrinsics_list version="3.6.9" date="07/12/2024">`. Downloaded from raw.githubusercontent.com on the laptop; kept in the session scratch directory and on the desktop (`D:\mithril\x0prep\x86-intel.xml`), not in the repository (Intel copyright) |
+| Effective flags | `flags/prefreeze/` (D2): A-vs vcxproj and design-time lines, A-ninja and B-cmake `compile_commands.json`, `-###` cc1 lines for B-cmake, B-proxy and D, `gcc -Q` and `gcc -###` for C |
+
+Pre-freeze statement on Hearth compilation (record OQ-7, Appendix D item D12), checked by x0prep on 2026-10-16 at
+17:30 EDT [M, desktop scan `scripts/runbook/logs/x0prep_*` and the commands below]:
+- No object, archive, executable or listing of any Hearth translation unit exists under `D:\mithril\x0`,
+  `D:\mithril\src\hearth` or `D:\mithril\jobs`. The `CMakeFiles\hearth_core.dir\engine\src` directories of the four
+  configure trees are empty. The only objects are CMake's compiler-identification and ShowIncludes probes, the
+  smoke and probe objects, and the `winverify` probes.
+- Every job script in `D:\mithril\jobs` (each `.cmd`, `.sh`, `.ps1`, `.py` and `.log` file present at 17:30,
+  searched for `quant`, `engine/src`, `--build`, `nmake`, `msbuild`, `hearth_core`, `make`, `ninja`, `cmake`, `.c.o`,
+  `.c.obj` and `hxcc`, and the unmatched ones read in full), including the earlier iterations not committed:
+  `smoke_win.cmd`, `smoke_wsl*.sh`, `probe2_win.cmd`, `win_verify*.cmd`, `wsl_verify.sh`, `implicit.sh`,
+  `mxcsr.sh`, `xedtest*.sh`, `cfg_win.cmd`, `cfg_wsl.sh`, ...) compiles only `smoke.c`, the probes, `hello*.c`,
+  `fpc.c`, XED or CMake's own checks; none runs `cmake --build`, `make`, `nmake`, `ninja` or `msbuild` on Hearth.
+- `git status --porcelain --ignored` in `D:\mithril\src\hearth` is empty (no build output in the tree).
+- Not verifiable from files: interactive SSH commands of the tooling session are not logged anywhere; for those
+  the statement rests on the tooling track's own account (section header: "no Hearth source was compiled").
+- x0prep's own pre-freeze runs (steps 68 to 72) compiled only `xed_tables.c`, the instruction zoo,
+  `smoke_dispatch.c`, `dummy.c` (`int x0_dummy;`, also compiled once by `gcc -Q --help` in step 71) and syntax-only
+  checks of `reduce_probe.c`; the configure-only runs A-vs, A-ninja and B-cmake ran under `D:\mithril\x0prep\cfg`,
+  and a scan after `GetClCommandLines` found only CMake's own compiler-id object.
+- The laptop's read-only Hearth clone (session scratch) has no build output; `git status --ignored` lists only
+  `governance/tools/__pycache__/` (Python bytecode from some earlier session's use of Hearth's governance tools,
+  not a C compilation).
+- Outside `D:\mithril` (added after the x0prep review of 2026-10-16, reviewer 1's scan; re-checked by the reviser
+  with a read-only `find`/`ls` in WSL, keepalive VM already up): the desktop's WSL home holds objects of the three
+  census files from Hearth's own development. They are not b5d3f14 census builds, and they were built with other
+  flags, including ASan and TSan: `/home/pierce_lonergan/hx_t02v/obj_tq/quant{,_avx2,_avx512}.o` and
+  `obj_tq_asan/` (2026-10-04 11:40), `/home/pierce_lonergan/t08g2/tsan/quant{,_avx2,_avx512}.o` and
+  `t08g2/obj_*quant*.o` (2026-10-04 18:53); 14 objects in all, and no `.o` under `/home` newer than 2026-10-15.
+  No Mithril track produced, read or decoded them. Census and re-derivation agents must not open them.
+
+Post-review regression (x0prep reviser, 2026-10-16, 19:21 to 19:39 EDT, desktop; final step 72 run 19:38 to 19:39) [M]: step 71b
+(`runbook/71b_regression_compile_wsl.sh`, WSL, keepalive present, one thread) compiled `smoke_dispatch.c`,
+`rv_tricky.c` and `rv_tricky2.c` (NON-Hearth) with the C and D lines; step 72 (Windows, `-j 2`, one job) compiled
+the same files with the A and B-cmake lines. It then ran extract, decode (twice, opposite work-list orders), loops and
+`smoke/check_smoke.py`: 168 variants, 0 deviations (`runbook/logs/x0prep_71b_*.log`, `x0prep_72_regression_check.log`,
+`smoke/results_regression.json`). New on D: only `D:\mithril\x0prep\reg\` and logs under `D:\mithril\jobs\x0prep\`.

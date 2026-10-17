@@ -1,0 +1,54 @@
+# fp_flag_patterns.txt -- X0 record §5 P3(a): flag patterns that flag a configuration's effective FP settings.
+# Frozen with the record (Appendix D, item D7). Evaluated by `x0_flags.py p3a` (function match_p3a).
+#
+# Format: one pattern per line, four TAB-separated fields:
+#   id      unique name
+#   class   a1 (contraction-enabling) or a2 (reassociation or value-unsafe)
+#   source  comma-separated subset of: argv, cc1, gccq
+#             argv = the exact compiler driver argv (A: cl line from the MSBuild log; A-ninja, B-cmake, C, D:
+#                    compile_commands.json). Before matching, clang pass-through forms are also expanded:
+#                    "/clang:X" and "-Xclang X" are matched as X as well.
+#             cc1  = the -cc1 argv printed by `clang -###` / `clang-cl -###` (B-cmake, B-proxy, D, H-D).
+#             gccq = one entry per option printed by `gcc <flags> -Q --help=common,optimizers` (C), normalised
+#                    to "<option><TAB><value>" with surrounding whitespace removed. GCC 13 prints the option name
+#                    with its value set, e.g. "-ffp-contract=[off|on|fast]\toff" and "-fassociative-math\t[disabled]"
+#                    [M, x0prep, flags/C-gcc.*.gccq.txt, 2026-10-16].
+#   regex   Python `re` pattern, matched with re.fullmatch against one token (argv, cc1) or one entry (gccq).
+#           Case-sensitive unless the pattern starts with (?i).
+# A configuration and file is flagged under P3(a) if any pattern matches any token or entry of a source the
+# pattern names. Lines starting with '#' and blank lines are ignored.
+#
+# a1: contraction-enabling (record §5 P3(a1); 04-toolchain §6.2 forbidden list)
+a1_msvc_fp_contract	a1	argv	(?i)[/-]fp:contract
+a1_ffp_contract_on	a1	argv,cc1	-ffp-contract=(on|fast|fast-honor-pragmas)
+a1_gcc_effective	a1	gccq	-ffp-contract=(\[[^\]]*\])?\t(?!off$).*
+# a2: reassociation or value-unsafe (record §5 P3(a2))
+a2_msvc_fp_fast	a2	argv	(?i)[/-]fp:fast
+a2_msvc_fast_transcendentals	a2	argv	(?i)[/-]Qfast_transcendentals
+a2_ffast_math	a2	argv,cc1	-ffast-math
+a2_Ofast	a2	argv,cc1	-Ofast
+a2_ffp_model_fast	a2	argv,cc1	-ffp-model=(fast|aggressive)
+a2_fassociative_math	a2	argv,cc1	-fassociative-math
+a2_mreassociate	a2	argv,cc1	-mreassociate
+a2_funsafe_math	a2	argv,cc1	-funsafe-math-optimizations
+a2_menable_unsafe_fp_math	a2	argv,cc1	-menable-unsafe-fp-math
+a2_freciprocal_math	a2	argv,cc1	-freciprocal-math
+a2_fapprox_func	a2	argv,cc1	-fapprox-func
+a2_ffinite_math_only	a2	argv,cc1	-ffinite-math-only
+a2_menable_no_nans	a2	argv,cc1	-menable-no-nans
+a2_menable_no_infs	a2	argv,cc1	-menable-no-infs
+a2_fno_honor_nans	a2	argv,cc1	-fno-honor-nans
+a2_fno_honor_infinities	a2	argv,cc1	-fno-honor-infinities
+a2_fno_signed_zeros	a2	argv,cc1	-fno-signed-zeros
+a2_fdenormal_fp_math	a2	argv,cc1	-fdenormal-fp-math=(preserve-sign|positive-zero)(,.*)?
+# added beyond the record's minimum list (stricter): the f32-only denormal mode clang uses for float.
+a2_fdenormal_fp_math_f32	a2	argv,cc1	-fdenormal-fp-math-f32=(preserve-sign|positive-zero)(,.*)?
+a2_mdaz_ftz	a2	argv,cc1	-mdaz-ftz
+# a2, GCC effective values (record: a value that enables -fassociative-math, -freciprocal-math,
+# -ffinite-math-only or -funsafe-math-optimizations, or disables -fsigned-zeros). -ffast-math is added (stricter).
+a2_gcc_assoc	a2	gccq	-fassociative-math\t\[enabled\]
+a2_gcc_recip	a2	gccq	-freciprocal-math\t\[enabled\]
+a2_gcc_finite	a2	gccq	-ffinite-math-only\t\[enabled\]
+a2_gcc_unsafe	a2	gccq	-funsafe-math-optimizations\t\[enabled\]
+a2_gcc_signed_zeros	a2	gccq	-fsigned-zeros\t\[disabled\]
+a2_gcc_fast_math	a2	gccq	-ffast-math\t\[enabled\]

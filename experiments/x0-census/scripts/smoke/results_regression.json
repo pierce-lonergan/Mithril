@@ -1,0 +1,6883 @@
+{
+ "configs": {
+  "A": {
+   "rv_tricky": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "gap_counts": {
+     "fp_trust_dep": 4,
+     "unresolved_indirect": 10
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 6,
+    "n_variants": 6,
+    "tooling_gaps": 10,
+    "u_iclasses": 42,
+    "u_iforms": 63,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_tailsw",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_tailsw",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 9,
+      "jump_tables": [
+       [
+        ".text$mn",
+        408,
+        7,
+        "ADDR32NB",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 73,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_tailsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_coldsw",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        364,
+        7,
+        "ADDR32NB",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 79,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_dieuser",
+        "entry"
+       ],
+       [
+        "rv_die",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "function": "rv_dieuser",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to abort"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_fatal"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 80,
+      "noreturn_inferred": [
+       "rv_die",
+       "rv_ext_fatal"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "rv_dieuser",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_hookcall",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_hookcall",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through variable rv_hook"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through a register (definition at 0x2f loads rv_hook, not an import or GOT slot)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [],
+      "n_instructions": 28,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "rv_hookcall",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_overlap",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_overlap",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 5,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "rv_overlap",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_sparse",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_sparse",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        284,
+        10,
+        "ADDR32NB",
+        "byte table (cmp 0x3e; jnbe)",
+        [
+         ".text$mn",
+         8,
+         324,
+         387
+        ]
+       ]
+      ],
+      "n_instructions": 49,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_sparse",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "rv_tricky2": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "gap_counts": {
+     "fp_trust_dep": 1,
+     "unresolved_indirect": 1
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 3,
+    "n_variants": 3,
+    "tooling_gaps": 1,
+    "u_iclasses": 36,
+    "u_iforms": 53,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_coldsw2",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw2",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        364,
+        7,
+        "ADDR32NB",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 79,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw2",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_pf",
+        "entry"
+       ],
+       [
+        "rv_pf_b",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_pf",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [
+       [
+        ".text$mn",
+        252,
+        7,
+        "ADDR32NB",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 59,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_pf",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_act2",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_act2",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 79,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_act2",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "smoke_dispatch": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "d1": {
+     "sd_table:act_quantize": "pass",
+     "sd_table_global:act_quantize": "pass"
+    },
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 12,
+    "n_variants": 12,
+    "tooling_gaps": 0,
+    "u_iclasses": 64,
+    "u_iforms": 99,
+    "variants": [
+     {
+      "closure": [
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_fail",
+        "internal"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        1120,
+        8,
+        "ADDR32NB",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 288,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        1120,
+        8,
+        "ADDR32NB",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 261,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        1120,
+        8,
+        "ADDR32NB",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 261,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        692,
+        9,
+        "ADDR32NB",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 171,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 61,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 132,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        1120,
+        8,
+        "ADDR32NB",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 261,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_fail",
+        "internal"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        1120,
+        8,
+        "ADDR32NB",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 288,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        692,
+        9,
+        "ADDR32NB",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 171,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        1120,
+        8,
+        "ADDR32NB",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 261,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 61,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 132,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   }
+  },
+  "A-scalar": {
+   "rv_tricky": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "gap_counts": {
+     "fp_trust_dep": 4,
+     "unresolved_indirect": 10
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 6,
+    "n_variants": 6,
+    "tooling_gaps": 10,
+    "u_iclasses": 33,
+    "u_iforms": 54,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_tailsw",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_tailsw",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 9,
+      "jump_tables": [
+       [
+        ".text$mn",
+        408,
+        7,
+        "ADDR32NB",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 73,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_tailsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_coldsw",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        368,
+        7,
+        "ADDR32NB",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 80,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_dieuser",
+        "entry"
+       ],
+       [
+        "rv_die",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "function": "rv_dieuser",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to abort"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_fatal"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 32,
+      "noreturn_inferred": [
+       "rv_die",
+       "rv_ext_fatal"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "rv_dieuser",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_hookcall",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_hookcall",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through variable rv_hook"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through a register (definition at 0x2f loads rv_hook, not an import or GOT slot)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [],
+      "n_instructions": 28,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "rv_hookcall",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_overlap",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_overlap",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 5,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "rv_overlap",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_sparse",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_sparse",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        284,
+        10,
+        "ADDR32NB",
+        "byte table (cmp 0x3e; jnbe)",
+        [
+         ".text$mn",
+         8,
+         324,
+         387
+        ]
+       ]
+      ],
+      "n_instructions": 49,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_sparse",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "rv_tricky2": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "gap_counts": {
+     "fp_trust_dep": 1,
+     "unresolved_indirect": 1
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 3,
+    "n_variants": 3,
+    "tooling_gaps": 1,
+    "u_iclasses": 35,
+    "u_iforms": 53,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_coldsw2",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw2",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        368,
+        7,
+        "ADDR32NB",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 80,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw2",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_pf",
+        "entry"
+       ],
+       [
+        "rv_pf_b",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_pf",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [
+       [
+        ".text$mn",
+        252,
+        7,
+        "ADDR32NB",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 59,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_pf",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_act2",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_act2",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 85,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_act2",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "smoke_dispatch": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "d1": {
+     "sd_table:act_quantize": "pass",
+     "sd_table_global:act_quantize": "pass"
+    },
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 12,
+    "n_variants": 12,
+    "tooling_gaps": 0,
+    "u_iclasses": 57,
+    "u_iforms": 90,
+    "variants": [
+     {
+      "closure": [
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_fail",
+        "internal"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        1008,
+        8,
+        "ADDR32NB",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 260,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        1008,
+        8,
+        "ADDR32NB",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 233,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        1008,
+        8,
+        "ADDR32NB",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 233,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        628,
+        9,
+        "ADDR32NB",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 170,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 61,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 137,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        1008,
+        8,
+        "ADDR32NB",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 233,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_fail",
+        "internal"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        1008,
+        8,
+        "ADDR32NB",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 260,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        628,
+        9,
+        "ADDR32NB",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 170,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".text$mn",
+        1008,
+        8,
+        "ADDR32NB",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 233,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 61,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 137,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   }
+  },
+  "B": {
+   "rv_tricky": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "gap_counts": {
+     "fp_trust_dep": 4,
+     "unresolved_indirect": 10
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 6,
+    "n_variants": 6,
+    "tooling_gaps": 10,
+    "u_iclasses": 42,
+    "u_iforms": 72,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_tailsw",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_tailsw",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 9,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        8,
+        "REL32",
+        "and 0x7",
+        null
+       ]
+      ],
+      "n_instructions": 56,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_tailsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_coldsw",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        7,
+        "REL32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 93,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_dieuser",
+        "entry"
+       ],
+       [
+        "rv_die",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "function": "rv_dieuser",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to abort"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_fatal"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 112,
+      "noreturn_inferred": [
+       "rv_die",
+       "rv_ext_fatal"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "rv_dieuser",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_hookcall",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_hookcall",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through variable rv_hook"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through a register (definition at 0x31 loads rv_hook, not an import or GOT slot)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [],
+      "n_instructions": 30,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "rv_hookcall",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_overlap",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_overlap",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 4,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "rv_overlap",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_sparse",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_sparse",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        63,
+        "REL32",
+        "cmp 0x3e; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 47,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_sparse",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "rv_tricky2": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "gap_counts": {
+     "fp_trust_dep": 1,
+     "unresolved_indirect": 1
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 3,
+    "n_variants": 3,
+    "tooling_gaps": 1,
+    "u_iclasses": 38,
+    "u_iforms": 60,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_coldsw2",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw2",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        7,
+        "REL32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 93,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw2",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_pf",
+        "entry"
+       ],
+       [
+        "rv_pf_b",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_pf",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        8,
+        "REL32",
+        "and 0x7",
+        null
+       ]
+      ],
+      "n_instructions": 56,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_pf",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_act2",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_act2",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 80,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_act2",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "smoke_dispatch": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "d1": {
+     "sd_table:act_quantize": "pass",
+     "sd_table_global:act_quantize": "pass"
+    },
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 12,
+    "n_variants": 12,
+    "tooling_gaps": 0,
+    "u_iclasses": 79,
+    "u_iforms": 148,
+    "variants": [
+     {
+      "closure": [
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_fail",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 280,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 243,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 243,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        9,
+        "REL32",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 297,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 81,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 203,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 243,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_fail",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 280,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        9,
+        "REL32",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 297,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 243,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 81,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 203,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   }
+  },
+  "B-scalar": {
+   "rv_tricky": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "gap_counts": {
+     "fp_trust_dep": 4,
+     "unresolved_indirect": 10
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 6,
+    "n_variants": 6,
+    "tooling_gaps": 10,
+    "u_iclasses": 43,
+    "u_iforms": 67,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_tailsw",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_tailsw",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 9,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        8,
+        "REL32",
+        "and 0x7",
+        null
+       ]
+      ],
+      "n_instructions": 56,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_tailsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_coldsw",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        7,
+        "REL32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 100,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_dieuser",
+        "entry"
+       ],
+       [
+        "rv_die",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "function": "rv_dieuser",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to abort"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_fatal"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 79,
+      "noreturn_inferred": [
+       "rv_die",
+       "rv_ext_fatal"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "rv_dieuser",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_hookcall",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_hookcall",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through variable rv_hook"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through a register (definition at 0x31 loads rv_hook, not an import or GOT slot)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [],
+      "n_instructions": 30,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "rv_hookcall",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_overlap",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_overlap",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 4,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "rv_overlap",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_sparse",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_sparse",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        63,
+        "REL32",
+        "cmp 0x3e; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 49,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_sparse",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "rv_tricky2": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "gap_counts": {
+     "fp_trust_dep": 1,
+     "unresolved_indirect": 1
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 3,
+    "n_variants": 3,
+    "tooling_gaps": 1,
+    "u_iclasses": 35,
+    "u_iforms": 54,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_coldsw2",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw2",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        7,
+        "REL32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 100,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw2",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_pf",
+        "entry"
+       ],
+       [
+        "rv_pf_b",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_pf",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        8,
+        "REL32",
+        "and 0x7",
+        null
+       ]
+      ],
+      "n_instructions": 56,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_pf",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_act2",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_act2",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 62,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_act2",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "smoke_dispatch": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "d1": {
+     "sd_table:act_quantize": "pass",
+     "sd_table_global:act_quantize": "pass"
+    },
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 12,
+    "n_variants": 12,
+    "tooling_gaps": 0,
+    "u_iclasses": 75,
+    "u_iforms": 120,
+    "variants": [
+     {
+      "closure": [
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_fail",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 242,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 206,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 206,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        9,
+        "REL32",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 253,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 81,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 131,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 206,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_fail",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 242,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rdata",
+        0,
+        9,
+        "REL32",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 253,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 206,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 81,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 131,
+      "noreturn_inferred": [
+       "__security_check_cookie"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   }
+  },
+  "C": {
+   "rv_tricky": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 4,
+    "gap_counts": {
+     "fp_trust_dep": 4,
+     "other": 1,
+     "unresolved_indirect": 10
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 6,
+    "n_variants": 6,
+    "tooling_gaps": 11,
+    "u_iclasses": 33,
+    "u_iforms": 54,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_tailsw",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_tailsw",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 9,
+      "jump_tables": [
+       [
+        ".rodata",
+        0,
+        7,
+        "PC32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 66,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_tailsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_coldsw",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ],
+       [
+        "rv_coldsw.cold",
+        "cold_part_of:rv_coldsw"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        280,
+        7,
+        "PC32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 90,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_die.constprop.0",
+        "internal"
+       ],
+       [
+        "rv_dieuser",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "function": "rv_dieuser",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to abort"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_fatal"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 32,
+      "noreturn_inferred": [
+       "rv_die.constprop.0",
+       "rv_ext_fatal"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "rv_dieuser",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_hookcall",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_hookcall",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through memory call qword ptr [r14]"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through a register (definition at 0x1c9 is not a load of an import or GOT slot)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [],
+      "n_instructions": 31,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "rv_hookcall",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_overlap",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 4,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_overlap",
+      "gaps": [
+       [
+        "other",
+        "overlapping reachable decodes at 0x20a and 0x20b"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 16,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "rv_overlap",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_sparse",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_sparse",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        28,
+        63,
+        "PC32",
+        "cmp 0x3e; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 49,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_sparse",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "rv_tricky2": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "gap_counts": {
+     "fp_trust_dep": 1,
+     "unresolved_indirect": 1
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 3,
+    "n_variants": 3,
+    "tooling_gaps": 1,
+    "u_iclasses": 35,
+    "u_iforms": 55,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_coldsw2",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ],
+       [
+        "rv_coldsw2.cold",
+        "cold_part_of:rv_coldsw2"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw2",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        28,
+        7,
+        "PC32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 90,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw2",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_pf_b",
+        "internal"
+       ],
+       [
+        "rv_pf",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_pf",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [
+       [
+        ".rodata",
+        0,
+        7,
+        "PC32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 69,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_pf",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_act2",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_act2",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 95,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_act2",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "smoke_dispatch": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "d1": {
+     "sd_table:act_quantize": "pass",
+     "sd_table_global:act_quantize": "pass"
+    },
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 12,
+    "n_variants": 12,
+    "tooling_gaps": 0,
+    "u_iclasses": 85,
+    "u_iforms": 148,
+    "variants": [
+     {
+      "closure": [
+       [
+        "sd_row_bytes",
+        "interposable"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_fail.constprop.0",
+        "internal"
+       ],
+       [
+        "sd_row_bytes.cold",
+        "cold_part_of:sd_row_bytes"
+       ],
+       [
+        "sd_f32.cold",
+        "cold_part_of:sd_f32"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        36,
+        8,
+        "PC32",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 320,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_row_bytes",
+        "interposable"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_row_bytes.cold",
+        "cold_part_of:sd_row_bytes"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        36,
+        8,
+        "PC32",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 294,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_row_bytes",
+        "interposable"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_row_bytes.cold",
+        "cold_part_of:sd_row_bytes"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        36,
+        8,
+        "PC32",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 294,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        0,
+        9,
+        "PC32",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 215,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "expf"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 64,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 237,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_row_bytes",
+        "interposable"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_row_bytes.cold",
+        "cold_part_of:sd_row_bytes"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        36,
+        8,
+        "PC32",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 294,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_row_bytes",
+        "interposable"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_fail.constprop.0",
+        "internal"
+       ],
+       [
+        "sd_row_bytes.cold",
+        "cold_part_of:sd_row_bytes"
+       ],
+       [
+        "sd_f32.cold",
+        "cold_part_of:sd_f32"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        36,
+        8,
+        "PC32",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 320,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        0,
+        9,
+        "PC32",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 215,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_row_bytes",
+        "interposable"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_row_bytes.cold",
+        "cold_part_of:sd_row_bytes"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        36,
+        8,
+        "PC32",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 294,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "expf"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 64,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 237,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   }
+  },
+  "C-scalar": {
+   "rv_tricky": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 4,
+    "gap_counts": {
+     "fp_trust_dep": 4,
+     "other": 1,
+     "unresolved_indirect": 10
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 6,
+    "n_variants": 6,
+    "tooling_gaps": 11,
+    "u_iclasses": 34,
+    "u_iforms": 54,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_tailsw",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_tailsw",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (definition at 0x8 is not a load of an import or GOT slot)"
+       ]
+      ],
+      "indirect_branches": 9,
+      "jump_tables": [
+       [
+        ".rodata",
+        0,
+        7,
+        "PC32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 67,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_tailsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_coldsw",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ],
+       [
+        "rv_coldsw.cold",
+        "cold_part_of:rv_coldsw"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        280,
+        7,
+        "PC32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 93,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_die.constprop.0",
+        "internal"
+       ],
+       [
+        "rv_dieuser",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "function": "rv_dieuser",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to abort"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_fatal"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 32,
+      "noreturn_inferred": [
+       "rv_die.constprop.0",
+       "rv_ext_fatal"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "rv_dieuser",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_hookcall",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_hookcall",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through memory call qword ptr [r14]"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through a register (definition at 0x1c9 is not a load of an import or GOT slot)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [],
+      "n_instructions": 31,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "rv_hookcall",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_overlap",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 4,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_overlap",
+      "gaps": [
+       [
+        "other",
+        "overlapping reachable decodes at 0x20a and 0x20b"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 16,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "rv_overlap",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_sparse",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_sparse",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        28,
+        63,
+        "PC32",
+        "cmp 0x3e; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 49,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_sparse",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "rv_tricky2": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "gap_counts": {
+     "fp_trust_dep": 1,
+     "unresolved_indirect": 1
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 3,
+    "n_variants": 3,
+    "tooling_gaps": 1,
+    "u_iclasses": 36,
+    "u_iforms": 53,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_coldsw2",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ],
+       [
+        "rv_coldsw2.cold",
+        "cold_part_of:rv_coldsw2"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw2",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        28,
+        7,
+        "PC32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 93,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw2",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_pf_b",
+        "internal"
+       ],
+       [
+        "rv_pf",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_pf",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [
+       [
+        ".rodata",
+        0,
+        7,
+        "PC32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 69,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_pf",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_act2",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_act2",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 62,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_act2",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "smoke_dispatch": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "d1": {
+     "sd_table:act_quantize": "pass",
+     "sd_table_global:act_quantize": "pass"
+    },
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 12,
+    "n_variants": 12,
+    "tooling_gaps": 0,
+    "u_iclasses": 65,
+    "u_iforms": 99,
+    "variants": [
+     {
+      "closure": [
+       [
+        "sd_row_bytes",
+        "interposable"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_fail.constprop.0",
+        "internal"
+       ],
+       [
+        "sd_row_bytes.cold",
+        "cold_part_of:sd_row_bytes"
+       ],
+       [
+        "sd_f32.cold",
+        "cold_part_of:sd_f32"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        36,
+        8,
+        "PC32",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 257,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_row_bytes",
+        "interposable"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_row_bytes.cold",
+        "cold_part_of:sd_row_bytes"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        36,
+        8,
+        "PC32",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 231,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_row_bytes",
+        "interposable"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_row_bytes.cold",
+        "cold_part_of:sd_row_bytes"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        36,
+        8,
+        "PC32",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 231,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        0,
+        9,
+        "PC32",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 266,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "expf"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 64,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 59,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_row_bytes",
+        "interposable"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_row_bytes.cold",
+        "cold_part_of:sd_row_bytes"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        36,
+        8,
+        "PC32",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 231,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_row_bytes",
+        "interposable"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_fail.constprop.0",
+        "internal"
+       ],
+       [
+        "sd_row_bytes.cold",
+        "cold_part_of:sd_row_bytes"
+       ],
+       [
+        "sd_f32.cold",
+        "cold_part_of:sd_f32"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        36,
+        8,
+        "PC32",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 257,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        0,
+        9,
+        "PC32",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 266,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_row_bytes",
+        "interposable"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_row_bytes.cold",
+        "cold_part_of:sd_row_bytes"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        36,
+        8,
+        "PC32",
+        "cmp 0x7; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 231,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "expf"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 64,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 59,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   }
+  },
+  "D": {
+   "rv_tricky": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 4,
+    "gap_counts": {
+     "fp_trust_dep": 4,
+     "other": 1,
+     "unresolved_indirect": 10
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 6,
+    "n_variants": 6,
+    "tooling_gaps": 11,
+    "u_iclasses": 47,
+    "u_iforms": 76,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_tailsw",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_tailsw",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 9,
+      "jump_tables": [
+       [
+        ".rodata",
+        0,
+        8,
+        "PC32",
+        "and 0x7",
+        null
+       ]
+      ],
+      "n_instructions": 63,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_tailsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_coldsw",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        32,
+        7,
+        "PC32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 95,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_dieuser",
+        "entry"
+       ],
+       [
+        "rv_die",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "function": "rv_dieuser",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to abort"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_fatal"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 145,
+      "noreturn_inferred": [
+       "rv_die",
+       "rv_ext_fatal"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "rv_dieuser",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_hookcall",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_hookcall",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through memory call qword ptr [r12]"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through a register (definition at 0x62c is not a load of an import or GOT slot)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [],
+      "n_instructions": 29,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "rv_hookcall",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_overlap",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 4,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_overlap",
+      "gaps": [
+       [
+        "other",
+        "overlapping reachable decodes at 0x666 and 0x667"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 14,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "rv_overlap",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_sparse",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_sparse",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        192,
+        63,
+        "PC32",
+        "cmp 0x3e; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 46,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_sparse",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "rv_tricky2": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "gap_counts": {
+     "fp_trust_dep": 1,
+     "unresolved_indirect": 1
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 3,
+    "n_variants": 3,
+    "tooling_gaps": 1,
+    "u_iclasses": 37,
+    "u_iforms": 56,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_coldsw2",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw2",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        0,
+        7,
+        "PC32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 97,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw2",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_pf",
+        "entry"
+       ],
+       [
+        "rv_pf_b",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_pf",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [
+       [
+        ".rodata",
+        28,
+        8,
+        "PC32",
+        "and 0x7",
+        null
+       ]
+      ],
+      "n_instructions": 64,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_pf",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_act2",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_act2",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 80,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_act2",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "smoke_dispatch": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "d1": {
+     "sd_table:act_quantize": "pass",
+     "sd_table_global:act_quantize": "pass"
+    },
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 12,
+    "n_variants": 12,
+    "tooling_gaps": 0,
+    "u_iclasses": 76,
+    "u_iforms": 140,
+    "variants": [
+     {
+      "closure": [
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_fail",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 311,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 276,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 276,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        32,
+        9,
+        "PC32",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 289,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 164,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 192,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 276,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_fail",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 311,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        32,
+        9,
+        "PC32",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 289,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 276,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 164,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 192,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   }
+  },
+  "D-scalar": {
+   "rv_tricky": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 4,
+    "gap_counts": {
+     "fp_trust_dep": 4,
+     "other": 1,
+     "unresolved_indirect": 10
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 6,
+    "n_variants": 6,
+    "tooling_gaps": 11,
+    "u_iclasses": 43,
+    "u_iforms": 64,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_tailsw",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_tailsw",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 9,
+      "jump_tables": [
+       [
+        ".rodata",
+        0,
+        8,
+        "PC32",
+        "and 0x7",
+        null
+       ]
+      ],
+      "n_instructions": 63,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_tailsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_coldsw",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        32,
+        7,
+        "PC32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 102,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_dieuser",
+        "entry"
+       ],
+       [
+        "rv_die",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "abort",
+       "rv_ext_fatal",
+       "rv_ext_log"
+      ],
+      "function": "rv_dieuser",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to abort"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_fatal"
+       ],
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 73,
+      "noreturn_inferred": [
+       "rv_die",
+       "rv_ext_fatal"
+      ],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "rv_dieuser",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_hookcall",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_hookcall",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through memory call qword ptr [r12]"
+       ],
+       [
+        "unresolved_indirect",
+        "indirect CALL_NEAR through a register (definition at 0x49c is not a load of an import or GOT slot)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [],
+      "n_instructions": 29,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "rv_hookcall",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_overlap",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 4,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_overlap",
+      "gaps": [
+       [
+        "other",
+        "overlapping reachable decodes at 0x4d6 and 0x4d7"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 14,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "rv_overlap",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_sparse",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_sparse",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        60,
+        63,
+        "PC32",
+        "cmp 0x3e; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 46,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_sparse",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "rv_tricky2": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "gap_counts": {
+     "fp_trust_dep": 1,
+     "unresolved_indirect": 1
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 3,
+    "n_variants": 3,
+    "tooling_gaps": 1,
+    "u_iclasses": 35,
+    "u_iforms": 50,
+    "variants": [
+     {
+      "closure": [
+       [
+        "rv_coldsw2",
+        "entry"
+       ],
+       [
+        "rv_cold",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "rv_ext_log"
+      ],
+      "fp_trust_deps": [
+       "rv_ext_log"
+      ],
+      "function": "rv_coldsw2",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to rv_ext_log"
+       ]
+      ],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        0,
+        7,
+        "PC32",
+        "cmp 0x6; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 104,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "rv_coldsw2",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_pf",
+        "entry"
+       ],
+       [
+        "rv_pf_b",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_pf",
+      "gaps": [
+       [
+        "unresolved_indirect",
+        "indirect jump through a register (no definition on a path from the function entry)"
+       ]
+      ],
+      "indirect_branches": 2,
+      "jump_tables": [
+       [
+        ".rodata",
+        28,
+        8,
+        "PC32",
+        "and 0x7",
+        null
+       ]
+      ],
+      "n_instructions": 64,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "rv_pf",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "rv_act2",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "rv_act2",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 62,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "rv_table2:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "rv_act2",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   },
+   "smoke_dispatch": {
+    "anomalies": {},
+    "crossdecoder_disagreements": 0,
+    "d1": {
+     "sd_table:act_quantize": "pass",
+     "sd_table_global:act_quantize": "pass"
+    },
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "lifo_fifo_identical": true,
+    "n_resolved": 12,
+    "n_variants": 12,
+    "tooling_gaps": 0,
+    "u_iclasses": 74,
+    "u_iforms": 118,
+    "variants": [
+     {
+      "closure": [
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_fail",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 227,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 192,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 192,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        32,
+        9,
+        "PC32",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 240,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 146,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 114,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_f16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 192,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[0]",
+      "slot_name_check": "match",
+      "symbol": "sd_f16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_f32",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ],
+       [
+        "sd_fail",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_f32",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 227,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[1]",
+      "slot_name_check": "match",
+      "symbol": "sd_f32",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q8",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_q8",
+      "gaps": [],
+      "indirect_branches": 1,
+      "jump_tables": [
+       [
+        ".rodata",
+        32,
+        9,
+        "PC32",
+        "cmp 0x8; jnbe",
+        null
+       ]
+      ],
+      "n_instructions": 240,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[2]",
+      "slot_name_check": "match",
+      "symbol": "sd_q8",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_bf16",
+        "entry"
+       ],
+       [
+        "sd_float_common",
+        "internal"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "function": "sd_bf16",
+      "gaps": [],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 192,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[3]",
+      "slot_name_check": "match",
+      "symbol": "sd_bf16",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_q4",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "function": "sd_q4",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to expf"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 146,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:matmul[4]",
+      "slot_name_check": "match",
+      "symbol": "sd_q4",
+      "tail_calls": []
+     },
+     {
+      "closure": [
+       [
+        "sd_act",
+        "entry"
+       ]
+      ],
+      "crossdecoder_disagreements": 0,
+      "external_calls": [
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "function": "sd_act",
+      "gaps": [
+       [
+        "fp_trust_dep",
+        "external call to sd_external_log"
+       ]
+      ],
+      "indirect_branches": 0,
+      "jump_tables": [],
+      "n_instructions": 114,
+      "noreturn_inferred": [],
+      "orphan_bytes": 0,
+      "referenced_non_instruction": [],
+      "slot": "sd_table_global:act_quantize",
+      "slot_name_check": "match",
+      "symbol": "sd_act",
+      "tail_calls": []
+     }
+    ],
+    "xed_version": "v2026.08.23"
+   }
+  }
+ },
+ "note": "runbook step 72, x0prep reviser 2026-10-16; inputs smoke_dispatch.c, rv_tricky.c, rv_tricky2.c (NOT Hearth) under the A (A-ninja lines), B-cmake, C and D command lines of quant_avx512.c and quant.c"
+}

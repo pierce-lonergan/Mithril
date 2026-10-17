@@ -1,0 +1,182 @@
+kind,objdump,xed_iclasses,note
+strip,notrack,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,bnd,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,data16,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,data32,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,addr32,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,rex64,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,rex,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,cs,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,ds,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,es,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,ss,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,fs,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,gs,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,{vex},,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,{vex2},,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,{vex3},,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,{evex},,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,{disp8},,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,{disp32},,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,{load},,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,{store},,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,{nf},,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,xacquire,,prefix token printed before the mnemonic; XED folds it into the same iclass
+strip,xrelease,,prefix token printed before the mnemonic; XED folds it into the same iclass
+merge,lock,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,rep,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,repe,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,repz,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,repne,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,repnz,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,data16,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,data32,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,addr32,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,rex64,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,rex,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,cs,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,ds,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,es,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,ss,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,fs,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,gs,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,notrack,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,bnd,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,xacquire,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+merge,xrelease,,llvm-objdump may print this prefix as its own 1-byte line; it is merged with the next line
+prefix,lock,{X}_LOCK|{X},XED names locked RMW forms <X>_LOCK; XCHG and others keep <X>
+prefix,rep,REP_{X}|REPE_{X}|{X},string ops: REP_/REPE_; on other instructions the prefix is ignored (e.g. 'rep ret')
+prefix,repe,REPE_{X}|{X},
+prefix,repz,REPE_{X}|{X},
+prefix,repne,REPNE_{X}|{X},
+prefix,repnz,REPNE_{X}|{X},
+alias,je,JZ,condition-code spelling
+alias,jz,JZ,condition-code spelling
+alias,jne,JNZ,condition-code spelling
+alias,jnz,JNZ,condition-code spelling
+alias,ja,JNBE,condition-code spelling
+alias,jnbe,JNBE,condition-code spelling
+alias,jae,JNB,condition-code spelling
+alias,jnb,JNB,condition-code spelling
+alias,jnc,JNB,condition-code spelling
+alias,jb,JB,condition-code spelling
+alias,jc,JB,condition-code spelling
+alias,jnae,JB,condition-code spelling
+alias,jbe,JBE,condition-code spelling
+alias,jna,JBE,condition-code spelling
+alias,jl,JL,condition-code spelling
+alias,jnge,JL,condition-code spelling
+alias,jge,JNL,condition-code spelling
+alias,jnl,JNL,condition-code spelling
+alias,jle,JLE,condition-code spelling
+alias,jng,JLE,condition-code spelling
+alias,jg,JNLE,condition-code spelling
+alias,jnle,JNLE,condition-code spelling
+alias,js,JS,condition-code spelling
+alias,jns,JNS,condition-code spelling
+alias,jp,JP,condition-code spelling
+alias,jpe,JP,condition-code spelling
+alias,jnp,JNP,condition-code spelling
+alias,jpo,JNP,condition-code spelling
+alias,jo,JO,condition-code spelling
+alias,jno,JNO,condition-code spelling
+alias,cmove,CMOVZ,condition-code spelling
+alias,cmovz,CMOVZ,condition-code spelling
+alias,cmovne,CMOVNZ,condition-code spelling
+alias,cmovnz,CMOVNZ,condition-code spelling
+alias,cmova,CMOVNBE,condition-code spelling
+alias,cmovnbe,CMOVNBE,condition-code spelling
+alias,cmovae,CMOVNB,condition-code spelling
+alias,cmovnb,CMOVNB,condition-code spelling
+alias,cmovnc,CMOVNB,condition-code spelling
+alias,cmovb,CMOVB,condition-code spelling
+alias,cmovc,CMOVB,condition-code spelling
+alias,cmovnae,CMOVB,condition-code spelling
+alias,cmovbe,CMOVBE,condition-code spelling
+alias,cmovna,CMOVBE,condition-code spelling
+alias,cmovl,CMOVL,condition-code spelling
+alias,cmovnge,CMOVL,condition-code spelling
+alias,cmovge,CMOVNL,condition-code spelling
+alias,cmovnl,CMOVNL,condition-code spelling
+alias,cmovle,CMOVLE,condition-code spelling
+alias,cmovng,CMOVLE,condition-code spelling
+alias,cmovg,CMOVNLE,condition-code spelling
+alias,cmovnle,CMOVNLE,condition-code spelling
+alias,cmovs,CMOVS,condition-code spelling
+alias,cmovns,CMOVNS,condition-code spelling
+alias,cmovp,CMOVP,condition-code spelling
+alias,cmovpe,CMOVP,condition-code spelling
+alias,cmovnp,CMOVNP,condition-code spelling
+alias,cmovpo,CMOVNP,condition-code spelling
+alias,cmovo,CMOVO,condition-code spelling
+alias,cmovno,CMOVNO,condition-code spelling
+alias,sete,SETZ,condition-code spelling
+alias,setz,SETZ,condition-code spelling
+alias,setne,SETNZ,condition-code spelling
+alias,setnz,SETNZ,condition-code spelling
+alias,seta,SETNBE,condition-code spelling
+alias,setnbe,SETNBE,condition-code spelling
+alias,setae,SETNB,condition-code spelling
+alias,setnb,SETNB,condition-code spelling
+alias,setnc,SETNB,condition-code spelling
+alias,setb,SETB,condition-code spelling
+alias,setc,SETB,condition-code spelling
+alias,setnae,SETB,condition-code spelling
+alias,setbe,SETBE,condition-code spelling
+alias,setna,SETBE,condition-code spelling
+alias,setl,SETL,condition-code spelling
+alias,setnge,SETL,condition-code spelling
+alias,setge,SETNL,condition-code spelling
+alias,setnl,SETNL,condition-code spelling
+alias,setle,SETLE,condition-code spelling
+alias,setng,SETLE,condition-code spelling
+alias,setg,SETNLE,condition-code spelling
+alias,setnle,SETNLE,condition-code spelling
+alias,sets,SETS,condition-code spelling
+alias,setns,SETNS,condition-code spelling
+alias,setp,SETP,condition-code spelling
+alias,setpe,SETP,condition-code spelling
+alias,setnp,SETNP,condition-code spelling
+alias,setpo,SETNP,condition-code spelling
+alias,seto,SETO,condition-code spelling
+alias,setno,SETNO,condition-code spelling
+alias,ret,RET_NEAR,
+alias,retq,RET_NEAR,
+alias,call,CALL_NEAR,
+alias,callq,CALL_NEAR,
+alias,lret,RET_FAR,
+alias,ljmp,JMP_FAR,
+alias,lcall,CALL_FAR,
+alias,movabs,MOV,
+alias,sal,SHL,
+alias,wait,FWAIT,
+alias,xlatb,XLAT,
+alias,int1,INT1,
+alias,nop,NOP|NOP2|NOP3|NOP4|NOP5|NOP6|NOP7|NOP8|NOP9,
+alias,xchg,XCHG|NOP,
+alias,movsd,MOVSD_XMM|MOVSD,
+alias,cmpsd,CMPSD_XMM|CMPSD,
+alias,pushfq,PUSHFQ,
+alias,popfq,POPFQ,
+alias,icebp,INT1,
+alias,movsxd,MOVSXD,
+alias,cwde,CWDE,
+alias,cdqe,CDQE,
+alias,fstsw,FNSTSW,
+alias,fstcw,FNSTCW,
+alias,fclex,FNCLEX,
+alias,finit,FNINIT,
+alias,fsave,FNSAVE,
+alias,fstenv,FNSTENV,
+alias,fcompi,FCOMIP,
+alias,fucompi,FUCOMIP,
+alias,pextrw,PEXTRW|PEXTRW_SSE4,
+regex,cmp(eq|lt|le|unord|neq|nlt|nle|ord|eq_uq|nge|ngt|false|neq_oq|ge|gt|true|eq_os|lt_oq|le_oq|unord_s|neq_us|nlt_uq|nle_uq|ord_s|eq_us|nge_uq|ngt_uq|false_os|neq_os|ge_oq|gt_oq|true_us)(ps|pd|ss),CMP{2},"legacy SSE compare, predicate spelled in the mnemonic"
+regex,cmp(eq|lt|le|unord|neq|nlt|nle|ord|eq_uq|nge|ngt|false|neq_oq|ge|gt|true|eq_os|lt_oq|le_oq|unord_s|neq_us|nlt_uq|nle_uq|ord_s|eq_us|nge_uq|ngt_uq|false_os|neq_os|ge_oq|gt_oq|true_us)sd,CMPSD_XMM,legacy SSE2 scalar double compare (XED CMPSD_XMM)
+regex,vcmp(eq|lt|le|unord|neq|nlt|nle|ord|eq_uq|nge|ngt|false|neq_oq|ge|gt|true|eq_os|lt_oq|le_oq|unord_s|neq_us|nlt_uq|nle_uq|ord_s|eq_us|nge_uq|ngt_uq|false_os|neq_os|ge_oq|gt_oq|true_us)(ps|pd|ss|sd|ph|sh|bf16),VCMP{2},"VEX/EVEX compare, predicate in the mnemonic"
+regex,vpcmp(eq|lt|le|false|neq|nlt|nle|true)(b|w|d|q),VPCMP{2}|VPCMPEQ{2},signed integer compare; 'eq' also spells the VPCMPEQ* opcode
+regex,vpcmp(eq|lt|le|false|neq|nlt|nle|true)u(b|w|d|q),VPCMPU{2},unsigned integer compare
+regex,vpcmpgt(b|w|d|q),VPCMPGT{1}|VPCMP{1},
+regex,vpcom(lt|le|gt|ge|eq|neq|false|true)(b|w|d|q),VPCOM{2},AMD XOP compare
+regex,vpcom(lt|le|gt|ge|eq|neq|false|true)u(b|w|d|q),VPCOMU{2},AMD XOP compare
+regex,(v?)pclmul(lq|hq)(lq|hq)dq,{1}PCLMULQDQ,carry-less multiply selector spelled in the mnemonic

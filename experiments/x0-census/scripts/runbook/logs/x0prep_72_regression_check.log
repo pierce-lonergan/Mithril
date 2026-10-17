@@ -1,0 +1,603 @@
+START Fri 10/16/2026 19:38:43.57
+==== compile (NOT Hearth): A and B lines of quant_avx512.c and quant.c
+smoke_dispatch.c
+{"directory": "D:/mithril/x0prep/cfg/A-ninja", "argv": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "-std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/FS", "/c", "/FoD:\\mithril\\x0prep\\reg\\A\\smoke_dispatch\\smoke_dispatch.obj", "D:\\mithril\\x0prep\\x0\\scripts\\smoke\\smoke_dispatch.c"]}
+A_smoke_dispatch_RC=0
+smoke_dispatch.c
+{"directory": "D:/mithril/x0prep/cfg/A-ninja", "argv": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "-std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/FS", "/c", "/FoD:\\mithril\\x0prep\\reg\\A-scalar\\smoke_dispatch\\smoke_dispatch.obj", "D:\\mithril\\x0prep\\x0\\scripts\\smoke\\smoke_dispatch.c"]}
+A-scalar_smoke_dispatch_RC=0
+clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]
+{"directory": "D:/mithril/x0prep/cfg/B-cmake", "argv": ["D:\\mithril\\tools\\llvm-win-23.1.3\\bin\\clang-cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "/std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/c", "/FoD:\\mithril\\x0prep\\reg\\B\\smoke_dispatch\\smoke_dispatch.obj", "D:\\mithril\\x0prep\\x0\\scripts\\smoke\\smoke_dispatch.c"]}
+B_smoke_dispatch_RC=0
+clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]
+{"directory": "D:/mithril/x0prep/cfg/B-cmake", "argv": ["D:\\mithril\\tools\\llvm-win-23.1.3\\bin\\clang-cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "/std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/c", "/FoD:\\mithril\\x0prep\\reg\\B-scalar\\smoke_dispatch\\smoke_dispatch.obj", "D:\\mithril\\x0prep\\x0\\scripts\\smoke\\smoke_dispatch.c"]}
+B-scalar_smoke_dispatch_RC=0
+rv_tricky.c
+{"directory": "D:/mithril/x0prep/cfg/A-ninja", "argv": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "-std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/FS", "/c", "/FoD:\\mithril\\x0prep\\reg\\A\\rv_tricky\\rv_tricky.obj", "D:\\mithril\\x0prep\\x0\\scripts\\smoke\\rv_tricky.c"]}
+A_rv_tricky_RC=0
+rv_tricky.c
+{"directory": "D:/mithril/x0prep/cfg/A-ninja", "argv": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "-std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/FS", "/c", "/FoD:\\mithril\\x0prep\\reg\\A-scalar\\rv_tricky\\rv_tricky.obj", "D:\\mithril\\x0prep\\x0\\scripts\\smoke\\rv_tricky.c"]}
+A-scalar_rv_tricky_RC=0
+clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]
+{"directory": "D:/mithril/x0prep/cfg/B-cmake", "argv": ["D:\\mithril\\tools\\llvm-win-23.1.3\\bin\\clang-cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "/std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/c", "/FoD:\\mithril\\x0prep\\reg\\B\\rv_tricky\\rv_tricky.obj", "D:\\mithril\\x0prep\\x0\\scripts\\smoke\\rv_tricky.c"]}
+B_rv_tricky_RC=0
+clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]
+{"directory": "D:/mithril/x0prep/cfg/B-cmake", "argv": ["D:\\mithril\\tools\\llvm-win-23.1.3\\bin\\clang-cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "/std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/c", "/FoD:\\mithril\\x0prep\\reg\\B-scalar\\rv_tricky\\rv_tricky.obj", "D:\\mithril\\x0prep\\x0\\scripts\\smoke\\rv_tricky.c"]}
+B-scalar_rv_tricky_RC=0
+rv_tricky2.c
+{"directory": "D:/mithril/x0prep/cfg/A-ninja", "argv": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "-std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/FS", "/c", "/FoD:\\mithril\\x0prep\\reg\\A\\rv_tricky2\\rv_tricky2.obj", "D:\\mithril\\x0prep\\x0\\scripts\\smoke\\rv_tricky2.c"]}
+A_rv_tricky2_RC=0
+rv_tricky2.c
+{"directory": "D:/mithril/x0prep/cfg/A-ninja", "argv": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "-std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/FS", "/c", "/FoD:\\mithril\\x0prep\\reg\\A-scalar\\rv_tricky2\\rv_tricky2.obj", "D:\\mithril\\x0prep\\x0\\scripts\\smoke\\rv_tricky2.c"]}
+A-scalar_rv_tricky2_RC=0
+clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]
+{"directory": "D:/mithril/x0prep/cfg/B-cmake", "argv": ["D:\\mithril\\tools\\llvm-win-23.1.3\\bin\\clang-cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "/std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/arch:AVX512", "/c", "/FoD:\\mithril\\x0prep\\reg\\B\\rv_tricky2\\rv_tricky2.obj", "D:\\mithril\\x0prep\\x0\\scripts\\smoke\\rv_tricky2.c"]}
+B_rv_tricky2_RC=0
+clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]
+{"directory": "D:/mithril/x0prep/cfg/B-cmake", "argv": ["D:\\mithril\\tools\\llvm-win-23.1.3\\bin\\clang-cl.exe", "/nologo", "-DHEARTH_BUILD_DLL", "-D_CRT_SECURE_NO_WARNINGS", "-ID:\\mithril\\src\\hearth\\engine\\include", "-ID:\\mithril\\src\\hearth\\engine\\src", "/DWIN32", "/D_WINDOWS", "/O2", "/Ob2", "/DNDEBUG", "/std:c11", "-MD", "/experimental:c11atomics", "/fp:precise", "/utf-8", "/W3", "/c", "/FoD:\\mithril\\x0prep\\reg\\B-scalar\\rv_tricky2\\rv_tricky2.obj", "D:\\mithril\\x0prep\\x0\\scripts\\smoke\\rv_tricky2.c"]}
+B-scalar_rv_tricky2_RC=0
+==== A smoke_dispatch: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+A_smoke_dispatch_EXTRACT_RC=0
+A_smoke_dispatch_DECODE_lifo_RC=0
+A_smoke_dispatch_DECODE_fifo_RC=0
+A_smoke_dispatch variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 99 anomalies {}
+==== A rv_tricky: extract
+rv_table                   matmul[0]              -> rv_tailsw                    ok
+rv_table                   matmul[1]              -> rv_coldsw                    ok
+rv_table                   matmul[2]              -> rv_dieuser                   ok
+rv_table                   matmul[3]              -> rv_hookcall                  ok
+rv_table                   matmul[4]              -> rv_overlap                   ok
+rv_table                   act_quantize           -> rv_sparse                    ok
+A_rv_tricky_EXTRACT_RC=0
+A_rv_tricky_DECODE_lifo_RC=1
+A_rv_tricky_DECODE_fifo_RC=1
+A_rv_tricky variants 6 resolved 6 gaps {'fp_trust_dep': 4, 'unresolved_indirect': 10} xdis 0 U_iform 63 anomalies {}
+==== A rv_tricky2: extract
+rv_table2                  matmul[0]              -> rv_coldsw2                   ok
+rv_table2                  matmul[1]              -> rv_pf                        ok
+rv_table2                  act_quantize           -> rv_act2                      ok
+A_rv_tricky2_EXTRACT_RC=0
+A_rv_tricky2_DECODE_lifo_RC=1
+A_rv_tricky2_DECODE_fifo_RC=1
+A_rv_tricky2 variants 3 resolved 3 gaps {'fp_trust_dep': 1, 'unresolved_indirect': 1} xdis 0 U_iform 53 anomalies {}
+==== A smoke_dispatch: loops, P3(c), canary d1
+A_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 68,
+ "p3c_flagged": [],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "canary_keys_matching_no_variant": [],
+ "tags": {
+  "lockstep": 50,
+  "software-pipelined": 14,
+  "spilled": 12,
+  "rotated": 4
+ }
+}
+==== A-scalar smoke_dispatch: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+A-scalar_smoke_dispatch_EXTRACT_RC=0
+A-scalar_smoke_dispatch_DECODE_lifo_RC=0
+A-scalar_smoke_dispatch_DECODE_fifo_RC=0
+A-scalar_smoke_dispatch variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 90 anomalies {}
+==== A-scalar rv_tricky: extract
+rv_table                   matmul[0]              -> rv_tailsw                    ok
+rv_table                   matmul[1]              -> rv_coldsw                    ok
+rv_table                   matmul[2]              -> rv_dieuser                   ok
+rv_table                   matmul[3]              -> rv_hookcall                  ok
+rv_table                   matmul[4]              -> rv_overlap                   ok
+rv_table                   act_quantize           -> rv_sparse                    ok
+A-scalar_rv_tricky_EXTRACT_RC=0
+A-scalar_rv_tricky_DECODE_lifo_RC=1
+A-scalar_rv_tricky_DECODE_fifo_RC=1
+A-scalar_rv_tricky variants 6 resolved 6 gaps {'fp_trust_dep': 4, 'unresolved_indirect': 10} xdis 0 U_iform 54 anomalies {}
+==== A-scalar rv_tricky2: extract
+rv_table2                  matmul[0]              -> rv_coldsw2                   ok
+rv_table2                  matmul[1]              -> rv_pf                        ok
+rv_table2                  act_quantize           -> rv_act2                      ok
+A-scalar_rv_tricky2_EXTRACT_RC=0
+A-scalar_rv_tricky2_DECODE_lifo_RC=1
+A-scalar_rv_tricky2_DECODE_fifo_RC=1
+A-scalar_rv_tricky2 variants 3 resolved 3 gaps {'fp_trust_dep': 1, 'unresolved_indirect': 1} xdis 0 U_iform 53 anomalies {}
+==== A-scalar smoke_dispatch: loops, P3(c), canary d1
+A-scalar_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 62,
+ "p3c_flagged": [],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "canary_keys_matching_no_variant": [],
+ "tags": {
+  "lockstep": 32,
+  "rotated": 16,
+  "software-pipelined": 14,
+  "spilled": 12
+ }
+}
+==== B smoke_dispatch: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+B_smoke_dispatch_EXTRACT_RC=0
+B_smoke_dispatch_DECODE_lifo_RC=0
+B_smoke_dispatch_DECODE_fifo_RC=0
+B_smoke_dispatch variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 148 anomalies {}
+==== B rv_tricky: extract
+rv_table                   matmul[0]              -> rv_tailsw                    ok
+rv_table                   matmul[1]              -> rv_coldsw                    ok
+rv_table                   matmul[2]              -> rv_dieuser                   ok
+rv_table                   matmul[3]              -> rv_hookcall                  ok
+rv_table                   matmul[4]              -> rv_overlap                   ok
+rv_table                   act_quantize           -> rv_sparse                    ok
+B_rv_tricky_EXTRACT_RC=0
+B_rv_tricky_DECODE_lifo_RC=1
+B_rv_tricky_DECODE_fifo_RC=1
+B_rv_tricky variants 6 resolved 6 gaps {'fp_trust_dep': 4, 'unresolved_indirect': 10} xdis 0 U_iform 72 anomalies {}
+==== B rv_tricky2: extract
+rv_table2                  matmul[0]              -> rv_coldsw2                   ok
+rv_table2                  matmul[1]              -> rv_pf                        ok
+rv_table2                  act_quantize           -> rv_act2                      ok
+B_rv_tricky2_EXTRACT_RC=0
+B_rv_tricky2_DECODE_lifo_RC=1
+B_rv_tricky2_DECODE_fifo_RC=1
+B_rv_tricky2 variants 3 resolved 3 gaps {'fp_trust_dep': 1, 'unresolved_indirect': 1} xdis 0 U_iform 60 anomalies {}
+==== B smoke_dispatch: loops, P3(c), canary d1
+B_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 66,
+ "p3c_flagged": [
+  [
+   "B",
+   "sd_table",
+   "matmul[0]",
+   [
+    "L19_2a0",
+    "L19_1ca",
+    "L19_123"
+   ]
+  ],
+  [
+   "B",
+   "sd_table",
+   "matmul[1]",
+   [
+    "L19_2a0",
+    "L19_1ca",
+    "L19_123"
+   ]
+  ],
+  [
+   "B",
+   "sd_table",
+   "matmul[2]",
+   [
+    "L19_2a0",
+    "L19_1ca",
+    "L19_123"
+   ]
+  ],
+  [
+   "B",
+   "sd_table_global",
+   "matmul[0]",
+   [
+    "L19_2a0",
+    "L19_1ca",
+    "L19_123"
+   ]
+  ],
+  [
+   "B",
+   "sd_table_global",
+   "matmul[1]",
+   [
+    "L19_2a0",
+    "L19_1ca",
+    "L19_123"
+   ]
+  ],
+  [
+   "B",
+   "sd_table_global",
+   "matmul[3]",
+   [
+    "L19_2a0",
+    "L19_1ca",
+    "L19_123"
+   ]
+  ]
+ ],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "canary_keys_matching_no_variant": [],
+ "tags": {
+  "lockstep": 44,
+  "rotated": 8,
+  "software-pipelined": 14,
+  "spilled": 12
+ }
+}
+==== B-scalar smoke_dispatch: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+B-scalar_smoke_dispatch_EXTRACT_RC=0
+B-scalar_smoke_dispatch_DECODE_lifo_RC=0
+B-scalar_smoke_dispatch_DECODE_fifo_RC=0
+B-scalar_smoke_dispatch variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 120 anomalies {}
+==== B-scalar rv_tricky: extract
+rv_table                   matmul[0]              -> rv_tailsw                    ok
+rv_table                   matmul[1]              -> rv_coldsw                    ok
+rv_table                   matmul[2]              -> rv_dieuser                   ok
+rv_table                   matmul[3]              -> rv_hookcall                  ok
+rv_table                   matmul[4]              -> rv_overlap                   ok
+rv_table                   act_quantize           -> rv_sparse                    ok
+B-scalar_rv_tricky_EXTRACT_RC=0
+B-scalar_rv_tricky_DECODE_lifo_RC=1
+B-scalar_rv_tricky_DECODE_fifo_RC=1
+B-scalar_rv_tricky variants 6 resolved 6 gaps {'fp_trust_dep': 4, 'unresolved_indirect': 10} xdis 0 U_iform 67 anomalies {}
+==== B-scalar rv_tricky2: extract
+rv_table2                  matmul[0]              -> rv_coldsw2                   ok
+rv_table2                  matmul[1]              -> rv_pf                        ok
+rv_table2                  act_quantize           -> rv_act2                      ok
+B-scalar_rv_tricky2_EXTRACT_RC=0
+B-scalar_rv_tricky2_DECODE_lifo_RC=1
+B-scalar_rv_tricky2_DECODE_fifo_RC=1
+B-scalar_rv_tricky2 variants 3 resolved 3 gaps {'fp_trust_dep': 1, 'unresolved_indirect': 1} xdis 0 U_iform 54 anomalies {}
+==== B-scalar smoke_dispatch: loops, P3(c), canary d1
+B-scalar_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 40,
+ "p3c_flagged": [],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "canary_keys_matching_no_variant": [],
+ "tags": {
+  "rotated": 8,
+  "software-pipelined": 16,
+  "spilled": 12,
+  "lockstep": 16
+ }
+}
+==== C smoke_dispatch: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+C_smoke_dispatch_EXTRACT_RC=0
+C_smoke_dispatch_DECODE_lifo_RC=0
+C_smoke_dispatch_DECODE_fifo_RC=0
+C_smoke_dispatch variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 148 anomalies {}
+==== C rv_tricky: extract
+rv_table                   matmul[0]              -> rv_tailsw                    ok
+rv_table                   matmul[1]              -> rv_coldsw                    ok
+rv_table                   matmul[2]              -> rv_dieuser                   ok
+rv_table                   matmul[3]              -> rv_hookcall                  ok
+rv_table                   matmul[4]              -> rv_overlap                   ok
+rv_table                   act_quantize           -> rv_sparse                    ok
+C_rv_tricky_EXTRACT_RC=0
+C_rv_tricky_DECODE_lifo_RC=1
+C_rv_tricky_DECODE_fifo_RC=1
+C_rv_tricky variants 6 resolved 6 gaps {'fp_trust_dep': 4, 'other': 1, 'unresolved_indirect': 10} xdis 4 U_iform 54 anomalies {}
+==== C rv_tricky2: extract
+rv_table2                  matmul[0]              -> rv_coldsw2                   ok
+rv_table2                  matmul[1]              -> rv_pf                        ok
+rv_table2                  act_quantize           -> rv_act2                      ok
+C_rv_tricky2_EXTRACT_RC=0
+C_rv_tricky2_DECODE_lifo_RC=1
+C_rv_tricky2_DECODE_fifo_RC=1
+C_rv_tricky2 variants 3 resolved 3 gaps {'fp_trust_dep': 1, 'unresolved_indirect': 1} xdis 0 U_iform 55 anomalies {}
+==== C smoke_dispatch: loops, P3(c), canary d1
+C_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 62,
+ "p3c_flagged": [],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "canary_keys_matching_no_variant": [],
+ "tags": {
+  "rotated": 14,
+  "lockstep": 26,
+  "spilled": 20,
+  "software-pipelined": 14
+ }
+}
+==== C-scalar smoke_dispatch: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+C-scalar_smoke_dispatch_EXTRACT_RC=0
+C-scalar_smoke_dispatch_DECODE_lifo_RC=0
+C-scalar_smoke_dispatch_DECODE_fifo_RC=0
+C-scalar_smoke_dispatch variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 99 anomalies {}
+==== C-scalar rv_tricky: extract
+rv_table                   matmul[0]              -> rv_tailsw                    ok
+rv_table                   matmul[1]              -> rv_coldsw                    ok
+rv_table                   matmul[2]              -> rv_dieuser                   ok
+rv_table                   matmul[3]              -> rv_hookcall                  ok
+rv_table                   matmul[4]              -> rv_overlap                   ok
+rv_table                   act_quantize           -> rv_sparse                    ok
+C-scalar_rv_tricky_EXTRACT_RC=0
+C-scalar_rv_tricky_DECODE_lifo_RC=1
+C-scalar_rv_tricky_DECODE_fifo_RC=1
+C-scalar_rv_tricky variants 6 resolved 6 gaps {'fp_trust_dep': 4, 'other': 1, 'unresolved_indirect': 10} xdis 4 U_iform 54 anomalies {}
+==== C-scalar rv_tricky2: extract
+rv_table2                  matmul[0]              -> rv_coldsw2                   ok
+rv_table2                  matmul[1]              -> rv_pf                        ok
+rv_table2                  act_quantize           -> rv_act2                      ok
+C-scalar_rv_tricky2_EXTRACT_RC=0
+C-scalar_rv_tricky2_DECODE_lifo_RC=1
+C-scalar_rv_tricky2_DECODE_fifo_RC=1
+C-scalar_rv_tricky2 variants 3 resolved 3 gaps {'fp_trust_dep': 1, 'unresolved_indirect': 1} xdis 0 U_iform 53 anomalies {}
+==== C-scalar smoke_dispatch: loops, P3(c), canary d1
+C-scalar_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 44,
+ "p3c_flagged": [],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "canary_keys_matching_no_variant": [],
+ "tags": {
+  "rotated": 6,
+  "lockstep": 22,
+  "software-pipelined": 14,
+  "spilled": 14
+ }
+}
+==== D smoke_dispatch: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+D_smoke_dispatch_EXTRACT_RC=0
+D_smoke_dispatch_DECODE_lifo_RC=0
+D_smoke_dispatch_DECODE_fifo_RC=0
+D_smoke_dispatch variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 140 anomalies {}
+==== D rv_tricky: extract
+rv_table                   matmul[0]              -> rv_tailsw                    ok
+rv_table                   matmul[1]              -> rv_coldsw                    ok
+rv_table                   matmul[2]              -> rv_dieuser                   ok
+rv_table                   matmul[3]              -> rv_hookcall                  ok
+rv_table                   matmul[4]              -> rv_overlap                   ok
+rv_table                   act_quantize           -> rv_sparse                    ok
+D_rv_tricky_EXTRACT_RC=0
+D_rv_tricky_DECODE_lifo_RC=1
+D_rv_tricky_DECODE_fifo_RC=1
+D_rv_tricky variants 6 resolved 6 gaps {'fp_trust_dep': 4, 'other': 1, 'unresolved_indirect': 10} xdis 4 U_iform 76 anomalies {}
+==== D rv_tricky2: extract
+rv_table2                  matmul[0]              -> rv_coldsw2                   ok
+rv_table2                  matmul[1]              -> rv_pf                        ok
+rv_table2                  act_quantize           -> rv_act2                      ok
+D_rv_tricky2_EXTRACT_RC=0
+D_rv_tricky2_DECODE_lifo_RC=1
+D_rv_tricky2_DECODE_fifo_RC=1
+D_rv_tricky2 variants 3 resolved 3 gaps {'fp_trust_dep': 1, 'unresolved_indirect': 1} xdis 0 U_iform 56 anomalies {}
+==== D smoke_dispatch: loops, P3(c), canary d1
+D_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 78,
+ "p3c_flagged": [
+  [
+   "D",
+   "sd_table",
+   "matmul[0]",
+   [
+    "L2_10c0",
+    "L2_f34",
+    "L2_e66"
+   ]
+  ],
+  [
+   "D",
+   "sd_table",
+   "matmul[1]",
+   [
+    "L2_10c0",
+    "L2_f34",
+    "L2_e66"
+   ]
+  ],
+  [
+   "D",
+   "sd_table",
+   "matmul[2]",
+   [
+    "L2_10c0",
+    "L2_f34",
+    "L2_e66"
+   ]
+  ],
+  [
+   "D",
+   "sd_table_global",
+   "matmul[0]",
+   [
+    "L2_10c0",
+    "L2_f34",
+    "L2_e66"
+   ]
+  ],
+  [
+   "D",
+   "sd_table_global",
+   "matmul[1]",
+   [
+    "L2_10c0",
+    "L2_f34",
+    "L2_e66"
+   ]
+  ],
+  [
+   "D",
+   "sd_table_global",
+   "matmul[3]",
+   [
+    "L2_10c0",
+    "L2_f34",
+    "L2_e66"
+   ]
+  ]
+ ],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "canary_keys_matching_no_variant": [],
+ "tags": {
+  "lockstep": 54,
+  "rotated": 8,
+  "software-pipelined": 16,
+  "spilled": 12
+ }
+}
+==== D-scalar smoke_dispatch: extract
+sd_table                   matmul[0]              -> sd_f32                       ok
+sd_table                   matmul[1]              -> sd_f16                       ok
+sd_table                   matmul[2]              -> sd_bf16                      ok
+sd_table                   matmul[3]              -> sd_q8                        ok
+sd_table                   matmul[4]              -> sd_q4                        ok
+sd_table                   act_quantize           -> sd_act                       ok
+sd_table_global            matmul[0]              -> sd_f16                       ok
+sd_table_global            matmul[1]              -> sd_f32                       ok
+sd_table_global            matmul[2]              -> sd_q8                        ok
+sd_table_global            matmul[3]              -> sd_bf16                      ok
+sd_table_global            matmul[4]              -> sd_q4                        ok
+sd_table_global            act_quantize           -> sd_act                       ok
+D-scalar_smoke_dispatch_EXTRACT_RC=0
+D-scalar_smoke_dispatch_DECODE_lifo_RC=0
+D-scalar_smoke_dispatch_DECODE_fifo_RC=0
+D-scalar_smoke_dispatch variants 12 resolved 12 gaps {'fp_trust_dep': 6} xdis 0 U_iform 118 anomalies {}
+==== D-scalar rv_tricky: extract
+rv_table                   matmul[0]              -> rv_tailsw                    ok
+rv_table                   matmul[1]              -> rv_coldsw                    ok
+rv_table                   matmul[2]              -> rv_dieuser                   ok
+rv_table                   matmul[3]              -> rv_hookcall                  ok
+rv_table                   matmul[4]              -> rv_overlap                   ok
+rv_table                   act_quantize           -> rv_sparse                    ok
+D-scalar_rv_tricky_EXTRACT_RC=0
+D-scalar_rv_tricky_DECODE_lifo_RC=1
+D-scalar_rv_tricky_DECODE_fifo_RC=1
+D-scalar_rv_tricky variants 6 resolved 6 gaps {'fp_trust_dep': 4, 'other': 1, 'unresolved_indirect': 10} xdis 4 U_iform 64 anomalies {}
+==== D-scalar rv_tricky2: extract
+rv_table2                  matmul[0]              -> rv_coldsw2                   ok
+rv_table2                  matmul[1]              -> rv_pf                        ok
+rv_table2                  act_quantize           -> rv_act2                      ok
+D-scalar_rv_tricky2_EXTRACT_RC=0
+D-scalar_rv_tricky2_DECODE_lifo_RC=1
+D-scalar_rv_tricky2_DECODE_fifo_RC=1
+D-scalar_rv_tricky2 variants 3 resolved 3 gaps {'fp_trust_dep': 1, 'unresolved_indirect': 1} xdis 0 U_iform 50 anomalies {}
+==== D-scalar smoke_dispatch: loops, P3(c), canary d1
+D-scalar_LOOPS_RC=0
+{
+ "variants": 12,
+ "loops": 44,
+ "p3c_flagged": [],
+ "d1": {
+  "sd_table:act_quantize": "pass",
+  "sd_table_global:act_quantize": "pass"
+ },
+ "canary_keys_matching_no_variant": [],
+ "tags": {
+  "rotated": 8,
+  "software-pipelined": 18,
+  "spilled": 12,
+  "lockstep": 18
+ }
+}
+==== expectations (smoke\tricky_expect.json) and lifo/fifo identity
+check_smoke: 168 variants checked, 0 deviations
+CHECK_RC=0 (expect 0)
+==== negative test: slot entries moved by one byte (A and C smoke_dispatch); decode must report gaps
+A_NEG_RC=1 (expect 1)
+A NEG gaps {'fp_trust_dep': 4, 'other': 4} xdis 12
+C_NEG_RC=1 (expect 1)
+C NEG gaps {'other': 34, 'unresolved_indirect': 2} xdis 12
+==== compact record of the outputs
+written D:\mithril\x0prep\reg\results_regression.json
+END Fri 10/16/2026 19:39:11.08

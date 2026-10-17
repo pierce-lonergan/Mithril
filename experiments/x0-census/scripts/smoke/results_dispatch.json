@@ -1,0 +1,8169 @@
+{
+ "note": "x0prep 2026-10-16, runbook step 72 (logs/x0prep_72_smoke_dispatch_check.log, final run 18:41 EDT with the scripts as committed): x0_extract.py, x0_decode.py and x0_loops.py on smoke/smoke_dispatch.c (NOT Hearth) compiled with the A (A-ninja lines), B-cmake, C and D command lines of quant_avx512.c (A, B, C, D) and of quant.c (A-scalar, B-scalar, C-scalar, D-scalar). Windows XED v2026.08.23 and llvm-objdump 23.1.3 on the desktop. Expected genuine gaps: fp_trust_dep for expf (libm) and sd_external_log (unknown external, presumed FP).",
+ "configs": {
+  "A": {
+   "summary": {
+    "n_variants": 12,
+    "n_resolved": 12,
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "tooling_gaps": 0,
+    "crossdecoder_disagreements": 0,
+    "u_iforms": 99,
+    "u_iclasses": 64,
+    "anomalies": {},
+    "xed_version": "v2026.08.23"
+   },
+   "loop_tags": {
+    "lockstep": 50,
+    "software-pipelined": 14,
+    "spilled": 12,
+    "rotated": 4
+   },
+   "variants": [
+    {
+     "table": "sd_table",
+     "slot": "matmul[0]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 288,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_fail",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail",
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 1120,
+       "end": 1152,
+       "entry_type": "ADDR32NB",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 2,
+      "orphan_bytes": 0,
+      "data_bytes": 32
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L12_1b0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V2": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 8,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[1]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 261,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 1120,
+       "end": 1152,
+       "entry_type": "ADDR32NB",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 2,
+      "orphan_bytes": 0,
+      "data_bytes": 32
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L12_1b0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V2": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 8,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[2]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 261,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 1120,
+       "end": 1152,
+       "entry_type": "ADDR32NB",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 2,
+      "orphan_bytes": 0,
+      "data_bytes": 32
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L12_1b0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V2": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 8,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[3]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 171,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {}
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 692,
+       "end": 728,
+       "entry_type": "ADDR32NB",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDSS",
+      "VCVTSI2SS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 3,
+      "orphan_bytes": 0,
+      "data_bytes": 36
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 61,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 132,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDSS",
+      "VCOMISS",
+      "VCVTTSS2SI",
+      "VDIVSS",
+      "VMAXSS",
+      "VMULSS",
+      "VSUBSS",
+      "VUCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L8_51",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V4": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      },
+      {
+       "id": "L8_93",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 1,
+       "accumulators": {
+        "V4": 1
+       },
+       "tags": [
+        "rotated"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": "pass"
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[0]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 261,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 1120,
+       "end": 1152,
+       "entry_type": "ADDR32NB",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 2,
+      "orphan_bytes": 0,
+      "data_bytes": 32
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L12_1b0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V2": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 8,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[1]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 288,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_fail",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail",
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 1120,
+       "end": 1152,
+       "entry_type": "ADDR32NB",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 2,
+      "orphan_bytes": 0,
+      "data_bytes": 32
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L12_1b0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V2": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 8,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[2]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 171,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {}
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 692,
+       "end": 728,
+       "entry_type": "ADDR32NB",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDSS",
+      "VCVTSI2SS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 3,
+      "orphan_bytes": 0,
+      "data_bytes": 36
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[3]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 261,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 1120,
+       "end": 1152,
+       "entry_type": "ADDR32NB",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 2,
+      "orphan_bytes": 0,
+      "data_bytes": 32
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L12_1b0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V2": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 8,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 61,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 132,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDSS",
+      "VCOMISS",
+      "VCVTTSS2SI",
+      "VDIVSS",
+      "VMAXSS",
+      "VMULSS",
+      "VSUBSS",
+      "VUCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L8_51",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V4": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      },
+      {
+       "id": "L8_93",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 1,
+       "accumulators": {
+        "V4": 1
+       },
+       "tags": [
+        "rotated"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": "pass"
+    }
+   ]
+  },
+  "A-scalar": {
+   "summary": {
+    "n_variants": 12,
+    "n_resolved": 12,
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "tooling_gaps": 0,
+    "crossdecoder_disagreements": 0,
+    "u_iforms": 90,
+    "u_iclasses": 57,
+    "anomalies": {},
+    "xed_version": "v2026.08.23"
+   },
+   "loop_tags": {
+    "lockstep": 32,
+    "rotated": 16,
+    "software-pipelined": 14,
+    "spilled": 12
+   },
+   "variants": [
+    {
+     "table": "sd_table",
+     "slot": "matmul[0]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 260,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_fail",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail",
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 1008,
+       "end": 1040,
+       "entry_type": "ADDR32NB",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 2,
+      "orphan_bytes": 0,
+      "data_bytes": 32
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L12_190",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V0": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L12_177",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V0": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[1]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 233,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 1008,
+       "end": 1040,
+       "entry_type": "ADDR32NB",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 2,
+      "orphan_bytes": 0,
+      "data_bytes": 32
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L12_190",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V0": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L12_177",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V0": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[2]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 233,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 1008,
+       "end": 1040,
+       "entry_type": "ADDR32NB",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 2,
+      "orphan_bytes": 0,
+      "data_bytes": 32
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L12_190",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V0": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L12_177",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V0": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[3]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 170,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {}
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 628,
+       "end": 664,
+       "entry_type": "ADDR32NB",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "CVTDQ2PS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 3,
+      "orphan_bytes": 0,
+      "data_bytes": 36
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 61,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 137,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "CVTTSS2SI",
+      "DIVSS",
+      "MAXSS",
+      "MINSS",
+      "MULSS",
+      "SUBSS",
+      "UCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L8_53",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V4": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      },
+      {
+       "id": "L8_94",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 1,
+       "accumulators": {
+        "V4": 1
+       },
+       "tags": [
+        "rotated"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": "pass"
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[0]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 233,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 1008,
+       "end": 1040,
+       "entry_type": "ADDR32NB",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 2,
+      "orphan_bytes": 0,
+      "data_bytes": 32
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L12_190",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V0": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L12_177",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V0": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[1]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 260,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_fail",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail",
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 1008,
+       "end": 1040,
+       "entry_type": "ADDR32NB",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 2,
+      "orphan_bytes": 0,
+      "data_bytes": 32
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L12_190",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V0": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L12_177",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V0": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[2]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 170,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {}
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 628,
+       "end": 664,
+       "entry_type": "ADDR32NB",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "CVTDQ2PS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 3,
+      "orphan_bytes": 0,
+      "data_bytes": 36
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[3]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 233,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".text$mn",
+       "start": 1008,
+       "end": 1040,
+       "entry_type": "ADDR32NB",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 2,
+      "orphan_bytes": 0,
+      "data_bytes": 32
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L12_190",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V0": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L12_177",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V0": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 61,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 137,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text$mn",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 1,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "CVTTSS2SI",
+      "DIVSS",
+      "MAXSS",
+      "MINSS",
+      "MULSS",
+      "SUBSS",
+      "UCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L8_53",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V4": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      },
+      {
+       "id": "L8_94",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 1,
+       "accumulators": {
+        "V4": 1
+       },
+       "tags": [
+        "rotated"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": "pass"
+    }
+   ]
+  },
+  "B": {
+   "summary": {
+    "n_variants": 12,
+    "n_resolved": 12,
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "tooling_gaps": 0,
+    "crossdecoder_disagreements": 0,
+    "u_iforms": 149,
+    "u_iclasses": 80,
+    "anomalies": {},
+    "xed_version": "v2026.08.23"
+   },
+   "loop_tags": {
+    "lockstep": 44,
+    "rotated": 8,
+    "software-pipelined": 14,
+    "spilled": 12
+   },
+   "variants": [
+    {
+     "table": "sd_table",
+     "slot": "matmul[0]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 281,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_fail",
+       "internal",
+       ".text$unlikely",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail",
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 6,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VFMADD213PS",
+      "VFMADD213SS",
+      "VFMADD231PS",
+      "VMULPS"
+     ],
+     "unreachable": {
+      "padding_bytes": 27,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L19_1f0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_2a0",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16,
+        "V1": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_1ca",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 77,
+       "accumulators": {
+        "STK:RSP:160": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_123",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 77,
+       "accumulators": {
+        "STK:RSP:160": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 6,
+     "p3c": [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[1]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 244,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 6,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VFMADD213PS",
+      "VFMADD213SS",
+      "VFMADD231PS",
+      "VMULPS"
+     ],
+     "unreachable": {
+      "padding_bytes": 27,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L19_1f0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_2a0",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16,
+        "V1": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_1ca",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 77,
+       "accumulators": {
+        "STK:RSP:160": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_123",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 77,
+       "accumulators": {
+        "STK:RSP:160": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 6,
+     "p3c": [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[2]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 244,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 6,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VFMADD213PS",
+      "VFMADD213SS",
+      "VFMADD231PS",
+      "VMULPS"
+     ],
+     "unreachable": {
+      "padding_bytes": 27,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L19_1f0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_2a0",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16,
+        "V1": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_1ca",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 77,
+       "accumulators": {
+        "STK:RSP:160": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_123",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 77,
+       "accumulators": {
+        "STK:RSP:160": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 6,
+     "p3c": [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[3]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 297,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {}
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rdata",
+       "start": 0,
+       "end": 36,
+       "entry_type": "REL32",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDSS",
+      "VCVTSI2SS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 38,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 8,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 82,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 10,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 204,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VCMPPS",
+      "VCMPSS",
+      "VCVTTPS2DQ",
+      "VCVTTSS2SI",
+      "VDIVSS",
+      "VMAXPS",
+      "VMAXSS",
+      "VMULPS",
+      "VMULSS",
+      "VUCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L17_60",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      },
+      {
+       "id": "L17_c0",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 1,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 5,
+     "p3c": [],
+     "d1": "pass"
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[0]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 244,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 6,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VFMADD213PS",
+      "VFMADD213SS",
+      "VFMADD231PS",
+      "VMULPS"
+     ],
+     "unreachable": {
+      "padding_bytes": 27,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L19_1f0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_2a0",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16,
+        "V1": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_1ca",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 77,
+       "accumulators": {
+        "STK:RSP:160": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_123",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 77,
+       "accumulators": {
+        "STK:RSP:160": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 6,
+     "p3c": [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[1]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 281,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_fail",
+       "internal",
+       ".text$unlikely",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail",
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 6,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VFMADD213PS",
+      "VFMADD213SS",
+      "VFMADD231PS",
+      "VMULPS"
+     ],
+     "unreachable": {
+      "padding_bytes": 27,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L19_1f0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_2a0",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16,
+        "V1": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_1ca",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 77,
+       "accumulators": {
+        "STK:RSP:160": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_123",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 77,
+       "accumulators": {
+        "STK:RSP:160": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 6,
+     "p3c": [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[2]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 297,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {}
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rdata",
+       "start": 0,
+       "end": 36,
+       "entry_type": "REL32",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDSS",
+      "VCVTSI2SS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 38,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 8,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[3]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 244,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 6,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VFMADD213PS",
+      "VFMADD213SS",
+      "VFMADD231PS",
+      "VMULPS"
+     ],
+     "unreachable": {
+      "padding_bytes": 27,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L19_1f0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_2a0",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16,
+        "V1": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_1ca",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 77,
+       "accumulators": {
+        "STK:RSP:160": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L19_123",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 77,
+       "accumulators": {
+        "STK:RSP:160": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 6,
+     "p3c": [
+      "L19_2a0",
+      "L19_1ca",
+      "L19_123"
+     ],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 82,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 10,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 204,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VCMPPS",
+      "VCMPSS",
+      "VCVTTPS2DQ",
+      "VCVTTSS2SI",
+      "VDIVSS",
+      "VMAXPS",
+      "VMAXSS",
+      "VMULPS",
+      "VMULSS",
+      "VUCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L17_60",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      },
+      {
+       "id": "L17_c0",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 1,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 5,
+     "p3c": [],
+     "d1": "pass"
+    }
+   ]
+  },
+  "B-scalar": {
+   "summary": {
+    "n_variants": 12,
+    "n_resolved": 12,
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "tooling_gaps": 0,
+    "crossdecoder_disagreements": 0,
+    "u_iforms": 121,
+    "u_iclasses": 76,
+    "anomalies": {},
+    "xed_version": "v2026.08.23"
+   },
+   "loop_tags": {
+    "rotated": 8,
+    "software-pipelined": 16,
+    "spilled": 12,
+    "lockstep": 16
+   },
+   "variants": [
+    {
+     "table": "sd_table",
+     "slot": "matmul[0]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 243,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_fail",
+       "internal",
+       ".text$unlikely",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail",
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULPS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 30,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L23_1a1",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L23_fe",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[1]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 207,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULPS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 30,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L23_1a1",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L23_fe",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[2]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 207,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULPS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 30,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L23_1a1",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L23_fe",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[3]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 253,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {}
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rdata",
+       "start": 0,
+       "end": 36,
+       "entry_type": "REL32",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "CVTSI2SS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 41,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 6,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 82,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 10,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 132,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "CMPPS",
+      "CMPSS",
+      "CVTTPS2DQ",
+      "CVTTSS2SI",
+      "DIVSS",
+      "MAXPS",
+      "MAXSS",
+      "MULPS",
+      "MULSS",
+      "UCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L21_70",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 2,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": "pass"
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[0]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 207,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULPS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 30,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L23_1a1",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L23_fe",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[1]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 243,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_fail",
+       "internal",
+       ".text$unlikely",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail",
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULPS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 30,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L23_1a1",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L23_fe",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[2]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 253,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {}
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rdata",
+       "start": 0,
+       "end": 36,
+       "entry_type": "REL32",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "CVTSI2SS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 41,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 6,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[3]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 207,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text",
+       "comdat"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULPS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 30,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L23_1a1",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L23_fe",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 82,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 10,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 132,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text",
+       "comdat"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__security_check_cookie",
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "gs_cookie_ref": 2,
+       "gs_cookie_check_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "CMPPS",
+      "CMPSS",
+      "CVTTPS2DQ",
+      "CVTTSS2SI",
+      "DIVSS",
+      "MAXPS",
+      "MAXSS",
+      "MULPS",
+      "MULSS",
+      "UCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L21_70",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 2,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": "pass"
+    }
+   ]
+  },
+  "C": {
+   "summary": {
+    "n_variants": 12,
+    "n_resolved": 12,
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "tooling_gaps": 0,
+    "crossdecoder_disagreements": 0,
+    "u_iforms": 148,
+    "u_iclasses": 85,
+    "anomalies": {},
+    "xed_version": "v2026.08.23"
+   },
+   "loop_tags": {
+    "rotated": 14,
+    "lockstep": 26,
+    "spilled": 20,
+    "software-pipelined": 14
+   },
+   "variants": [
+    {
+     "table": "sd_table",
+     "slot": "matmul[0]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 320,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes",
+       "interposable",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ],
+      [
+       "sd_f32.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ],
+      [
+       "sd_fail.constprop.0",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail.constprop.0",
+       "sd_float_common"
+      ],
+      "interposable_calls": [
+       "sd_row_bytes"
+      ],
+      "external_calls": [
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 2,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 36,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 60,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L1_b70",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "rotated"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_bf1",
+       "acc_lanes_emitted": 8,
+       "acc_updates_per_iter": 8,
+       "accumulators": {
+        "STK:RSP:64": 8
+       },
+       "tags": [
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_b60",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 42,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_b3f",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 42,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[1]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 294,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes",
+       "interposable",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [
+       "sd_row_bytes"
+      ],
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 2,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 36,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 60,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L1_b70",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "rotated"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_bf1",
+       "acc_lanes_emitted": 8,
+       "acc_updates_per_iter": 8,
+       "accumulators": {
+        "STK:RSP:64": 8
+       },
+       "tags": [
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_b60",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 42,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_b3f",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 42,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[2]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 294,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes",
+       "interposable",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [
+       "sd_row_bytes"
+      ],
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 2,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 36,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 60,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L1_b70",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "rotated"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_bf1",
+       "acc_lanes_emitted": 8,
+       "acc_updates_per_iter": 8,
+       "accumulators": {
+        "STK:RSP:64": 8
+       },
+       "tags": [
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_b60",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 42,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_b3f",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 42,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[3]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 215,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 0,
+       "end": 36,
+       "entry_type": "PC32",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDSS",
+      "VCVTSI2SS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 45,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 64,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "expf"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "endbr": 1,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 237,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "endbr": 1,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VCMPPS",
+      "VCOMISS",
+      "VCVTTPS2DQ",
+      "VCVTTSS2SI",
+      "VDIVSS",
+      "VMAXSS",
+      "VMULPS",
+      "VMULSS",
+      "VSUBSS",
+      "VUCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 9,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L1_410",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 1,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": "pass"
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[0]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 294,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes",
+       "interposable",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [
+       "sd_row_bytes"
+      ],
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 2,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 36,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 60,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L1_b70",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "rotated"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_bf1",
+       "acc_lanes_emitted": 8,
+       "acc_updates_per_iter": 8,
+       "accumulators": {
+        "STK:RSP:64": 8
+       },
+       "tags": [
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_b60",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 42,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_b3f",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 42,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[1]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 320,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes",
+       "interposable",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ],
+      [
+       "sd_f32.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ],
+      [
+       "sd_fail.constprop.0",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail.constprop.0",
+       "sd_float_common"
+      ],
+      "interposable_calls": [
+       "sd_row_bytes"
+      ],
+      "external_calls": [
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 2,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 36,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 60,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L1_b70",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "rotated"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_bf1",
+       "acc_lanes_emitted": 8,
+       "acc_updates_per_iter": 8,
+       "accumulators": {
+        "STK:RSP:64": 8
+       },
+       "tags": [
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_b60",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 42,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_b3f",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 42,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[2]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 215,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 0,
+       "end": 36,
+       "entry_type": "PC32",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDSS",
+      "VCVTSI2SS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 45,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[3]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 294,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes",
+       "interposable",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [
+       "sd_row_bytes"
+      ],
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 2,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 36,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 60,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L1_b70",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "rotated"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_bf1",
+       "acc_lanes_emitted": 8,
+       "acc_updates_per_iter": 8,
+       "accumulators": {
+        "STK:RSP:64": 8
+       },
+       "tags": [
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_b60",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 42,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L1_b3f",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 42,
+       "accumulators": {
+        "V1": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 64,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "expf"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "endbr": 1,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 237,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "endbr": 1,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VCMPPS",
+      "VCOMISS",
+      "VCVTTPS2DQ",
+      "VCVTTSS2SI",
+      "VDIVSS",
+      "VMAXSS",
+      "VMULPS",
+      "VMULSS",
+      "VSUBSS",
+      "VUCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 9,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L1_410",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 1,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": "pass"
+    }
+   ]
+  },
+  "C-scalar": {
+   "summary": {
+    "n_variants": 12,
+    "n_resolved": 12,
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "tooling_gaps": 0,
+    "crossdecoder_disagreements": 0,
+    "u_iforms": 99,
+    "u_iclasses": 65,
+    "anomalies": {},
+    "xed_version": "v2026.08.23"
+   },
+   "loop_tags": {
+    "rotated": 6,
+    "lockstep": 22,
+    "software-pipelined": 14,
+    "spilled": 14
+   },
+   "variants": [
+    {
+     "table": "sd_table",
+     "slot": "matmul[0]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 257,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes",
+       "interposable",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ],
+      [
+       "sd_f32.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ],
+      [
+       "sd_fail.constprop.0",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail.constprop.0",
+       "sd_float_common"
+      ],
+      "interposable_calls": [
+       "sd_row_bytes"
+      ],
+      "external_calls": [
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 2,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 36,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 60,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 5,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[1]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 231,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes",
+       "interposable",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [
+       "sd_row_bytes"
+      ],
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 2,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 36,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 60,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 5,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[2]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 231,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes",
+       "interposable",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [
+       "sd_row_bytes"
+      ],
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 2,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 36,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 60,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 5,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[3]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 266,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 0,
+       "end": 36,
+       "entry_type": "PC32",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "CVTSI2SS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 14,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 64,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "expf"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "endbr": 1,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 59,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "endbr": 1,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "COMISS",
+      "CVTTSS2SI",
+      "DIVSS",
+      "MAXSS",
+      "MULSS",
+      "SUBSS",
+      "UCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L1_468",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 1,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": "pass"
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[0]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 231,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes",
+       "interposable",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [
+       "sd_row_bytes"
+      ],
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 2,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 36,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 60,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 5,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[1]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 257,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes",
+       "interposable",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ],
+      [
+       "sd_f32.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ],
+      [
+       "sd_fail.constprop.0",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail.constprop.0",
+       "sd_float_common"
+      ],
+      "interposable_calls": [
+       "sd_row_bytes"
+      ],
+      "external_calls": [
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 2,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 36,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 60,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 5,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[2]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 266,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 0,
+       "end": 36,
+       "entry_type": "PC32",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "CVTSI2SS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 14,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[3]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 231,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes",
+       "interposable",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_row_bytes.cold",
+       "internal",
+       ".text.unlikely",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [
+       "sd_row_bytes"
+      ],
+      "external_calls": [
+       "__stack_chk_fail"
+      ],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {
+       "endbr": 2,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 36,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 8
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 60,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 5,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 64,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "expf"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "endbr": 1,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 59,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "__memcpy_chk",
+       "__stack_chk_fail",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {
+       "endbr": 1,
+       "stack_protector_canary": 2,
+       "stack_chk_fail_call": 1
+      }
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "COMISS",
+      "CVTTSS2SI",
+      "DIVSS",
+      "MAXSS",
+      "MULSS",
+      "SUBSS",
+      "UCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L1_468",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 1,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 2,
+     "p3c": [],
+     "d1": "pass"
+    }
+   ]
+  },
+  "D": {
+   "summary": {
+    "n_variants": 12,
+    "n_resolved": 12,
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "tooling_gaps": 0,
+    "crossdecoder_disagreements": 0,
+    "u_iforms": 140,
+    "u_iclasses": 76,
+    "anomalies": {},
+    "xed_version": "v2026.08.23"
+   },
+   "loop_tags": {
+    "lockstep": 54,
+    "rotated": 8,
+    "software-pipelined": 16,
+    "spilled": 12
+   },
+   "variants": [
+    {
+     "table": "sd_table",
+     "slot": "matmul[0]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 311,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_fail",
+       "internal",
+       ".text.unlikely.",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail",
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 24,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_fa0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 128,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_1020",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_10c0",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 64,
+       "accumulators": {
+        "V0": 16,
+        "V1": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_f34",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 193,
+       "accumulators": {
+        "STK:RSP:48": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_e66",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 193,
+       "accumulators": {
+        "STK:RSP:48": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[1]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 276,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 24,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_fa0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 128,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_1020",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_10c0",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 64,
+       "accumulators": {
+        "V0": 16,
+        "V1": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_f34",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 193,
+       "accumulators": {
+        "STK:RSP:48": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_e66",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 193,
+       "accumulators": {
+        "STK:RSP:48": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[2]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 276,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 24,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_fa0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 128,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_1020",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_10c0",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 64,
+       "accumulators": {
+        "V0": 16,
+        "V1": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_f34",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 193,
+       "accumulators": {
+        "STK:RSP:48": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_e66",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 193,
+       "accumulators": {
+        "STK:RSP:48": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[3]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 289,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {}
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 32,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDSS",
+      "VCVTSI2SS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 21,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 8,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 164,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 11,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 5,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 192,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VCMPPS",
+      "VCMPSS",
+      "VCVTTPS2DQ",
+      "VCVTTSS2SI",
+      "VDIVSS",
+      "VMAXPS",
+      "VMAXSS",
+      "VMULPS",
+      "VMULSS",
+      "VUCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_9a0",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      },
+      {
+       "id": "L2_a00",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 1,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 5,
+     "p3c": [],
+     "d1": "pass"
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[0]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 276,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 24,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_fa0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 128,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_1020",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_10c0",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 64,
+       "accumulators": {
+        "V0": 16,
+        "V1": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_f34",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 193,
+       "accumulators": {
+        "STK:RSP:48": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_e66",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 193,
+       "accumulators": {
+        "STK:RSP:48": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[1]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 311,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_fail",
+       "internal",
+       ".text.unlikely.",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail",
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 24,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_fa0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 128,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_1020",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_10c0",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 64,
+       "accumulators": {
+        "V0": 16,
+        "V1": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_f34",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 193,
+       "accumulators": {
+        "STK:RSP:48": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_e66",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 193,
+       "accumulators": {
+        "STK:RSP:48": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[2]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 289,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {}
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 32,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDSS",
+      "VCVTSI2SS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 21,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 8,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[3]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 276,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VMULPS",
+      "VMULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 24,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_fa0",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 128,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_1020",
+       "acc_lanes_emitted": 16,
+       "acc_updates_per_iter": 32,
+       "accumulators": {
+        "V0": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_10c0",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 64,
+       "accumulators": {
+        "V0": 16,
+        "V1": 16
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_f34",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 193,
+       "accumulators": {
+        "STK:RSP:48": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_e66",
+       "acc_lanes_emitted": 32,
+       "acc_updates_per_iter": 193,
+       "accumulators": {
+        "STK:RSP:48": 16,
+        "V0": 16
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 7,
+     "p3c": [
+      "L2_10c0",
+      "L2_f34",
+      "L2_e66"
+     ],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 164,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 11,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 5,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 192,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "VADDPS",
+      "VADDSS",
+      "VCMPPS",
+      "VCMPSS",
+      "VCVTTPS2DQ",
+      "VCVTTSS2SI",
+      "VDIVSS",
+      "VMAXPS",
+      "VMAXSS",
+      "VMULPS",
+      "VMULSS",
+      "VUCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_9a0",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      },
+      {
+       "id": "L2_a00",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 1,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "lockstep"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 5,
+     "p3c": [],
+     "d1": "pass"
+    }
+   ]
+  },
+  "D-scalar": {
+   "summary": {
+    "n_variants": 12,
+    "n_resolved": 12,
+    "gap_counts": {
+     "fp_trust_dep": 6
+    },
+    "tooling_gaps": 0,
+    "crossdecoder_disagreements": 0,
+    "u_iforms": 118,
+    "u_iclasses": 74,
+    "anomalies": {},
+    "xed_version": "v2026.08.23"
+   },
+   "loop_tags": {
+    "rotated": 8,
+    "software-pipelined": 18,
+    "spilled": 12,
+    "lockstep": 18
+   },
+   "variants": [
+    {
+     "table": "sd_table",
+     "slot": "matmul[0]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 227,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_fail",
+       "internal",
+       ".text.unlikely.",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail",
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULPS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 40,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_b6d",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_acb",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[1]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 192,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULPS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 40,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_b6d",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_acb",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[2]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 192,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULPS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 40,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_b6d",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_acb",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[3]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 240,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {}
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 32,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "CVTSI2SS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 24,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 6,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 146,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 24,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 114,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "CMPPS",
+      "CMPSS",
+      "CVTTPS2DQ",
+      "CVTTSS2SI",
+      "DIVSS",
+      "MAXPS",
+      "MAXSS",
+      "MULPS",
+      "MULSS",
+      "UCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_850",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 2,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": "pass"
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[0]",
+     "symbol": "sd_f16",
+     "gaps": [],
+     "n_instructions": 192,
+     "closure": [
+      [
+       "sd_f16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULPS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 40,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_b6d",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_acb",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[1]",
+     "symbol": "sd_f32",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 227,
+     "closure": [
+      [
+       "sd_f32",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_fail",
+       "internal",
+       ".text.unlikely.",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_fail",
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULPS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 40,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_b6d",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_acb",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[2]",
+     "symbol": "sd_q8",
+     "gaps": [],
+     "n_instructions": 240,
+     "closure": [
+      [
+       "sd_q8",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 1,
+      "jump_tables": 1,
+      "hardening": {}
+     },
+     "jump_tables": [
+      {
+       "section_name": ".rodata",
+       "start": 32,
+       "end": 68,
+       "entry_type": "PC32",
+       "n_entries": 9
+      }
+     ],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDSS",
+      "CVTSI2SS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 24,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 6,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[3]",
+     "symbol": "sd_bf16",
+     "gaps": [],
+     "n_instructions": 192,
+     "closure": [
+      [
+       "sd_bf16",
+       "entry",
+       ".text",
+       "symbol_size"
+      ],
+      [
+       "sd_float_common",
+       "internal",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [
+       "sd_float_common"
+      ],
+      "interposable_calls": [],
+      "external_calls": [],
+      "fp_trust_deps": [],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "MULPS",
+      "MULSS"
+     ],
+     "unreachable": {
+      "padding_bytes": 40,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_b6d",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      },
+      {
+       "id": "L2_acb",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 4,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined",
+        "spilled"
+       ],
+       "bound_used": 16
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "matmul[4]",
+     "symbol": "sd_q4",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 146,
+     "closure": [
+      [
+       "sd_q4",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "expf",
+       "memcpy"
+      ],
+      "fp_trust_deps": [
+       "expf"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [],
+     "unreachable": {
+      "padding_bytes": 24,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [],
+     "n_loops": 4,
+     "p3c": [],
+     "d1": null
+    },
+    {
+     "table": "sd_table_global",
+     "slot": "act_quantize",
+     "symbol": "sd_act",
+     "gaps": [
+      "fp_trust_dep"
+     ],
+     "n_instructions": 114,
+     "closure": [
+      [
+       "sd_act",
+       "entry",
+       ".text",
+       "symbol_size"
+      ]
+     ],
+     "lift_blockers": {
+      "internal_calls": [],
+      "interposable_calls": [],
+      "external_calls": [
+       "memcpy",
+       "sd_external_log"
+      ],
+      "fp_trust_deps": [
+       "sd_external_log"
+      ],
+      "tail_calls": [],
+      "indirect_branches": 0,
+      "jump_tables": 0,
+      "hardening": {}
+     },
+     "jump_tables": [],
+     "p2_fma": 0,
+     "fp_sensitive": [
+      "ADDPS",
+      "ADDSS",
+      "CMPPS",
+      "CMPSS",
+      "CVTTPS2DQ",
+      "CVTTSS2SI",
+      "DIVSS",
+      "MAXPS",
+      "MAXSS",
+      "MULPS",
+      "MULSS",
+      "UCOMISS"
+     ],
+     "unreachable": {
+      "padding_bytes": 0,
+      "orphan_bytes": 0,
+      "data_bytes": 0
+     },
+     "sweep_crosscheck": {
+      "sweep_only": 0,
+      "descent_only_anchored": 0
+     },
+     "loops": [
+      {
+       "id": "L2_850",
+       "acc_lanes_emitted": 1,
+       "acc_updates_per_iter": 2,
+       "accumulators": {
+        "V1": 1
+       },
+       "tags": [
+        "software-pipelined"
+       ],
+       "bound_used": 1
+      }
+     ],
+     "n_loops": 3,
+     "p3c": [],
+     "d1": "pass"
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,18 @@
+START Fri 10/16/2026 17:56:11.35
+zoo_avx.c 5588 functions
+zoo_sse.c 433 functions
+flags avx: -mavx512f -mavx512bw -mavx512dq -mavx512vl -mavx512cd -mavx512vnni -mavx512bf16 -mavx2 -mfma -mf16c -mbmi -mbmi2 -mlzcnt -mpopcnt | flags sse: -msse4.2 -mpopcnt
+ITER 1 ZOO_AVX_RC=1 ZOO_SSE_RC=1
+new exclusions: 2 ['_mm_cvtsi64x_sd', '_mm_cvtsi64x_si128']
+zoo_avx.c 5586 functions
+zoo_sse.c 431 functions
+flags avx: -mavx512f -mavx512bw -mavx512dq -mavx512vl -mavx512cd -mavx512vnni -mavx512bf16 -mavx2 -mfma -mf16c -mbmi -mbmi2 -mlzcnt -mpopcnt | flags sse: -msse4.2 -mpopcnt
+ITER 2 ZOO_AVX_RC=0 ZOO_SSE_RC=0
+ZOO_ASM_RC=0
+COMPILED Fri 10/16/2026 17:56:13.47
+{"objects": ["D:\\mithril\\x0prep\\zoo\\zoo_avx.obj", "D:\\mithril\\x0prep\\zoo\\zoo_sse.obj", "D:\\mithril\\x0prep\\zoo\\zoo_asm.obj", "D:\\mithril\\x0\\smoke\\A-msvc\\smoke.obj", "D:\\mithril\\x0\\smoke\\B-clangcl\\smoke.obj", "D:\\mithril\\x0\\smoke\\C-gcc\\smoke.o", "D:\\mithril\\x0\\smoke\\D-clang\\smoke.o"], "instructions_compared": 26553, "xed_undecodable": 0, "boundary_disagreements": 7, "iclass_disagreements": 3, "fp_sensitive_disagreements": 2, "distinct_pairs": 1105, "distinct_xed_iclasses": 976, "distinct_fp_sensitive_xed_iclasses": 320}
+DISAGREE PEXTRW_SSE4 | pextrw	word ptr [rcx], xmm0, 0 | ['PEXTRW']
+DISAGREE FCOMIP | fcompi	st, st(1) | ['FCOMPI']
+DISAGREE FUCOMIP | fucompi	st, st(1) | ['FUCOMPI']
+NORM_RC=1
+END Fri 10/16/2026 17:57:06.09

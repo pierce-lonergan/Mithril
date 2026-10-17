@@ -1,0 +1,56 @@
+{
+ "note": "Expected x0_extract.py / x0_decode.py outcomes on the NON-Hearth regression inputs of runbook step 72 (x0prep reviser, 2026-10-16). Each rule applies to the listed configurations ('*' = all eight); later rules add to or override earlier ones. Checked by check_smoke.py; any deviation fails step 72. Keys: require_causes, forbid_causes, require_detail (substrings of some gap detail), no_gaps, fp_trust_deps_include, fp_trust_deps_subset, external_calls_exclude, closure_include, jump_tables (count), table_entries (sorted n_entries), byte_table, orphan_bytes, xdis_max, n_resolved.",
+ "configs": ["A", "A-scalar", "B", "B-scalar", "C", "C-scalar", "D", "D-scalar"],
+ "defaults": {"forbid_causes": ["both_decoders_fail", "range_mismatch", "unresolved_indirect", "other"], "xdis_max": 0},
+ "decodes": {
+  "smoke_dispatch": {"variants": 12},
+  "rv_tricky": {"variants": 6},
+  "rv_tricky2": {"variants": 3}
+ },
+ "expect": {
+  "smoke_dispatch:*": [
+   {"configs": "*", "fp_trust_deps_subset": ["expf", "sd_external_log"]}
+  ],
+  "rv_tailsw": [
+   {"configs": "*", "require_causes": ["unresolved_indirect"], "forbid_causes": ["both_decoders_fail", "range_mismatch", "other"],
+    "require_detail": ["indirect jump through a register"], "jump_tables": 1},
+   {"configs": ["A", "A-scalar", "C", "C-scalar"], "table_entries": [7]},
+   {"configs": ["B", "B-scalar", "D", "D-scalar"], "table_entries": [8]}
+  ],
+  "rv_coldsw": [
+   {"configs": "*", "fp_trust_deps_include": ["rv_ext_log"], "closure_include": ["rv_cold"], "jump_tables": 1, "table_entries": [7]},
+   {"configs": ["C", "C-scalar"], "closure_include": ["rv_cold", "rv_coldsw.cold"], "orphan_bytes": 0}
+  ],
+  "rv_dieuser": [
+   {"configs": "*", "fp_trust_deps_include": ["rv_ext_fatal", "rv_ext_log"]},
+   {"configs": ["C", "C-scalar", "D", "D-scalar"], "noreturn_inferred_include": ["rv_ext_fatal"]}
+  ],
+  "rv_hookcall": [
+   {"configs": "*", "require_causes": ["unresolved_indirect"], "forbid_causes": ["both_decoders_fail", "range_mismatch", "other"],
+    "external_calls_exclude": ["rv_hook"]},
+   {"configs": ["A", "A-scalar", "B", "B-scalar"], "require_detail": ["through variable rv_hook"]}
+  ],
+  "rv_overlap": [
+   {"configs": ["A", "A-scalar", "B", "B-scalar"], "no_gaps": true},
+   {"configs": ["C", "C-scalar", "D", "D-scalar"], "require_causes": ["other"], "require_detail": ["overlapping reachable decodes"],
+    "forbid_causes": ["both_decoders_fail", "range_mismatch", "unresolved_indirect"], "xdis_max": 8}
+  ],
+  "rv_sparse": [
+   {"configs": "*", "no_gaps": true, "jump_tables": 1, "table_entries": [63]},
+   {"configs": ["A", "A-scalar"], "table_entries": [10], "byte_table": true, "orphan_bytes": 0}
+  ],
+  "rv_coldsw2": [
+   {"configs": "*", "fp_trust_deps_include": ["rv_ext_log"], "closure_include": ["rv_cold"], "jump_tables": 1, "table_entries": [7]},
+   {"configs": ["C", "C-scalar"], "closure_include": ["rv_cold", "rv_coldsw2.cold"], "orphan_bytes": 0}
+  ],
+  "rv_pf": [
+   {"configs": "*", "require_causes": ["unresolved_indirect"], "forbid_causes": ["both_decoders_fail", "range_mismatch", "other"],
+    "require_detail": ["indirect jump through a register"], "closure_include": ["rv_pf_b"], "jump_tables": 1},
+   {"configs": ["A", "A-scalar", "C", "C-scalar"], "table_entries": [7]},
+   {"configs": ["B", "B-scalar", "D", "D-scalar"], "table_entries": [8]}
+  ],
+  "rv_act2": [
+   {"configs": "*", "no_gaps": true}
+  ]
+ }
+}

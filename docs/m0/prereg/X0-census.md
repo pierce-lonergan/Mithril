@@ -23,6 +23,18 @@ Owner authorisation: **provisional, pending D0-12** (sign-off) **and D0-10a** (M
   §3.1 upper bound], and Pierce has not decided it.
 - Under the [collection rule](../README.md#pre-registration-lifecycle-roadmap-1-rule-1-d0-12), the
   Gatekeeper evaluates no verdict until the record is SIGNED.
+- Owner chat answers of 2026-10-16, as relayed by the x0prep task brief [relayed, not seen first-hand by
+  x0prep; to be ratified at the first weekly signing session]: D0-12, signing is a batch weekly review and
+  collection under any record waits for that sitting, **except X0, which the Owner has already authorised**;
+  D0-10, no metered API spend for any model family, and the only family besides Claude is the local Qwen3 pilot
+  run through Hearth. Nothing else in D0 is decided. These answers bear on OQ-6 but do not answer it formally;
+  X0 still collects only after it is FROZEN, and the Gatekeeper still waits for the signature.
+
+Pre-freeze preparation. The x0prep track (2026-10-16) produced the Appendix D artefacts, reworked the census
+scripts, and changed this DRAFT where Appendix E lists. It compiled no Hearth source and decoded no Hearth
+object; every validation used NON-Hearth smoke files (§2). The same track revised the scripts and this DRAFT
+after its own independent review of 2026-10-16 (§12; Appendix E rows marked "post-review"), under the same
+restriction.
 
 Conventions. Evidence tags follow [docs/m0/README](../README.md#evidence-tags). "Reviser" means the
 agent that revised this DRAFT on 2026-10-16. It worked on the laptop running this session (hostname
@@ -67,7 +79,7 @@ Release`), with nothing added or removed. §4.6 defines the one exception, the d
 
 | Config | Generator | Where the exact command line comes from |
 |---|---|---|
-| A | `Visual Studio 17 2022`, `-A x64`. This is Hearth's documented and CI Windows release path [M, reviser, read of Hearth `CONTRIBUTING.md:36-41`, `.github/workflows/ci.yml:159-164` and ADR-0007 line 27 at b5d3f14, 2026-10-16] | The ClCompile command lines in the MSBuild log of that build (binary log, or detailed verbosity). `CL.command.1.tlog` is a cross-check. **The census objects of A are the objects this build produces** |
+| A | `Visual Studio 17 2022`, `-A x64`. This is Hearth's documented and CI Windows release path [M, reviser, read of Hearth `CONTRIBUTING.md:36-41`, `.github/workflows/ci.yml:159-164` and ADR-0007 line 27 at b5d3f14, 2026-10-16] | The ClCompile command lines in the MSBuild log of that build (binary log, or detailed verbosity). `CL.command.1.tlog` is a cross-check. **The census objects of A are the objects this build produces.** Pre-freeze, x0prep froze the generated `hearth_core.vcxproj` (Release ClCompile metadata: `Optimization` MaxSpeed, `InlineFunctionExpansion` AnySuitable, `FloatingPointModel` Precise, `EnableEnhancedInstructionSet` AdvancedVectorExtensions2 / AdvancedVectorExtensions512 for the two SIMD files) and MSBuild's design-time command lines (`-t:GetClCommandLines`, which runs no compiler) [M, x0prep, `experiments/x0-census/flags/prefreeze/`, 2026-10-16]. The design-time lines omit `/O2` and are therefore not the build lines; a difference between them and the binlog lines other than optimisation switches is reported |
 | A-ninja (cross-check) | Ninja, `CMAKE_EXPORT_COMPILE_COMMANDS=ON` | `compile_commands.json`. CMake ignores that option under Visual Studio generators [inference, CMake documentation as recalled by reviewer 1 and the reviser; not re-checked against the pinned CMake], which is why a second build is needed |
 | B-cmake | Ninja | `compile_commands.json` |
 | C, D | Unix Makefiles, as Hearth's Linux CI uses it (`ci.yml:104-107` configures without `-G`) [M, reviser, read, 2026-10-16] | `compile_commands.json` |
@@ -91,14 +103,37 @@ Release`), with nothing added or removed. §4.6 defines the one exception, the d
   generator), B, C and D, plus an extract, `quant_flags.json`. The X0 tooling track produced them on
   the desktop; the file times read 2026-10-16 11:28 local [M, reviser, `ls -la` and read,
   2026-10-16].
-- CMake's configure step writes these files without compiling any Hearth source (CMake's own
-  compiler-check programs aside) [inference]. The repository cannot show whether any Hearth object
-  was compiled before freeze. The freeze commit must therefore carry the tooling track's statement
-  on that (Appendix D, item D12; OQ-7).
-- **One further pre-freeze action is allowed: a compile smoke test.** The three files are compiled
-  under each configuration and arm of §3 with the command lines that will be frozen. Only the exit
-  status and the diagnostics text are recorded. Objects go to a temporary directory and are deleted
-  without being read by any script: no decode, no hash, no size. The log is pre-freeze artefact D3.
+- x0prep added configure-only runs on 2026-10-16: A with the Visual Studio generator, A-ninja and B-cmake
+  with Ninja (under `D:\mithril\x0prep\cfg`), and `-###` / `gcc -Q --help` expansions of each file's exact
+  command line with a dummy source. Captures: `experiments/x0-census/flags/prefreeze/` (D2, D4) [M].
+- **Statement on pre-freeze compilation (D12, OQ-7)** [M, x0prep, desktop scan and job-script review,
+  2026-10-16 17:30 EDT; details in `experiments/x0-census/TOOLCHAINS.md` §11]: no object, archive or listing of
+  any Hearth translation unit exists on the desktop's `D:\mithril`; the `hearth_core.dir\engine\src` directories
+  of every configure tree are empty; every desktop job script compiles only non-Hearth files (smoke files,
+  probes, XED, CMake's own checks) and none builds a Hearth target; the Hearth working tree has no build
+  output (`git status --porcelain --ignored` empty). Only configure-only CMake runs touched Hearth. Not
+  verifiable from files: interactive SSH commands of the tooling session are not logged; for those the
+  statement rests on that track's own account.
+  Outside `D:\mithril`, the desktop's WSL home holds objects of the three census files from Hearth's own
+  development, not b5d3f14 census builds and built with other flags, including ASan and TSan builds:
+  `/home/pierce_lonergan/hx_t02v/obj_tq/quant{,_avx2,_avx512}.o` and `obj_tq_asan/` (2026-10-04 11:40),
+  `t08g2/tsan/quant{,_avx2,_avx512}.o` and `t08g2/obj_*quant*.o` (2026-10-04 18:53). No `.o` under `/home` is newer
+  than 2026-10-15 [M, x0prep review scan (reviewer 1) and the reviser's read-only `find`/`ls` re-check, desktop,
+  2026-10-16]. No Mithril track produced, read or decoded them. Census and re-derivation agents must not open them.
+- **No Hearth source is compiled before freeze, not even as an unread smoke test.** (The previous draft
+  allowed a compile smoke test of the three files; x0prep removed it, Appendix E.) Whether each census file
+  compiles under each configuration is therefore census data, classified by the compile rule of §5 P1. The
+  pre-freeze smoke tests (D3) use only NON-Hearth files: `scripts/smoke/smoke.c`,
+  `scripts/smoke/smoke_dispatch.c`, the adversarial regression files `scripts/smoke/rv_tricky.c` and
+  `scripts/smoke/rv_tricky2.c` (added after the §12 review), the probes in `scripts/runbook/probes/`,
+  `scripts/probes/reduce_probe.c` (syntax check only) and the generated instruction zoo of
+  `scripts/smoke/gen_zoo.py`.
+- **Known before freeze from flags alone** [M, x0prep, `flags/prefreeze/`]: B-cmake's expanded cc1 lines carry
+  `-ffp-contract=on` for all three files, so P3(a1) flags B-cmake (E1) whatever the objects contain; A-ninja,
+  B-proxy, C (GCC effective values) and D match no pattern of `fp_flag_patterns.txt`. A probe calling
+  `_mm512_dpbusd_epi32`, compiled with B-cmake's exact `quant_avx512.c` command, fails with "always_inline
+  function '_mm512_dpbusd_epi32' requires target feature 'avx512vnni'" [M, tooling track, `TOOLCHAINS.md` §6];
+  Hearth's file itself was not compiled (E2).
 
 **Machine.** The desktop (Ryzen 9 9950X, Windows 11) and WSL2 on it [M, sprint brief, per PLAN.md
 §2]. Once everything in Table 2.1 is pinned, the host is assumed not to affect emitted code [G]. §6
@@ -114,13 +149,13 @@ is empty. Each value written there carries [M] with the command, machine and dat
 
 | Item | Candidate now, with provenance | Recorded before freeze |
 |---|---|---|
-| MSVC (A, A-ninja, H-A) | Toolset directory `14.44.35207`, VS 2022 Community: the compiler path in `flags/A-msvc.compile_commands.json` [M, X0 tooling track, 2026-10-16]. `cl` reports its own version, expected 19.44.x [inference]. "14.44.35207" is not the `cl` banner | ________ (`cl` banner; SHA-256 of `cl.exe`, `c1.dll`, `c2.dll`; Windows SDK and UCRT versions; MSBuild version) |
-| LLVM (B-cmake, B-proxy, D, H-D) | 23.1.3, from the install directory names `llvm-win-23.1.3` and `llvm-linux-23.1.3` in `flags/*.json` [M, X0 tooling track, 2026-10-16]; the banner is not yet recorded | ________ (`clang --version`, `clang-cl --version`, LLVM commit, SHA-256 of both binaries, hash of the resource-dir headers) |
-| GCC (C) | `/usr/bin/gcc` in WSL2. The previous draft's "13.3.0 (Ubuntu 24.04)" is unverified | ________ (`gcc --version`, `gcc -v`, hash of `-dumpspecs`, SHA-256 of `cc1`, `libc6-dev`/glibc version, Ubuntu release) |
-| CMake; Ninja | not recorded | ________ |
-| XED | tag `v2026.08.23`, which PLAN.md §2 takes from the X0 track's scratch scripts [not verified by the reviser] | ________ (tag, commit, build options, `xed -version`) |
-| stdarch XML (§4.5) | not chosen | ________ (stdarch commit; SHA-256 of `intrinsics_data/x86-intel.xml`) |
-| Effective flags | `flags/quant_flags.json` (explicit lines only) | ________ (per configuration and file: exact compiler argv; `clang -###` / `clang-cl -###` cc1 lines; `gcc <flags> -Q --help=common,optimizers`) |
+| MSVC (A, A-ninja, H-A) | Toolset directory `14.44.35207`, VS 2022 Community: the compiler path in `flags/A-msvc.compile_commands.json` [M, X0 tooling track, 2026-10-16]. `cl` reports its own version, expected 19.44.x [inference]. "14.44.35207" is not the `cl` banner | Banner "Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64"; SHA-256 `cl.exe` `fe251ef5…a36619`, `c1.dll` `6176d88c…a6604b`, `c2.dll` `b057a185…b3cec`; Windows SDK 10.0.26100.0; UCRT 10.0.26100.0; MSBuild 17.14.60.43110 [M, x0prep, step 70 on the desktop, 2026-10-16; full hashes in `TOOLCHAINS.md` §11] |
+| LLVM (B-cmake, B-proxy, D, H-D) | 23.1.3, from the install directory names `llvm-win-23.1.3` and `llvm-linux-23.1.3` in `flags/*.json` [M, X0 tooling track, 2026-10-16]; the banner is not yet recorded | `clang --version` / `clang-cl --version`: "clang version 23.1.3 (https://github.com/llvm/llvm-project 0d261d1ca552c95a8f007e061c787ac7132fbcbc)"; Windows `clang-cl.exe` = `clang.exe` SHA-256 `9584244d…8d8261`; Linux `clang-23` `913453af…0d9a0e`; resource-dir include trees: Windows 322 files `5587c91b…a61a12`, Linux 327 files `18b182d3…2f31c` [M, x0prep, steps 70 and 71, 2026-10-16] |
+| GCC (C) | `/usr/bin/gcc` in WSL2. The previous draft's "13.3.0 (Ubuntu 24.04)" is unverified | "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"; configured `--enable-default-pie --enable-cet`; `-dumpspecs` SHA-256 `3a269a0e…70e0dc`; `cc1` SHA-256 `5d167913…8e2f4`; `libc6-dev` 2.39-0ubuntu8.9; Ubuntu 24.04.3 LTS [M, x0prep, step 71, 2026-10-16] |
+| CMake; Ninja | not recorded | CMake 4.4.3 (Windows and Linux); Ninja 1.12.1 bundled with VS 2022, SHA-256 `5020138b…1b89123` [M, x0prep, step 70] |
+| XED | tag `v2026.08.23`, which PLAN.md §2 takes from the X0 track's scratch scripts [not verified by the reviser] | Tag v2026.08.23, commit `0bcb6237345c5066726dcc08b3d87928df3b5b26`; builds and `mfile.py` options in `TOOLCHAINS.md` §3; `xed -version` "[v2026.08.23]"; Windows `xed.exe` SHA-256 `f10d2680…846368`; decode mode `-64 -cet` [M, tooling track and x0prep] |
+| stdarch XML (§4.5) | not chosen | rust-lang/stdarch `main` at `eb9b3025937c85bd271a3ca46a681cd52739db12` (2026-10-16); `intrinsics_data/x86-intel.xml` SHA-256 `6762a50652a35ef663fd532ed83b789d19bbc2ac7e94b1771f19d666d96c2c30`, version 3.6.9 dated 07/12/2024 [M, x0prep, `git ls-remote` and download on the laptop, 2026-10-16] |
+| Effective flags | `flags/quant_flags.json` (explicit lines only) | `experiments/x0-census/flags/prefreeze/`: exact argv (A-ninja, B-cmake, C, D `compile_commands.json`; A: vcxproj and design-time lines, the build lines come from the census binlog); cc1 lines from `-###` for B-cmake, B-proxy and D; `gcc -Q --help=common,optimizers` and `gcc -###` for C [M, x0prep, steps 70, 70b, 71] |
 
 ## 3. Configurations
 
@@ -147,10 +182,29 @@ clang-cl. B-cmake therefore gets `/fp:precise`, `/arch:AVX2`, `/arch:AVX512` and
 away later [inference, not verified]:
 - The expanded cc1 line will carry `-ffp-contract=on`, because clang's C default is `on`
   ([04 §6.2](../../architecture/04-toolchain.md#62-strict-fp-flags-per-compiler-v0)). P3(a1) would
-  then flag B-cmake (§8, E1).
+  then flag B-cmake (§8, E1). *Now measured on flags* [M, x0prep, `flags/prefreeze/B-cmake.*.cc1.txt`]:
+  all three files carry `-ffp-contract=on`; on smoke code the B-cmake objects contain FMA-class
+  instructions (P2 = 6 in one smoke closure) [M, `scripts/smoke/results_dispatch.json`].
 - `/arch:AVX512` in clang-cl may not enable AVX512-VNNI. If so, `quant_avx512.c` fails at
   `_mm512_dpbusd_epi32` (quant_avx512.c:237). `/experimental:c11atomics` may also be ignored or
-  rejected. The pre-freeze smoke test (§2) settles both. A failure is handled by row N2 of §8.
+  rejected. *Now measured on a probe, not on Hearth* [M, tooling track, `TOOLCHAINS.md` §4 and §6;
+  x0prep cc1 lines]: `/arch:AVX512` expands to `-target-cpu skylake-avx512`, which lacks AVX512-VNNI, and a
+  probe calling `_mm512_dpbusd_epi32` with B-cmake's exact `quant_avx512.c` command fails;
+  `/experimental:c11atomics` is ignored with a warning and C11 atomics still compile.
+- **A compile failure of a census file under B-cmake (or C) is a recorded finding of that configuration, not
+  a tooling failure** (§5 P1 compile rule): the file's variants get the genuine gap `compile_failed`, rows N1
+  and N2 of §8 apply (the union is a lower bound; a build-defect draft is written), and the configuration's
+  effective flags are still screened by P3(a), so Amber (b) can hold for B-cmake even when
+  `quant_avx512.c` does not compile. The census does not add `-mavx512vnni` or any other flag to B-cmake;
+  the B-proxy arm (secondary) carries D's `-m` flags and is expected to compile.
+- **Config C (Ubuntu GCC) carries hidden hardening defaults** [M, `flags/prefreeze/C-gcc.*.cc1.txt`]:
+  `-D_FORTIFY_SOURCE=3 -fasynchronous-unwind-tables -fstack-protector-strong -fstack-clash-protection
+  -fcf-protection` (configured `--enable-cet --enable-default-pie`). They are part of C's effective flags and
+  are neither added nor neutralised. Their code (ENDBR64 at function entries, stack-protector canaries,
+  `__stack_chk_fail`, `__*_chk` calls) is expected and is listed under lift blockers (§4.2); it is not a P1 gap
+  (`__stack_chk_fail`, `__memcpy_chk` and the other allow-listed externals are not FP trust dependencies). XED
+  must run with `-cet`, or ENDBR64 decodes as a reserved NOP (`NOP_GPRv_GPRv_0F1E`) [M, `TOOLCHAINS.md` §3];
+  every decode in this record uses `xed -64 -cet`.
 - The Win64 ABI (xmm6 to xmm15 callee-saved) changes spills relative to D. That is why B-proxy, not
   B-cmake, is the proxy arm.
 
@@ -159,9 +213,9 @@ them still produces the mandatory report (§10).
 
 | Arm | What | Why |
 |---|---|---|
-| B-proxy | clang-cl with D's codegen flags for each file passed through `/clang:`, i.e. `-O3 -std=gnu11 -ffp-contract=off` plus D's `-m` flags, with `/fp:precise` and `/arch:*` removed. Target triple and ABI stay Win64 | The "clang-cl build with the release flags, labelled as a proxy for the SysV build" of ROADMAP §3.4. It feeds the proxy-fidelity metric (§5) |
-| H-A, H-D | `scripts/hxcc.py` builds of the three files, with MSVC and with D's clang | Hearth's second build path (`-O2`) |
-| P (reduce probe) | One translation unit per ISA. It is not Hearth code. Its noinline wrappers call `_mm512_reduce_add_ps`, `_mm512_reduce_max_ps` and `_mm512_reduce_add_epi32`, and each main-union configuration compiles it with its own `quant_avx512.c` flags | ROADMAP §3.1 and [04 §7.1](../../architecture/04-toolchain.md#71-x0-the-instruction-census-dr-008-v0-m0-before-the-lifter-exists)(c) ask how `_mm512_reduce_add_ps` is lowered, and Hearth at b5d3f14 never calls it (§4.5) |
+| B-proxy | clang-cl with D's codegen flags for each file passed through `/clang:`, i.e. `-O3 -std=gnu11 -ffp-contract=off` plus D's `-m` flags, with `/fp:precise` and `/arch:*` removed. Target triple and ABI stay Win64. Written out in `flags/prefreeze/B-proxy.argv.json` by `x0_flags.py proxy` (the added flags precede the per-file plumbing); its cc1 lines carry `-ffp-contract=off` and D's target features [M, x0prep, D4] | The "clang-cl build with the release flags, labelled as a proxy for the SysV build" of ROADMAP §3.4. It feeds the proxy-fidelity metric (§5) |
+| H-A, H-D | `scripts/hxcc.py` builds of the three files, with MSVC and with D's clang, non-debug, non-ASan, with `--shared` (so `HEARTH_BUILD_DLL` is defined as in `hearth_core`; for H-D this adds `-fPIC -fvisibility=hidden`). Argv written out in `flags/prefreeze/README.md` from `hxcc.py` lines 75-81, 118-134 and 153-164 [M, x0prep, read; `--shared` is a record choice] | Hearth's second build path (`-O2`) |
+| P (reduce probe) | `scripts/probes/reduce_probe.c`. It is not Hearth code. Its noinline wrappers call `_mm512_reduce_add_ps`, `_mm512_reduce_max_ps` and `_mm512_reduce_add_epi32` (by value and through a load), and each main-union configuration compiles it with its own `quant_avx512.c` flags. Intel defines these `_reduce_` intrinsics only for 512-bit vectors, so there is one translation unit. Pre-freeze it was only syntax-checked (`/Zs`, `-fsyntax-only`) with the A, B-cmake, C and D `quant_avx512.c` commands, rc 0 for all four [M, x0prep, steps 70 and 71]; its emitted sequences are census data | ROADMAP §3.1 and [04 §7.1](../../architecture/04-toolchain.md#71-x0-the-instruction-census-dr-008-v0-m0-before-the-lifter-exists)(c) ask how `_mm512_reduce_add_ps` is lowered, and Hearth at b5d3f14 never calls it (§4.5) |
 | S-helpers | Every external-linkage function in `quant.c` that fills no table slot: `hx_sum16`, `hx_dot16`, `hx_rmsnorm`, `hx_softmax`, `hx_swiglu`, `hx_sigmoid`, `hx_rope`, `hx_axpy`, `hx_quantize_row`, `hx_dequantize_row` and the rest, under every main-union configuration | The canonical exact helpers and the authoritative quantisers ([07 §2.6](../../architecture/07-hearth-port.md#26-what-evidence-each-gate-produces-dr-021); ROADMAP M2) |
 | S-object | Every executable section of the three objects | \|U_object\| |
 
@@ -209,20 +263,120 @@ them still produces the mandatory report (§10).
      calls, external calls, interposable calls, indirect branches, jump tables, and hardening code.
      Hardening code means ENDBR64, stack-protector canary loads and `__stack_chk_fail` calls, and
      `/GS` cookie checks.
+   - **Precisions fixed before freeze** (x0prep; implemented in `x0_extract.py` / `x0_decode.py`, revised after
+     the review of §12, and validated on NON-Hearth smoke objects of all four configurations, including the
+     adversarial regression inputs of runbook step 72; `scripts/README.md`):
+     - *Relocation arithmetic.* ELF RELA addends are explicit; COFF addends are the in-place field. Branch and
+       RIP-relative targets: ELF `PC32`/`PLT32`/`GOTPCREL*` give S + A + (end − P); COFF `REL32_k` gives
+       S + addend + (end − P − 4 − k). Jump-table entries at P in a table based at B: ELF `PC32` gives
+       S + A − (P − B); COFF `REL32` gives S + addend − (P + 4 − B); ELF `64`/`32`/`32S` and COFF
+       `ADDR32NB`/`ADDR64` give S + addend.
+     - *Jump tables.* A table is the one loaded by the indirect jump's own address computation, recognised in
+       the jump's basic block: `movsxd rX,[rB+rI*4]`, or `mov eX,[rB+rI*4+T]` with T through an `ADDR32NB`
+       relocation; then `add rX,rB`; then `jmp rX`. Every reaching definition of rB must be `lea rB,[rip+T]`,
+       or `lea rB,[__ImageBase]` in the `ADDR32NB` form; definitions are followed through whole-register copies,
+       including a spill to an XMM register and back. The other accepted form is `jmp [T+rI*8]` with a relocated
+       displacement.
+       - The entry count n comes from the bound on rI that guards the jump. Either the jump's block has a single
+         predecessor, a conditional branch on `cmp rI,imm`: `ja` falling through to the jump gives n = imm+1,
+         `jae` gives n = imm, and the taken `jbe`/`jb` forms are also accepted. Or the jump's own block masks
+         rI with `and rI,2^k−1`, which gives n = 2^k. Between the bound and the table load, the only writes to
+         rI allowed are zero- or sign-extending moves and whole-register copies. For an MSVC byte index table `movzx eI,byte [rB+rJ+T2]`,
+         T2 is bounded the same way on rJ, n = largest byte + 1, and T2's bytes are data.
+       - Exactly n entries of the expected relocation type must exist at the table's stride. Each must land on
+         an instruction start inside the jump's function or its GCC cold parts. An entry range that overlaps
+         another address referenced by the counted set is rejected.
+       - Anything else makes the jump `unresolved_indirect`: no recognised shape, no bound, or a missing or
+         misplaced entry ("jump table truncated at entry k of n"). A partial table is never accepted. Table
+         bytes in a code section are data.
+     - *Function families.* A GCC cold part is a function symbol named exactly `<parent>.cold` or
+       `<parent>.cold.N` in the same object. Jumps between a function and its cold parts are intra-procedural:
+       the cold part joins the closure with kind `cold_part_of:<parent>`, and no call or tail call is recorded.
+       A jump (`jmp` or `jcc`) to another function's start is a tail call. A jump into the middle of another
+       function is a gap `other`.
+     - *Calls through memory or registers.*
+       - `call/jmp [rip+X]` is a call (tail call) to X only when the operand holds X's address. On COFF, X is
+         `__imp_<name>`. On ELF, the relocation is `GOTPCREL`, `GOTPCRELX` or `REX_GOTPCRELX` to an undefined X.
+       - Everything else is `unresolved_indirect` ("indirect call through variable X"). This includes a
+         `PC32`/`REL32` relocation to a variable, such as an extern function pointer.
+       - `call/jmp reg` is a call to an imported X only if every reaching definition of reg's 64-bit register
+         family is a MOV loading the same import or GOT slot. A call on the path clobbers the caller-saved
+         registers of the object's ABI. Otherwise the branch is `unresolved_indirect`.
+       - Under `/guard:cf`, `call [__guard_dispatch_icall_fptr]` is `unresolved_indirect` ("CFG dispatch").
+         `call [__guard_check_icall_fptr]` is an allow-listed check call.
+     - *Order independence.* The descent runs in rounds. Each round computes the closure over direct edges, then
+       resolves every pending indirect branch against the complete reach set of the round. Rounds repeat until no
+       instruction is added. A branch whose resolution changes between rounds is a gap `other`. Runbook step 72
+       decodes every regression object twice, with opposite work-list orders, and requires byte-identical
+       outputs.
+     - *No return.* A call does not fall through in three cases. Execution falling off the end of a function
+       range after any other instruction is a gap `other`.
+       - The callee is on the frozen list (`__stack_chk_fail`, `__stack_chk_fail_local`, `abort`, `exit`,
+         `_exit`, `__assert_fail`, `__chk_fail`, `__fortify_fail`, `longjmp`, `__longjmp_chk`,
+         `_invalid_parameter_noinfo_noreturn`, `__report_gsfailure`, `__report_rangecheckfailure`, `__fastfail`,
+         `ExitProcess`). The list applies to direct, memory-operand and import-register calls alike.
+       - The call's next byte is the end of its function, or padding up to the end. This is the compiler's own
+         no-return knowledge. It is recorded in `lift_blockers.noreturn_inferred` and is not a gap.
+       - The callee is an internal function whose family has no reachable return and no tail call to a function
+         that can return. The descent is repeated until this set is stable.
+       - A mid-function call to an external no-return function that is on no list is assumed to return. The
+         bytes after it then join the counted set, which over-counts.
+     - *Overlapping decodes.* Two reachable instructions whose bytes overlap are a gap `other`.
+     - *FP trust dependencies (P1).* "Calls to libm or CRT floating-point functions" is made strict: **every
+       external callee is an FP trust dependency unless it is on the frozen allow-list** of `x0_decode.py`
+       (`memcpy`, `memmove`, `memset`, `memcmp`, `__memcpy_chk`, `__memset_chk`, `__memmove_chk`,
+       `__stack_chk_fail`, `__stack_chk_fail_local`, `__security_check_cookie`, `__GSHandlerCheck`, `__chkstk`,
+       `___chkstk_ms`, `__report_rangecheckfailure` and `__guard_check_icall_fptr`). An unknown callee is
+       presumed FP-relevant.
+     - *COFF function ranges.* A function alone in its COMDAT section spans the section. Otherwise its range is
+       the union of its `.pdata` ranges. Otherwise it runs up to the next function symbol, which for a closure
+       function is a gap `range_mismatch`.
+       - The first `.pdata` entry of each function begins at its symbol. Further entries (MSVC chained-unwind
+         fragments) begin inside the function's range.
+       - The entries are sorted, non-overlapping and contiguous, and the last ends at or before the range end.
+         Otherwise the function gets `range_mismatch`.
+       - Leaf functions without `.pdata` are allowed.
+     - *Slot names.* After the relocation mapping, the initialiser's function name is compared with the resolved
+       function's names, with GCC `.constprop`/`.isra`/`.part`/`.cold` suffixes stripped. A mismatch is
+       reported (`slot_name_check`) and is not a gap, so that identical-code folding and clones stay visible.
+     - *Code addresses referenced as data.* A code address referenced by a reachable instruction that is neither
+       an instruction start nor data is listed per variant (`referenced_non_instruction`). It is not
+       reclassified.
+     - *Hardening detected:* ENDBR64/ENDBR32; `fs:[0x28]` loads and references to `__stack_chk_guard`; calls to
+       `__stack_chk_fail`; references to `__security_cookie` and calls to `__security_check_cookie`;
+       `or qword ptr [rsp], 0` stack-clash probes (descriptive).
 3. **Form** = XED `iform`. **Mnemonic** = XED `iclass`. ROADMAP §3.1's "mnemonics" is read as XED
    iclass, the stricter of the readings on offer (OQ-1).
    - A secondary partition by XED extension separates category **S** (SIMD and mask: SSE, SSE2,
      SSE3, SSSE3, SSE4, AVX, AVX2, AVX2GATHER, FMA, F16C, AVX512EVEX, AVX512VEX) from category **G**
      (every other reachable instruction: GPR, control flow, NOP-class inside reachable code).
    - The extension names are XED's. `classify.py` checks them against the pinned release before
-     freeze.
+     freeze. All twelve exist in XED v2026.08.23 [M, x0prep, `class/fp_class_summary.json`].
 4. **FP sensitivity** (the unit of P5). The classification is fixed before any Hearth object exists.
    - Before freeze, `scripts/classify.py` enumerates every XED iclass in these extensions or ISA
      sets: X87; SSE to SSE4.2; AVX; AVX2 and AVX2GATHER; FMA; F16C; AVX-512 F, CD, BW, DQ, VL, VNNI,
      BF16 and FP16 (EVEX and the VEX k-mask forms); BMI1; BMI2.
+     - **Widened by x0prep to every iclass XED defines** (1,995 iclasses, from XED's own tables dumped
+       into `class/xed_tables.tsv` by `scripts/xed_tables.c`) [M]. Reason: under the rule below, a census
+       iclass missing from the CSV counts as FP-sensitive, so MOV, ADD, JNZ and every other GPR or control
+       iclass would have counted towards P5. Every row gets the same verdict rule; no threshold changes.
+     - Result [M, x0prep, `classify.py`, laptop, 2026-10-16]: 624 of 1,995 iclasses are FP-sensitive; every
+       "FP-sensitive by name" and "not FP-sensitive by name" item below is checked by the script and holds;
+       0 iclasses fall back to the FP-typed-operand default. Four iclasses are "no" by the SDM reading and
+       "yes" by the XED cross-check, so they are FP-sensitive: LDMXCSR and VLDMXCSR (attribute MXCSR),
+       STMXCSR and VSTMXCSR (MXCSR_RD).
+     - The `reason` column names the source document and instruction page (SDM Vol. 2, or for ISA sets newer
+       than the SDM text the Intel ISA-extension specification that XED's ISA set names), followed by the
+       description template of the classification rule that fired and any XED cross-check hits. **It is not a
+       per-instruction SDM citation** (corrected after the §12 review). For some rows the template overstates
+       the mechanism. Examples are VCVTPH2PS and VCVTNEEBF162PS, exact widening conversions that carry the
+       conversion template ("rounding per MXCSR.RC, ..."). Such rows are FP-sensitive by the record's by-name
+       conversion rule whatever the template says, so no `fp_sensitive` value depends on the template text.
+       The templates were written without re-reading the SDM in this session [inference].
    - It writes `experiments/x0-census/class/fp_class.csv` with the columns `iclass`, `extension`,
-     `fp_sensitive` (yes|no), `reason` (SDM section or pseudocode clause) and `op_class`. The CSV's
-     SHA-256 goes into Appendix D, and an independent reviewer checks it before freeze (§12).
+     `fp_sensitive` (yes|no), `reason` (source page plus rule template, above) and `op_class`. The CSV's
+     SHA-256 goes into Appendix D, and an independent reviewer checks it before freeze (§12; done
+     2026-10-16 on a sample, Appendix D item D5).
    - **Definition.** An iclass is FP-sensitive if the architectural result it writes to any
      destination can depend on MXCSR.RC, MXCSR.DAZ, MXCSR.FTZ, on embedded rounding or SAE, or on
      IEEE special-value handling.
@@ -256,6 +410,12 @@ them still produces the mandatory report (§10).
      - These names come from reviewer 1 and from the X0 tooling track's `x0_decode.py`, and nobody
        has verified them against the pinned XED.
      - `classify.py` confirms them before freeze or records the substitutes it uses.
+     - *Confirmed and substituted* [M, x0prep]: MXCSR and MXCSR_RD exist; MXCSR_RD occurs only on STMXCSR and
+       VSTMXCSR, so "MXCSR_RD" cannot mean "uses the rounding mode". XED splits the SDM's exception types 2
+       and 3 into SSE_TYPE_2, SSE_TYPE_2D, SSE_TYPE_3 (legacy) and AVX_TYPE_2, AVX_TYPE_2D, AVX_TYPE_3 (VEX);
+       the AVX-512 classes are AVX512_E2, AVX512_E3 and the scalar variant AVX512_E3NF. All of these are
+       used. Added (stricter): the XED attributes USES_DAZ, USES_FTZ, FLUSH_INPUT_DENORM,
+       FLUSH_OUTPUT_DENORM and FIXED_ROUNDING_RNE also make an iclass FP-sensitive.
    - **Disagreement and gaps.** Where the SDM reading and the XED cross-check disagree, the iclass is
      FP-sensitive. A census iclass that is missing from `fp_class.csv` counts as FP-sensitive, and
      only a post-data amendment can change that.
@@ -284,7 +444,11 @@ them still produces the mandatory report (§10).
      - An entry with one or more `<instruction>` elements contributes the union of their `xed`
        attributes.
      - An `<instruction>` with no `xed` attribute gets a row in `hand_map.csv`: intrinsic, name and
-       form, the iform it maps to, and the reason.
+       form, the iform it maps to, and the reason. So does an `xed` attribute that names no iform of the
+       pinned XED (added by x0prep). At the pinned inputs every instruction element has an `xed` attribute,
+       and exactly one names an iform the pinned XED does not define: `_mm256_extractf128_ps`'s
+       `VEXTRACTF128_XMMdq_YMMdq_IMMb`, which XED v2026.08.23 calls `VEXTRACTF128_XMMdq_YMMqq_IMMb` (one row)
+       [M, x0prep].
      - No intrinsic is excluded by name. A `set1` entry that carries an instruction element
        contributes it.
    - **Sets.** B_iform is the union of iforms. B_mnem is their iclasses, taken from XED's iform to
@@ -297,8 +461,16 @@ them still produces the mandatory report (§10).
    - **Threshold base.** T_forms = min(|B_iform|, 105) [target; 105 is G02 §1's count and ROADMAP
      §3.1's "~105"]. A larger recomputed value is used only if the Owner's signature line accepts it
      (OQ-5).
-   - **Values, filled before freeze:** |B_iform| = ____, |B_mnem| = ____, T_forms = ____ [M, script,
-     machine, date].
+   - **Values, filled before freeze:** |B_iform| = 102, |B_mnem| = 74, T_forms = min(102, 105) = 102,
+     so the Amber (a) union threshold is |U_all| > 204 [M, `scripts/baseline.py` on the laptop
+     (DESKTOP-F441IUK), 2026-10-16, inputs pinned in `class/B_iform.json`].
+     - Reconciliation with G02 [M]: 130 names (47/51/32) and 23 with no single instruction both match.
+       G02's "105 forms" are the 105 distinct (instruction name, form) strings of the XML; several of them
+       map to one XED iform (for example `zmm, zmm, zmm` and `zmm {k}, zmm, zmm` of VADDPS), which gives 102
+       XED iforms. The 74 mnemonics match (74 XED iclasses; 74 distinct XML instruction names).
+     - The source re-check of P2 holds: the only sequence intrinsic in the three files is
+       `_mm256_hadd_epi32` (quant_avx2.c:72-74, six uses); no FMA, RCP, RSQRT or `_reduce_` intrinsic [M].
+     - 102 < 105, so OQ-5 does not arise at the pinned inputs.
    - **Not like-for-like with U.** The XML names legacy-SSE iforms for many `_mm_*` intrinsics (for
      example `ADDPS_XMMps_XMMps`), but files built with AVX flags emit VEX forms. The operand-
      normalised comparison of §5 covers this.
@@ -329,7 +501,11 @@ them still produces the mandatory report (§10).
      the *source accumulator lanes* (the number of independent FP partial results carried across
      iterations), the operation, and the induction pointer with the bytes it advances per source
      iteration. Illustrative rows follow [D, reviser's reading of b5d3f14; the frozen CSV is
-     authoritative]:
+     authoritative]. The frozen CSV has 62 rows: every `for` loop of every function reachable from the 18
+     variants through the source call graph; the other 45 `for` loops of the three files lie in functions no
+     variant reaches [M, x0prep, check script against the source, 2026-10-16]. Each row lists the variants
+     whose closure contains it (`scalar|avx2|avx512` `.` `F32|F16|BF16|Q8|Q4|act`); the illustrative rows
+     below all agree with it:
 
      | Source loop (header line) | FP accumulators | Source lanes | Op |
      |---|---|---|---|
@@ -350,10 +526,26 @@ them still produces the mandatory report (§10).
        packed or scalar, that reads a loop-carried value.
      - *Emitted accumulator lanes* is the sum of the defining instructions' lane counts: scalar 1;
        f32 in xmm, ymm or zmm 4, 8 or 16; f64 half of that. Masked forms count their full width.
-   - **Unroll factor.** u_acc is the emitted accumulator lanes updated per iteration divided by the
-     source lanes updated per source iteration. u_ind is the primary induction increment divided by
-     the source loop's bytes per iteration. Both are reported, and any disagreement between them is
-     reported.
+     - *Made precise before freeze (x0prep).* Two numbers are kept apart, because "the sum of the defining
+       instructions' lane counts" double-counts a serial chain that an unrolled loop updates twice per
+       iteration, while the source side counts *independent partial results*:
+       `acc_lanes_emitted` (the P3(c) quantity) = the sum over **distinct** loop-carried accumulator
+       locations of the widest lane count of the instructions that define them, the same unit as the loop
+       table's source lanes; `acc_updates_per_iter` = the sum over defining **instructions** of their lane
+       counts, which feeds u_acc. A loop that keeps one 16-lane accumulator and adds into it four times per
+       iteration has 16 emitted lanes and u_acc = 4 (unrolled-u), not 64 lanes; two separate 16-lane
+       accumulators for one 16-lane source sum have 32 emitted lanes and are flagged.
+     - "Reads a loop-carried value" is decided by a forward data-flow over one iteration (back edges into the
+       header cut): the value read may be the one live into the header, directly or through register moves
+       and stack reloads. Merge-masked writes keep the old value. For scalar unary and insert-style
+       instructions (`VCVTSI2SS xmm_d, xmm_pass, r32`, `MOVSS xmm, xmm`, `VSQRTSS`, ...) only the last source
+       reaches lane 0; the pass-through register does not count as read (otherwise a register reused for an
+       integer sum would look like an FP accumulator). A loop-carried location written by a pure copy of a
+       value an accumulation produced in the same iteration (a spilled accumulator) is an accumulator.
+   - **Unroll factor.** u_acc is the emitted accumulator lanes updated per iteration
+     (`acc_updates_per_iter`) divided by the source lanes updated per source iteration. u_ind is the
+     primary induction increment divided by the source loop's bytes per iteration. Both are reported, and
+     any disagreement between them is reported.
    - **Tags.** A loop may carry several.
      - *lockstep*: u = 1 and no other tag.
      - *unrolled-u*: u > 1; any remainder loop is noted.
@@ -367,6 +559,12 @@ them still produces the mandatory report (§10).
      - *spilled*: vector stores to and reloads from the stack inside the body.
      - *interchanged*: the iteration order over independent outputs differs from the source nesting.
      - *other*: always comes with a written description.
+     - *Mechanisation at freeze (x0prep, `x0_loops.py`).* lockstep, unrolled-u, rotated,
+       software-pipelined, auto-vectorised (for the scalar-table variants) and spilled are computed. **peeled
+       and interchanged are not detected by the frozen script**; every loop carries
+       `not_computed_tags: [peeled, interchanged]`. For the narrowing (§8) such a loop is uncovered unless X2
+       lists its loop id in `proved_loop_ids` (the strict reading: an unchecked shape is not a proved one).
+       A loop with no FP accumulator and no computed tag is tagged lockstep with `fp_free: true`.
    - **Register reuse** (ROADMAP §3.1). The number of vector registers with more than one definition
      per iteration outside accumulator chains. It is descriptive only.
 
@@ -392,10 +590,35 @@ A.
 
   A tooling bug misfiled as `table_or_slot_absent` would make the outcome stricter, not looser, and
   the independent re-derivation (V3) would catch it.
+
+  **Compile rule** (made exhaustive before freeze by x0prep, because no Hearth file is compiled before
+  freeze; `judge.py` decides it from the census build records, not the census script). For each
+  configuration, census file and build (§6):
+  - *every build*, successful or not, records the SHA-256 of its compiler binaries. They must equal the Table 2.1
+    pin of the configuration, mirrored in `class/frozen_inputs.json` "compilers". Otherwise the build is
+    *tooling* `other` (made explicit after the §12 review);
+  - *success*: exit status 0 and an object exists;
+  - *genuine* `compile_failed`: non-zero exit in both builds, the pinned compiler ran with exactly the frozen
+    argv, and at least one error diagnostic is located in a census file or in a header the build recorded as
+    included.
+    - The census build records each error's file and line, and its include list (`/showIncludes` or `-H`
+      output). The compiler's own intrinsic headers count, for example "always_inline function
+      '_mm512_dpbusd_epi32' requires target feature 'avx512vnni'" at quant_avx512.c:237.
+    - An internal compiler error in both builds, with the pinned compiler and the frozen argv, is also genuine.
+  - *tooling* `other`: any other failure. Examples: the compiler did not start, the argv differs from the frozen
+    one, no error diagnostic located in a census file or an included header (a linker error, say), an internal
+    compiler error in only one build, or build 1 and build 2 disagree.
+  A genuine compile failure gives every variant of the file the gap `compile_failed`: Amber (c) under A or D;
+  rows N1 and N2 under B-cmake or C (and A-ninja). It never makes V fail. A census.json that lacks a variant or
+  a build record for a main-union configuration or for A-ninja fails V1 (`other`).
+
+  `fp_trust_dep` uses the strict allow-list rule of §4.2: any external callee not on the frozen non-FP list.
 - **P2, contraction.** The number of FMA-class instructions in each variant's counted set:
   iclasses VFMADD\*, VFMSUB\*, VFNMADD\*, VFNMSUB\*, VFMADDSUB\*, VFMSUBADD\*, and FMA4 forms. Hearth's
   source at b5d3f14 contains no FMA intrinsic (§4.5), so any FMA-class instruction is a contraction.
-  The script re-checks the source.
+  The script re-checks the source. `judge.py` does not trust the census counter alone. Per variant it takes the
+  larger of `p2_fma` and the number of FMA-class instructions in the variant's iclass counts (made explicit after
+  the §12 review).
 - **P3, reassociation screen.** X0 can screen for reassociation but cannot prove its absence (§8,
   Pass; OQ-3). A variant is flagged if any of the following holds.
   - **(a) Flags.** The effective settings match a pattern in
@@ -418,9 +641,13 @@ A.
       - Also matched, under (a2): a GCC effective value that enables `-fassociative-math`,
         `-freciprocal-math`, `-ffinite-math-only` or `-funsafe-math-optimizations`, or that
         disables `-fsigned-zeros`.
-  - **(b) Approximations.** The counted set contains an approximation iclass (RCPPS, RCPSS, RSQRTPS,
-    RSQRTSS and their V forms, VRCP14\*, VRSQRT14\*, VRCP28\*, VRSQRT28\*) with no matching source
-    intrinsic. There are none at b5d3f14 (§4.5).
+  - **(b) Approximations.** The counted set contains an approximation iclass with no matching source
+    intrinsic. There are none at b5d3f14 (§4.5). The iclasses are RCPPS, RCPSS, RSQRTPS, RSQRTSS and their V
+    forms, VRCP14\*, VRSQRT14\*, VRCP28\* and VRSQRT28\*.
+    - Added after the §12 review, which is stricter: the FP16 and BF16 forms VRCPPH, VRCPSH, VRSQRTPH,
+      VRSQRTSH, VRCPBF16 and VRSQRTBF16; VEXP2PS and VEXP2PD; and the 3DNow! PFRCP\* and PFRSQ\* iclasses.
+      All exist in XED v2026.08.23 [M, `class/xed_tables.tsv`]. None is reachable under Hearth's flags
+      [inference: no `-mavx512fp16` or 3DNow! flag].
   - **(c) Accumulator splitting.** In any variant and any configuration, a loop's emitted
     accumulator lanes (§4.7) exceed the source accumulator lanes of its attributed source loop.
     - If attribution is approximate or missing, the bound is the largest source-lane count among
@@ -435,7 +662,11 @@ A.
         the first instruction's result through moves only.
 
       Constants are resolved through constant-pool relocations or GPR immediates. Any reassociation
-      folds `(v + M) − M` to `v`. If the pair is missing, the variant is flagged.
+      folds `(v + M) − M` to `v`. If the pair is missing, the variant is flagged. Any d1 value other than an
+      explicit `pass` flags the variant, including an absent result or `not_evaluated`. This applies to
+      every present, compiled `hx_kernels_scalar:act_quantize_q8` variant of a main-union configuration and
+      build (A-ninja: union members). `x0_loops.py` exits non-zero when a canary key matches no variant (made
+      explicit after the §12 review).
     - (d2) Every `tree16` site in both SIMD files is checked by a lane-provenance tracker.
       - The tracker evaluates the attributed straight-line sequence from the 16 accumulator lanes
         to the scalar result.
@@ -447,6 +678,17 @@ A.
         each add.
       - A mismatch flags the variant. A sequence that leaves the whitelist, or an approximate
         attribution, makes the site *unchecked*: it is reported and not flagged (§9).
+    - *Mechanisation at freeze (x0prep, `x0_loops.py`).* (d1) runs over the closure in address order,
+      tracking constants from relocated memory operands (bytes read from the object's constant pool) and from
+      GPR immediates moved into vector registers, and register moves; the SUB must have the `v + M` value as
+      its minuend. Unit tests cover the VEX, legacy-SSE and GPR-immediate shapes and a reversed subtraction;
+      on the smoke file the pair is found in all eight smoke objects [M]. (d2): the lane-provenance tracker
+      `track_tree16` implements the whitelist and the commutation rule and is unit-tested on the AVX-512 and
+      AVX2 `tree16` shapes, on a wrong pairing (mismatch) and on an off-whitelist instruction (unchecked).
+      **Selecting the sites needs exact twin attribution, which the frozen scripts do not yet implement
+      (Appendix D, D11): until it exists, every (d2) site is `unchecked`.**
+    - P3(c) without attribution uses the variant-wide bound of (c) above for every loop (all loops
+      unattributed); the twin attribution (§4.6) is the same missing piece.
 - **P4, table size.** |U_all|: the number of distinct XED iforms over the counted sets of all 18
   variants, scalar included, under every main-union configuration (OQ-2).
 - **P5, FP-sensitive mnemonics.** P5_iclass: the number of distinct FP-sensitive XED iclasses
@@ -511,9 +753,10 @@ commit hash.
 
 | Script | Job |
 |---|---|
-| `x0_flags.py` | flag capture |
-| `x0_extract.py` | §4.1 and §4.2 |
-| `x0_decode.py` | XED decode and the cross-decoder check |
+| `x0_flags.py` | flag capture; P3(a) matcher (`p3a`); B-proxy lines (`proxy`) |
+| `x0_extract.py` | §4.1 (tables and slots from the source, slot -> function by relocation) and the object model of §4.2 (ranges, `.pdata` check, resolved relocations) |
+| `x0_decode.py` | §4.2 recursive descent and call kinds, XED decode, the cross-decoder check |
+| `x0_norm.py` | the `objdump_norm.csv` normaliser |
 | `x0_loops.py` | §4.7, P3(c) and P3(d) |
 | `classify.py` | §4.4, before freeze |
 | `baseline.py` | §4.5, before freeze |
@@ -521,7 +764,37 @@ commit hash.
 
 The `x0_extract.py` and `x0_decode.py` present on 2026-10-16 describe, in their headers, COFF ranges
 taken up to the next symbol and a linear-sweep decode [M, reviser, read, 2026-10-16]. They must
-implement §4.2 before freeze (Appendix D, item D11).
+implement §4.2 before freeze (Appendix D, item D11). *Done by x0prep*: both were rewritten to §4.1/§4.2 and
+validated on `scripts/smoke/smoke_dispatch.c` (NOT Hearth; two dispatch tables shaped like Hearth's, 12
+slots) under A, B-cmake, C and D with each configuration's `quant_avx512.c` and `quant.c` command lines
+[M, x0prep, runbook step 72, desktop, 2026-10-16]: 12/12 slots resolved by relocation in all 8 objects, 0
+tooling gaps, 0 cross-decoder disagreements, `llvm-readobj` symbol cross-check clean; a deliberately
+corrupted manifest makes the decode fail. Still missing before freeze: the `census.json` assembler and the
+twin attribution (Appendix D, D11).
+
+*Revised after the §12 review.* Reviewer 2 showed that the smoke file did not exercise the hard cases. On two
+adversarial NON-Hearth files, the decoder of that date produced two silent false negatives and six
+misclassifications (§12). `x0_decode.py` and `x0_extract.py` were revised to the §4.2 text above. Runbook steps
+71b and 72 now compile `smoke_dispatch.c` and the reviewer's adversarial files `rv_tricky.c` and `rv_tricky2.c`,
+adopted unchanged in `scripts/smoke/`, under the A (A-ninja lines), B-cmake, C and D command lines of
+`quant_avx512.c` and `quant.c`. That gives 24 objects. Each is decoded twice, with opposite work-list orders,
+and `smoke/check_smoke.py` compares all 168 variants with `smoke/tricky_expect.json`.
+
+Result [M, x0prep reviser, desktop, 2026-10-16; `scripts/runbook/logs/x0prep_72_regression_check.log`,
+`scripts/smoke/results_regression.json`]: 0 deviations, and the two decodes of every object are byte-identical.
+- `smoke_dispatch.c`: unchanged against the earlier run in slots, gaps (6 designed `fp_trust_dep`),
+  cross-decoder check and d1. |U_iform| is unchanged for A, A-scalar, C, C-scalar, D and D-scalar (99, 90, 148,
+  99, 140, 118). It is one lower for B and B-scalar (149→148, 121→120), because the INT3 after clang-cl's
+  `/GS` failure call is no longer reached (no-return rule).
+- The adversarial functions give the expected outcome in every configuration:
+  - the indirect tail calls (`rv_tailsw`, `rv_pf`) are `unresolved_indirect` next to a correctly bounded table;
+  - GCC's switch cases in `.cold` (`rv_coldsw`, `rv_coldsw2`) bring `<f>.cold` and `rv_cold` into the closure,
+    with the `fp_trust_dep` `rv_ext_log` and no orphan bytes;
+  - the call through `extern void (*rv_hook)()` is `unresolved_indirect` under A and B as well;
+  - the user no-return calls give no gap;
+  - the overlapping decode is a gap `other` under C and D;
+  - MSVC's byte index table is data (orphan bytes 0, dword table 10 entries);
+  - the GCC tables adjacent in `.rodata` keep their bounded 63 entries.
 
 **Raw outputs.** The objects, build logs, XED decode dumps, `llvm-objdump` disassembly and the twins'
 line tables. Results land in `experiments/x0-census/results/` as `census.json` (Appendix C),
@@ -533,6 +806,13 @@ line tables. Results land in `experiments/x0-census/results/` as `census.json` (
   `experiments/x0-census/class/objdump_norm.csv`, which is frozen before collection.
 - Every disagreement is listed. A disagreement where either side maps to an FP-sensitive iclass
   blocks validity check V2 (§8) until it is resolved.
+- `objdump_norm.csv` was validated before freeze on a NON-Hearth corpus [M, x0prep, `class/objdump_norm_validation.json`]:
+  an "instruction zoo" generated from the pinned XML (one wrapper per intrinsic of the SSE to AVX-512
+  F/BW/DQ/VL/CD/VNNI/BF16, FMA, F16C and BMI sets; FP compare predicates 0-31 enumerated) compiled by clang-cl
+  23.1.3, a hand-written GPR/x87/prefix file, and the four `smoke.c` objects: 26,553 instructions, 982
+  distinct XED iclasses (320 FP-sensitive), 0 iclass disagreements. The single length disagreement is a
+  linear sweep through an MSVC jump table (data), which the census never decodes. llvm-objdump prints some
+  prefixes (`lock`) on a line of their own; the table's `merge` rows join them with the next line.
 
 **Independent re-derivation.**
 - A separate agent context, labelled *same-family, independent-context* in §12 until D0-10 names
@@ -547,6 +827,11 @@ line tables. Results land in `experiments/x0-census/results/` as `census.json` (
   - decode with XED;
   - recompute P1 to P5, |B_iform|, T_forms and P5_opclass.
 - Every figure must match exactly. A mismatch fails validity check V3 (§8).
+- The procedure (inputs, tools, the `figures.json` format, and how "match" and the `rederivation` field of
+  `census.json` are decided) is fixed in `experiments/x0-census/rederive/PROCEDURE.md` [x0prep, 2026-10-16].
+  Under the Owner's D0-10 answer (relayed above) the only other family is the local Qwen3 pilot run through
+  Hearth; whether it can carry a re-derivation is not established, so the re-derivation is planned as
+  same-family, independent-context, and labelled so.
 
 **Gatekeeper.** `judge.py` computes `verdict.json` from `census.json` and the frozen inputs. Agents may
 run it. They never judge (ROADMAP §1 rule 3).
@@ -589,11 +874,67 @@ Rows outside the gate. They change no verdict.
 | N1 | A genuine P1 gap under B-cmake or C | The union is reported as a lower bound for that configuration. Its uncovered variants are `tested` |
 | N2 | A non-release configuration fails to compile a census file with Hearth's own flags | A build-defect draft goes to `experiments/x0-census/results/build_defect_<config>.md`. The variants are missing from P4 and P5, as in row N1 |
 
+**Exhaustiveness, made explicit before freeze** (x0prep, revised after the §12 review; `judge.py` implements
+exactly this list. Its unit tests, `scripts/tests/test_judge.py`, exercise each branch on synthetic
+`census.json` inputs, including the reviewer's adversarial cases [M, 56 tests, laptop, 2026-10-16]):
+0. *Schema.* A `census.json` that does not have the Appendix C shape `judge.py` reads gives `tooling_failure`,
+   with the violations listed. Examples: a variant or build record without `build_index` 1 or 2, or a field of
+   the wrong type. This cannot be resolved conservatively, even after the week-3 bound.
+1. *Completeness first.*
+   - Each main-union configuration and A-ninja must list all 18 variants for build 1 and build 2 (§6), and a
+     build record for every census file and build.
+   - Each must carry a P3(a) result `{a1: [...], a2: [...]}` for every census file.
+   - Each present variant of a compiled file needs a coverage block, a resolved slot (or a genuine gap saying
+     why not), and a non-empty counted set.
+   - Anything missing is a tooling gap `other` (V1). So is a variant record of an unexpected (table, slot), or a
+     duplicate.
+2. *Compile outcomes* follow the compile rule of §5 P1, including the compiler pin of every build.
+   - A genuine `compile_failed` under A or D is Amber (c). Under B-cmake, C or A-ninja it is rows N1 and N2.
+   - Amber (b) is still evaluated on that configuration's effective flags (P3(a) per configuration and file).
+     So B-cmake can be Amber (b) with `quant_avx512.c` uncompiled.
+   - A tooling compile failure fails V1.
+3. *A-ninja.* The A versus A-ninja comparison is required.
+   - Every A-ninja variant carries `ab_compare` (`identical` or `differs`), with `union_member` true exactly
+     when it differs. An absent A-ninja configuration, a missing or inconsistent comparison, and an A-ninja
+     tooling compile failure fail V1. Such a variant joins the union, so its gap counts.
+   - Otherwise A-ninja joins V1, V2, P2 and P3(b) to (d) only through variants marked `union_member`. Its P3(a)
+     flags count per configuration, as for every configuration. Its genuine gaps are row N1, its compile
+     failures row N2, and it never contributes to Amber (c).
+4. *Validity after the week-3 bound.* Resolutions (i) to (iii) apply to V1, V2 and V3.
+   - Under (i), a missing P3(a) result counts as a P3(a) flag of that configuration.
+   - Under (iii), a variant is flagged if the re-derivation flags it, meaning P2 > 0, P3(b), P3(c) or d1 other
+     than `pass` on the re-derivation side. Every gap cause the re-derivation reports is added to the variant
+     as a genuine gap.
+   - Some failures cannot be resolved conservatively: a V4 failure (frozen inputs differ); a V3 failure because
+     no re-derivation exists; a V3 mismatch whose `rederivation.figures` lack `u_all`, `p5_iclass` or, for any
+     union variant, `{flagged, gap_causes}`. In those cases the verdict stays `tooling_failure` (final, no
+     scientific verdict) and goes to the Owner at the M0 verdict.
+   - After a conservative resolution, Pass holds if none of Amber (a), (b), (c) holds; `conservative_resolution`
+     is then true in `verdict.json`.
+   - The evaluation date is not the caller's choice. It is the later of the system's UTC date and the date of
+     the latest census run in `census.json`, and both are written into `verdict.json`.
+5. *Unknown cause codes* in `census.json` are rewritten in place to tooling gaps `other`, keeping the original
+   code. After the bound they therefore count as genuine under (i).
+6. *Recomputed, not trusted.* Amber (a), P2 and P3(b) are recomputed by `judge.py` from the variants' iform and
+   iclass sets and `fp_class.csv`. V2's FP-sensitivity is recomputed from both readings of each disagreement.
+   A difference from `census.json`'s own metrics is noted, and the recomputation is used.
+7. *V4* covers the class files (including `xed_tables.tsv`), the XML pin, the compiler pins and every census
+   script listed in `class/frozen_inputs.json` "scripts". For the scripts, the hashes on disk and
+   `census.json`'s `record.scripts_sha256` must both equal the pins.
+8. *Narrowing* (week 6): if X2's `verdict.json` lacks `proved_loop_shapes`, every hot-kernel loop is uncovered
+   and the narrowing holds. Loops with unchecked tags (§4.7) are covered only by loop id. A loop with no tags is
+   uncovered, and a compiled variant under A or D without a loop analysis contributes an uncovered entry.
+
 **Expectations registered before data** [inference, from reading the source and the flags; none of
 them measured]:
-- **E1.** P3(a1) flags B-cmake (§3), so Amber (b) holds under the strict reading.
-- **E2.** B-cmake fails to compile `quant_avx512.c` (row N2). The smoke test settles this before
-  freeze.
+- **E1.** P3(a1) flags B-cmake (§3), so Amber (b) holds under the strict reading. *Confirmed on flags
+  before freeze* [M, x0prep]: P3(a1) matches B-cmake's effective flags for all three files; this needs no
+  object.
+- **E2.** B-cmake fails to compile `quant_avx512.c` (row N2). The previous draft planned a pre-freeze smoke
+  test of the Hearth file; x0prep removed it (§2). What is known before freeze is a probe result [M, tooling
+  track]: `_mm512_dpbusd_epi32` does not compile under B-cmake's exact `quant_avx512.c` command. Whether the
+  Hearth file compiles is census data; either way the decision list covers it (rows N1, N2; Amber (b) on
+  flags).
 - **E3.** P5_iclass > 20.
   - G02's "about ten" grouped entries become 11 iclasses when written as the VEX/EVEX forms the SIMD
     files emit [D: G02 §1's list → VADDPS, VADDSS, VMULPS, VMULSS, VMAXPS, VMAXSS, VMINPS, VCMPPS,
@@ -631,7 +972,23 @@ them measured]:
 - **Same-family review and re-derivation.** Both are labelled as such. That is weaker than ROADMAP's
   different-family requirement (README, Independence).
 - **XED names unverified.** The attribute, extension and exception-class names are checked against
-  the pinned XED before freeze (§4.3, §4.4).
+  the pinned XED before freeze (§4.3, §4.4). *Done by x0prep; substitutes recorded in §4.4.*
+- **Classifier reasons are templates.** The `reason` column of `fp_class.csv` names the source page and the
+  template of the rule that fired. It is not a per-instruction SDM citation, and it was written without
+  re-reading the SDM in this session [inference] (§4.4). The XED cross-check and the "disagreement means
+  FP-sensitive" rule bound the damage. The §12 review re-classified a sample of 197 iclasses blind and found no
+  difference in `fp_sensitive`.
+- **Heuristics in the closure and loop scripts.** Jump-table recognition, import-pointer calls, the no-return
+  inference, the d1 constant tracker and the carried-value data-flow are deterministic but heuristic.
+  - Since the §12 review the closure accepts only the recognised shapes of §4.2, with the table's extent taken
+    from its guarding bound. Anything else is `unresolved_indirect` (tooling). The remaining risk is
+    therefore a tooling gap on a legitimate shape, which V1 makes visible, rather than a silent miss.
+  - Each other failure mode is conservative where possible: canary not found -> flagged; unknown external ->
+    FP trust dependency.
+  - Known residuals: a base or index register passed through the stack (not followed) gives a tooling gap. A
+    mid-function call to an external no-return function that is on no list falls through, so the bytes after
+    it are over-counted.
+  - The independent re-derivation (V3) checks the figures.
 - **Limits of the tracker and of attribution.** Sites outside the whitelist are *unchecked* and loops
   without exact attribution are *unattributed*. Both are listed for X2 and B1.5, not hidden.
 - **Pre-freeze configure runs.** Disclosed in §2; OQ-7.
@@ -671,13 +1028,19 @@ them measured]:
 |---|---|---|---|---|---|
 | 2026-10-16 | Reviewer 1 (codegen and extraction mechanics: toolchains, object formats, ISA semantics) [G: lens inferred from the findings] | Claude (same family as author; independent context) | DRAFT of 2026-10-16 | 17: 0 blocker, 10 major, 7 minor | 17 accepted, 2 of them with a sub-point rejected; 0 rejected outright |
 | 2026-10-16 | Reviewer 2 (pre-registration integrity: threshold units, forking paths, outcome exhaustiveness, provenance) [G: lens inferred from the findings] | Claude (same family as author; independent context) | DRAFT of 2026-10-16 | 17: 3 blocker, 9 major, 5 minor | 17 accepted, 3 of them with a sub-point rejected; 0 rejected outright |
+| 2026-10-16 | x0prep review, reviewer 1 (Gatekeeper and pre-freeze artefacts: adversarial `judge.py` tests on synthetic `census.json`; independent re-derivation of §4.5; blind sampled re-classification of §4.4; read-only desktop scan for D12) | Claude, same family, independent context | DRAFT with Appendix E (x0prep), `judge.py`, `class/`, D12 | 15: 0 blocker, 7 major, 8 minor | 15 accepted (one resolved by the alternative the finding offered); 0 rejected |
+| 2026-10-16 | x0prep review, reviewer 2 (closure and decode soundness on adversarial NON-Hearth objects compiled with each configuration's exact lines: jump tables, cold parts, indirect calls, no-return, order dependence, data in code) | Claude, same family, independent context | `x0_extract.py`, `x0_decode.py`, §4.2 text, the smoke validation claim | 13: 2 blocker, 4 major, 7 minor | 13 accepted, 2 of them with a sub-point rejected; 0 rejected outright |
 
 Per-reviewer counts are the reviser's count of the findings relayed on 2026-10-16 [M, reviser].
 Totals: 34 findings (3 blocker, 19 major, 12 minor); 34 accepted, 5 of them only in part; 0 rejected
-outright [D: sums of the rows above]. Each accepted finding was checked against the Hearth clone at
-b5d3f14, the repository docs and `experiments/x0-census/flags/` before it was applied.
+outright [D: sums of the first two rows]. Each accepted finding of those two reviews was checked against the
+Hearth clone at b5d3f14, the repository docs and `experiments/x0-census/flags/` before it was applied.
+x0prep review totals: 28 findings (2 blocker, 11 major, 15 minor). All 28 were accepted: 2 with a sub-point
+rejected and 1 resolved by the alternative the finding offered. None was rejected outright [D: sums of the two
+x0prep rows; counts are the reviser's count of the findings relayed on 2026-10-16]. How each was checked and
+handled is set out below the earlier reviews' sub-points.
 
-Sub-points rejected (one line each):
+Sub-points rejected in the first two reviews (one line each):
 - **R1, P4 (like-for-like):** making P4's gate \|U_all^SIMD,S\| (category S in the SIMD variants) was
   rejected. It is the looser reading, which the finding itself says not to adopt without an Owner
   answer. It is kept as a secondary metric, and OQ-2 asks the question.
@@ -703,7 +1066,106 @@ Corrections to reviewer evidence, none of which changed a finding's outcome:
 - **R2, scope statements:** the finding names a `silu` function. `quant.c` defines `hx_swiglu` at
   lines 644-649, uses `expf` at lines 639, 647 and 651, and uses `sqrtf` at line 630.
 - **R1, FP sensitivity:** the XED attribute names remain unverified, as reviewer 1 said; §4.4 requires
-  checking them before freeze.
+  checking them before freeze. *x0prep checked them against the pinned XED (§4.4).*
+
+Pre-freeze preparation, not a review. The x0prep track (Claude, 2026-10-16) wrote `fp_class.csv`,
+`B_iform.json` and `hand_map.csv`, `loop_table.csv`, `objdump_norm.csv`, `fp_flag_patterns.txt`, the
+reworked scripts and `judge.py`, and changed this DRAFT (Appendix E). The two x0prep reviews of 2026-10-16
+(rows above) cover:
+- `fp_class.csv`: sampled, see D5;
+- `B_iform.json` / `hand_map.csv`: re-derived, see D6;
+- the §5 P1 and §8 decision list, through `judge.py`;
+- the closure scripts;
+- the D12 statement.
+
+Still unreviewed:
+- the §4.7 unit change and `loop_table.csv`, which neither reviewer covered;
+- the reviser's own revisions in response to these reviews (Appendix E, rows marked "post-review"). These
+  need an independent review before freeze.
+
+All reviews are same-family, independent-context (README, Independence; D0-10 as relayed in the header).
+
+**x0prep review of 2026-10-16: how each finding was handled.** Reviser: Claude, x0prep track. Every finding was
+checked before it was applied.
+- Findings on `judge.py` were checked by reading the version reviewed. `FREEZE.md` listed that version as
+  SHA-256 `4cb2d020…`, and the reviewer found the disk bytes equal to it.
+- The reviewer's scratch tests (`adv_judge.py`, `adv2.py`, 26 cases) were then run against the revised `judge.py`.
+  22 pass. The other 4 fail because of the new requirements, not a defect [M, laptop]:
+  - their fixture now includes A-ninja;
+  - an added build record lacks the compiler hash;
+  - after-bound figures are incomplete;
+  - one case uses the old `error_locations` field.
+  Each case behind a finding was rewritten as a unit test against the new census fields (`test_judge.py`).
+- Findings on the decoder were checked against the reviewer's own outputs and disassembly of the adversarial
+  objects, copied to the laptop [M, reviser, 2026-10-16].
+- The D12 finding was checked by a read-only `find`/`ls` in the desktop's WSL home [M].
+- After the fixes, `judge.py` passes its 56 unit tests, which include each adversarial case. Runbook step 72
+  passes on all 24 regression objects (§7).
+
+Reviewer 1 (15 findings, all accepted):
+- Majors:
+  - P2 is recomputed from iclasses.
+  - A missing P3(a) result is a V1 gap; after the bound it counts as a flag.
+  - d1 must be exactly `pass`, and `x0_loops.py` exits 1 on an unmatched canary key.
+  - Unknown cause codes are rewritten in place, so they survive the conservative resolution.
+  - The A versus A-ninja comparison is required (`ab_compare`, union membership, A-ninja tooling compile
+    failures in V1).
+  - V3 after the bound needs complete figures and adds the re-derivation's gap causes. The evaluation date is
+    max(system UTC date, latest census run), and the CLI parameter is removed.
+  - The coverage block, slot resolution and a non-empty counted set are required.
+- Minors:
+  - The compile rule checks the compiler pin and structured error locations against the census files or the
+    recorded include list.
+  - A schema check runs first. Unexpected and duplicate variants are gaps.
+  - The narrowing treats empty tags and a missing loop analysis as uncovered.
+  - V4 covers `xed_tables.tsv`, every census script and the compiler pins.
+  - The approximation list is extended.
+  - The `reason` column is reworded (below).
+  - The D12 statement is extended.
+  - This log.
+
+Reviewer 2 (13 findings, all accepted):
+- Both blockers: jump tables are tied to the jump's own address computation, with a bounded extent and no
+  partial tables, and GCC cold parts belong to their parent function.
+- Table extent from the guarding bound.
+- Memory-operand calls through a variable are `unresolved_indirect`.
+- No-return inference, with the no-return list also applied to memory and import calls.
+- An order-independent, round-based descent with register families.
+- An overlap gap.
+- MSVC byte index tables are data.
+- `.pdata` contiguity.
+- Cold-part call kinds.
+- The CFG dispatch pointer is removed from the allow-list.
+- A slot-name warning.
+- An adversarial regression set with expected outcomes (`smoke/rv_tricky*.c`, `smoke/tricky_expect.json`), so
+  that step 72 fails on any deviation.
+
+Beyond the findings, all stricter:
+- The compiler pin is checked on successful builds too.
+- `judge.py` also hashes the scripts on disk.
+- V2's FP-sensitivity is recomputed from both readings of a disagreement. Reviewer 1's scratch test
+  `test_v2_objdump_side_fp`, not among the relayed findings, showed that `judge.py` trusted the census flag.
+
+Sub-points rejected or changed (one line each):
+- **x0prep R1, `fp_class.csv` reasons:** resolved by the finding's first option, rewording §4.4 so that `reason`
+  is a rule template. Per-row text was not written, because it would need the SDM re-read, which this revision
+  did not do. No `fp_sensitive` value changes and the CSV hash is unchanged.
+- **x0prep R2, jump-table association:** rejected only the restriction of the base-register slice to the jump's
+  basic block. In loops the base is often defined outside that block [M, disassembly]: by MSVC
+  (`lea rbp,[__ImageBase]` before the loop in `rv_coldsw`), by clang-cl and clang (`r14` and `r12` in
+  `rv_coldsw`), and by GCC, which in `smoke_dispatch`'s `sd_q8` spills the base to `xmm4` and reloads it. The base is traced through its reaching definitions and register copies instead. The load,
+  the add, the jump and the guarding bound must still sit in the jump's block.
+- **x0prep R2, data in code:** rejected the generic fallback that treats any referenced non-instruction code
+  address as data up to the next reachable instruction, because it would hide orphan code behind a stray
+  reference. MSVC byte index tables are data with their exact bounded extent, and other such addresses are
+  listed (`referenced_non_instruction`).
+
+Corrections to reviewer evidence, none of which changed an outcome:
+- **x0prep R1, D12:** the finding dates the WSL objects "2026-10-04 to 10-06". The reviser's re-check finds the
+  14 quant objects dated 2026-10-04 only (11:40 and 18:53) [M].
+- **x0prep R2, smoke corpus:** the four-configuration claim of the earlier validation stands for
+  `smoke_dispatch.c`. Its weakness was the corpus, not the reported numbers, which the re-run reproduces except
+  B and B-scalar U (§7).
 
 ## 13. Signature block
 
@@ -745,7 +1207,8 @@ needs a post-data amendment, with the verdict reported both ways.
   limit under D0-10a.
 - **OQ-7, pre-freeze compilation.** Confirm, through the X0 tooling track's statement in the freeze
   commit, that no Hearth object was compiled and examined before freeze. The configure-only runs in
-  `experiments/x0-census/flags/` are disclosed in §2.
+  `experiments/x0-census/flags/` are disclosed in §2. *The statement is in §2 (x0prep's check of
+  2026-10-16, with its one unverifiable part: unlogged interactive commands).*
 
 ## Appendix B. Tombstones from this revision
 
@@ -845,6 +1308,36 @@ verdict.json = {
 }
 ```
 
+Fields added before freeze by x0prep (what `judge.py` reads; the others above stay):
+
+```text
+census.json += {
+  record += { sha256 += { xed_tables }, scripts_sha256: { "<path under experiments/x0-census>": sha256 } },
+  builds:   [ { config, file, build_index: 1|2, rc, compiler_ran: bool,
+                compiler_sha256: { <binary>: sha256 },                         // must equal frozen_inputs "compilers"
+                argv_sha256, argv_matches_frozen: bool,
+                errors: [ { file, line, text } ], includes: [path],            // includes: /showIncludes or -H
+                ice: bool } ],
+  configs.<cfg>.p3a: { <file>: { a1: [pattern id], a2: [pattern id] } },      // required for A, A-ninja, B-cmake, C, D
+  variants[] += { build_index: 1|2, file, union_member: bool,                  // union_member: A-ninja only
+                  ab_compare: identical|differs,                               // A-ninja only; union_member == differs
+                  slot_name_check: match|mismatch,                             // reported, not a gap (§4.2)
+                  closure[].kind += cold_part_of:<parent>,
+                  lift_blockers += { tail_calls[], noreturn_inferred[] },
+                  jump_tables: [ { section_name, start, end, entry_type, n_entries, bound, site, byte_table } ],
+                  unreachable += { data_bytes, referenced_non_instruction[] },
+                  p3 += { d1: pass|fail|not_evaluated },                       // anything but pass flags (canary only)
+                  loops[] += { acc_updates_per_iter, fp_free, not_computed_tags[] } },
+  crossdecoder.disagreements[] += { normalised: [iclass] },                    // objdump reading via objdump_norm.csv
+  rederivation: { present: bool, matches: bool, mismatches: [..],
+                  figures: { u_all, p5_iclass, "<config>|<table>:<slot>": { flagged, gap_causes[] } } }
+}
+verdict.json += { eval_date, eval_date_basis: { system_utc_date, latest_census_run_date }, tooling_bound,
+                  validity_detail: { schema[] | v1_tooling_gaps[], v1_config_gaps[], v2_unresolved[], v3, v4[] },
+                  amber_b[].p3 += { rederivation[] },
+                  amber_a += { two_t_forms, p5_limit, fp_sensitive_iclasses[], holds }, notes[] }
+```
+
 ## Appendix D. Freeze checklist (pre-data artefacts)
 
 This record can be FROZEN only when every line below has its hash or value filled in. None of these
@@ -852,15 +1345,50 @@ items reads a compiled Hearth object.
 
 | # | Artefact | SHA-256 or value |
 |---|---|---|
-| D1 | `experiments/x0-census/TOOLCHAINS.md`, complete per Table 2.1 | ________ |
-| D2 | Flag captures: the MSBuild log for A; `compile_commands.json` for A-ninja, B-cmake, C and D; `-###` and `gcc -Q` outputs. All come from configure-only runs | ________ |
-| D3 | Smoke-test log (exit status and diagnostics only; objects deleted unread) | ________ |
-| D4 | B-proxy and H argv for each file, written out | ________ |
-| D5 | `class/fp_class.csv`, plus the commit of `classify.py`, with the review recorded in §12 | ________ |
-| D6 | `B_iform.json`, `hand_map.csv`, stdarch commit, XML SHA-256, with the values written into §4.5 and the review recorded in §12 | ________ |
-| D7 | `class/fp_flag_patterns.txt` | ________ |
-| D8 | `class/objdump_norm.csv` | ________ |
-| D9 | `class/loop_table.csv` | ________ |
-| D10 | Reduce-probe sources (arm P) | ________ |
-| D11 | Scripts implementing §4.2, §4.7 and §8 (`judge.py`), tested only on `scripts/smoke/` and never on Hearth objects; commit hash | ________ |
-| D12 | The X0 tooling track's statement on whether any Hearth object was compiled before freeze (OQ-7) | ________ |
+| D1 | `experiments/x0-census/TOOLCHAINS.md`, complete per Table 2.1 | Table 2.1 filled [M, x0prep]; `TOOLCHAINS.md` §11 mirrors it. File hash: `experiments/x0-census/FREEZE.md` |
+| D2 | Flag captures: for A, the generated `hearth_core.vcxproj` and MSBuild's design-time ClCompile lines (the build lines come from the census binlog, §2); `compile_commands.json` for A-ninja, B-cmake, C and D; `-###` and `gcc -Q` outputs. All come from configure-only runs | `experiments/x0-census/flags/prefreeze/` (20 capture files and a README) plus `flags/C-gcc.compile_commands.json` and `flags/D-clang.compile_commands.json`; hashes in `FREEZE.md` |
+| D3 | Smoke-test logs: NON-Hearth files only (§2): `smoke.c` and probes (steps 60-62), `smoke_dispatch.c` (steps 70-72), `smoke_dispatch.c` with `rv_tricky.c` and `rv_tricky2.c` (steps 71b and 72 after the §12 review), the instruction zoo (step 69); no Hearth file is compiled before freeze | `scripts/runbook/logs/` (`60_*`, `61_*`, `62_*`, `x0prep_*`); hashes in `FREEZE.md` |
+| D4 | B-proxy and H argv for each file, written out | `flags/prefreeze/B-proxy.argv.json` and `flags/prefreeze/README.md`; hashes in `FREEZE.md` |
+| D5 | `class/fp_class.csv`, plus the commit of `classify.py`, with the review recorded in §12 | `7cabb6913437c364f7d02c988a839ed5807462a3812cacd86e68a1c72a686c2f`; input `class/xed_tables.tsv` `1db25e7f5f02b5796d06cbb94f4cb5ab7d8230ed1091bacae485fa5c517d1d13`. **Review: done, 2026-10-16** (§12, reviewer 1 of the x0prep review; Claude, same family, independent context). A seeded random sample of 50 of the 741 FP-typed iclasses plus 147 hand-picked edge cases was re-classified blind: 197/197 agree. The XED cross-check covers all 502 iclasses hit by the named attributes or exception classes, and op_class matches on all 1,995 rows. SDM citations were not re-fetched; the template-reason finding was resolved by rewording §4.4, so the CSV and its hash are unchanged |
+| D6 | `B_iform.json`, `hand_map.csv`, stdarch commit, XML SHA-256, with the values written into §4.5 and the review recorded in §12 | `B_iform.json` `a66e1a935d887a272d5f3fb868d10a1877f8e4d7b26137a3962079b1edcb1eaa`; `hand_map.csv` `008f558ead3ee86b9484f8891470f51db0e10dbf8591a8509ca20c4219ad5d3e`; stdarch `eb9b3025937c85bd271a3ca46a681cd52739db12`; XML `6762a50652a35ef663fd532ed83b789d19bbc2ac7e94b1771f19d666d96c2c30`; values in §4.5. **Review: done, 2026-10-16** (§12, reviewer 1; Claude, same family, independent context). B_iform and hand_map were re-derived independently from the Hearth blobs and an independently downloaded XML (same SHA-256): identical. That covers 130 names (47/51/32), 23 with no single instruction, 105 XML form strings, 1 hand-mapped xed name, |B_iform| 102 and |B_mnem| 74, with 0 differences per intrinsic |
+| D7 | `class/fp_flag_patterns.txt` | `181ab6e8b9cffbe12dd2d7bbeb4bf7a6aeed36161bc8e4ec2692261bf8a42dbc` |
+| D8 | `class/objdump_norm.csv` | `d6196d60246a08733ca1581d83e81cc8be9891223e2750323b250c50dbc6e2e7` (LF bytes; validation: `class/objdump_norm_validation.json`, run on the same content with CRLF line endings) |
+| D9 | `class/loop_table.csv` | `0d94b2e636fb355e3c3c56d9b452dfef6a00925860adda05e116fe99b22a35be` |
+| D10 | Reduce-probe sources (arm P) | `scripts/probes/reduce_probe.c`; hash in `FREEZE.md` |
+| D11 | Scripts implementing §4.2, §4.7 and §8 (`judge.py`), tested only on `scripts/smoke/` and never on Hearth objects; commit hash | §4.1/§4.2 (`x0_extract.py`, `x0_decode.py`) and §8 (`judge.py`) done, revised after the §12 review and tested (56 judge unit tests; runbook step 72 regression on 24 NON-Hearth objects, 0 deviations, order-independent). §4.7 (`x0_loops.py`) is done except the twin attribution (and so P3(d2) site selection and exact P3(c) attribution) and the peeled/interchanged tags. The `census.json` assembler is not written; it must also record the build fields judge.py now requires (compiler hashes, structured errors, include lists, `ab_compare`). **Incomplete.** Hashes of every script in `FREEZE.md` and `class/frozen_inputs.json` "scripts" (checked by V4). Commit: the commit that adds them |
+| D12 | The X0 tooling track's statement on whether any Hearth object was compiled before freeze (OQ-7) | §2 "Statement on pre-freeze compilation" and `TOOLCHAINS.md` §11 [M, x0prep, 2026-10-16] |
+
+The hash values above were computed on 2026-10-16 by x0prep. `FREEZE.md` holds the complete list; every value
+is recomputed at freeze, and `class/frozen_inputs.json` must equal it (`judge.py` checks V4 against it).
+
+## Appendix E. Changes made by x0prep before freeze (2026-10-16)
+
+All changes are to a DRAFT and precede any data. None moves a threshold. Each needs the independent review
+of §12.
+
+| Where | Change | Direction |
+|---|---|---|
+| Header | Owner chat answers relayed (D0-10, D0-12, X0 authorised); X0 still collects only once FROZEN | none |
+| §2 | Removed the pre-freeze compile smoke test of the three Hearth files; no Hearth file is compiled before freeze; D3 is smoke on NON-Hearth files only | stricter (no early look) |
+| §2 | D12 statement written from a desktop scan and the job scripts; P3(a) for B-cmake disclosed as known from flags | disclosure |
+| §2 table, Table 2.1 | Values filled [M]; A's pre-freeze capture is the vcxproj plus design-time lines (which omit `/O2`) | precision |
+| §3 | B-cmake compile failure is a configuration finding (N1, N2), with Amber (b) still evaluated on its flags; C's hardening defaults and XED's `-cet` stated; B-proxy, H and P written out (H: `--shared` chosen) | precision |
+| §4.2 | Relocation arithmetic, jump tables, import-pointer calls, no-return list, COFF ranges, hardening list; FP trust dependency = any external callee not on an allow-list | stricter (`fp_trust_dep`) |
+| §4.4 | Enumeration widened to every XED iclass (so GPR iclasses are not FP-sensitive by default); XED names confirmed, substitutes and extra attributes listed; results | precision; stricter (extra attributes) |
+| §4.5 | Values filled (102, 74, 102); `hand_map.csv` also covers `xed` names absent from the pinned XED | precision |
+| §4.7 | `acc_lanes_emitted` counts distinct carried locations (same unit as source lanes); `acc_updates_per_iter` feeds u_acc; flow-sensitive carried reads with lane-0 semantics for scalar ops; tags computed vs not computed | precision of a unit (reviewer attention: the literal "sum of defining instructions" would flag serial unrolls) |
+| §4.7, §8 | Loops whose peeled/interchanged status is unchecked count as uncovered for the narrowing unless X2 lists their id | stricter |
+| §5 P1 | Compile rule (genuine vs tooling), decided by `judge.py` from build records | precision, exhaustive |
+| §5 P3 | Mechanisation notes for (d1) and (d2); (d2) unchecked until twin attribution exists | disclosure |
+| §7 | Script table; cross-decoder table validated on a NON-Hearth corpus; re-derivation procedure file | precision |
+| §8 | Exhaustiveness list (completeness, compile outcomes, A-ninja, after-bound V4 / missing V3, unknown causes, recomputed Amber (a), narrowing default) | exhaustive |
+| §12 | Statement that the x0prep artefacts are unreviewed | disclosure |
+| Appendix C | Fields `judge.py` needs | precision |
+| Appendix D | Values and status | — |
+| §2 (post-review) | D12 statement extended: Hearth objects from Pierce's own development in the desktop's WSL home, not to be opened | disclosure |
+| §4.2 (post-review) | Jump tables tied to the jump's own address computation, extent from the guarding bound, never partial; GCC cold parts as function families; calls through variables and CFG dispatch `unresolved_indirect`; reaching-definition register rule; round-based, order-independent descent; no-return inference; overlap gap; `.pdata` contiguity; slot-name warning; referenced code addresses listed | stricter |
+| §4.4 (post-review) | `reason` column described as a rule template, not a per-instruction SDM citation | correction |
+| §5 P1, P2, P3(b), P3(d1) (post-review) | Compiler pin on every build; located error = structured error in a census file or a recorded include; P2 recomputed from iclasses; approximation list extended (FP16/BF16 forms, VEXP2P\*, 3DNow!); any d1 other than `pass` flags | stricter |
+| §7 (post-review) | Validation extended to the adversarial regression set of steps 71b and 72, with expected outcomes and a work-list-order check | precision |
+| §8 (post-review) | Schema check; A-ninja comparison and P3(a) results required; coverage completeness; unknown causes rewritten in place; after the bound, V3 needs complete figures and a missing P3(a) result counts as a flag; evaluation date from the clock and the census runs; V2 and P2 recomputed; V4 covers `xed_tables.tsv`, every script and the compiler pins; narrowing counts empty tags and missing loop analyses as uncovered | stricter |
+| §9, §12, Appendix C (post-review) | Threats updated; x0prep review logged; new fields | disclosure, precision |

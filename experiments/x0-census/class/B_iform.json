@@ -1,0 +1,4098 @@
+{
+ "record": "X0-census \u00a74.5",
+ "inputs": {
+  "hearth_commit": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220",
+  "hearth_blobs": {
+   "engine/src/quant.c": "e95496945c254335c0d25aafb374575e0db930fe",
+   "engine/src/quant_avx2.c": "a2004d22fd50c62b9bffa52b77b02870cd066986",
+   "engine/src/quant_avx512.c": "9c7586b16e589989edec35c4bf8c1eee373da886",
+   "engine/src/hx_quant.h": "df7e75e3e14f7281e80d47b20fab67a2ab5c99cb",
+   "engine/src/hx_platform.h": "53141baa62f703508b50c5e511617732c97f5b2e",
+   "engine/include/hearth.h": "0bbc9c9d93da2832d8ca5a5f494c3c1e120beaec",
+   "CMakeLists.txt": "217ca743186ac066ee7c13b4ef416bb3704e3d30"
+  },
+  "stdarch_commit": "eb9b3025937c85bd271a3ca46a681cd52739db12",
+  "xml_path": "intrinsics_data/x86-intel.xml",
+  "xml_sha256": "6762a50652a35ef663fd532ed83b789d19bbc2ac7e94b1771f19d666d96c2c30",
+  "xml_version": "3.6.9",
+  "xml_date": "07/12/2024",
+  "xed_tables_sha256": "1db25e7f5f02b5796d06cbb94f4cb5ab7d8230ed1091bacae485fa5c517d1d13",
+  "hand_map_sha256": "008f558ead3ee86b9484f8891470f51db0e10dbf8591a8509ca20c4219ad5d3e"
+ },
+ "rule": "union of XML <instruction xed=...> per intrinsic; hand_map.csv where the XML gives no xed attribute or one the pinned XED does not define; zero instruction elements = no single instruction",
+ "counts": {
+  "intrinsics": 130,
+  "by_prefix": {
+   "mm": 32,
+   "mm256": 51,
+   "mm512": 47
+  },
+  "no_single_instruction": 23,
+  "b_iform": 102,
+  "b_mnem": 74,
+  "b_iform_category_S": 102,
+  "t_forms": 102,
+  "xml_form_strings": 105,
+  "xml_instruction_names": 74,
+  "hand_mapped_instructions": 1
+ },
+ "reconciliation_g02": {
+  "g02": {
+   "intrinsics": 130,
+   "no_single_instruction": 23,
+   "forms": 105,
+   "mnemonics": 74
+  },
+  "intrinsics": [
+   130,
+   130
+  ],
+  "no_single_instruction": [
+   23,
+   23
+  ],
+  "forms": {
+   "b_iform_xed_iforms": 102,
+   "xml_distinct_name_form_strings": 105,
+   "g02": 105
+  },
+  "mnemonics": {
+   "b_mnem_xed_iclasses": 74,
+   "xml_distinct_instruction_names": 74,
+   "g02": 74
+  }
+ },
+ "t_forms": {
+  "value": 102,
+  "rule": "min(|B_iform|, 105)",
+  "cap": 105
+ },
+ "no_single_instruction": [
+  "_mm256_castpd_ps",
+  "_mm256_castps256_ps128",
+  "_mm256_castsi128_si256",
+  "_mm256_castsi256_ps",
+  "_mm256_castsi256_si128",
+  "_mm256_set1_epi16",
+  "_mm256_set1_epi32",
+  "_mm256_set1_epi8",
+  "_mm256_set1_ps",
+  "_mm256_setr_epi32",
+  "_mm512_castps512_ps256",
+  "_mm512_castps_pd",
+  "_mm512_castsi256_si512",
+  "_mm512_castsi512_ps",
+  "_mm512_castsi512_si128",
+  "_mm512_castsi512_si256",
+  "_mm512_set1_ps",
+  "_mm512_setr_epi32",
+  "_mm_castsi128_ps",
+  "_mm_set1_epi32",
+  "_mm_set1_ps",
+  "_mm_set_epi64x",
+  "_mm_set_ss"
+ ],
+ "b_iform": [
+  "ADDPS_XMMps_XMMps",
+  "ADDSS_XMMss_XMMss",
+  "BLENDVPS_XMMdq_XMMdq",
+  "CMPPS_XMMps_XMMps_IMMb",
+  "CVTDQ2PS_XMMps_XMMdq",
+  "MAXPS_XMMps_XMMps",
+  "MAXSS_XMMss_XMMss",
+  "MOVDQU_MEMdq_XMMdq",
+  "MOVDQU_XMMdq_MEMdq",
+  "MOVD_GPR32_XMMd",
+  "MOVD_XMMdq_GPR32",
+  "MOVHLPS_XMMq_XMMq",
+  "MOVQ_XMMdq_GPR64",
+  "MOVSS_MEMss_XMMss",
+  "MOVSS_XMMdq_MEMss",
+  "MULPS_XMMps_XMMps",
+  "MULSS_XMMss_XMMss",
+  "PADDD_XMMdq_XMMdq",
+  "PSHUFD_XMMdq_XMMdq_IMMb",
+  "PSUBD_XMMdq_XMMdq",
+  "SHUFPS_XMMps_XMMps_IMMb",
+  "VADDPS_YMMqq_YMMqq_YMMqq",
+  "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+  "VANDNPS_YMMqq_YMMqq_YMMqq",
+  "VANDPS_YMMqq_YMMqq_YMMqq",
+  "VBLENDVPS_YMMqq_YMMqq_YMMqq_YMMqq",
+  "VBROADCASTI32X4_ZMMu32_MASKmskw_MEMu32_AVX512",
+  "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512",
+  "VCMPPS_MASKmskw_MASKmskw_ZMMf32_ZMMf32_IMM8_AVX512",
+  "VCMPPS_YMMqq_YMMqq_YMMqq_IMMb",
+  "VCVTDQ2PS_YMMqq_YMMqq",
+  "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512",
+  "VCVTPH2PS_XMMdq_XMMq",
+  "VCVTPH2PS_YMMqq_XMMdq",
+  "VCVTPH2PS_ZMMf32_MASKmskw_YMMf16_AVX512",
+  "VCVTPS2DQ_YMMqq_YMMqq",
+  "VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+  "VEXTRACTF128_XMMdq_YMMqq_IMMb",
+  "VEXTRACTF64X4_YMMf64_MASKmskw_ZMMf64_IMM8_AVX512",
+  "VEXTRACTI128_XMMdq_YMMqq_IMMb",
+  "VEXTRACTI64X4_YMMu64_MASKmskw_ZMMu64_IMM8_AVX512",
+  "VINSERTI128_YMMqq_YMMqq_XMMdq_IMMb",
+  "VINSERTI64X4_ZMMu64_MASKmskw_ZMMu64_YMMu64_IMM8_AVX512",
+  "VMASKMOVPS_MEMqq_YMMqq_YMMqq",
+  "VMAXPS_YMMqq_YMMqq_YMMqq",
+  "VMAXPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+  "VMINPS_YMMqq_YMMqq_YMMqq",
+  "VMINPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+  "VMOVAPS_MEMqq_YMMqq",
+  "VMOVAPS_XMMf32_MASKmskw_XMMf32_AVX512",
+  "VMOVAPS_YMMqq_MEMqq",
+  "VMOVAPS_ZMMf32_MASKmskw_ZMMf32_AVX512",
+  "VMOVDQU16_YMMu16_MASKmskw_MEMu16_AVX512",
+  "VMOVDQU_MEMqq_YMMqq",
+  "VMOVDQU_YMMqq_MEMqq",
+  "VMOVUPS_MEMf32_MASKmskw_XMMf32_AVX512",
+  "VMOVUPS_MEMf32_MASKmskw_ZMMf32_AVX512",
+  "VMOVUPS_MEMqq_YMMqq",
+  "VMOVUPS_YMMqq_MEMqq",
+  "VMOVUPS_ZMMf32_MASKmskw_MEMf32_AVX512",
+  "VMULPS_YMMqq_YMMqq_YMMqq",
+  "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+  "VPABSB_YMMqq_YMMqq",
+  "VPACKSSDW_YMMqq_YMMqq_YMMqq",
+  "VPACKSSWB_YMMqq_YMMqq_YMMqq",
+  "VPADDD_YMMqq_YMMqq_YMMqq",
+  "VPADDD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+  "VPADDW_YMMqq_YMMqq_YMMqq",
+  "VPANDD_ZMMu32_MASKmskw_ZMMu32_MEMu32_AVX512",
+  "VPANDD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+  "VPAND_YMMqq_YMMqq_YMMqq",
+  "VPBROADCASTB_ZMMu8_MASKmskw_GPR32u8_AVX512",
+  "VPBROADCASTD_ZMMu32_MASKmskw_GPR32u32_AVX512",
+  "VPCMPGTD_YMMqq_YMMqq_YMMqq",
+  "VPDPBUSD_ZMMi32_MASKmskw_ZMMu8_ZMMu32_AVX512",
+  "VPERM2I128_YMMqq_YMMqq_YMMqq_IMMb",
+  "VPERMD_YMMqq_YMMqq_YMMqq",
+  "VPERMD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+  "VPHADDD_YMMqq_YMMqq_YMMqq",
+  "VPMADDUBSW_YMMqq_YMMqq_YMMqq",
+  "VPMADDWD_YMMqq_YMMqq_YMMqq",
+  "VPMOVDB_XMMu8_MASKmskw_ZMMu32_AVX512",
+  "VPMOVZXWD_YMMqq_XMMdq",
+  "VPMOVZXWD_ZMMi32_MASKmskw_YMMi16_AVX512",
+  "VPSHUFD_ZMMu32_MASKmskw_ZMMu32_IMM8_AVX512",
+  "VPSIGNB_YMMqq_YMMqq_YMMqq",
+  "VPSLLD_YMMqq_YMMqq_IMMb",
+  "VPSLLD_ZMMu32_MASKmskw_ZMMu32_IMM8_AVX512",
+  "VPSRLW_YMMqq_YMMqq_IMMb",
+  "VPSRLW_ZMMu16_MASKmskw_ZMMu16_IMM8_AVX512",
+  "VPSUBD_YMMqq_YMMqq_YMMqq",
+  "VPSUBD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+  "VPUNPCKHDQ_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+  "VPUNPCKHQDQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512",
+  "VPUNPCKLDQ_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+  "VPUNPCKLQDQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512",
+  "VPXORD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+  "VPXORQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512",
+  "VPXOR_YMMqq_YMMqq_YMMqq",
+  "VSHUFI64X2_ZMMu64_MASKmskw_ZMMu64_ZMMu64_IMM8_AVX512",
+  "VXORPS_YMMqq_YMMqq_YMMqq",
+  "XORPS_XMMxud_XMMxud"
+ ],
+ "b_mnem": [
+  "ADDPS",
+  "ADDSS",
+  "BLENDVPS",
+  "CMPPS",
+  "CVTDQ2PS",
+  "MAXPS",
+  "MAXSS",
+  "MOVD",
+  "MOVDQU",
+  "MOVHLPS",
+  "MOVQ",
+  "MOVSS",
+  "MULPS",
+  "MULSS",
+  "PADDD",
+  "PSHUFD",
+  "PSUBD",
+  "SHUFPS",
+  "VADDPS",
+  "VANDNPS",
+  "VANDPS",
+  "VBLENDVPS",
+  "VBROADCASTI32X4",
+  "VCMPPS",
+  "VCVTDQ2PS",
+  "VCVTPH2PS",
+  "VCVTPS2DQ",
+  "VEXTRACTF128",
+  "VEXTRACTF64X4",
+  "VEXTRACTI128",
+  "VEXTRACTI64X4",
+  "VINSERTI128",
+  "VINSERTI64X4",
+  "VMASKMOVPS",
+  "VMAXPS",
+  "VMINPS",
+  "VMOVAPS",
+  "VMOVDQU",
+  "VMOVDQU16",
+  "VMOVUPS",
+  "VMULPS",
+  "VPABSB",
+  "VPACKSSDW",
+  "VPACKSSWB",
+  "VPADDD",
+  "VPADDW",
+  "VPAND",
+  "VPANDD",
+  "VPBROADCASTB",
+  "VPBROADCASTD",
+  "VPCMPGTD",
+  "VPDPBUSD",
+  "VPERM2I128",
+  "VPERMD",
+  "VPHADDD",
+  "VPMADDUBSW",
+  "VPMADDWD",
+  "VPMOVDB",
+  "VPMOVZXWD",
+  "VPSHUFD",
+  "VPSIGNB",
+  "VPSLLD",
+  "VPSRLW",
+  "VPSUBD",
+  "VPUNPCKHDQ",
+  "VPUNPCKHQDQ",
+  "VPUNPCKLDQ",
+  "VPUNPCKLQDQ",
+  "VPXOR",
+  "VPXORD",
+  "VPXORQ",
+  "VSHUFI64X2",
+  "VXORPS",
+  "XORPS"
+ ],
+ "xml_forms": [
+  [
+   "ADDPS",
+   "xmm, xmm"
+  ],
+  [
+   "ADDSS",
+   "xmm, xmm"
+  ],
+  [
+   "BLENDVPS",
+   "xmm, xmm"
+  ],
+  [
+   "CMPPS",
+   "xmm, xmm, imm8"
+  ],
+  [
+   "CVTDQ2PS",
+   "xmm, xmm"
+  ],
+  [
+   "MAXPS",
+   "xmm, xmm"
+  ],
+  [
+   "MAXSS",
+   "xmm, xmm"
+  ],
+  [
+   "MOVD",
+   "r32, xmm"
+  ],
+  [
+   "MOVD",
+   "xmm, r32"
+  ],
+  [
+   "MOVDQU",
+   "m128, xmm"
+  ],
+  [
+   "MOVDQU",
+   "xmm, m128"
+  ],
+  [
+   "MOVHLPS",
+   "xmm, xmm"
+  ],
+  [
+   "MOVQ",
+   "xmm, r64"
+  ],
+  [
+   "MOVSS",
+   "m32, xmm"
+  ],
+  [
+   "MOVSS",
+   "xmm, m32"
+  ],
+  [
+   "MULPS",
+   "xmm, xmm"
+  ],
+  [
+   "MULSS",
+   "xmm, xmm"
+  ],
+  [
+   "PADDD",
+   "xmm, xmm"
+  ],
+  [
+   "PSHUFD",
+   "xmm, xmm, imm8"
+  ],
+  [
+   "PSUBD",
+   "xmm, xmm"
+  ],
+  [
+   "SHUFPS",
+   "xmm, xmm, imm8"
+  ],
+  [
+   "VADDPS",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VADDPS",
+   "zmm {k}, zmm, zmm"
+  ],
+  [
+   "VADDPS",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VANDNPS",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VANDPS",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VBLENDVPS",
+   "ymm, ymm, ymm, ymm"
+  ],
+  [
+   "VBROADCASTI32X4",
+   "zmm, m128"
+  ],
+  [
+   "VCMPPS",
+   "k, xmm, xmm, imm8"
+  ],
+  [
+   "VCMPPS",
+   "k, zmm, zmm, imm8"
+  ],
+  [
+   "VCMPPS",
+   "ymm, ymm, ymm, imm8"
+  ],
+  [
+   "VCVTDQ2PS",
+   "ymm, ymm"
+  ],
+  [
+   "VCVTDQ2PS",
+   "zmm, zmm"
+  ],
+  [
+   "VCVTPH2PS",
+   "xmm, xmm"
+  ],
+  [
+   "VCVTPH2PS",
+   "ymm, xmm"
+  ],
+  [
+   "VCVTPH2PS",
+   "zmm, ymm"
+  ],
+  [
+   "VCVTPS2DQ",
+   "ymm, ymm"
+  ],
+  [
+   "VCVTPS2DQ",
+   "zmm, zmm"
+  ],
+  [
+   "VEXTRACTF128",
+   "xmm, ymm, imm8"
+  ],
+  [
+   "VEXTRACTF64X4",
+   "ymm, zmm, imm8"
+  ],
+  [
+   "VEXTRACTI128",
+   "xmm, ymm, imm8"
+  ],
+  [
+   "VEXTRACTI64X4",
+   "ymm, zmm, imm8"
+  ],
+  [
+   "VINSERTI128",
+   "ymm, ymm, xmm, imm8"
+  ],
+  [
+   "VINSERTI64X4",
+   "zmm, zmm, ymm, imm8"
+  ],
+  [
+   "VMASKMOVPS",
+   "m256, ymm, ymm"
+  ],
+  [
+   "VMAXPS",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VMAXPS",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VMINPS",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VMINPS",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VMOVAPS",
+   "m256, ymm"
+  ],
+  [
+   "VMOVAPS",
+   "xmm {k}, xmm"
+  ],
+  [
+   "VMOVAPS",
+   "ymm, m256"
+  ],
+  [
+   "VMOVAPS",
+   "zmm {k}, zmm"
+  ],
+  [
+   "VMOVAPS",
+   "zmm {z}, zmm"
+  ],
+  [
+   "VMOVDQU",
+   "m256, ymm"
+  ],
+  [
+   "VMOVDQU",
+   "ymm, m256"
+  ],
+  [
+   "VMOVDQU16",
+   "ymm {z}, m256"
+  ],
+  [
+   "VMOVUPS",
+   "m128 {k}, xmm"
+  ],
+  [
+   "VMOVUPS",
+   "m256, ymm"
+  ],
+  [
+   "VMOVUPS",
+   "m512, zmm"
+  ],
+  [
+   "VMOVUPS",
+   "ymm, m256"
+  ],
+  [
+   "VMOVUPS",
+   "zmm {z}, m512"
+  ],
+  [
+   "VMOVUPS",
+   "zmm, m512"
+  ],
+  [
+   "VMULPS",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VMULPS",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VPABSB",
+   "ymm, ymm"
+  ],
+  [
+   "VPACKSSDW",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VPACKSSWB",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VPADDD",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VPADDD",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VPADDW",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VPAND",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VPANDD",
+   "zmm, zmm, m512"
+  ],
+  [
+   "VPANDD",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VPBROADCASTB",
+   "zmm, r8"
+  ],
+  [
+   "VPBROADCASTD",
+   "zmm, r32"
+  ],
+  [
+   "VPCMPGTD",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VPDPBUSD",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VPERM2I128",
+   "ymm, ymm, ymm, imm8"
+  ],
+  [
+   "VPERMD",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VPERMD",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VPHADDD",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VPMADDUBSW",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VPMADDWD",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VPMOVDB",
+   "xmm, zmm"
+  ],
+  [
+   "VPMOVZXWD",
+   "ymm, xmm"
+  ],
+  [
+   "VPMOVZXWD",
+   "zmm, ymm"
+  ],
+  [
+   "VPSHUFD",
+   "zmm, zmm, imm8"
+  ],
+  [
+   "VPSIGNB",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VPSLLD",
+   "ymm, ymm, imm8"
+  ],
+  [
+   "VPSLLD",
+   "zmm, zmm, imm8"
+  ],
+  [
+   "VPSRLW",
+   "ymm, ymm, imm8"
+  ],
+  [
+   "VPSRLW",
+   "zmm, zmm, imm8"
+  ],
+  [
+   "VPSUBD",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VPSUBD",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VPUNPCKHDQ",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VPUNPCKHQDQ",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VPUNPCKLDQ",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VPUNPCKLQDQ",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VPXOR",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "VPXORD",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VPXORQ",
+   "zmm, zmm, zmm"
+  ],
+  [
+   "VSHUFI64X2",
+   "zmm, zmm, zmm, imm8"
+  ],
+  [
+   "VXORPS",
+   "ymm, ymm, ymm"
+  ],
+  [
+   "XORPS",
+   "xmm, xmm"
+  ]
+ ],
+ "intrinsics": {
+  "_mm256_abs_epi8": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Special Math Functions"
+   ],
+   "instructions": [
+    {
+     "name": "VPABSB",
+     "form": "ymm, ymm",
+     "xml_xed": "VPABSB_YMMqq_YMMqq",
+     "iform": "VPABSB_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPABSB"
+    }
+   ],
+   "iforms": [
+    "VPABSB_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:256",
+    "quant_avx2.c:257",
+    "quant_avx2.c:288",
+    "quant_avx2.c:289"
+   ]
+  },
+  "_mm256_add_epi16": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VPADDW",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VPADDW_YMMqq_YMMqq_YMMqq",
+     "iform": "VPADDW_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPADDW"
+    }
+   ],
+   "iforms": [
+    "VPADDW_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:252",
+    "quant_avx2.c:299"
+   ]
+  },
+  "_mm256_add_epi32": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VPADDD",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VPADDD_YMMqq_YMMqq_YMMqq",
+     "iform": "VPADDD_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPADDD"
+    }
+   ],
+   "iforms": [
+    "VPADDD_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:75",
+    "quant_avx2.c:101",
+    "quant_avx2.c:258",
+    "quant_avx2.c:304",
+    "quant_avx512.c:55"
+   ]
+  },
+  "_mm256_add_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VADDPS",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VADDPS_YMMqq_YMMqq_YMMqq",
+     "iform": "VADDPS_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VADDPS"
+    }
+   ],
+   "iforms": [
+    "VADDPS_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:36",
+    "quant_avx2.c:178",
+    "quant_avx2.c:179",
+    "quant_avx2.c:181",
+    "quant_avx2.c:182",
+    "quant_avx2.c:184",
+    "quant_avx2.c:185",
+    "quant_avx2.c:187",
+    "quant_avx2.c:188",
+    "quant_avx2.c:204",
+    "quant_avx2.c:205",
+    "quant_avx2.c:263",
+    "quant_avx2.c:309",
+    "quant_avx512.c:38"
+   ]
+  },
+  "_mm256_and_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Logical"
+   ],
+   "instructions": [
+    {
+     "name": "VANDPS",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VANDPS_YMMqq_YMMqq_YMMqq",
+     "iform": "VANDPS_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VANDPS"
+    }
+   ],
+   "iforms": [
+    "VANDPS_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:98"
+   ]
+  },
+  "_mm256_and_si256": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Logical"
+   ],
+   "instructions": [
+    {
+     "name": "VPAND",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VPAND_YMMqq_YMMqq_YMMqq",
+     "iform": "VPAND_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPAND"
+    }
+   ],
+   "iforms": [
+    "VPAND_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:251",
+    "quant_avx2.c:251",
+    "quant_avx2.c:283",
+    "quant_avx2.c:284"
+   ]
+  },
+  "_mm256_andnot_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Logical"
+   ],
+   "instructions": [
+    {
+     "name": "VANDNPS",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VANDNPS_YMMqq_YMMqq_YMMqq",
+     "iform": "VANDNPS_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VANDNPS"
+    }
+   ],
+   "iforms": [
+    "VANDNPS_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:90"
+   ]
+  },
+  "_mm256_blendv_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VBLENDVPS",
+     "form": "ymm, ymm, ymm, ymm",
+     "xml_xed": "VBLENDVPS_YMMqq_YMMqq_YMMqq_YMMqq",
+     "iform": "VBLENDVPS_YMMqq_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VBLENDVPS"
+    }
+   ],
+   "iforms": [
+    "VBLENDVPS_YMMqq_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:28"
+   ]
+  },
+  "_mm256_castpd_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Cast"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx512.c:37",
+    "quant_avx512.c:47"
+   ]
+  },
+  "_mm256_castps256_ps128": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Cast"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx2.c:37",
+    "quant_avx2.c:44",
+    "quant_avx512.c:39",
+    "quant_avx512.c:48"
+   ]
+  },
+  "_mm256_castsi128_si256": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Cast"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx512.c:256"
+   ]
+  },
+  "_mm256_castsi256_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Cast"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx2.c:28",
+    "quant_avx2.c:126",
+    "quant_avx2.c:127"
+   ]
+  },
+  "_mm256_castsi256_si128": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Cast"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx2.c:51",
+    "quant_avx512.c:56"
+   ]
+  },
+  "_mm256_cmp_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Compare"
+   ],
+   "instructions": [
+    {
+     "name": "VCMPPS",
+     "form": "ymm, ymm, ymm, imm8",
+     "xml_xed": "VCMPPS_YMMqq_YMMqq_YMMqq_IMMb",
+     "iform": "VCMPPS_YMMqq_YMMqq_YMMqq_IMMb",
+     "source": "xml",
+     "iclass": "VCMPPS"
+    }
+   ],
+   "iforms": [
+    "VCMPPS_YMMqq_YMMqq_YMMqq_IMMb"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:28",
+    "quant_avx2.c:98"
+   ]
+  },
+  "_mm256_cmpgt_epi32": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Compare"
+   ],
+   "instructions": [
+    {
+     "name": "VPCMPGTD",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VPCMPGTD_YMMqq_YMMqq_YMMqq",
+     "iform": "VPCMPGTD_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPCMPGTD"
+    }
+   ],
+   "iforms": [
+    "VPCMPGTD_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:235"
+   ]
+  },
+  "_mm256_cvtepi32_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "VCVTDQ2PS",
+     "form": "ymm, ymm",
+     "xml_xed": "VCVTDQ2PS_YMMqq_YMMqq",
+     "iform": "VCVTDQ2PS_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VCVTDQ2PS"
+    }
+   ],
+   "iforms": [
+    "VCVTDQ2PS_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:263",
+    "quant_avx2.c:309"
+   ]
+  },
+  "_mm256_cvtepu16_epi32": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "VPMOVZXWD",
+     "form": "ymm, xmm",
+     "xml_xed": "VPMOVZXWD_YMMqq_XMMdq",
+     "iform": "VPMOVZXWD_YMMqq_XMMdq",
+     "source": "xml",
+     "iclass": "VPMOVZXWD"
+    }
+   ],
+   "iforms": [
+    "VPMOVZXWD_YMMqq_XMMdq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:126",
+    "quant_avx2.c:127"
+   ]
+  },
+  "_mm256_cvtph_ps": {
+   "cpuid": [
+    "F16C"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "VCVTPH2PS",
+     "form": "ymm, xmm",
+     "xml_xed": "VCVTPH2PS_YMMqq_XMMdq",
+     "iform": "VCVTPH2PS_YMMqq_XMMdq",
+     "source": "xml",
+     "iclass": "VCVTPH2PS"
+    }
+   ],
+   "iforms": [
+    "VCVTPH2PS_YMMqq_XMMdq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:123",
+    "quant_avx2.c:124",
+    "quant_avx2.c:245",
+    "quant_avx2.c:278"
+   ]
+  },
+  "_mm256_cvtps_epi32": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "VCVTPS2DQ",
+     "form": "ymm, ymm",
+     "xml_xed": "VCVTPS2DQ_YMMqq_YMMqq",
+     "iform": "VCVTPS2DQ_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VCVTPS2DQ"
+    }
+   ],
+   "iforms": [
+    "VCVTPS2DQ_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:100"
+   ]
+  },
+  "_mm256_extractf128_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VEXTRACTF128",
+     "form": "xmm, ymm, imm8",
+     "xml_xed": "VEXTRACTF128_XMMdq_YMMdq_IMMb",
+     "iform": "VEXTRACTF128_XMMdq_YMMqq_IMMb",
+     "source": "hand_map",
+     "iclass": "VEXTRACTF128"
+    }
+   ],
+   "iforms": [
+    "VEXTRACTF128_XMMdq_YMMqq_IMMb"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:37",
+    "quant_avx2.c:44",
+    "quant_avx512.c:39",
+    "quant_avx512.c:48"
+   ]
+  },
+  "_mm256_extracti128_si256": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VEXTRACTI128",
+     "form": "xmm, ymm, imm8",
+     "xml_xed": "VEXTRACTI128_XMMdq_YMMqq_IMMb",
+     "iform": "VEXTRACTI128_XMMdq_YMMqq_IMMb",
+     "source": "xml",
+     "iclass": "VEXTRACTI128"
+    }
+   ],
+   "iforms": [
+    "VEXTRACTI128_XMMdq_YMMqq_IMMb"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:51",
+    "quant_avx512.c:56"
+   ]
+  },
+  "_mm256_hadd_epi32": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VPHADDD",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VPHADDD_YMMqq_YMMqq_YMMqq",
+     "iform": "VPHADDD_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPHADDD"
+    }
+   ],
+   "iforms": [
+    "VPHADDD_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:72",
+    "quant_avx2.c:72",
+    "quant_avx2.c:73",
+    "quant_avx2.c:73",
+    "quant_avx2.c:74",
+    "quant_avx2.c:74"
+   ]
+  },
+  "_mm256_inserti128_si256": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VINSERTI128",
+     "form": "ymm, ymm, xmm, imm8",
+     "xml_xed": "VINSERTI128_YMMqq_YMMqq_XMMdq_IMMb",
+     "iform": "VINSERTI128_YMMqq_YMMqq_XMMdq_IMMb",
+     "source": "xml",
+     "iclass": "VINSERTI128"
+    }
+   ],
+   "iforms": [
+    "VINSERTI128_YMMqq_YMMqq_XMMdq_IMMb"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:256"
+   ]
+  },
+  "_mm256_load_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Load"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVAPS",
+     "form": "ymm, m256",
+     "xml_xed": "VMOVAPS_YMMqq_MEMqq",
+     "iform": "VMOVAPS_YMMqq_MEMqq",
+     "source": "xml",
+     "iclass": "VMOVAPS"
+    }
+   ],
+   "iforms": [
+    "VMOVAPS_YMMqq_MEMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:155",
+    "quant_avx2.c:156"
+   ]
+  },
+  "_mm256_loadu_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Load"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVUPS",
+     "form": "ymm, m256",
+     "xml_xed": "VMOVUPS_YMMqq_MEMqq",
+     "iform": "VMOVUPS_YMMqq_MEMqq",
+     "source": "xml",
+     "iclass": "VMOVUPS"
+    }
+   ],
+   "iforms": [
+    "VMOVUPS_YMMqq_MEMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:89",
+    "quant_avx2.c:117",
+    "quant_avx2.c:118",
+    "quant_avx2.c:176",
+    "quant_avx2.c:176",
+    "quant_avx2.c:204",
+    "quant_avx2.c:205"
+   ]
+  },
+  "_mm256_loadu_si256": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Load"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVDQU",
+     "form": "ymm, m256",
+     "xml_xed": "VMOVDQU_YMMqq_MEMqq",
+     "iform": "VMOVDQU_YMMqq_MEMqq",
+     "source": "xml",
+     "iclass": "VMOVDQU"
+    }
+   ],
+   "iforms": [
+    "VMOVDQU_YMMqq_MEMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:243",
+    "quant_avx2.c:244",
+    "quant_avx2.c:250",
+    "quant_avx2.c:254",
+    "quant_avx2.c:255",
+    "quant_avx2.c:282",
+    "quant_avx2.c:286",
+    "quant_avx2.c:287",
+    "quant_avx2.c:294",
+    "quant_avx2.c:295",
+    "quant_avx512.c:113",
+    "quant_avx512.c:196",
+    "quant_avx512.c:197",
+    "quant_avx512.c:198",
+    "quant_avx512.c:199",
+    "quant_avx512.c:208",
+    "quant_avx512.c:209",
+    "quant_avx512.c:210",
+    "quant_avx512.c:211",
+    "quant_avx512.c:212",
+    "quant_avx512.c:213",
+    "quant_avx512.c:214",
+    "quant_avx512.c:215"
+   ]
+  },
+  "_mm256_madd_epi16": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VPMADDWD",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VPMADDWD_YMMqq_YMMqq_YMMqq",
+     "iform": "VPMADDWD_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPMADDWD"
+    }
+   ],
+   "iforms": [
+    "VPMADDWD_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:252",
+    "quant_avx2.c:258",
+    "quant_avx2.c:258",
+    "quant_avx2.c:300",
+    "quant_avx2.c:304",
+    "quant_avx2.c:304"
+   ]
+  },
+  "_mm256_maddubs_epi16": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VPMADDUBSW",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VPMADDUBSW_YMMqq_YMMqq_YMMqq",
+     "iform": "VPMADDUBSW_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPMADDUBSW"
+    }
+   ],
+   "iforms": [
+    "VPMADDUBSW_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:252",
+    "quant_avx2.c:252",
+    "quant_avx2.c:256",
+    "quant_avx2.c:257",
+    "quant_avx2.c:299",
+    "quant_avx2.c:299",
+    "quant_avx2.c:302",
+    "quant_avx2.c:303"
+   ]
+  },
+  "_mm256_maskstore_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Store"
+   ],
+   "instructions": [
+    {
+     "name": "VMASKMOVPS",
+     "form": "m256, ymm, ymm",
+     "xml_xed": "VMASKMOVPS_MEMqq_YMMqq_YMMqq",
+     "iform": "VMASKMOVPS_MEMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VMASKMOVPS"
+    }
+   ],
+   "iforms": [
+    "VMASKMOVPS_MEMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:267",
+    "quant_avx2.c:317"
+   ]
+  },
+  "_mm256_maskz_loadu_epi16": {
+   "cpuid": [
+    "AVX512BW",
+    "AVX512VL"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Load"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVDQU16",
+     "form": "ymm {z}, m256",
+     "xml_xed": "VMOVDQU16_YMMu16_MASKmskw_MEMu16_AVX512",
+     "iform": "VMOVDQU16_YMMu16_MASKmskw_MEMu16_AVX512",
+     "source": "xml",
+     "iclass": "VMOVDQU16"
+    }
+   ],
+   "iforms": [
+    "VMOVDQU16_YMMu16_MASKmskw_MEMu16_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:122"
+   ]
+  },
+  "_mm256_max_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Special Math Functions"
+   ],
+   "instructions": [
+    {
+     "name": "VMAXPS",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VMAXPS_YMMqq_YMMqq_YMMqq",
+     "iform": "VMAXPS_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VMAXPS"
+    }
+   ],
+   "iforms": [
+    "VMAXPS_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:90",
+    "quant_avx2.c:99",
+    "quant_avx512.c:46"
+   ]
+  },
+  "_mm256_min_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Special Math Functions"
+   ],
+   "instructions": [
+    {
+     "name": "VMINPS",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VMINPS_YMMqq_YMMqq_YMMqq",
+     "iform": "VMINPS_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VMINPS"
+    }
+   ],
+   "iforms": [
+    "VMINPS_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:99"
+   ]
+  },
+  "_mm256_mul_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VMULPS",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VMULPS_YMMqq_YMMqq_YMMqq",
+     "iform": "VMULPS_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VMULPS"
+    }
+   ],
+   "iforms": [
+    "VMULPS_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:97",
+    "quant_avx2.c:178",
+    "quant_avx2.c:179",
+    "quant_avx2.c:181",
+    "quant_avx2.c:182",
+    "quant_avx2.c:184",
+    "quant_avx2.c:185",
+    "quant_avx2.c:187",
+    "quant_avx2.c:188",
+    "quant_avx2.c:204",
+    "quant_avx2.c:205",
+    "quant_avx2.c:263",
+    "quant_avx2.c:263",
+    "quant_avx2.c:309",
+    "quant_avx2.c:310"
+   ]
+  },
+  "_mm256_packs_epi16": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Miscellaneous"
+   ],
+   "instructions": [
+    {
+     "name": "VPACKSSWB",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VPACKSSWB_YMMqq_YMMqq_YMMqq",
+     "iform": "VPACKSSWB_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPACKSSWB"
+    }
+   ],
+   "iforms": [
+    "VPACKSSWB_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:104"
+   ]
+  },
+  "_mm256_packs_epi32": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Miscellaneous"
+   ],
+   "instructions": [
+    {
+     "name": "VPACKSSDW",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VPACKSSDW_YMMqq_YMMqq_YMMqq",
+     "iform": "VPACKSSDW_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPACKSSDW"
+    }
+   ],
+   "iforms": [
+    "VPACKSSDW_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:104",
+    "quant_avx2.c:105"
+   ]
+  },
+  "_mm256_permute2x128_si256": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VPERM2I128",
+     "form": "ymm, ymm, ymm, imm8",
+     "xml_xed": "VPERM2I128_YMMqq_YMMqq_YMMqq_IMMb",
+     "iform": "VPERM2I128_YMMqq_YMMqq_YMMqq_IMMb",
+     "source": "xml",
+     "iclass": "VPERM2I128"
+    }
+   ],
+   "iforms": [
+    "VPERM2I128_YMMqq_YMMqq_YMMqq_IMMb"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:75",
+    "quant_avx2.c:75"
+   ]
+  },
+  "_mm256_permutevar8x32_epi32": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VPERMD",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VPERMD_YMMqq_YMMqq_YMMqq",
+     "iform": "VPERMD_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPERMD"
+    }
+   ],
+   "iforms": [
+    "VPERMD_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:106"
+   ]
+  },
+  "_mm256_set1_epi16": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Set"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx2.c:234"
+   ]
+  },
+  "_mm256_set1_epi32": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Set"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx2.c:28",
+    "quant_avx2.c:235",
+    "quant_avx2.c:262",
+    "quant_avx2.c:308"
+   ]
+  },
+  "_mm256_set1_epi8": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Set"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx2.c:234"
+   ]
+  },
+  "_mm256_set1_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Set"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx2.c:81",
+    "quant_avx2.c:81",
+    "quant_avx2.c:82",
+    "quant_avx2.c:95",
+    "quant_avx2.c:263",
+    "quant_avx2.c:310"
+   ]
+  },
+  "_mm256_setr_epi32": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Set"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx2.c:83",
+    "quant_avx2.c:235"
+   ]
+  },
+  "_mm256_setzero_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Set"
+   ],
+   "instructions": [
+    {
+     "name": "VXORPS",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VXORPS_YMMqq_YMMqq_YMMqq",
+     "iform": "VXORPS_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VXORPS"
+    }
+   ],
+   "iforms": [
+    "VXORPS_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:85",
+    "quant_avx2.c:174",
+    "quant_avx2.c:200",
+    "quant_avx2.c:239",
+    "quant_avx2.c:273"
+   ]
+  },
+  "_mm256_setzero_si256": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Set"
+   ],
+   "instructions": [
+    {
+     "name": "VPXOR",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VPXOR_YMMqq_YMMqq_YMMqq",
+     "iform": "VPXOR_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPXOR"
+    }
+   ],
+   "iforms": [
+    "VPXOR_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:86"
+   ]
+  },
+  "_mm256_sign_epi8": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VPSIGNB",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VPSIGNB_YMMqq_YMMqq_YMMqq",
+     "iform": "VPSIGNB_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPSIGNB"
+    }
+   ],
+   "iforms": [
+    "VPSIGNB_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:256",
+    "quant_avx2.c:257",
+    "quant_avx2.c:302",
+    "quant_avx2.c:303"
+   ]
+  },
+  "_mm256_slli_epi32": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Shift"
+   ],
+   "instructions": [
+    {
+     "name": "VPSLLD",
+     "form": "ymm, ymm, imm8",
+     "xml_xed": "VPSLLD_YMMqq_YMMqq_IMMb",
+     "iform": "VPSLLD_YMMqq_YMMqq_IMMb",
+     "source": "xml",
+     "iclass": "VPSLLD"
+    }
+   ],
+   "iforms": [
+    "VPSLLD_YMMqq_YMMqq_IMMb"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:126",
+    "quant_avx2.c:127"
+   ]
+  },
+  "_mm256_srli_epi16": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Shift"
+   ],
+   "instructions": [
+    {
+     "name": "VPSRLW",
+     "form": "ymm, ymm, imm8",
+     "xml_xed": "VPSRLW_YMMqq_YMMqq_IMMb",
+     "iform": "VPSRLW_YMMqq_YMMqq_IMMb",
+     "source": "xml",
+     "iclass": "VPSRLW"
+    }
+   ],
+   "iforms": [
+    "VPSRLW_YMMqq_YMMqq_IMMb"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:251",
+    "quant_avx2.c:284"
+   ]
+  },
+  "_mm256_store_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Store"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVAPS",
+     "form": "m256, ymm",
+     "xml_xed": "VMOVAPS_MEMqq_YMMqq",
+     "iform": "VMOVAPS_MEMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VMOVAPS"
+    }
+   ],
+   "iforms": [
+    "VMOVAPS_MEMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:151",
+    "quant_avx2.c:152"
+   ]
+  },
+  "_mm256_storeu_ps": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Store"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVUPS",
+     "form": "m256, ymm",
+     "xml_xed": "VMOVUPS_MEMqq_YMMqq",
+     "iform": "VMOVUPS_MEMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VMOVUPS"
+    }
+   ],
+   "iforms": [
+    "VMOVUPS_MEMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:266",
+    "quant_avx2.c:316"
+   ]
+  },
+  "_mm256_storeu_si256": {
+   "cpuid": [
+    "AVX"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Store"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVDQU",
+     "form": "m256, ymm",
+     "xml_xed": "VMOVDQU_MEMqq_YMMqq",
+     "iform": "VMOVDQU_MEMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VMOVDQU"
+    }
+   ],
+   "iforms": [
+    "VMOVDQU_MEMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:106"
+   ]
+  },
+  "_mm256_sub_epi32": {
+   "cpuid": [
+    "AVX2"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VPSUBD",
+     "form": "ymm, ymm, ymm",
+     "xml_xed": "VPSUBD_YMMqq_YMMqq_YMMqq",
+     "iform": "VPSUBD_YMMqq_YMMqq_YMMqq",
+     "source": "xml",
+     "iclass": "VPSUBD"
+    }
+   ],
+   "iforms": [
+    "VPSUBD_YMMqq_YMMqq_YMMqq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:262",
+    "quant_avx2.c:308"
+   ]
+  },
+  "_mm512_abs_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VPANDD",
+     "form": "zmm, zmm, m512",
+     "xml_xed": "VPANDD_ZMMu32_MASKmskw_ZMMu32_MEMu32_AVX512",
+     "iform": "VPANDD_ZMMu32_MASKmskw_ZMMu32_MEMu32_AVX512",
+     "source": "xml",
+     "iclass": "VPANDD"
+    }
+   ],
+   "iforms": [
+    "VPANDD_ZMMu32_MASKmskw_ZMMu32_MEMu32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:88"
+   ]
+  },
+  "_mm512_add_epi32": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VPADDD",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VPADDD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "iform": "VPADDD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "source": "xml",
+     "iclass": "VPADDD"
+    }
+   ],
+   "iforms": [
+    "VPADDD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:65",
+    "quant_avx512.c:66",
+    "quant_avx512.c:67",
+    "quant_avx512.c:73",
+    "quant_avx512.c:74",
+    "quant_avx512.c:100"
+   ]
+  },
+  "_mm512_add_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VADDPS",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+     "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+     "source": "xml",
+     "iclass": "VADDPS"
+    }
+   ],
+   "iforms": [
+    "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:144",
+    "quant_avx512.c:145",
+    "quant_avx512.c:146",
+    "quant_avx512.c:147",
+    "quant_avx512.c:168",
+    "quant_avx512.c:271"
+   ]
+  },
+  "_mm512_and_si512": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Logical"
+   ],
+   "instructions": [
+    {
+     "name": "VPANDD",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VPANDD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "iform": "VPANDD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "source": "xml",
+     "iclass": "VPANDD"
+    }
+   ],
+   "iforms": [
+    "VPANDD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:202",
+    "quant_avx512.c:203",
+    "quant_avx512.c:204",
+    "quant_avx512.c:205"
+   ]
+  },
+  "_mm512_broadcast_i32x4": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VBROADCASTI32X4",
+     "form": "zmm, m128",
+     "xml_xed": "VBROADCASTI32X4_ZMMu32_MASKmskw_MEMu32_AVX512",
+     "iform": "VBROADCASTI32X4_ZMMu32_MASKmskw_MEMu32_AVX512",
+     "source": "xml",
+     "iclass": "VBROADCASTI32X4"
+    }
+   ],
+   "iforms": [
+    "VBROADCASTI32X4_ZMMu32_MASKmskw_MEMu32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:230",
+    "quant_avx512.c:231",
+    "quant_avx512.c:232",
+    "quant_avx512.c:233"
+   ]
+  },
+  "_mm512_castps512_ps256": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Cast"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx512.c:36",
+    "quant_avx512.c:46"
+   ]
+  },
+  "_mm512_castps_pd": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Cast"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx512.c:37",
+    "quant_avx512.c:47"
+   ]
+  },
+  "_mm512_castsi256_si512": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Cast"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx512.c:196",
+    "quant_avx512.c:198",
+    "quant_avx512.c:208",
+    "quant_avx512.c:210",
+    "quant_avx512.c:212",
+    "quant_avx512.c:214"
+   ]
+  },
+  "_mm512_castsi512_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Cast"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx512.c:27",
+    "quant_avx512.c:115",
+    "quant_avx512.c:124"
+   ]
+  },
+  "_mm512_castsi512_si128": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Cast"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx512.c:75"
+   ]
+  },
+  "_mm512_castsi512_si256": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Cast"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx512.c:55"
+   ]
+  },
+  "_mm512_cmp_ps_mask": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Compare"
+   ],
+   "instructions": [
+    {
+     "name": "VCMPPS",
+     "form": "k, zmm, zmm, imm8",
+     "xml_xed": "VCMPPS_MASKmskw_MASKmskw_ZMMf32_ZMMf32_IMM8_AVX512",
+     "iform": "VCMPPS_MASKmskw_MASKmskw_ZMMf32_ZMMf32_IMM8_AVX512",
+     "source": "xml",
+     "iclass": "VCMPPS"
+    }
+   ],
+   "iforms": [
+    "VCMPPS_MASKmskw_MASKmskw_ZMMf32_ZMMf32_IMM8_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:27",
+    "quant_avx512.c:97"
+   ]
+  },
+  "_mm512_cvtepi32_epi8": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "VPMOVDB",
+     "form": "xmm, zmm",
+     "xml_xed": "VPMOVDB_XMMu8_MASKmskw_ZMMu32_AVX512",
+     "iform": "VPMOVDB_XMMu8_MASKmskw_ZMMu32_AVX512",
+     "source": "xml",
+     "iclass": "VPMOVDB"
+    }
+   ],
+   "iforms": [
+    "VPMOVDB_XMMu8_MASKmskw_ZMMu32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:101"
+   ]
+  },
+  "_mm512_cvtepi32_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "VCVTDQ2PS",
+     "form": "zmm, zmm",
+     "xml_xed": "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512",
+     "iform": "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512",
+     "source": "xml",
+     "iclass": "VCVTDQ2PS"
+    }
+   ],
+   "iforms": [
+    "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:271"
+   ]
+  },
+  "_mm512_cvtepu16_epi32": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "VPMOVZXWD",
+     "form": "zmm, ymm",
+     "xml_xed": "VPMOVZXWD_ZMMi32_MASKmskw_YMMi16_AVX512",
+     "iform": "VPMOVZXWD_ZMMi32_MASKmskw_YMMi16_AVX512",
+     "source": "xml",
+     "iclass": "VPMOVZXWD"
+    }
+   ],
+   "iforms": [
+    "VPMOVZXWD_ZMMi32_MASKmskw_YMMi16_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:115",
+    "quant_avx512.c:124"
+   ]
+  },
+  "_mm512_cvtph_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "VCVTPH2PS",
+     "form": "zmm, ymm",
+     "xml_xed": "VCVTPH2PS_ZMMf32_MASKmskw_YMMf16_AVX512",
+     "iform": "VCVTPH2PS_ZMMf32_MASKmskw_YMMf16_AVX512",
+     "source": "xml",
+     "iclass": "VCVTPH2PS"
+    }
+   ],
+   "iforms": [
+    "VCVTPH2PS_ZMMf32_MASKmskw_YMMf16_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:114",
+    "quant_avx512.c:123",
+    "quant_avx512.c:256"
+   ]
+  },
+  "_mm512_cvtps_epi32": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "VCVTPS2DQ",
+     "form": "zmm, zmm",
+     "xml_xed": "VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+     "iform": "VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+     "source": "xml",
+     "iclass": "VCVTPS2DQ"
+    }
+   ],
+   "iforms": [
+    "VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:99"
+   ]
+  },
+  "_mm512_dpbusd_epi32": {
+   "cpuid": [
+    "AVX512_VNNI"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VPDPBUSD",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VPDPBUSD_ZMMi32_MASKmskw_ZMMu8_ZMMu32_AVX512",
+     "iform": "VPDPBUSD_ZMMi32_MASKmskw_ZMMu8_ZMMu32_AVX512",
+     "source": "xml",
+     "iclass": "VPDPBUSD"
+    }
+   ],
+   "iforms": [
+    "VPDPBUSD_ZMMi32_MASKmskw_ZMMu8_ZMMu32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:237",
+    "quant_avx512.c:238",
+    "quant_avx512.c:239",
+    "quant_avx512.c:240"
+   ]
+  },
+  "_mm512_extractf64x4_pd": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VEXTRACTF64X4",
+     "form": "ymm, zmm, imm8",
+     "xml_xed": "VEXTRACTF64X4_YMMf64_MASKmskw_ZMMf64_IMM8_AVX512",
+     "iform": "VEXTRACTF64X4_YMMf64_MASKmskw_ZMMf64_IMM8_AVX512",
+     "source": "xml",
+     "iclass": "VEXTRACTF64X4"
+    }
+   ],
+   "iforms": [
+    "VEXTRACTF64X4_YMMf64_MASKmskw_ZMMf64_IMM8_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:37",
+    "quant_avx512.c:47"
+   ]
+  },
+  "_mm512_extracti64x4_epi64": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VEXTRACTI64X4",
+     "form": "ymm, zmm, imm8",
+     "xml_xed": "VEXTRACTI64X4_YMMu64_MASKmskw_ZMMu64_IMM8_AVX512",
+     "iform": "VEXTRACTI64X4_YMMu64_MASKmskw_ZMMu64_IMM8_AVX512",
+     "source": "xml",
+     "iclass": "VEXTRACTI64X4"
+    }
+   ],
+   "iforms": [
+    "VEXTRACTI64X4_YMMu64_MASKmskw_ZMMu64_IMM8_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:55"
+   ]
+  },
+  "_mm512_inserti64x4": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VINSERTI64X4",
+     "form": "zmm, zmm, ymm, imm8",
+     "xml_xed": "VINSERTI64X4_ZMMu64_MASKmskw_ZMMu64_YMMu64_IMM8_AVX512",
+     "iform": "VINSERTI64X4_ZMMu64_MASKmskw_ZMMu64_YMMu64_IMM8_AVX512",
+     "source": "xml",
+     "iclass": "VINSERTI64X4"
+    }
+   ],
+   "iforms": [
+    "VINSERTI64X4_ZMMu64_MASKmskw_ZMMu64_YMMu64_IMM8_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:196",
+    "quant_avx512.c:198",
+    "quant_avx512.c:208",
+    "quant_avx512.c:210",
+    "quant_avx512.c:212",
+    "quant_avx512.c:214"
+   ]
+  },
+  "_mm512_loadu_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Load"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVUPS",
+     "form": "zmm, m512",
+     "xml_xed": "VMOVUPS_ZMMf32_MASKmskw_MEMf32_AVX512",
+     "iform": "VMOVUPS_ZMMf32_MASKmskw_MEMf32_AVX512",
+     "source": "xml",
+     "iclass": "VMOVUPS"
+    }
+   ],
+   "iforms": [
+    "VMOVUPS_ZMMf32_MASKmskw_MEMf32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:87",
+    "quant_avx512.c:111",
+    "quant_avx512.c:143",
+    "quant_avx512.c:168"
+   ]
+  },
+  "_mm512_mask_add_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VADDPS",
+     "form": "zmm {k}, zmm, zmm",
+     "xml_xed": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+     "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+     "source": "xml",
+     "iclass": "VADDPS"
+    }
+   ],
+   "iforms": [
+    "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:151",
+    "quant_avx512.c:152",
+    "quant_avx512.c:153",
+    "quant_avx512.c:154",
+    "quant_avx512.c:170"
+   ]
+  },
+  "_mm512_mask_mov_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Move"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVAPS",
+     "form": "zmm {k}, zmm",
+     "xml_xed": "VMOVAPS_ZMMf32_MASKmskw_ZMMf32_AVX512",
+     "iform": "VMOVAPS_ZMMf32_MASKmskw_ZMMf32_AVX512",
+     "source": "xml",
+     "iclass": "VMOVAPS"
+    }
+   ],
+   "iforms": [
+    "VMOVAPS_ZMMf32_MASKmskw_ZMMf32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:27"
+   ]
+  },
+  "_mm512_maskz_loadu_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Load"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVUPS",
+     "form": "zmm {z}, m512",
+     "xml_xed": "VMOVUPS_ZMMf32_MASKmskw_MEMf32_AVX512",
+     "iform": "VMOVUPS_ZMMf32_MASKmskw_MEMf32_AVX512",
+     "source": "xml",
+     "iclass": "VMOVUPS"
+    }
+   ],
+   "iforms": [
+    "VMOVUPS_ZMMf32_MASKmskw_MEMf32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:120",
+    "quant_avx512.c:150",
+    "quant_avx512.c:171"
+   ]
+  },
+  "_mm512_maskz_mov_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Move"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVAPS",
+     "form": "zmm {z}, zmm",
+     "xml_xed": "VMOVAPS_ZMMf32_MASKmskw_ZMMf32_AVX512",
+     "iform": "VMOVAPS_ZMMf32_MASKmskw_ZMMf32_AVX512",
+     "source": "xml",
+     "iclass": "VMOVAPS"
+    }
+   ],
+   "iforms": [
+    "VMOVAPS_ZMMf32_MASKmskw_ZMMf32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:97"
+   ]
+  },
+  "_mm512_max_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Special Math Functions"
+   ],
+   "instructions": [
+    {
+     "name": "VMAXPS",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VMAXPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+     "iform": "VMAXPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+     "source": "xml",
+     "iclass": "VMAXPS"
+    }
+   ],
+   "iforms": [
+    "VMAXPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:88",
+    "quant_avx512.c:98"
+   ]
+  },
+  "_mm512_min_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Special Math Functions"
+   ],
+   "instructions": [
+    {
+     "name": "VMINPS",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VMINPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+     "iform": "VMINPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+     "source": "xml",
+     "iclass": "VMINPS"
+    }
+   ],
+   "iforms": [
+    "VMINPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:98"
+   ]
+  },
+  "_mm512_mul_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VMULPS",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+     "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+     "source": "xml",
+     "iclass": "VMULPS"
+    }
+   ],
+   "iforms": [
+    "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:95",
+    "quant_avx512.c:144",
+    "quant_avx512.c:145",
+    "quant_avx512.c:146",
+    "quant_avx512.c:147",
+    "quant_avx512.c:151",
+    "quant_avx512.c:152",
+    "quant_avx512.c:153",
+    "quant_avx512.c:154",
+    "quant_avx512.c:168",
+    "quant_avx512.c:170",
+    "quant_avx512.c:271",
+    "quant_avx512.c:271"
+   ]
+  },
+  "_mm512_permutexvar_epi32": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VPERMD",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VPERMD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "iform": "VPERMD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "source": "xml",
+     "iclass": "VPERMD"
+    }
+   ],
+   "iforms": [
+    "VPERMD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:75"
+   ]
+  },
+  "_mm512_set1_epi32": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Set"
+   ],
+   "instructions": [
+    {
+     "name": "VPBROADCASTD",
+     "form": "zmm, r32",
+     "xml_xed": "VPBROADCASTD_ZMMu32_MASKmskw_GPR32u32_AVX512",
+     "iform": "VPBROADCASTD_ZMMu32_MASKmskw_GPR32u32_AVX512",
+     "source": "xml",
+     "iclass": "VPBROADCASTD"
+    }
+   ],
+   "iforms": [
+    "VPBROADCASTD_ZMMu32_MASKmskw_GPR32u32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:27",
+    "quant_avx512.c:270"
+   ]
+  },
+  "_mm512_set1_epi8": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Set"
+   ],
+   "instructions": [
+    {
+     "name": "VPBROADCASTB",
+     "form": "zmm, r8",
+     "xml_xed": "VPBROADCASTB_ZMMu8_MASKmskw_GPR32u8_AVX512",
+     "iform": "VPBROADCASTB_ZMMu8_MASKmskw_GPR32u8_AVX512",
+     "source": "xml",
+     "iclass": "VPBROADCASTB"
+    }
+   ],
+   "iforms": [
+    "VPBROADCASTB_ZMMu8_MASKmskw_GPR32u8_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:195",
+    "quant_avx512.c:207"
+   ]
+  },
+  "_mm512_set1_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Set"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx512.c:81",
+    "quant_avx512.c:81",
+    "quant_avx512.c:93",
+    "quant_avx512.c:271"
+   ]
+  },
+  "_mm512_setr_epi32": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Set"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx512.c:72"
+   ]
+  },
+  "_mm512_setzero_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Set"
+   ],
+   "instructions": [
+    {
+     "name": "VPXORQ",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VPXORQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512",
+     "iform": "VPXORQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512",
+     "source": "xml",
+     "iclass": "VPXORQ"
+    }
+   ],
+   "iforms": [
+    "VPXORQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:83",
+    "quant_avx512.c:141",
+    "quant_avx512.c:166",
+    "quant_avx512.c:281",
+    "quant_avx512.c:294"
+   ]
+  },
+  "_mm512_setzero_si512": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Set"
+   ],
+   "instructions": [
+    {
+     "name": "VPXORQ",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VPXORQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512",
+     "iform": "VPXORQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512",
+     "source": "xml",
+     "iclass": "VPXORQ"
+    }
+   ],
+   "iforms": [
+    "VPXORQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:84",
+    "quant_avx512.c:237"
+   ]
+  },
+  "_mm512_shuffle_epi32": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VPSHUFD",
+     "form": "zmm, zmm, imm8",
+     "xml_xed": "VPSHUFD_ZMMu32_MASKmskw_ZMMu32_IMM8_AVX512",
+     "iform": "VPSHUFD_ZMMu32_MASKmskw_ZMMu32_IMM8_AVX512",
+     "source": "xml",
+     "iclass": "VPSHUFD"
+    }
+   ],
+   "iforms": [
+    "VPSHUFD_ZMMu32_MASKmskw_ZMMu32_IMM8_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:73",
+    "quant_avx512.c:74"
+   ]
+  },
+  "_mm512_shuffle_i64x2": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VSHUFI64X2",
+     "form": "zmm, zmm, zmm, imm8",
+     "xml_xed": "VSHUFI64X2_ZMMu64_MASKmskw_ZMMu64_ZMMu64_IMM8_AVX512",
+     "iform": "VSHUFI64X2_ZMMu64_MASKmskw_ZMMu64_ZMMu64_IMM8_AVX512",
+     "source": "xml",
+     "iclass": "VSHUFI64X2"
+    }
+   ],
+   "iforms": [
+    "VSHUFI64X2_ZMMu64_MASKmskw_ZMMu64_ZMMu64_IMM8_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:200",
+    "quant_avx512.c:201",
+    "quant_avx512.c:216",
+    "quant_avx512.c:217",
+    "quant_avx512.c:218",
+    "quant_avx512.c:219"
+   ]
+  },
+  "_mm512_slli_epi32": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Shift"
+   ],
+   "instructions": [
+    {
+     "name": "VPSLLD",
+     "form": "zmm, zmm, imm8",
+     "xml_xed": "VPSLLD_ZMMu32_MASKmskw_ZMMu32_IMM8_AVX512",
+     "iform": "VPSLLD_ZMMu32_MASKmskw_ZMMu32_IMM8_AVX512",
+     "source": "xml",
+     "iclass": "VPSLLD"
+    }
+   ],
+   "iforms": [
+    "VPSLLD_ZMMu32_MASKmskw_ZMMu32_IMM8_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:115",
+    "quant_avx512.c:124"
+   ]
+  },
+  "_mm512_srli_epi16": {
+   "cpuid": [
+    "AVX512BW"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Shift"
+   ],
+   "instructions": [
+    {
+     "name": "VPSRLW",
+     "form": "zmm, zmm, imm8",
+     "xml_xed": "VPSRLW_ZMMu16_MASKmskw_ZMMu16_IMM8_AVX512",
+     "iform": "VPSRLW_ZMMu16_MASKmskw_ZMMu16_IMM8_AVX512",
+     "source": "xml",
+     "iclass": "VPSRLW"
+    }
+   ],
+   "iforms": [
+    "VPSRLW_ZMMu16_MASKmskw_ZMMu16_IMM8_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:204",
+    "quant_avx512.c:205"
+   ]
+  },
+  "_mm512_storeu_ps": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Store"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVUPS",
+     "form": "m512, zmm",
+     "xml_xed": "VMOVUPS_MEMf32_MASKmskw_ZMMf32_AVX512",
+     "iform": "VMOVUPS_MEMf32_MASKmskw_ZMMf32_AVX512",
+     "source": "xml",
+     "iclass": "VMOVUPS"
+    }
+   ],
+   "iforms": [
+    "VMOVUPS_MEMf32_MASKmskw_ZMMf32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:288",
+    "quant_avx512.c:304"
+   ]
+  },
+  "_mm512_sub_epi32": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "VPSUBD",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VPSUBD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "iform": "VPSUBD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "source": "xml",
+     "iclass": "VPSUBD"
+    }
+   ],
+   "iforms": [
+    "VPSUBD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:270"
+   ]
+  },
+  "_mm512_unpackhi_epi32": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VPUNPCKHDQ",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VPUNPCKHDQ_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "iform": "VPUNPCKHDQ_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "source": "xml",
+     "iclass": "VPUNPCKHDQ"
+    }
+   ],
+   "iforms": [
+    "VPUNPCKHDQ_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:65",
+    "quant_avx512.c:66"
+   ]
+  },
+  "_mm512_unpackhi_epi64": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VPUNPCKHQDQ",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VPUNPCKHQDQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512",
+     "iform": "VPUNPCKHQDQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512",
+     "source": "xml",
+     "iclass": "VPUNPCKHQDQ"
+    }
+   ],
+   "iforms": [
+    "VPUNPCKHQDQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:67"
+   ]
+  },
+  "_mm512_unpacklo_epi32": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VPUNPCKLDQ",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VPUNPCKLDQ_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "iform": "VPUNPCKLDQ_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "source": "xml",
+     "iclass": "VPUNPCKLDQ"
+    }
+   ],
+   "iforms": [
+    "VPUNPCKLDQ_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:65",
+    "quant_avx512.c:66"
+   ]
+  },
+  "_mm512_unpacklo_epi64": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "VPUNPCKLQDQ",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VPUNPCKLQDQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512",
+     "iform": "VPUNPCKLQDQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512",
+     "source": "xml",
+     "iclass": "VPUNPCKLQDQ"
+    }
+   ],
+   "iforms": [
+    "VPUNPCKLQDQ_ZMMu64_MASKmskw_ZMMu64_ZMMu64_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:67"
+   ]
+  },
+  "_mm512_xor_si512": {
+   "cpuid": [
+    "AVX512F"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Logical"
+   ],
+   "instructions": [
+    {
+     "name": "VPXORD",
+     "form": "zmm, zmm, zmm",
+     "xml_xed": "VPXORD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "iform": "VPXORD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512",
+     "source": "xml",
+     "iclass": "VPXORD"
+    }
+   ],
+   "iforms": [
+    "VPXORD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:216",
+    "quant_avx512.c:217",
+    "quant_avx512.c:218",
+    "quant_avx512.c:219"
+   ]
+  },
+  "_mm_add_epi32": {
+   "cpuid": [
+    "SSE2"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "PADDD",
+     "form": "xmm, xmm",
+     "xml_xed": "PADDD_XMMdq_XMMdq",
+     "iform": "PADDD_XMMdq_XMMdq",
+     "source": "xml",
+     "iclass": "PADDD"
+    }
+   ],
+   "iforms": [
+    "PADDD_XMMdq_XMMdq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:51",
+    "quant_avx2.c:52",
+    "quant_avx2.c:53",
+    "quant_avx512.c:56",
+    "quant_avx512.c:57",
+    "quant_avx512.c:58"
+   ]
+  },
+  "_mm_add_ps": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "ADDPS",
+     "form": "xmm, xmm",
+     "xml_xed": "ADDPS_XMMps_XMMps",
+     "iform": "ADDPS_XMMps_XMMps",
+     "source": "xml",
+     "iclass": "ADDPS"
+    }
+   ],
+   "iforms": [
+    "ADDPS_XMMps_XMMps"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:37",
+    "quant_avx2.c:38",
+    "quant_avx512.c:39",
+    "quant_avx512.c:40",
+    "quant_avx512.c:334"
+   ]
+  },
+  "_mm_add_ss": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "ADDSS",
+     "form": "xmm, xmm",
+     "xml_xed": "ADDSS_XMMss_XMMss",
+     "iform": "ADDSS_XMMss_XMMss",
+     "source": "xml",
+     "iclass": "ADDSS"
+    }
+   ],
+   "iforms": [
+    "ADDSS_XMMss_XMMss"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:39",
+    "quant_avx2.c:154",
+    "quant_avx512.c:41"
+   ]
+  },
+  "_mm_blendv_ps": {
+   "cpuid": [
+    "SSE4.1"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "BLENDVPS",
+     "form": "xmm, xmm",
+     "xml_xed": "BLENDVPS_XMMdq_XMMdq",
+     "iform": "BLENDVPS_XMMdq_XMMdq",
+     "source": "xml",
+     "iclass": "BLENDVPS"
+    }
+   ],
+   "iforms": [
+    "BLENDVPS_XMMdq_XMMdq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:32"
+   ]
+  },
+  "_mm_castsi128_ps": {
+   "cpuid": [
+    "SSE2"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Cast"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx2.c:32",
+    "quant_avx512.c:31"
+   ]
+  },
+  "_mm_cmp_ps_mask": {
+   "cpuid": [
+    "AVX512F",
+    "AVX512VL"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Compare"
+   ],
+   "instructions": [
+    {
+     "name": "VCMPPS",
+     "form": "k, xmm, xmm, imm8",
+     "xml_xed": "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512",
+     "iform": "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512",
+     "source": "xml",
+     "iclass": "VCMPPS"
+    }
+   ],
+   "iforms": [
+    "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:31"
+   ]
+  },
+  "_mm_cmpunord_ps": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Compare"
+   ],
+   "instructions": [
+    {
+     "name": "CMPPS",
+     "form": "xmm, xmm, imm8",
+     "xml_xed": "CMPPS_XMMps_XMMps_IMMb",
+     "iform": "CMPPS_XMMps_XMMps_IMMb",
+     "source": "xml",
+     "iclass": "CMPPS"
+    }
+   ],
+   "iforms": [
+    "CMPPS_XMMps_XMMps_IMMb"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:32"
+   ]
+  },
+  "_mm_cvtepi32_ps": {
+   "cpuid": [
+    "SSE2"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "CVTDQ2PS",
+     "form": "xmm, xmm",
+     "xml_xed": "CVTDQ2PS_XMMps_XMMdq",
+     "iform": "CVTDQ2PS_XMMps_XMMdq",
+     "source": "xml",
+     "iclass": "CVTDQ2PS"
+    }
+   ],
+   "iforms": [
+    "CVTDQ2PS_XMMps_XMMdq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:334"
+   ]
+  },
+  "_mm_cvtph_ps": {
+   "cpuid": [
+    "F16C"
+   ],
+   "tech": "AVX_ALL",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "VCVTPH2PS",
+     "form": "xmm, xmm",
+     "xml_xed": "VCVTPH2PS_XMMdq_XMMq",
+     "iform": "VCVTPH2PS_XMMdq_XMMq",
+     "source": "xml",
+     "iclass": "VCVTPH2PS"
+    }
+   ],
+   "iforms": [
+    "VCVTPH2PS_XMMdq_XMMq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:136",
+    "quant_avx512.c:325"
+   ]
+  },
+  "_mm_cvtsi128_si32": {
+   "cpuid": [
+    "SSE2"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "MOVD",
+     "form": "r32, xmm",
+     "xml_xed": "MOVD_GPR32_XMMd",
+     "iform": "MOVD_GPR32_XMMd",
+     "source": "xml",
+     "iclass": "MOVD"
+    }
+   ],
+   "iforms": [
+    "MOVD_GPR32_XMMd"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:54",
+    "quant_avx512.c:59"
+   ]
+  },
+  "_mm_cvtsi32_si128": {
+   "cpuid": [
+    "SSE2"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "MOVD",
+     "form": "xmm, r32",
+     "xml_xed": "MOVD_XMMdq_GPR32",
+     "iform": "MOVD_XMMdq_GPR32",
+     "source": "xml",
+     "iclass": "MOVD"
+    }
+   ],
+   "iforms": [
+    "MOVD_XMMdq_GPR32"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:136"
+   ]
+  },
+  "_mm_cvtsi64_si128": {
+   "cpuid": [
+    "SSE2"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "MOVQ",
+     "form": "xmm, r64",
+     "xml_xed": "MOVQ_XMMdq_GPR64",
+     "iform": "MOVQ_XMMdq_GPR64",
+     "source": "xml",
+     "iclass": "MOVQ"
+    }
+   ],
+   "iforms": [
+    "MOVQ_XMMdq_GPR64"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:325"
+   ]
+  },
+  "_mm_cvtss_f32": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Convert"
+   ],
+   "instructions": [
+    {
+     "name": "MOVSS",
+     "form": "m32, xmm",
+     "xml_xed": "MOVSS_MEMss_XMMss",
+     "iform": "MOVSS_MEMss_XMMss",
+     "source": "xml",
+     "iclass": "MOVSS"
+    }
+   ],
+   "iforms": [
+    "MOVSS_MEMss_XMMss"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:40",
+    "quant_avx2.c:47",
+    "quant_avx512.c:42",
+    "quant_avx512.c:51"
+   ]
+  },
+  "_mm_load_ss": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Load"
+   ],
+   "instructions": [
+    {
+     "name": "MOVSS",
+     "form": "xmm, m32",
+     "xml_xed": "MOVSS_XMMdq_MEMss",
+     "iform": "MOVSS_XMMdq_MEMss",
+     "source": "xml",
+     "iclass": "MOVSS"
+    }
+   ],
+   "iforms": [
+    "MOVSS_XMMdq_MEMss"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:133",
+    "quant_avx2.c:154",
+    "quant_avx2.c:154"
+   ]
+  },
+  "_mm_loadu_si128": {
+   "cpuid": [
+    "SSE2"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Load"
+   ],
+   "instructions": [
+    {
+     "name": "MOVDQU",
+     "form": "xmm, m128",
+     "xml_xed": "MOVDQU_XMMdq_MEMdq",
+     "iform": "MOVDQU_XMMdq_MEMdq",
+     "source": "xml",
+     "iclass": "MOVDQU"
+    }
+   ],
+   "iforms": [
+    "MOVDQU_XMMdq_MEMdq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:120",
+    "quant_avx2.c:121",
+    "quant_avx512.c:230",
+    "quant_avx512.c:231",
+    "quant_avx512.c:232",
+    "quant_avx512.c:233"
+   ]
+  },
+  "_mm_mask_mov_ps": {
+   "cpuid": [
+    "AVX512F",
+    "AVX512VL"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Move"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVAPS",
+     "form": "xmm {k}, xmm",
+     "xml_xed": "VMOVAPS_XMMf32_MASKmskw_XMMf32_AVX512",
+     "iform": "VMOVAPS_XMMf32_MASKmskw_XMMf32_AVX512",
+     "source": "xml",
+     "iclass": "VMOVAPS"
+    }
+   ],
+   "iforms": [
+    "VMOVAPS_XMMf32_MASKmskw_XMMf32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:31"
+   ]
+  },
+  "_mm_mask_storeu_ps": {
+   "cpuid": [
+    "AVX512F",
+    "AVX512VL"
+   ],
+   "tech": "AVX-512",
+   "category": [
+    "Store"
+   ],
+   "instructions": [
+    {
+     "name": "VMOVUPS",
+     "form": "m128 {k}, xmm",
+     "xml_xed": "VMOVUPS_MEMf32_MASKmskw_XMMf32_AVX512",
+     "iform": "VMOVUPS_MEMf32_MASKmskw_XMMf32_AVX512",
+     "source": "xml",
+     "iclass": "VMOVUPS"
+    }
+   ],
+   "iforms": [
+    "VMOVUPS_MEMf32_MASKmskw_XMMf32_AVX512"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:338"
+   ]
+  },
+  "_mm_max_ps": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Special Math Functions"
+   ],
+   "instructions": [
+    {
+     "name": "MAXPS",
+     "form": "xmm, xmm",
+     "xml_xed": "MAXPS_XMMps_XMMps",
+     "iform": "MAXPS_XMMps_XMMps",
+     "source": "xml",
+     "iclass": "MAXPS"
+    }
+   ],
+   "iforms": [
+    "MAXPS_XMMps_XMMps"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:44",
+    "quant_avx2.c:45",
+    "quant_avx512.c:48",
+    "quant_avx512.c:49"
+   ]
+  },
+  "_mm_max_ss": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Special Math Functions"
+   ],
+   "instructions": [
+    {
+     "name": "MAXSS",
+     "form": "xmm, xmm",
+     "xml_xed": "MAXSS_XMMss_XMMss",
+     "iform": "MAXSS_XMMss_XMMss",
+     "source": "xml",
+     "iclass": "MAXSS"
+    }
+   ],
+   "iforms": [
+    "MAXSS_XMMss_XMMss"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:46",
+    "quant_avx512.c:50"
+   ]
+  },
+  "_mm_movehl_ps": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Move"
+   ],
+   "instructions": [
+    {
+     "name": "MOVHLPS",
+     "form": "xmm, xmm",
+     "xml_xed": "MOVHLPS_XMMq_XMMq",
+     "iform": "MOVHLPS_XMMq_XMMq",
+     "source": "xml",
+     "iclass": "MOVHLPS"
+    }
+   ],
+   "iforms": [
+    "MOVHLPS_XMMq_XMMq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:38",
+    "quant_avx2.c:45",
+    "quant_avx512.c:40",
+    "quant_avx512.c:49"
+   ]
+  },
+  "_mm_mul_ps": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "MULPS",
+     "form": "xmm, xmm",
+     "xml_xed": "MULPS_XMMps_XMMps",
+     "iform": "MULPS_XMMps_XMMps",
+     "source": "xml",
+     "iclass": "MULPS"
+    }
+   ],
+   "iforms": [
+    "MULPS_XMMps_XMMps"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:334",
+    "quant_avx512.c:334"
+   ]
+  },
+  "_mm_mul_ss": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "MULSS",
+     "form": "xmm, xmm",
+     "xml_xed": "MULSS_XMMss_XMMss",
+     "iform": "MULSS_XMMss_XMMss",
+     "source": "xml",
+     "iclass": "MULSS"
+    }
+   ],
+   "iforms": [
+    "MULSS_XMMss_XMMss"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:154"
+   ]
+  },
+  "_mm_set1_epi32": {
+   "cpuid": [
+    "SSE2"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Set"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx2.c:32",
+    "quant_avx512.c:31",
+    "quant_avx512.c:333"
+   ]
+  },
+  "_mm_set1_ps": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Set"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx512.c:334"
+   ]
+  },
+  "_mm_set_epi64x": {
+   "cpuid": [
+    "SSE2"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Set"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx2.c:245",
+    "quant_avx2.c:278",
+    "quant_avx512.c:254",
+    "quant_avx512.c:255"
+   ]
+  },
+  "_mm_set_ss": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Set"
+   ],
+   "instructions": [],
+   "iforms": [],
+   "no_single_instruction": true,
+   "source_sites": [
+    "quant_avx2.c:141"
+   ]
+  },
+  "_mm_setzero_ps": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Set"
+   ],
+   "instructions": [
+    {
+     "name": "XORPS",
+     "form": "xmm, xmm",
+     "xml_xed": "XORPS_XMMxud_XMMxud",
+     "iform": "XORPS_XMMxud_XMMxud",
+     "source": "xml",
+     "iclass": "XORPS"
+    }
+   ],
+   "iforms": [
+    "XORPS_XMMxud_XMMxud"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:319"
+   ]
+  },
+  "_mm_shuffle_epi32": {
+   "cpuid": [
+    "SSE2"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "PSHUFD",
+     "form": "xmm, xmm, imm8",
+     "xml_xed": "PSHUFD_XMMdq_XMMdq_IMMb",
+     "iform": "PSHUFD_XMMdq_XMMdq_IMMb",
+     "source": "xml",
+     "iclass": "PSHUFD"
+    }
+   ],
+   "iforms": [
+    "PSHUFD_XMMdq_XMMdq_IMMb"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:52",
+    "quant_avx2.c:53",
+    "quant_avx512.c:57",
+    "quant_avx512.c:58"
+   ]
+  },
+  "_mm_shuffle_ps": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Swizzle"
+   ],
+   "instructions": [
+    {
+     "name": "SHUFPS",
+     "form": "xmm, xmm, imm8",
+     "xml_xed": "SHUFPS_XMMps_XMMps_IMMb",
+     "iform": "SHUFPS_XMMps_XMMps_IMMb",
+     "source": "xml",
+     "iclass": "SHUFPS"
+    }
+   ],
+   "iforms": [
+    "SHUFPS_XMMps_XMMps_IMMb"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:39",
+    "quant_avx2.c:46",
+    "quant_avx512.c:41",
+    "quant_avx512.c:50"
+   ]
+  },
+  "_mm_store_ss": {
+   "cpuid": [
+    "SSE"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Store"
+   ],
+   "instructions": [
+    {
+     "name": "MOVSS",
+     "form": "m32, xmm",
+     "xml_xed": "MOVSS_MEMss_XMMss",
+     "iform": "MOVSS_MEMss_XMMss",
+     "source": "xml",
+     "iclass": "MOVSS"
+    }
+   ],
+   "iforms": [
+    "MOVSS_MEMss_XMMss"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx2.c:154"
+   ]
+  },
+  "_mm_storeu_si128": {
+   "cpuid": [
+    "SSE2"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Store"
+   ],
+   "instructions": [
+    {
+     "name": "MOVDQU",
+     "form": "m128, xmm",
+     "xml_xed": "MOVDQU_MEMdq_XMMdq",
+     "iform": "MOVDQU_MEMdq_XMMdq",
+     "source": "xml",
+     "iclass": "MOVDQU"
+    }
+   ],
+   "iforms": [
+    "MOVDQU_MEMdq_XMMdq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:101"
+   ]
+  },
+  "_mm_sub_epi32": {
+   "cpuid": [
+    "SSE2"
+   ],
+   "tech": "SSE_ALL",
+   "category": [
+    "Arithmetic"
+   ],
+   "instructions": [
+    {
+     "name": "PSUBD",
+     "form": "xmm, xmm",
+     "xml_xed": "PSUBD_XMMdq_XMMdq",
+     "iform": "PSUBD_XMMdq_XMMdq",
+     "source": "xml",
+     "iclass": "PSUBD"
+    }
+   ],
+   "iforms": [
+    "PSUBD_XMMdq_XMMdq"
+   ],
+   "no_single_instruction": false,
+   "source_sites": [
+    "quant_avx512.c:333"
+   ]
+  }
+ },
+ "source_checks": {
+  "sequence_intrinsics_in_census_files": {
+   "_mm256_hadd_epi32": [
+    "quant_avx2.c:72",
+    "quant_avx2.c:72",
+    "quant_avx2.c:73",
+    "quant_avx2.c:73",
+    "quant_avx2.c:74",
+    "quant_avx2.c:74"
+   ]
+  },
+  "fma_rcp_rsqrt_reduce_present": []
+ },
+ "problems": []
+}

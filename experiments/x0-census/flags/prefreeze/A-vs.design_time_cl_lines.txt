@@ -1,0 +1,11 @@
+# A (Visual Studio 17 2022 generator), design-time ClCompile command lines: msbuild hearth_core.vcxproj
+# -t:GetClCommandLines -p:Configuration=Release -p:Platform=x64 -p:DesignTimeBuild=true (CLCommandLine task; no compiler run).
+# These are IntelliSense command lines: they omit optimisation switches (/O2 etc.), so they are NOT the build lines.
+# Record section 2: A's exact lines come from the census build's MSBuild binary log. Extracted from the diagnostic log by x0prep.
+cmd:   /c /ID:\mithril\src\hearth\engine\include /ID:\mithril\src\hearth\engine\src /W3 /WX- /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D HEARTH_BUILD_DLL /D _CRT_SECURE_NO_WARNINGS /D "CMAKE_INTDIR=\"Release\"" /MD /fp:precise /std:c11 /Fo"hearth_core.dir\Release\\" /external:W3 /TC /errorReport:queue  /experimental:c11atomics /utf-8
+files: D:\mithril\src\hearth\engine\src\pool.c;D:\mithril\src\hearth\engine\src\quant.c;D:\mithril\src\hearth\engine\src\modelfile.c;D:\mithril\src\hearth\engine\src\store.c;D:\mithril\src\hearth\engine\src\model.c;D:\mithril\src\hearth\engine\src\api.c;D:\mithril\src\hearth\engine\src\platform_win.c
+cmd:   /c /ID:\mithril\src\hearth\engine\include /ID:\mithril\src\hearth\engine\src /W3 /WX- /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D HEARTH_BUILD_DLL /D _CRT_SECURE_NO_WARNINGS /D "CMAKE_INTDIR=\"Release\"" /MD /arch:AVX2 /fp:precise /std:c11 /Fo"hearth_core.dir\Release\\" /external:W3 /TC /errorReport:queue  /experimental:c11atomics /utf-8
+files: D:\mithril\src\hearth\engine\src\quant_avx2.c
+cmd:   /c /ID:\mithril\src\hearth\engine\include /ID:\mithril\src\hearth\engine\src /W3 /WX- /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D HEARTH_BUILD_DLL /D _CRT_SECURE_NO_WARNINGS /D "CMAKE_INTDIR=\"Release\"" /MD /arch:AVX512 /fp:precise /std:c11 /Fo"hearth_core.dir\Release\\" /external:W3 /TC /errorReport:queue  /experimental:c11atomics /utf-8
+files: D:\mithril\src\hearth\engine\src\quant_avx512.c
+cmd:   /c /ID:\mithril\src\hearth\engine\include /ID:\mithril\src\hearth\engine\src /W3 /WX- /Ob2 /D _MBCS /D WIN32 /D _WINDOWS /D NDEBUG /D HEARTH_BUILD_DLL /D _CRT_SECURE_NO_WARNINGS /D "CMAKE_INTDIR=\"Release\"" /MD /fp:precise /Fo"hearth_core.dir\Release\\" /external:W3 /TP /errorReport:queue  /experimental:c11atomics /utf-8
