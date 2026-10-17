@@ -1,0 +1,27 @@
+START Sat 10/17/2026 10:12:45.61 RUN=D:\mithril\x0census\run1 CFG=B-cmake MODE=census MORE=
+[2026-10-17T14:13:03+00:00] configure:cfg1 rc=0
+[2026-10-17T14:13:04+00:00] compile1_quant.c rc=0
+[2026-10-17T14:13:04+00:00] compile1_quant_avx2.c rc=0
+[2026-10-17T14:13:04+00:00] compile1_quant_avx512.c rc=0
+[2026-10-17T14:13:06+00:00] configure:cfg2 rc=0
+[2026-10-17T14:13:06+00:00] compile2_quant.c rc=0
+[2026-10-17T14:13:06+00:00] compile2_quant_avx2.c rc=0
+[2026-10-17T14:13:07+00:00] compile2_quant_avx512.c rc=0
+[2026-10-17T14:13:07+00:00] twin_quant.c rc=0
+[2026-10-17T14:13:08+00:00] twin_quant_avx2.c rc=0
+[2026-10-17T14:13:08+00:00] cc1:quant.c rc=0
+[2026-10-17T14:13:08+00:00] cc1:quant_avx2.c rc=0
+[2026-10-17T14:13:08+00:00] cc1:quant_avx512.c rc=0
+[2026-10-17T14:13:10+00:00] extract_b1_all rc=0
+[2026-10-17T14:13:19+00:00] decode_b1_all rc=0
+[2026-10-17T14:13:19+00:00] attr_b1_all_quant.c rc=0
+[2026-10-17T14:13:19+00:00] attr_b1_all_quant_avx2.c rc=0
+[2026-10-17T14:13:21+00:00] loops_b1_all rc=0
+[2026-10-17T14:13:21+00:00] extract_b2_all rc=0
+[2026-10-17T14:13:29+00:00] decode_b2_all rc=0
+[2026-10-17T14:13:30+00:00] attr_b2_all_quant.c rc=0
+[2026-10-17T14:13:30+00:00] attr_b2_all_quant_avx2.c rc=0
+[2026-10-17T14:13:31+00:00] loops_b2_all rc=0
+{"config": "B-cmake", "steps": 25, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026 10:13:31.98

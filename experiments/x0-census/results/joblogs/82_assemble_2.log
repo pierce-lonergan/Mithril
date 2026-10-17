@@ -1,0 +1,25 @@
+{
+ "configs": [
+  "A",
+  "A-ninja",
+  "B-cmake",
+  "B-proxy",
+  "C",
+  "D",
+  "P.A",
+  "P.A-ninja",
+  "P.B-cmake",
+  "P.C",
+  "P.D"
+ ],
+ "variants": 264,
+ "builds": 46,
+ "disagreements": 0,
+ "p4_u_all": 446,
+ "p5_iclass": 32,
+ "schema_violations": []
+}
+{"outcomes": ["tooling_failure"], "validity": {"v1": true, "v2": true, "v3": false, "v4": true}, "eval_date": "2026-10-17", "conservative_resolution": false}
+x0_census.py rc=0
+judge.py rc=0
+ASSEMBLE_RC=0

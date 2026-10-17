@@ -1,0 +1,16 @@
+START 2026-10-17T10:18:43-04:00 RUN=/mnt/d/mithril/x0census/run1 CFG=P.D MODE=probe MORE=--from-config D
+[2026-10-17T14:18:47+00:00] compile1_reduce_probe.c rc=0
+[2026-10-17T14:18:50+00:00] compile2_reduce_probe.c rc=0
+[2026-10-17T14:18:53+00:00] twin_reduce_probe.c rc=0
+[2026-10-17T14:18:53+00:00] cc1:reduce_probe.c rc=0
+[2026-10-17T14:18:56+00:00] extract_b1_reduce_probe.c rc=0
+[2026-10-17T14:18:56+00:00] decode_b1_reduce_probe.c rc=0
+[2026-10-17T14:18:56+00:00] attr_b1_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T14:18:56+00:00] loops_b1_reduce_probe.c rc=0
+[2026-10-17T14:18:57+00:00] extract_b2_reduce_probe.c rc=0
+[2026-10-17T14:18:57+00:00] decode_b2_reduce_probe.c rc=0
+[2026-10-17T14:18:57+00:00] attr_b2_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T14:18:57+00:00] loops_b2_reduce_probe.c rc=0
+{"config": "P.D", "steps": 14, "failed_steps": []}
+CONFIG_RC=0
+END 2026-10-17T10:18:57-04:00

@@ -1,0 +1,30 @@
+START 2026-10-17T10:14:40-04:00 RUN=/mnt/d/mithril/x0census/run1 CFG=C MODE=census MORE=
+[2026-10-17T14:14:49+00:00] configure:cfg1 rc=0
+[2026-10-17T14:14:50+00:00] compile1_quant.c rc=0
+[2026-10-17T14:14:51+00:00] compile1_quant_avx2.c rc=0
+[2026-10-17T14:14:53+00:00] compile1_quant_avx512.c rc=0
+[2026-10-17T14:15:00+00:00] configure:cfg2 rc=0
+[2026-10-17T14:15:01+00:00] compile2_quant.c rc=0
+[2026-10-17T14:15:02+00:00] compile2_quant_avx2.c rc=0
+[2026-10-17T14:15:04+00:00] compile2_quant_avx512.c rc=0
+[2026-10-17T14:15:05+00:00] twin_quant.c rc=0
+[2026-10-17T14:15:06+00:00] twin_quant_avx2.c rc=0
+[2026-10-17T14:15:07+00:00] twin_quant_avx512.c rc=0
+[2026-10-17T14:15:07+00:00] gccq:quant.c rc=0
+[2026-10-17T14:15:07+00:00] gccq:quant_avx2.c rc=0
+[2026-10-17T14:15:07+00:00] gccq:quant_avx512.c rc=0
+[2026-10-17T14:15:08+00:00] extract_b1_all rc=0
+[2026-10-17T14:15:44+00:00] decode_b1_all rc=0
+[2026-10-17T14:15:45+00:00] attr_b1_all_quant.c rc=0
+[2026-10-17T14:15:46+00:00] attr_b1_all_quant_avx2.c rc=0
+[2026-10-17T14:15:47+00:00] attr_b1_all_quant_avx512.c rc=0
+[2026-10-17T14:15:50+00:00] loops_b1_all rc=0
+[2026-10-17T14:15:51+00:00] extract_b2_all rc=0
+[2026-10-17T14:16:23+00:00] decode_b2_all rc=0
+[2026-10-17T14:16:24+00:00] attr_b2_all_quant.c rc=0
+[2026-10-17T14:16:24+00:00] attr_b2_all_quant_avx2.c rc=0
+[2026-10-17T14:16:25+00:00] attr_b2_all_quant_avx512.c rc=0
+[2026-10-17T14:16:29+00:00] loops_b2_all rc=0
+{"config": "C", "steps": 28, "failed_steps": []}
+CONFIG_RC=0
+END 2026-10-17T10:16:29-04:00

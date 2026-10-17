@@ -1,0 +1,27 @@
+START Sat 10/17/2026 10:12:12.80 RUN=D:\mithril\x0census\run1 CFG=A-ninja MODE=census MORE=
+[2026-10-17T14:12:14+00:00] configure:cfg1 rc=0
+[2026-10-17T14:12:14+00:00] compile1_quant.c rc=0
+[2026-10-17T14:12:15+00:00] compile1_quant_avx2.c rc=0
+[2026-10-17T14:12:15+00:00] compile1_quant_avx512.c rc=0
+[2026-10-17T14:12:16+00:00] configure:cfg2 rc=0
+[2026-10-17T14:12:16+00:00] compile2_quant.c rc=0
+[2026-10-17T14:12:17+00:00] compile2_quant_avx2.c rc=0
+[2026-10-17T14:12:17+00:00] compile2_quant_avx512.c rc=0
+[2026-10-17T14:12:17+00:00] twin_quant.c rc=0
+[2026-10-17T14:12:18+00:00] twin_quant_avx2.c rc=0
+[2026-10-17T14:12:18+00:00] twin_quant_avx512.c rc=0
+[2026-10-17T14:12:18+00:00] extract_b1_all rc=0
+[2026-10-17T14:12:28+00:00] decode_b1_all rc=0
+[2026-10-17T14:12:28+00:00] attr_b1_all_quant.c rc=0
+[2026-10-17T14:12:28+00:00] attr_b1_all_quant_avx2.c rc=0
+[2026-10-17T14:12:28+00:00] attr_b1_all_quant_avx512.c rc=0
+[2026-10-17T14:12:31+00:00] loops_b1_all rc=0
+[2026-10-17T14:12:31+00:00] extract_b2_all rc=0
+[2026-10-17T14:12:41+00:00] decode_b2_all rc=0
+[2026-10-17T14:12:41+00:00] attr_b2_all_quant.c rc=0
+[2026-10-17T14:12:41+00:00] attr_b2_all_quant_avx2.c rc=0
+[2026-10-17T14:12:41+00:00] attr_b2_all_quant_avx512.c rc=0
+[2026-10-17T14:12:44+00:00] loops_b2_all rc=0
+{"config": "A-ninja", "steps": 25, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026 10:12:44.79

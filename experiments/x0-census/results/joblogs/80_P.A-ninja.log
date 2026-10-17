@@ -1,0 +1,15 @@
+START Sat 10/17/2026 10:13:34.96 RUN=D:\mithril\x0census\run1 CFG=P.A-ninja MODE=probe MORE= --from-config A-ninja
+[2026-10-17T14:13:35+00:00] compile1_reduce_probe.c rc=0
+[2026-10-17T14:13:35+00:00] compile2_reduce_probe.c rc=0
+[2026-10-17T14:13:35+00:00] twin_reduce_probe.c rc=0
+[2026-10-17T14:13:35+00:00] extract_b1_reduce_probe.c rc=0
+[2026-10-17T14:13:35+00:00] decode_b1_reduce_probe.c rc=0
+[2026-10-17T14:13:35+00:00] attr_b1_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T14:13:35+00:00] loops_b1_reduce_probe.c rc=0
+[2026-10-17T14:13:35+00:00] extract_b2_reduce_probe.c rc=0
+[2026-10-17T14:13:36+00:00] decode_b2_reduce_probe.c rc=0
+[2026-10-17T14:13:36+00:00] attr_b2_reduce_probe.c_reduce_probe.c rc=0
+[2026-10-17T14:13:36+00:00] loops_b2_reduce_probe.c rc=0
+{"config": "P.A-ninja", "steps": 13, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026 10:13:36.25

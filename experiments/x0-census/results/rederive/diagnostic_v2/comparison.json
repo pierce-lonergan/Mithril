@@ -1,0 +1,122 @@
+{
+ "matches": false,
+ "n_mismatches": 4,
+ "mismatches": [
+  {
+   "kind": "p3c",
+   "key": "C|k_avx512:matmul[Q4]@1:0x2d5f",
+   "census": true,
+   "rederivation": false,
+   "note": "census lanes 32 bound 0; re-derivation lanes 0 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "C|k_avx512:matmul[Q4]@1:0x2e90",
+   "census": true,
+   "rederivation": false,
+   "note": "census lanes 32 bound 0; re-derivation lanes 0 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "C|k_avx512:matmul[Q8]@1:0xc64",
+   "census": true,
+   "rederivation": false,
+   "note": "census lanes 32 bound 0; re-derivation lanes 0 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "C|k_avx512:matmul[Q8]@1:0xd98",
+   "census": true,
+   "rederivation": false,
+   "note": "census lanes 32 bound 0; re-derivation lanes 0 bound 0"
+  }
+ ],
+ "p3c_rows": [
+  {
+   "variant": "C|k_avx512:matmul[Q4]",
+   "header": "1:0x2d5f",
+   "census_id": "L1_2d5f",
+   "rederive_id": "mm_q4_avx512+0xc2f",
+   "census_flagged": true,
+   "rederive_flagged": false,
+   "census_lanes": 32,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant_avx512.c:352",
+   "rederive_lanes": 0,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant_avx512.c:352",
+    "quant_avx512.c:352"
+   ]
+  },
+  {
+   "variant": "C|k_avx512:matmul[Q4]",
+   "header": "1:0x2e90",
+   "census_id": "L1_2e90",
+   "rederive_id": "mm_q4_avx512+0xd60",
+   "census_flagged": true,
+   "rederive_flagged": false,
+   "census_lanes": 32,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant_avx512.c:316",
+   "rederive_lanes": 0,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant_avx512.c:316",
+    "quant_avx512.c:316"
+   ]
+  },
+  {
+   "variant": "C|k_avx512:matmul[Q8]",
+   "header": "1:0xc64",
+   "census_id": "L1_c64",
+   "rederive_id": "mm_q8_avx512+0xa54",
+   "census_flagged": true,
+   "rederive_flagged": false,
+   "census_lanes": 32,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant_avx512.c:352",
+   "rederive_lanes": 0,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant_avx512.c:352",
+    "quant_avx512.c:352"
+   ]
+  },
+  {
+   "variant": "C|k_avx512:matmul[Q8]",
+   "header": "1:0xd98",
+   "census_id": "L1_d98",
+   "rederive_id": "mm_q8_avx512+0xb88",
+   "census_flagged": true,
+   "rederive_flagged": false,
+   "census_lanes": 32,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant_avx512.c:316",
+   "rederive_lanes": 0,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant_avx512.c:316",
+    "quant_avx512.c:316"
+   ]
+  }
+ ],
+ "compile_failed_from_builds": [
+  "B-cmake|quant_avx512.c"
+ ],
+ "loop_inventory_differences": [],
+ "variant_differences_descriptive": [],
+ "inputs": {
+  "figures.json": "fd503f2d2b539d2797ae7003427325982a772bfd66054d78f99f57fa43cebd31",
+  "rederive_detail.json": "d55f349aacf8c9657c1f5adc6ebf1f927b055d5c904c8a9b03f1c89955d02e54",
+  "census.json": "3d54f0d50862e359b20e1c50904f7218092d27f680b9b2175891fb65dbef6f06"
+ }
+}

@@ -1,0 +1,244 @@
+{
+ "amber_a": null,
+ "amber_b": [],
+ "amber_c": [],
+ "conservative_resolution": false,
+ "eval_date": "2026-10-17",
+ "eval_date_basis": {
+  "latest_census_run_date": "2026-10-17",
+  "system_utc_date": "2026-10-17"
+ },
+ "narrowing": null,
+ "non_gate": [],
+ "notes": [],
+ "outcomes": [
+  "tooling_failure"
+ ],
+ "record": "X0-census",
+ "tooling_bound": "2026-11-12",
+ "tooling_runs": 1,
+ "validity": {
+  "v1": true,
+  "v2": true,
+  "v3": false,
+  "v4": true
+ },
+ "validity_detail": {
+  "v1_config_gaps": [],
+  "v1_tooling_gaps": [],
+  "v2_resolved_by_amendment": [],
+  "v2_unresolved": [],
+  "v3": [
+   {
+    "census": false,
+    "key": "A|k_avx2:matmul[Q4]@8:0x110",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 24 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "A|k_avx512:matmul[Q4]@8:0x116",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "A|k_avx512:matmul[Q8]@7:0x126",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "B-cmake|hx_kernels_scalar:act_quantize_q8@49:0x11b",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "B-cmake|hx_kernels_scalar:matmul[BF16]@67:0x1b6",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "B-cmake|hx_kernels_scalar:matmul[BF16]@67:0x27c",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "B-cmake|hx_kernels_scalar:matmul[F16]@67:0x1b6",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "B-cmake|hx_kernels_scalar:matmul[F16]@67:0x27c",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "B-cmake|hx_kernels_scalar:matmul[F32]@67:0x1b6",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "B-cmake|hx_kernels_scalar:matmul[F32]@67:0x27c",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "B-cmake|k_avx2:matmul[Q8]@17:0x753",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 8 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "B-cmake|k_avx2:matmul[Q8]@17:0x842",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 8 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": true,
+    "key": "C|k_avx512:matmul[Q4]@1:0x2d5f",
+    "kind": "p3c",
+    "note": "census lanes 32 bound 0; re-derivation lanes 0 bound 0",
+    "rederivation": false
+   },
+   {
+    "census": true,
+    "key": "C|k_avx512:matmul[Q4]@1:0x2e90",
+    "kind": "p3c",
+    "note": "census lanes 32 bound 0; re-derivation lanes 0 bound 0",
+    "rederivation": false
+   },
+   {
+    "census": true,
+    "key": "C|k_avx512:matmul[Q8]@1:0xc64",
+    "kind": "p3c",
+    "note": "census lanes 32 bound 0; re-derivation lanes 0 bound 0",
+    "rederivation": false
+   },
+   {
+    "census": true,
+    "key": "C|k_avx512:matmul[Q8]@1:0xd98",
+    "kind": "p3c",
+    "note": "census lanes 32 bound 0; re-derivation lanes 0 bound 0",
+    "rederivation": false
+   },
+   {
+    "census": false,
+    "key": "D|hx_kernels_scalar:act_quantize_q8@2:0x2dbc",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "D|hx_kernels_scalar:matmul[BF16]@2:0x43fb",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "D|hx_kernels_scalar:matmul[BF16]@2:0x44c7",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "D|hx_kernels_scalar:matmul[F16]@2:0x43fb",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "D|hx_kernels_scalar:matmul[F16]@2:0x44c7",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "D|hx_kernels_scalar:matmul[F32]@2:0x43fb",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "D|hx_kernels_scalar:matmul[F32]@2:0x44c7",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "D|k_avx2:matmul[Q8]@2:0x350d",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 8 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "D|k_avx2:matmul[Q8]@2:0x35b2",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 8 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "D|k_avx512:matmul[Q4]@2:0x4453",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "D|k_avx512:matmul[Q4]@2:0x44e1",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "D|k_avx512:matmul[Q8]@2:0x2c83",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0",
+    "rederivation": true
+   },
+   {
+    "census": false,
+    "key": "D|k_avx512:matmul[Q8]@2:0x2d11",
+    "kind": "p3c",
+    "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0",
+    "rederivation": true
+   }
+  ],
+  "v4": [],
+  "v4_commits": {
+   "freeze_commit": "152fa33cc24225d78806bc028a1985fffbd3148b",
+   "post_freeze": false,
+   "post_freeze_changes": [],
+   "run_commit": "152fa33cc24225d78806bc028a1985fffbd3148b"
+  }
+ }
+}

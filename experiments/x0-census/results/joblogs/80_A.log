@@ -1,0 +1,25 @@
+START Sat 10/17/2026 10:11:30.95 RUN=D:\mithril\x0census\run1 CFG=A MODE=census MORE=
+[2026-10-17T14:11:34+00:00] configure:cfg1 rc=0
+[2026-10-17T14:11:36+00:00] build1 rc=0
+[2026-10-17T14:11:36+00:00] records1 rc=0
+[2026-10-17T14:11:39+00:00] configure:cfg2 rc=0
+[2026-10-17T14:11:42+00:00] build2 rc=0
+[2026-10-17T14:11:42+00:00] records2 rc=0
+[2026-10-17T14:11:42+00:00] twin_quant.c rc=0
+[2026-10-17T14:11:42+00:00] twin_quant_avx2.c rc=0
+[2026-10-17T14:11:43+00:00] twin_quant_avx512.c rc=0
+[2026-10-17T14:11:44+00:00] extract_b1_all rc=0
+[2026-10-17T14:11:55+00:00] decode_b1_all rc=0
+[2026-10-17T14:11:55+00:00] attr_b1_all_quant.c rc=0
+[2026-10-17T14:11:55+00:00] attr_b1_all_quant_avx2.c rc=0
+[2026-10-17T14:11:55+00:00] attr_b1_all_quant_avx512.c rc=0
+[2026-10-17T14:11:58+00:00] loops_b1_all rc=0
+[2026-10-17T14:11:58+00:00] extract_b2_all rc=0
+[2026-10-17T14:12:08+00:00] decode_b2_all rc=0
+[2026-10-17T14:12:08+00:00] attr_b2_all_quant.c rc=0
+[2026-10-17T14:12:08+00:00] attr_b2_all_quant_avx2.c rc=0
+[2026-10-17T14:12:09+00:00] attr_b2_all_quant_avx512.c rc=0
+[2026-10-17T14:12:11+00:00] loops_b2_all rc=0
+{"config": "A", "steps": 21, "failed_steps": []}
+CONFIG_RC=0
+END Sat 10/17/2026 10:12:12.00
