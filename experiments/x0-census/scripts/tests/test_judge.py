@@ -27,6 +27,11 @@ COMPILERS = {"A": {"cl.exe": "a1" * 32, "c1.dll": "a2" * 32, "c2.dll": "a3" * 32
              "A-ninja": {"cl.exe": "a1" * 32, "c1.dll": "a2" * 32, "c2.dll": "a3" * 32},
              "B-cmake": {"clang-cl.exe": "b1" * 32}, "C": {"cc1": "c1" * 32, "gcc": "c2" * 32},
              "D": {"clang-23": "d1" * 32}}
+WIN_H = {"sdk": "10.0.26100.0", "ucrt": "10.0.26100.0", "vctools": "14.44.35207"}
+HEADERS = {"A": dict(WIN_H), "A-ninja": dict(WIN_H),
+           "B-cmake": dict(WIN_H, resource_dir_sha256={"files": 322, "sha256": "e1" * 32}),
+           "C": {"libc_dev": "2.39-0ubuntu8.9"},
+           "D": {"libc_dev": "2.39-0ubuntu8.9", "resource_dir_sha256": {"files": 327, "sha256": "e2" * 32}}}
 
 
 def read_text(p):
@@ -59,6 +64,7 @@ class Base(unittest.TestCase):
         pins["x86-intel.xml"] = XML_SHA
         pins["scripts"] = {"scripts/census_script.py": sha(os.path.join(cls.root, "scripts", "census_script.py"))}
         pins["compilers"] = COMPILERS
+        pins["headers"] = HEADERS
         with open(os.path.join(cls.cdir, "frozen_inputs.json"), "w") as f:
             json.dump(pins, f)
         cls.pins = pins
@@ -89,10 +95,19 @@ class Base(unittest.TestCase):
                                    "object_exists": True, "errors": [], "includes": [], "ice": False})
         rec = {k: self.pins[n] for n, k in judge.FROZEN.items()}
         rec["xml"] = XML_SHA
+        # pre-freeze review of 2026-10-17: the run commit, the post-freeze change list, the Hearth source pin, the
+        # scripts each configuration ran and its header environment (vcvars' SDK version ends in a backslash)
+        hdr = {c: dict(HEADERS[c]) for c in judge.CHECKED}
+        for c in ("A", "A-ninja", "B-cmake"):
+            hdr[c]["sdk"] = "10.0.26100.0\\"
+        hdr["D"]["resource_dir_sha256"] = dict(HEADERS["D"]["resource_dir_sha256"], dir="/x/lib/clang/23/include")
         return {"record": {"id": "X0-census", "sha256": rec, "scripts_sha256": dict(self.pins["scripts"]),
-                           "freeze_commit": "f" * 40},
+                           "freeze_commit": "f" * 40, "run_commit": "f" * 40, "post_freeze_changes": [],
+                           "hearth_commit": judge.HEARTH_COMMIT,
+                           "source_blobs": {"engine/src/quant.c": {"pinned": "x", "found": "x", "ok": True}}},
                 "runs": [{"run_id": "r1", "kind": "census", "utc": "2026-10-30T12:00:00Z"}],
-                "configs": {c: {"p3a": {f: {"a1": [], "a2": []} for f in judge.CENSUS_FILES}} for c in judge.CHECKED},
+                "configs": {c: {"p3a": {f: {"a1": [], "a2": []} for f in judge.CENSUS_FILES},
+                                "scripts_sha256": dict(self.pins["scripts"]), "headers": hdr[c]} for c in judge.CHECKED},
                 "variants": variants, "builds": builds, "crossdecoder": {"disagreements": []},
                 "rederivation": {"present": True, "matches": True, "mismatches": []}, "metrics": {}}
 
@@ -688,3 +703,77 @@ class TestReviewX0final(Base):
         self.assertFalse(v["validity"]["v4"])
         c["record"]["freeze_commit"] = "HEAD"
         self.assertFalse(self.run_judge(c)["validity"]["v4"])
+
+
+class TestReviewPreFreeze(Base):
+    """Pre-freeze review of 2026-10-17 (Claude, same family, independent context): the freeze point and the run
+    commit, the Hearth source pin, the scripts each configuration ran, the header environment, the record id, and the
+    canary report with the E6 label."""
+
+    def test_record_id_is_written(self):
+        c = self.clean()
+        self.assertEqual(self.run_judge(c)["record"], "X0-census")
+        c["record"]["id"] = "X0-census-smoke"
+        self.assertEqual(self.run_judge(c)["record"], "X0-census-smoke")
+
+    def test_run_commit_source_pin_and_config_scripts_are_v4(self):
+        for mutate in (lambda c: c["record"].pop("run_commit"),
+                       lambda c: c["record"].update(post_freeze_changes=None),
+                       lambda c: c["record"].update(hearth_commit="0" * 40),
+                       lambda c: c["record"]["source_blobs"]["engine/src/quant.c"].update(ok=False),
+                       lambda c: c["record"].update(source_blobs={}),
+                       lambda c: c["configs"]["C"].update(scripts_sha256={"scripts/census_script.py": "0" * 64}),
+                       lambda c: c["configs"]["D"].pop("scripts_sha256")):
+            c = self.clean()
+            mutate(c)
+            v = self.run_judge(c)
+            self.assertFalse(v["validity"]["v4"])
+            self.assertEqual(v["outcomes"], ["tooling_failure"])
+
+    def test_post_freeze_run_is_surfaced(self):
+        c = self.clean()
+        c["record"]["run_commit"] = "e" * 40
+        c["record"]["post_freeze_changes"] = ["experiments/x0-census/scripts/x0_loops.py"]
+        v = self.run_judge(c)
+        self.assertTrue(v["validity"]["v4"])
+        self.assertEqual(v["validity_detail"]["v4_commits"]["post_freeze"], True)
+        self.assertTrue(any("after the freeze point" in n for n in v["notes"]))
+        self.assertFalse(self.run_judge(self.clean())["validity_detail"]["v4_commits"]["post_freeze"])
+
+    def test_header_environment_is_part_of_the_compile_rule(self):
+        c = self.clean()
+        c["configs"]["A"]["headers"]["sdk"] = "10.0.22621.0"
+        v = self.run_judge(c)
+        self.assertFalse(v["validity"]["v1"])
+        self.assertTrue(any("header environment" in (g["detail"] or "") for g in v["validity_detail"]["v1_tooling_gaps"]))
+        c = self.clean()
+        c["configs"]["D"]["headers"]["resource_dir_sha256"] = None          # not recorded: tooling, never genuine
+        self.fail_build(c, "D", "quant_avx512.c", errors=ERR237, includes=[])
+        v = self.run_judge(c)
+        self.assertNotIn("amber_c", v["outcomes"])
+        self.assertFalse(v["validity"]["v1"])
+        c = self.clean()
+        pins = json.load(open(os.path.join(self.cdir, "frozen_inputs.json")))
+        try:
+            del pins["headers"]["C"]
+            json.dump(pins, open(os.path.join(self.cdir, "frozen_inputs.json"), "w"))
+            self.assertFalse(self.run_judge(c)["validity"]["v4"])
+        finally:
+            json.dump(self.pins, open(os.path.join(self.cdir, "frozen_inputs.json"), "w"))
+        self.assertEqual(judge.headers_mismatch({"sdk": "10.0.26100.0\\"}, {"sdk": "10.0.26100.0"}), [])
+
+    def test_canary_report_carries_the_e6_label_and_counts_d2_sites(self):
+        c = self.clean()
+        for v in c["variants"]:
+            if (v["table"], v["slot"]) in judge.D2_EXPECTED:
+                v["p3"]["d2"] = [{"site": "tree16", "result": "match" if v["config"] != "A" else "unchecked"}]
+        v = self.run_judge(c)
+        self.assertEqual(v["outcomes"], ["pass"])
+        self.assertEqual(v["canaries"]["label"], judge.E6_LABEL)
+        self.assertEqual(v["canaries"]["d2"]["D"]["match"], 12)
+        self.assertEqual(v["canaries"]["d2"]["A"], {"match": 0, "mismatch": 0, "unchecked": 12, "variants_without_d2": []})
+        self.assertEqual(v["canaries"]["d1"]["C"], ["b1:pass", "b2:pass"])
+        self.assertEqual(len(v["canaries"]["p3c_labelled"]["A"]), 8)
+        self.assertEqual(len(v["caveats"]), 1)
+        self.assertIn("under A is unchecked", v["caveats"][0])
+        self.assertIn("caveat on Pass", v["caveats"][0])

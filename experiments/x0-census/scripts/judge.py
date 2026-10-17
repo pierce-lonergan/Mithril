@@ -32,7 +32,9 @@ Decision list, in this order (every state of census.json maps to exactly one ver
       every build      : compiler_sha256 must equal the Table 2.1 pin of its configuration
                          (class/frozen_inputs.json "compilers"), and (x0final revision) the pinned compiler ran
                          (compiler_ran) with exactly the frozen argv (argv_matches_frozen), and an exit status 0
-                         has an object (object_exists); otherwise tooling `other`;
+                         has an object (object_exists), and (pre-freeze review of 2026-10-17) the configuration's
+                         header environment (configs.<cfg>.headers) equals frozen_inputs.json "headers";
+                         otherwise tooling `other`;
       genuine `compile_failed`  : rc != 0 in both builds, the pinned compiler ran with the frozen argv, and at
                                   least one error diagnostic is located (errors[].file) in a census file or in
                                   a header the build recorded as included (includes[]: /showIncludes or -H; the
@@ -52,9 +54,13 @@ Decision list, in this order (every state of census.json maps to exactly one ver
       V3 the independent re-derivation is present and matches exactly;
       V4 the SHA-256 of every frozen input on disk (class files, xed_tables.tsv, the census scripts listed in
          frozen_inputs.json "scripts") equals both class/frozen_inputs.json and census.json's record, and the
-         compiler pins exist; (x0final revision) a census record (record.id X0-census) carries the 40-hex freeze
-         commit that x0_driver.py init took from the clean checkout of the FROZEN record, and a record.id other
-         than X0-census or X0-census-smoke fails.
+         compiler and (pre-freeze review of 2026-10-17) header pins exist; (x0final revision) a census record
+         (record.id X0-census) carries the 40-hex freeze commit that x0_driver.py init took from the clean checkout
+         of the FROZEN record, and a record.id other than X0-census or X0-census-smoke fails. Pre-freeze review of
+         2026-10-17: the freeze commit is the freeze point (the first commit with the record FROZEN); a census record
+         also carries the 40-hex run_commit and the post_freeze_changes list (a run after the freeze point is listed
+         in validity_detail.v4_commits and the notes), hearth_commit b5d3f14 with every source blob ok, and for every
+         configuration the scripts' hashes that its step ran, equal to record.scripts_sha256.
     If V fails and eval-date <= TOOLING_BOUND (2026-11-12, end of M0 week 3): outcome tooling_failure only.
     If V fails after the bound: V4 failure, a schema violation, a V3 failure because no re-derivation exists, or a
     V3 mismatch whose re-derivation figures are incomplete (u_all, p5_iclass and, for every union variant,
@@ -80,6 +86,12 @@ Decision list, in this order (every state of census.json maps to exactly one ver
       pass    : V holds (or was resolved conservatively after the bound) and none of the three rows holds.
     Rows outside the gate (non_gate): N1 = a genuine gap under B-cmake, C or A-ninja; N2 = a genuine compile
     failure under B-cmake, C or A-ninja (a build-defect draft is required).
+    Canary report (pre-freeze review of 2026-10-17; record §2 ruling, §8 E6): verdict.json "canaries" lists the d1
+    result of every canary variant, the expected d2 sites (F32/F16/BF16 of k_avx2 and k_avx512) of each
+    configuration by result, and the P3(c) results of the scalar F32/F16/BF16 and act variants, under the label
+    "outcome indicated before freeze by a verbatim copy (E6)"; an amber_b entry with d1 or d2 flags carries the same
+    label; "caveats" says when every expected d2 site under A or D is unchecked (a caveat on Pass). verdict.json
+    "record" is census.json's record.id.
  4. Narrowing (only with --x2-verdict, judged at week 6): every natural loop in the closure of a dispatched
     variant under A or D whose tags are not all in X2's proved_loop_shapes ('other' is covered only if its loop
     id is in proved_loop_ids; a loop with not_computed_tags, i.e. peeled/interchanged unchecked, is covered only
@@ -125,6 +137,35 @@ APPROX_RE = re.compile(r"^V?(RCP|RSQRT)(PS|SS)$|^V(RCP|RSQRT)(14|28)(PS|PD|SS|SD
                        r"^VEXP2P[SD]$|^PF(RCP|RSQ)")
 TAGS = ("lockstep", "unrolled-u", "rotated", "peeled", "software-pipelined", "auto-vectorised", "spilled",
         "interchanged", "other")
+HEARTH_COMMIT = "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220"      # record §2
+# record §2, §8 E6 (lead engineer's ruling of 2026-10-17; pre-freeze review of 2026-10-17): every report of these
+# results carries this label
+E6_LABEL = "outcome indicated before freeze by a verbatim copy (E6)"
+D2_EXPECTED = [(t, s) for t in ("k_avx2", "k_avx512") for s in ("matmul[F32]", "matmul[F16]", "matmul[BF16]")]
+E6_P3C_VARIANTS = [("hx_kernels_scalar", s) for s in ("matmul[F32]", "matmul[F16]", "matmul[BF16]", "act_quantize_q8")]
+
+
+def _norm_header_value(x):
+    return x.strip().rstrip("\\/").strip() if isinstance(x, str) else x
+
+
+def headers_mismatch(have, pin):
+    """Pre-freeze review of 2026-10-17 (record §5 P1, Table 2.1): the keys of the configuration's header pin
+    (class/frozen_inputs.json "headers": Windows SDK, UCRT, MSVC toolset, libc6-dev, clang's resource-dir include tree)
+    whose recorded value (census.json configs.<cfg>.headers, written by x0_driver.py) differs. A trailing path
+    separator of a version string (vcvars' WindowsSDKVersion ends in a backslash) is ignored. No pin: ['no pin']."""
+    if not isinstance(pin, dict) or not pin:
+        return ["no header pin for this configuration"]
+    have = have if isinstance(have, dict) else {}
+    bad = []
+    for k, want in sorted(pin.items()):
+        got = have.get(k)
+        if isinstance(want, dict):
+            if not (isinstance(got, dict) and all(got.get(kk) == vv for kk, vv in want.items())):
+                bad.append(k)
+        elif _norm_header_value(got) != _norm_header_value(want):
+            bad.append(k)
+    return bad
 
 
 def _load_json(path):
@@ -265,7 +306,8 @@ def judge(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_
     t_forms = n_b if t_forms_owner_accepted else min(n_b, T_FORMS_CAP)
     notes = []
     after_bound = eval_date > TOOLING_BOUND
-    verdict = {"record": "X0-census", "eval_date": eval_date.isoformat(), "eval_date_basis": date_basis,
+    rid = (census.get("record") or {}).get("id") if isinstance(census, dict) and isinstance(census.get("record"), dict) else None
+    verdict = {"record": rid, "eval_date": eval_date.isoformat(), "eval_date_basis": date_basis,
                "tooling_bound": TOOLING_BOUND.isoformat(),
                "validity": {"v1": False, "v2": False, "v3": False, "v4": False},
                "validity_detail": {}, "tooling_runs": 0, "conservative_resolution": False, "outcomes": [],
@@ -311,19 +353,50 @@ def judge(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_
                 v4_detail.append({"input": rel, "disk": disk, "pinned": h})
     # x0final revision: a census run is tied to the freeze commit (x0_driver.py init checks the clean checkout and
     # the FROZEN status line at HEAD; x0_census.py copies the commit into record.freeze_commit)
+    v4_commits = None
     if rec.get("id") == "X0-census":
         if not (isinstance(rec.get("freeze_commit"), str) and COMMIT_RE.match(rec["freeze_commit"])):
             v4_detail.append({"input": "record.freeze_commit", "census": rec.get("freeze_commit"),
                               "detail": "no freeze commit: the census was not run from a clean checkout of the FROZEN record"})
+        # pre-freeze review of 2026-10-17: the freeze point (first commit with the record FROZEN) and the commit the
+        # run used are distinct facts; a run after the freeze point lists the class/, scripts/ and flags/ paths
+        # changed since (each named by an appended amendment, which x0_driver.py init checked)
+        rc_ = rec.get("run_commit")
+        pfc = rec.get("post_freeze_changes")
+        if not (isinstance(rc_, str) and COMMIT_RE.match(rc_)) or not isinstance(pfc, list):
+            v4_detail.append({"input": "record.run_commit", "census": rc_, "post_freeze_changes": pfc,
+                              "detail": "no run commit or no post-freeze change list from x0_driver.py init"})
+        else:
+            v4_commits = {"freeze_commit": rec.get("freeze_commit"), "run_commit": rc_,
+                                                  "post_freeze": rc_ != rec.get("freeze_commit"),
+                                                  "post_freeze_changes": pfc}
+            if rc_ != rec.get("freeze_commit"):
+                notes.append("the census ran at %s, after the freeze point %s; class/scripts/flags paths changed since "
+                             "(each named by an amendment, record §10): %s" % (rc_, rec.get("freeze_commit"), pfc or "none"))
+        # pre-freeze review of 2026-10-17 (record §2): the census source is Hearth b5d3f14 with the pinned blobs
+        sb = rec.get("source_blobs")
+        if rec.get("hearth_commit") != HEARTH_COMMIT or not isinstance(sb, dict) or not sb or \
+                not all(isinstance(x, dict) and x.get("ok") is True for x in sb.values()):
+            v4_detail.append({"input": "record.hearth_commit/source_blobs", "census": rec.get("hearth_commit"),
+                              "pinned": HEARTH_COMMIT, "detail": "the census source is not Hearth b5d3f14 with the "
+                                                                 "pinned blobs of record §2"})
+        # pre-freeze review of 2026-10-17: every configuration step ran the scripts init verified
+        for cfg, x in sorted(census["configs"].items()):
+            if not isinstance(x, dict) or x.get("scripts_sha256") != rec.get("scripts_sha256"):
+                v4_detail.append({"input": "configs.%s.scripts_sha256" % cfg,
+                                  "detail": "this configuration ran scripts other than the ones init verified"})
     elif rec.get("id") == "X0-census-smoke":
         notes.append("smoke record (record.id X0-census-smoke, NON-Hearth): no freeze commit is required")
     else:
         v4_detail.append({"input": "record.id", "census": rec.get("id"),
                           "detail": "record.id is neither X0-census nor X0-census-smoke"})
     cpins = pins.get("compilers") if isinstance(pins.get("compilers"), dict) else {}
+    hpins = pins.get("headers") if isinstance(pins.get("headers"), dict) else {}
     for cfg in CHECKED:
         if not isinstance(cpins.get(cfg), dict) or not cpins.get(cfg):
             v4_detail.append({"input": "compilers.%s" % cfg, "detail": "no Table 2.1 compiler pin"})
+        if not isinstance(hpins.get(cfg), dict) or not hpins.get(cfg):
+            v4_detail.append({"input": "headers.%s" % cfg, "detail": "no Table 2.1 header pin"})
     v4 = not v4_detail
 
     variants = census["variants"]
@@ -350,6 +423,11 @@ def judge(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_
             st, det = classify_build(bs, cpins.get(cfg))
             if idx != [1, 2]:
                 st, det = "other", "build records for build_index %s, expected [1, 2]" % idx
+            # pre-freeze review of 2026-10-17: the header environment of Table 2.1 (SDK, UCRT, toolset, libc6-dev,
+            # resource-dir include tree) is part of what makes a compile failure genuine and a success Hearth's build
+            hbad = headers_mismatch((configs.get(cfg) or {}).get("headers"), hpins.get(cfg))
+            if hbad and st != "other":
+                st, det = "other", "header environment differs from the Table 2.1 pin (frozen_inputs.json headers): %s" % hbad
             compile_state[(cfg, fl)] = (st, det)
             x = ((configs.get(cfg) or {}).get("p3a") or {}).get(fl)
             # x0final revision: a P3(a) result that carries an error was not evaluated, whatever its lists say
@@ -443,7 +521,7 @@ def judge(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_
                             for v, g in tooling_gaps],
         "v1_config_gaps": [{"config": c, "item": k, "detail": d} for c, k, d in config_gaps],
         "v2_unresolved": unresolved, "v2_resolved_by_amendment": resolved,
-        "v3": rd.get("mismatches", []) if rd else "absent", "v4": v4_detail}
+        "v3": rd.get("mismatches", []) if rd else "absent", "v4": v4_detail, "v4_commits": v4_commits}
     verdict["tooling_runs"] = len({r.get("run_id") for r in census["runs"] if r.get("kind") == "census"})
     rcd = {}
     if not valid:
@@ -542,7 +620,10 @@ def judge(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_
             if rv.get("flagged"):
                 p3["rederivation"].append(vid)
         if p2 > 0 or any(p3.values()):
-            verdict["amber_b"].append({"config": cfg, "p2": p2, "p3": p3})
+            item = {"config": cfg, "p2": p2, "p3": p3}
+            if p3["d1"] or p3["d2"]:
+                item["label"] = E6_LABEL           # record §2 ruling: every report of d1 or d2 carries it
+            verdict["amber_b"].append(item)
 
     # ---- amber_a: U_all and P5_iclass recomputed here
     u_all, ic_all = set(), set()
@@ -574,6 +655,39 @@ def judge(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_
     if verdict["amber_c"]:
         outs.append("amber_c")
     verdict["outcomes"] = outs or ["pass"]
+
+    # ---- canary report (record §2 ruling, §8 E6; pre-freeze review of 2026-10-17): every d1 and d2 result, and the
+    # P3(c) results of the scalar F32/F16/BF16 and act variants (dot16_conv's loops and the amax loop, whose shapes a
+    # regression file carried in Hearth's own text), are reported with the E6 label; the expected d2 sites of each
+    # configuration are counted by result, and "every expected d2 site unchecked" under A or D is a caveat on Pass
+    canaries = {"label": E6_LABEL, "d1": {}, "d2": {}, "p3c_labelled": {}}
+    for cfg in CHECKED:
+        vs = [v for v in union if v.get("config") == cfg and not v.get("synthetic")]
+        canaries["d1"][cfg] = sorted(["b%s:%s" % (v.get("build_index"), (v.get("p3") or {}).get("d1"))
+                                      for v in vs if (v.get("table"), v.get("slot")) == CANARY])
+        cnt = {"match": 0, "mismatch": 0, "unchecked": 0, "variants_without_d2": []}
+        for v in vs:
+            if (v.get("table"), v.get("slot")) not in D2_EXPECTED:
+                continue
+            sites = [s for s in (v.get("p3") or {}).get("d2") or [] if isinstance(s, dict)]
+            if not sites:
+                cnt["variants_without_d2"].append("%s|b%s" % (_vid(v), v.get("build_index")))
+            for s in sites:
+                if s.get("result") in D2_RESULTS:
+                    cnt[s["result"]] += 1
+        canaries["d2"][cfg] = cnt
+        canaries["p3c_labelled"][cfg] = sorted("%s|b%s:%s" % (_vid(v), v.get("build_index"),
+                                                              ",".join((v.get("p3") or {}).get("c") or []) or "no flag")
+                                               for v in vs if (v.get("table"), v.get("slot")) in E6_P3C_VARIANTS)
+    verdict["canaries"] = canaries
+    verdict["caveats"] = []
+    for cfg in RELEASE:
+        c2 = canaries["d2"].get(cfg) or {}
+        if not (c2.get("match") or c2.get("mismatch")):
+            verdict["caveats"].append("every expected P3(d2) site under %s is unchecked (%d unchecked, %d variants without "
+                                      "a d2 result): the d2 canary was vacuous there%s" % (
+                                          cfg, c2.get("unchecked", 0), len(c2.get("variants_without_d2") or []),
+                                          "; this is a caveat on Pass" if verdict["outcomes"] == ["pass"] else ""))
 
     # ---- narrowing (week 6)
     if x2 is not None:

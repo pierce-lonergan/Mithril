@@ -1,6 +1,9 @@
 @echo off
 rem X0 runbook step 82 (Windows): census.json (x0_census.py) and verdict.json (judge.py) of a run.
-rem   82_census_assemble.cmd RUN [--freeze-commit SHA] [--scripts-commit SHA] [--qualify-tables]
+rem   82_census_assemble.cmd RUN [--qualify-tables]
+rem Pre-freeze review of 2026-10-17: a census run takes the freeze point and the run commit from the init step's
+rem run.json only (x0_driver.py and x0_census.py refuse --freeze-commit / --scripts-commit there; a NON-Hearth smoke
+rem run may still pass them), and the assembler and judge.py run only from the tree init verified.
 setlocal
 set CUDA_VISIBLE_DEVICES=-1
 if "%X0%"=="" (

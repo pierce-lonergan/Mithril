@@ -95,6 +95,37 @@ class TestAssembler(unittest.TestCase):
         self.assertIn("twin attribution none", a1["coverage"]["gaps"][0]["detail"])
         self.assertEqual(a2["coverage"]["gaps"], [])
 
+    def test_census_run_takes_commits_from_init_only(self):
+        """pre-freeze review of 2026-10-17: in a census run --freeze-commit is refused; the freeze point, the run
+        commit, the post-freeze change list and each configuration's script hashes reach census.json."""
+        with tempfile.TemporaryDirectory() as d:
+            self.make_run(d)
+            rj = os.path.join(d, "run.json")
+            r = json.load(open(rj))
+            r.update(kind="census", freeze_commit="c" * 40, run_commit="e" * 40,
+                     post_freeze_changes=["experiments/x0-census/scripts/x0_loops.py"])
+            dump(r, rj)
+            for cfg in ("A", "A-ninja"):
+                cp = os.path.join(d, cfg, "config.json")
+                cj = json.load(open(cp))
+                cj["scripts_sha256"] = {"scripts/x.py": "00"}
+                dump(cj, cp)
+            out = os.path.join(d, "census.json")
+            argv = [sys.executable, "-I", os.path.join(SCRIPTS, "x0_census.py"), "--run", d, "-o", out]
+            p = subprocess.run(argv + ["--freeze-commit", "c" * 40], capture_output=True, text=True)
+            self.assertNotEqual(p.returncode, 0)
+            self.assertIn("REFUSED", p.stdout + p.stderr)
+            p = subprocess.run(argv, capture_output=True, text=True)
+            self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+            c = json.load(open(out, encoding="utf-8"))
+        rec = c["record"]
+        self.assertEqual((rec["id"], rec["freeze_commit"], rec["run_commit"], rec["scripts_commit"]),
+                         ("X0-census", "c" * 40, "e" * 40, "e" * 40))
+        self.assertEqual(rec["post_freeze_changes"], ["experiments/x0-census/scripts/x0_loops.py"])
+        self.assertEqual(c["configs"]["A"]["scripts_sha256"], {"scripts/x.py": "00"})
+        self.assertIsNone(c["configs"]["B-cmake"]["scripts_sha256"])
+        self.assertTrue(any("B-cmake ran other scripts" in n for n in c["notes"]))
+
 
 if __name__ == "__main__":
     unittest.main()

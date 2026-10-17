@@ -9,6 +9,8 @@ rem It configures twice from scratch, builds twice, builds the debug-info twin, 
 rem then extracts, decodes (-j 2), attributes and analyses the loops of both builds (x0_driver.py, record sections 2-7).
 rem One compiler or MSBuild node at a time; XED with at most 2 workers; no GPU.
 rem The census proper: 79_census_init.cmd first (it refuses unless the record is FROZEN and the Hearth blobs match).
+rem Pre-freeze review of 2026-10-17: in a census run each step refuses unless X0's pinned scripts equal the hashes init
+rem verified (run.json) and the checkout is still at init's HEAD.
 setlocal enabledelayedexpansion
 set CUDA_VISIBLE_DEVICES=-1
 if "%X0%"=="" (

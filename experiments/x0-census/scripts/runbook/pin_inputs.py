@@ -8,7 +8,8 @@
     __pycache__) and documentation (*.md) -- census scripts, tests, smoke and mock inputs, probes and runbook files
     alike. This is a superset
     of the x0prep map (FREEZE.md D5, D6, D8, D10, D11), so V4 also catches a change to any runbook or regression file;
-  * "compilers" and "x86-intel.xml" are kept as they are (Table 2.1 pins; the XML is not stored in the repository).
+  * "compilers", "headers" (pre-freeze review of 2026-10-17) and "x86-intel.xml" are kept as they are (Table 2.1
+    pins; the XML is not stored in the repository).
 Without --write it only prints the differences from the current frozen_inputs.json (exit 1 if there are any).
 --markdown prints the FREEZE.md hash tables (SHA-256 of the bytes on disk; LF line endings except *.cmd, which
 .gitattributes keeps CRLF on every checkout). Standard library only.

@@ -17,17 +17,21 @@ Definitions (record §4.7), per dispatched variant:
     A memory operand [RSP+d] or [RBP+d] with no index register is a stack slot treated as a register. A call
     defines (clobbers) the caller-saved registers of the object's ABI (SysV for ELF, Win64 for COFF; x0final).
   * Accumulation instruction: an FP-sensitive instruction of op_class ADD, SUB, MUL, MAX or MIN (FMA-class counts
-    as ADD) that reads, through its data operands, a loop-carried value (live into the header, through moves and
-    stack reloads; the address registers of a load are not data) or a value an accumulation produced in this
-    iteration; and (x0final revision) a blend or merge-masked FP move that reads a mask written by a (V)CMPP*/CMPS*
-    and one of the carried or tainted locations that compare read (compare-select, op MAX/MIN).
+    as ADD) that reads, through its data operands, a loop-carried value (pre-freeze review of 2026-10-17: any value
+    to which a carried location's header value may flow along data operands, through any instruction, not only
+    through moves and stack reloads; the address registers of a load are not data) or a value an accumulation
+    produced in this iteration; and (x0final revision) a blend or merge-masked FP move that reads a mask written by a
+    (V)CMPP*/CMPS* whose sources share an origin (a carried location, or an accumulation behind a tainted value)
+    with the blend's data operands (compare-select, op MAX/MIN; a compare on a copy of the accumulator counts), and
+    (pre-freeze review) the SSE2 form of the same select, an OR/XOR of (V)AND/ANDN parts of such a mask.
   * Taint (x0final revision, record §4.7 (a)): a location written by ANY instruction that reads a tainted value stays
     tainted, with provenance the union of the accumulation instructions behind it; only a write reading no tainted
     value, or a call clobber, removes it; merge-masked writes keep it.
   * acc_lanes_emitted (the unit of P3(c); x0final revision, §4.7 (b), (c)): over the strongly connected components of
     the carried-location graph (s -> r when the header value of s may reach the back-edge value of r; opmask
     registers excluded) that contain a cycle and a tainted location: the component's partial results (tainted
-    locations grouped by equal back-edge provenance at every latch, plus each untainted member) times the widest lane
+    locations grouped by equal back-edge provenance at every latch that is also equal on every path to it, a copy or
+    a part of one value, pre-freeze review; plus each untainted member) times the widest lane
     count of the accumulation instructions behind them (scalar 1; f32 in xmm/ymm/zmm 4/8/16; f64 half that; masked
     forms full width), summed. The same unit as the loop table's source_lanes ("independent FP partial results
     carried across iterations"); partial_results and partial_result_cycles list them.
@@ -53,7 +57,9 @@ Definitions (record §4.7), per dispatched variant:
     for the back edge's own instruction (the latch; its line is the loop control). When the two loops nest, the outer
     one is taken only if the inner one shows signs of flattening (constant or outer-bounded trip count and no loop
     attributed to it through header and back edge) or the emitted loop encloses an emitted loop of the inner one;
-    otherwise the loop's bound is the smaller of the two (x0final revision); when they are unrelated, the latch's
+    the inner one's own bound when the emitted loop is enclosed by an emitted loop of the outer one (pre-freeze
+    review); otherwise the loop's bound is the smaller of the two (x0final revision). Nesting through the inline
+    stack counts as nesting; when the two are unrelated, the smaller bound (pre-freeze review; before: the latch's)
     (choose_source_loop). bound_header, bound_latch and bound_rule are recorded. A variant is also EXACT when a
     differing section keeps its size and relocation offsets and every closure function's own range is identical
     (x0_twin.py function_identity). Only exact
@@ -250,8 +256,10 @@ def full_kills(ins):
 
 
 def is_move(ins):
-    """A pure register/stack copy (no arithmetic): the move iclasses of the d2 whitelist and plain MOV."""
-    return bool(MOVE_RE.match(ins.get("iclass", ""))) or ins.get("iclass") in ("MOV", "VMOVQ", "MOVQ")
+    """A pure register/stack copy (no arithmetic): the move iclasses of the d2 whitelist and plain MOV; (pre-freeze
+    review of 2026-10-17) also MOVD/VMOVD, the 32-bit moves between XMM and GPR registers (GCC spills a float to a GPR
+    with them), which record §4.7 counts among "register moves"."""
+    return bool(MOVE_RE.match(ins.get("iclass", ""))) or ins.get("iclass") in ("MOV", "VMOVQ", "MOVQ", "MOVD", "VMOVD")
 
 
 # ------------------------------------------------------------------------------------------------ CFG
@@ -350,6 +358,24 @@ def moving_bases(body, insts):
 CMP_RE = re.compile(r"^V?CMP(PS|PD|SS|SD)$")
 SELECT_RE = re.compile(r"^V?(BLENDV(PS|PD)|BLENDM(PS|PD))$")
 MASKED_MOVE_RE = re.compile(r"^V?MOV(APS|UPS|APD|UPD|SS|SD_XMM)$")
+# pre-freeze review of 2026-10-17 (record §4.7 (d)): the SSE2 select idiom (mask & a) | (~mask & b) of a compare mask
+BITAND_RE = re.compile(r"^V?(ANDN?P[SD]|PANDN?[DQ]?)$")
+BITOR_RE = re.compile(r"^V?(X?ORP[SD]|PX?OR[DQ]?)$")
+
+
+def vec_lanes(ins):
+    """f32 lanes of the widest vector register operand of a compare (scalar forms: 1; PD: half)."""
+    ic = ins.get("iclass", "")
+    if ic.endswith(("SS", "SD")):
+        return 1
+    f, width = ins.get("fields", {}), 4
+    for op in ins.get("operands", []):
+        r = f.get(op.split("/")[0]) or ""
+        if r.startswith("ZMM"):
+            width = max(width, 16)
+        elif r.startswith("YMM"):
+            width = max(width, 8)
+    return width if "PS" in ic else width // 2
 
 
 def address_regs(ins):
@@ -484,9 +510,19 @@ def _analyse_loop(lp, insts, succ, preds):
     #          op MAX/MIN (compare-select).
     #   DEP[n] location -> the carried locations whose header values may have reached it (data operands only; the
     #          address registers of a load are not data).
+    # Pre-freeze review of 2026-10-17 (record §4.7): "reads a loop-carried value" is decided from DEP, i.e. any
+    # data-operand path from a carried location (a permute, an insert, a GPR round trip or any other instruction
+    # before the ADD, MUL, MAX, FMA or blend), not only from move-only UE; the cycle and taint requirements of (c)
+    # still bound false counts. Compare-select (d) matches the ORIGINS of the compare's sources (their carried
+    # origins and the accumulations behind them) with the origins of the blend's data operands, so a compare on a
+    # copy of the accumulator is recognised; the SSE2 idiom (mask & a) | (~mask & b) of such a mask is a select too
+    # (CM is carried through moves; MP holds the mask-ANDed parts). EQ[n] is a must-analysis: the pairs of
+    # locations whose provenance is equal on EVERY path to n (a copy, or a non-accumulating write from one class of
+    # tainted sources); (b) merges two carried locations only if they are such a pair at every latch, so a swap of
+    # two accumulators on one path is not merged.
     order = sorted(body, key=lambda n: (n != hdr, n))
-    ue_in, av_in, cm_in = {}, {}, {}
     ue_out, av_out, cm_out, dep_out = {}, {}, {}, {}
+    cml_out, mp_out, mpl_out, eq_out = {}, {}, {}, {}
     acc_info = {}                                    # n -> lanes, for accumulation (and compare-select) instructions
 
     def join(maps):
@@ -495,45 +531,95 @@ def _analyse_loop(lp, insts, succ, preds):
             for k, v in m.items():
                 out[k] = out.get(k, frozenset()) | v
         return out
+
+    def join_pairs(maps):
+        out = {}
+        for m in maps:
+            for k, (a, b) in m.items():
+                pa, pb = out.get(k, (frozenset(), frozenset()))
+                out[k] = (pa | a, pb | b)
+        return out
+
+    def join_max(maps):
+        out = {}
+        for m in maps:
+            for k, v in m.items():
+                out[k] = max(out.get(k, 0), v)
+        return out
+
+    def origins(xs, dep, av):
+        o = set()
+        for x in xs:
+            o |= dep.get(x, frozenset())
+            o |= {("acc", p) for p in av.get(x, frozenset())}
+        return frozenset(o)
     for _ in range(4 * len(body) + 10):
         changed = False
         for n in order:
             ps = [p for p in preds.get(n, []) if p in body and p in ue_out]
             if n == hdr:
                 ue, av, cm, dep = set(carried), {}, {}, {s: frozenset([s]) for s in carried}
+                cml, mp, mpl, eq = {}, {}, {}, frozenset()
             else:
                 ue = set().union(*[ue_out[p] for p in ps]) if ps else set()
                 av = join(av_out[p] for p in ps)
                 cm = join(cm_out[p] for p in ps)
                 dep = join(dep_out[p] for p in ps)
-            ue_in[n], av_in[n], cm_in[n] = ue, av, cm
+                cml = join_max(cml_out[p] for p in ps)
+                mp = join_pairs(mp_out[p] for p in ps)
+                mpl = join_max(mpl_out[p] for p in ps)
+                eq = frozenset.intersection(*[eq_out[p] for p in ps]) if ps else frozenset()
             ins = insts[n]
             ic = ins.get("iclass", "")
-            u0 = lane0_uses(ins)
             du = data_uses(ins)
             d = ud[n][1]
             kills = full_kills(ins)
             clob = call_clobbers(ins)
+            tgt = d - clob
             op, _ = op_class_of(ic)
-            live = ue | set(av)
+            live = ue | set(av) | {x for x, s in dep.items() if s}
             is_acc = op in ACC_OPS and bool(du & live)
             is_sel = bool(SELECT_RE.match(ic) or masked_move(ins)) and \
-                any(cm[m] & du & live for m in du if m in cm)
+                any(cm[m] & origins(du - {m}, dep, av) for m in du if m in cm)
+            sel_lanes = select_lanes(ins) if is_sel else 0
+            parts = [x for x in du if x in mp]
+            if BITOR_RE.match(ic) and parts and not is_sel:
+                closure = frozenset().union(*[mp[x][0] for x in parts])
+                selected = frozenset().union(*[mp[x][1] for x in parts]) | origins(du - set(parts), dep, av)
+                if closure & selected:
+                    is_sel, sel_lanes = True, max(mpl.get(x, 0) for x in parts)
             if is_acc or is_sel:
-                acc_info[n] = lanes_of(ins) if is_acc else select_lanes(ins)
+                acc_info[n] = lanes_of(ins) if is_acc else sel_lanes
             nue = ((ue - d) | d) if (is_move(ins) and (du & ue)) else (ue - kills)
             src_prov = frozenset().union(*[av[x] for x in du if x in av])
             nav = {r: p for r, p in av.items() if r not in kills}
             prov = (frozenset([n]) | src_prov) if (is_acc or is_sel) else src_prov
             if prov:
-                for r in d - clob:
+                for r in tgt:
                     nav[r] = nav.get(r, frozenset()) | prov
             ncm = {m: s for m, s in cm.items() if m not in d}
+            ncml = {m: s for m, s in cml.items() if m not in d}
+            nmp = {m: s for m, s in mp.items() if m not in d}
+            nmpl = {m: s for m, s in mpl.items() if m not in d}
             if CMP_RE.match(ic):
-                srcs = frozenset(x for x in du if x in live)
+                srcs = origins(du, dep, av)
                 if srcs:
-                    for m in d - clob:
-                        ncm[m] = srcs
+                    for m in tgt:
+                        ncm[m], ncml[m] = srcs, vec_lanes(ins)
+            elif is_move(ins) and len(du) == 1:
+                s0 = next(iter(du))
+                for m in tgt & kills:
+                    if s0 in cm:
+                        ncm[m], ncml[m] = cm[s0], cml.get(s0, 0)
+                    if s0 in mp:
+                        nmp[m], nmpl[m] = mp[s0], mpl.get(s0, 0)
+            elif BITAND_RE.match(ic):
+                masks = [x for x in du if x in cm]
+                if masks:
+                    closure = frozenset().union(*[cm[x] for x in masks])
+                    for m in tgt:
+                        nmp[m] = (closure, origins(du - set(masks), dep, av))
+                        nmpl[m] = max(cml.get(x, 0) for x in masks)
             src_dep = frozenset().union(*[dep.get(x, frozenset()) for x in du])
             ndep = dict(dep)
             for r in d:
@@ -543,8 +629,23 @@ def _analyse_loop(lp, insts, succ, preds):
                     ndep[r] = src_dep
                 else:
                     ndep[r] = dep.get(r, frozenset()) | src_dep
-            if (ue_out.get(n), av_out.get(n), cm_out.get(n), dep_out.get(n)) != (nue, nav, ncm, ndep):
-                ue_out[n], av_out[n], cm_out[n], dep_out[n], changed = nue, nav, ncm, ndep, True
+            # EQ (must): drop pairs of every written location; a full, non-accumulating write whose (tainted) sources
+            # form one class of equal provenance joins that class
+            neq = {p for p in eq if not (p & d)}
+            if tgt and tgt <= kills and not (is_acc or is_sel):
+                srcs_eq = set(du) if (is_move(ins) and len(du) == 1) else {x for x in du if x in av}
+                if srcs_eq and all(frozenset((a, b)) in eq for a in srcs_eq for b in srcs_eq if a < b):
+                    s0 = min(srcs_eq)
+                    cls = ({s0} | {x for p in eq if s0 in p for x in p}) - d
+                    for w in tgt:
+                        neq |= {frozenset((w, c)) for c in cls if c != w}
+                        neq |= {frozenset((w, w2)) for w2 in tgt if w2 != w}
+            neq = frozenset(neq)
+            new = (nue, nav, ncm, ndep, ncml, nmp, nmpl, neq)
+            if (ue_out.get(n), av_out.get(n), cm_out.get(n), dep_out.get(n), cml_out.get(n), mp_out.get(n),
+                    mpl_out.get(n), eq_out.get(n)) != new:
+                ue_out[n], av_out[n], cm_out[n], dep_out[n], cml_out[n], mp_out[n], mpl_out[n], eq_out[n] = new
+                changed = True
         if not changed:
             break
     # (c) independent partial results: the strongly connected components of the carried-location graph (an edge
@@ -574,10 +675,23 @@ def _analyse_loop(lp, insts, succ, preds):
         lanes_c = max([acc_info.get(x, 0) for x in behind] or [0])
         if lanes_c <= 0:
             continue
+        # (b) one partial result: tainted locations whose back-edge provenance is equal at every latch AND equal on
+        # every path to it (EQ; pre-freeze review of 2026-10-17: a swap of two accumulators on one path makes their
+        # joined provenances equal, but they are not copies of each other)
+        parent = {r: r for r in comp}
+
+        def find(x):
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+        for i, r1 in enumerate(tainted):
+            for r2 in tainted[i + 1:]:
+                if provs[r1] == provs[r2] and all(frozenset((r1, r2)) in (eq_out.get(tl) or frozenset()) for tl in latches):
+                    parent[find(r2)] = find(r1)
         classes = {}
         for r in comp:
-            key = ("acc", provs[r]) if any(provs[r]) else \
-                ("copy", tuple((dep_out.get(tl) or {}).get(r, frozenset()) for tl in latches), r)
+            key = ("acc", find(r)) if any(provs[r]) else ("copy", r)
             classes.setdefault(key, []).append(r)
         groups = sorted(sorted(g) for g in classes.values())
         partial += groups
@@ -1171,9 +1285,20 @@ def _trip_ok(inner, outer, rows, ad):
     return False, "trip count %r is neither a constant nor the induction variable of %s (%r)" % (tc, outer[0], var)
 
 
-def choose_source_loop(sl_h, sl_l, own=None, rows=None, ad=None, encloses=None):
+def _nested_through_inlining(sl_x, frames_x, sl_y):
+    """True when the source loop sl_x (found at inline frame sl_x[4] of frames_x) runs inside the source loop sl_y
+    because one of the call sites outside sl_x's frame (an inlined call) lies in sl_y's line range of the same file
+    (pre-freeze review of 2026-10-17: q16_unpack's loop inlined into qtile16's g-loop)."""
+    if not (sl_x and sl_y and frames_x) or len(sl_x) < 5 or sl_x[4] is None:
+        return False
+    fy = sl_y[0].rsplit(":", 1)[0]
+    return any(f == fy and sl_y[2] <= line <= sl_y[3] for f, line in frames_x[sl_x[4] + 1:])
+
+
+def choose_source_loop(sl_h, sl_l, own=None, rows=None, ad=None, encloses=None, enclosed_by=None,
+                       frames_h=None, frames_l=None):
     """Record §4.7 source loop: the loops found from the header instruction and from the back edge's own instruction.
-    Returns (source loop, how, rule); rule is 'same', 'header', 'latch', 'outer' or 'min'.
+    Returns (source loop, how, rule); rule is 'same', 'header', 'latch', 'outer', 'inner' or 'min'.
     x0final: when one contains the other, the outer one (an emitted loop whose inner source loop was flattened into
     straight-line code, a vectorised j-loop of an s = 8, 4, 2, 1 tree measured on the regression set under GCC and
     Clang, has its header in the inner loop and its back edge in the outer loop).
@@ -1186,11 +1311,18 @@ def choose_source_loop(sl_h, sl_l, own=None, rows=None, ad=None, encloses=None):
     emitted loop attributed to the inner source loop through header and back edge (`encloses`): then this loop is not
     the inner loop (measured on the regression set under C: GCC keeps j-loops of the s = 8, 4, 2, 1 tree inside the
     emitted s-loop, whose header line is a j line; without this the s-loop's 8 lanes were checked against 0).
-    When the two loops are unrelated, the back edge's loop."""
+    Pre-freeze review of 2026-10-17 (stricter): (iii) the mirror test: when the emitted loop is itself enclosed by an
+    emitted loop attributed to the OUTER source loop through header and back edge (`enclosed_by`), it is the inner
+    loop: rule 'inner' (its own bound); condition (i) is vacuous in exactly that case, since the inner loop's only
+    emitted loop is this one. If it both encloses an emitted inner loop and is enclosed by an emitted outer loop, the
+    smaller bound ('min'). (iv) Nesting through the inline stack (a call site of the header's or the latch's source
+    loop lies inside the other source loop, `frames_h` / `frames_l`) is nesting, so these rules apply to helper loops
+    inlined into a caller's loop. (v) Two source loops that are unrelated, by lines and by inlining: the smaller bound
+    ('min'; before: the back edge's loop)."""
     own, rows = own or set(), rows or {}
     if sl_h and sl_l:
         (hs, he), (ls, le) = (sl_h[2], sl_h[3]), (sl_l[2], sl_l[3])
-        same_file = sl_h[0].split(":")[0] == sl_l[0].split(":")[0]
+        same_file = sl_h[0].rsplit(":", 1)[0] == sl_l[0].rsplit(":", 1)[0]
         if sl_h[0] == sl_l[0]:
             return sl_h, "header=latch", "same"
         nest = None
@@ -1198,9 +1330,21 @@ def choose_source_loop(sl_h, sl_l, own=None, rows=None, ad=None, encloses=None):
             nest = (sl_h, sl_l, "latch (encloses the header's loop)")
         elif hs <= ls and le <= he and same_file:
             nest = (sl_l, sl_h, "header (encloses the latch's loop)")
+        elif _nested_through_inlining(sl_h, frames_h, sl_l):
+            nest = (sl_h, sl_l, "latch (encloses the header's loop through an inlined call)")
+        elif _nested_through_inlining(sl_l, frames_l, sl_h):
+            nest = (sl_l, sl_h, "header (encloses the latch's loop through an inlined call)")
         if nest:
             inner, outer, how = nest
-            if encloses and encloses(inner[0]):
+            enc = bool(encloses and encloses(inner[0]))
+            encd = bool(enclosed_by and enclosed_by(outer[0]))
+            if enc and encd:
+                return inner, "%s; it encloses an emitted loop of %s and is enclosed by an emitted loop of %s: the " \
+                              "smaller bound" % (how, inner[0], outer[0]), "min"
+            if encd:
+                return inner, "%s; it is enclosed by an emitted loop of %s, so it is the inner loop %s" % (
+                    how, outer[0], inner[0]), "inner"
+            if enc:
                 return outer, "%s; it encloses an emitted loop of %s" % (how, inner[0]), "outer"
             ok, why = _trip_ok(inner, outer, rows, ad)
             if inner[0] not in own and ok:
@@ -1209,7 +1353,8 @@ def choose_source_loop(sl_h, sl_l, own=None, rows=None, ad=None, encloses=None):
                 if inner[0] in own else why
             return inner, "nested header %s and latch %s, inner not shown flattened (%s): the smaller bound" % (
                 sl_h[0], sl_l[0], why2), "min"
-        return sl_l, "latch (unrelated to the header's loop)", "latch"
+        return sl_l, "header %s and latch %s unrelated (by lines and by inlining): the smaller bound" % (
+            sl_h[0], sl_l[0]), "min"
     if sl_l:
         return sl_l, "latch", "latch"
     if sl_h:
@@ -1374,15 +1519,20 @@ def main():
                         if sl_l:
                             break
                 info["latch_inline_stack"] = ["%s:%d" % f for f in lstack] if lstack else None
-                pending.append((lp, info, sl_h, sl_l))
+                pending.append((lp, info, sl_h, sl_l, frames, lstack))
         # x0final revision (record §4.7): a source loop counts as emitted on its own when some loop of the variant
         # has its header and its back edge attributed to it
-        own = {h[0] for _, _, h, l2 in pending if h and l2 and h[0] == l2[0]}
-        for lp, info, sl_h, sl_l in pending:
+        own = {h[0] for _, _, h, l2, _, _ in pending if h and l2 and h[0] == l2[0]}
+        for lp, info, sl_h, sl_l, frames, lstack in pending:
             def encloses(inner_id, lp=lp):
                 return any(q is not lp and qh and ql and qh[0] == ql[0] == inner_id and q["header"] in lp["body"]
-                           for q, _, qh, ql in pending)
-            sl, via, rule = choose_source_loop(sl_h, sl_l, own, row_by_id, ad, encloses)
+                           for q, _, qh, ql, _, _ in pending)
+
+            def enclosed_by(outer_id, lp=lp):
+                # pre-freeze review of 2026-10-17: the mirror test (this loop lies inside an emitted loop of outer_id)
+                return any(q is not lp and qh and ql and qh[0] == ql[0] == outer_id and lp["header"] in q["body"]
+                           for q, _, qh, ql, _, _ in pending)
+            sl, via, rule = choose_source_loop(sl_h, sl_l, own, row_by_id, ad, encloses, enclosed_by, frames, lstack)
 
             def bound_of(x):
                 r = row_by_id.get(x[0]) if x else None

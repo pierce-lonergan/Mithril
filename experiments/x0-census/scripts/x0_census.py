@@ -4,6 +4,9 @@
 Usage:
   python -I x0_census.py --run RUN_DIR -o census.json [--class-dir ../class] [--xml x86-intel.xml]
          [--freeze-commit SHA] [--scripts-commit SHA] [--qualify-tables]
+  (pre-freeze review of 2026-10-17: in a census run --freeze-commit and --scripts-commit are refused; record gets
+  freeze_commit (the freeze point), run_commit and post_freeze_changes from run.json, and configs.<cfg> the scripts'
+  hashes each configuration step ran, which judge.py V4 compares with record.scripts_sha256.)
 
 RUN_DIR is written by x0_driver.py (one directory per configuration):
   RUN_DIR/run.json                         run id, kind (census | smoke), times, host, Hearth commit and blobs,
@@ -193,14 +196,24 @@ def main():
     rec_sha = {key: sha256(os.path.join(cdir, name)) for name, key in judge.FROZEN.items()}
     rec_sha["xml"] = sha256(a.xml) if a.xml else None
     # x0final revision: the freeze commit comes from the init step (x0_driver.py init checks the clean checkout of
-    # the FROZEN record and writes HEAD to run.json); an explicit --freeze-commit must agree with it
+    # the FROZEN record and writes the freeze point and HEAD to run.json). Pre-freeze review of 2026-10-17: in a census
+    # run an explicit --freeze-commit or --scripts-commit is refused (it could replace the init step's commit, with
+    # only a note); in a smoke run one that differs from run.json's is noted
     fc_run = run.get("freeze_commit")
-    freeze_commit = a.freeze_commit or fc_run
     commit_notes = []
-    if a.freeze_commit and fc_run and a.freeze_commit != fc_run:
-        commit_notes.append("--freeze-commit %s differs from the init step's %s" % (a.freeze_commit, fc_run))
+    if run.get("kind") == "census":
+        if a.freeze_commit or a.scripts_commit:
+            raise SystemExit("REFUSED: in a census run record.freeze_commit and record.scripts_commit come from the init "
+                             "step's run.json only (--freeze-commit / --scripts-commit given)")
+        freeze_commit, scripts_commit = fc_run, run.get("run_commit")
+    else:
+        freeze_commit = a.freeze_commit or fc_run
+        scripts_commit = a.scripts_commit or run.get("run_commit") or freeze_commit
+        if a.freeze_commit and fc_run and a.freeze_commit != fc_run:
+            commit_notes.append("--freeze-commit %s differs from the init step's %s" % (a.freeze_commit, fc_run))
     census = {"record": {"id": "X0-census" if run.get("kind") == "census" else "X0-census-%s" % run.get("kind", "smoke"),
-                         "freeze_commit": freeze_commit, "scripts_commit": a.scripts_commit or freeze_commit,
+                         "freeze_commit": freeze_commit, "scripts_commit": scripts_commit,
+                         "run_commit": run.get("run_commit"), "post_freeze_changes": run.get("post_freeze_changes"),
                          "sha256": rec_sha,
                          "scripts_sha256": run.get("scripts_sha256") or {}, "profile": run.get("profile"),
                          "mock": bool(run.get("mock")), "hearth_commit": run.get("hearth_commit"),
@@ -226,8 +239,15 @@ def main():
                       for f, x in (cj.get("p3a") or {}).items() if isinstance(x, dict) and "a1" in x},
               "p3a_hits": {f: x.get("hits") for f, x in (cj.get("p3a") or {}).items() if isinstance(x, dict)},
               "census_files": cj.get("census_files", []), "steps": cj.get("steps", []),
-              "objects": {}, "objects_build2": {}, "repro": {}}
+              "objects": {}, "objects_build2": {}, "repro": {},
+              # pre-freeze review of 2026-10-17: the scripts this configuration ran (judge.py V4 compares them with
+              # record.scripts_sha256, the hashes init verified)
+              "scripts_sha256": cj.get("scripts_sha256"), "tree_recheck": cj.get("tree_recheck"),
+              "source_blobs": cj.get("source_blobs")}
         census["configs"][cfg] = ce
+        if run.get("kind") == "census" and cj.get("scripts_sha256") != (run.get("scripts_sha256") or {}):
+            commit_notes.append("configuration %s ran other scripts than init verified (config.json scripts_sha256 "
+                                "differs from run.json): judge.py V4 fails" % cfg)
         for st in cj.get("steps", []):
             if st.get("step") in ("build1", "build2") or str(st.get("step")).startswith("twin_"):
                 twin = str(st["step"]).startswith("twin_")
@@ -450,7 +470,7 @@ def main():
     # rule that set its P3(c) bound
     for v in census["variants"]:
         for lp in v.get("loops") or []:
-            if lp.get("bound_rule") in ("outer", "min"):
+            if lp.get("bound_rule") in ("outer", "inner", "min"):
                 census["notes"].append("loop %s|%s:%s|b%d|%s: header %s (bound %s), back edge %s (bound %s), rule %s, "
                                        "bound used %s" % (v["config"], v["table"], v["slot"], v["build_index"],
                                                           lp.get("id"), (lp.get("header_inline_stack") or ["?"])[0],

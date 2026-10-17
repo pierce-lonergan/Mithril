@@ -5,6 +5,8 @@
 # RUN is a /mnt/d/... path. X0 = experiments/x0-census of the tree to use, as a /mnt/d/... path; required (x0final
 # revision: no default). For the census: the clean checkout of the freeze commit.
 # Run inside the existing keepalive VM: wsl.exe -d Ubuntu -- bash $X0/scripts/runbook/81_census_wsl.sh RUN CFG
+# Pre-freeze review of 2026-10-17: in a census run the step refuses unless X0's pinned scripts equal the hashes init
+# verified (run.json); the git re-check of the checkout runs on Windows only (steps 80 and 82).
 exec 2>&1
 export CUDA_VISIBLE_DEVICES=-1
 if [ -z "$X0" ]; then echo "REFUSED: set X0 to experiments/x0-census of the tree to use"; exit 2; fi

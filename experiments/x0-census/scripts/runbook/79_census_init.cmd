@@ -5,6 +5,9 @@ rem   79_census_init.cmd RUN [RECORD]   (RECORD: default %X0%\..\..\docs\m0\prer
 rem x0final revision: X0 must name experiments\x0-census of a clean git checkout of the freeze commit on the desktop
 rem (for example `git clone` of the repository, then `git checkout <freeze commit>`); there is no default tree, and
 rem x0_driver.py init refuses a dirty checkout or a record that is not FROZEN at HEAD.
+rem Pre-freeze review of 2026-10-17: init records the freeze point (the first commit with the record FROZEN) and HEAD
+rem separately; it refuses a record edited other than by an appended amendment, class/, scripts/ or flags/ changes
+rem the amendment does not name, ignored files there other than __pycache__, and a Hearth tree not at b5d3f14.
 setlocal
 set CUDA_VISIBLE_DEVICES=-1
 if "%X0%"=="" (

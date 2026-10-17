@@ -7,13 +7,16 @@ that assembles census.json and runs the Gatekeeper.
             class/frozen_inputs.json "scripts" (as the run uses them), and the source check. In census mode (kind
             census) it REFUSES unless (a) the record's status line reads FROZEN (--record, default
             docs/m0/prereg/X0-census.md next to this tree), (b) the 7 Hearth files carry exactly the blob hashes
-            of record §2 (class/B_iform.json inputs.hearth_blobs), and (c) (x0final revision) this tree is a clean git
-            checkout: `git status --porcelain` is empty for experiments/x0-census and the record, the record's status
-            line at HEAD (`git show HEAD:docs/m0/prereg/X0-census.md`) begins "Status: FROZEN", the --record file is
-            that checkout's record, and every pinned script on disk equals its pin; HEAD is written to run.json as
-            freeze_commit (x0_census.py copies it into census.json, judge.py V4 requires it). With --mock (smoke kind
-            only) the source tree must contain the marker file X0_NOT_HEARTH instead; the record status is then not
-            required.
+            of record §2 (class/B_iform.json inputs.hearth_blobs) and the source tree is at the pinned Hearth commit,
+            and (c) (x0final revision; pre-freeze review of 2026-10-17) this tree is a clean git checkout tied to the
+            FREEZE POINT (freeze_checkout): `git status --porcelain` is empty for experiments/x0-census and the record,
+            no ignored file other than __pycache__ lies under class/, scripts/ or flags/, the freeze point is the first
+            commit at which the record reads FROZEN, the record at HEAD is the freeze point's record plus an appended
+            amendment at most, every class/, scripts/ or flags/ path changed since the freeze point is named in that
+            amendment, the --record file is that checkout's record, and every pinned script on disk equals its pin.
+            run.json gets freeze_commit (the freeze point), run_commit (HEAD) and post_freeze_changes (x0_census.py
+            copies them into census.json; judge.py V4 requires them). With --mock (smoke kind only) the source tree
+            must contain the marker file X0_NOT_HEARTH instead; the record status is then not required.
   config    python -I x0_driver.py config --run RUN --config CFG --tools TOOLS.json
                    [--mode census|replay|probe] [--set SET.json] [--target hearth_core]
                    [--from-config CFG --from-file FILE] [--frozen-db DB] [--design-time FILE]
@@ -31,9 +34,16 @@ that assembles census.json and runs the Gatekeeper.
               Hearth file it stands in for (x0_flags.py replay semantics), twice, plus the twin; one extraction unit
               per census file. probe mode (arm P, configuration P.<CFG>): the reduce probe compiled with <CFG>'s
               build-1 line of --from-file, twice, plus the twin; the wrappers are found by symbol.
-            A smoke run (kind smoke) refuses to compile any file whose bytes are a pinned Hearth blob.
+            A smoke run (kind smoke) refuses to compile any file whose bytes are a pinned Hearth blob, or any C source or
+            header of its source and include directories that shares a pair of consecutive normalised lines with a pinned
+            Hearth file (guard_sources). In a census run (pre-freeze review of 2026-10-17) the step first re-checks that
+            this tree's pinned scripts equal run.json's and class/frozen_inputs.json's hashes, that the checkout is still
+            at run.json's run_commit (Windows) and that the Hearth blobs match; it refuses --frozen-db and
+            --design-time; config.json records the scripts' hashes (x0_census.py compares them with run.json's).
   assemble  python -I x0_driver.py assemble --run RUN [--xml XML] [--freeze-commit SHA] [--qualify-tables]
             x0_census.py -> RUN/census.json, then judge.py -> RUN/verdict.json (the evaluation date is judge.py's).
+            In a census run --freeze-commit and --scripts-commit are refused (the commits come from init) and the
+            scripts are re-checked as in config.
 
 Every external step is logged in RUN/<CFG>/config.json "steps" (argv, rc, start and end UTC, log file). A failed
 step is recorded and the driver continues where the record says the failure is data (a compile failure of a census
@@ -152,23 +162,57 @@ def record_status(path):
 
 
 # ------------------------------------------------------------------------------------------- init
-def cmd_init(a):
-    os.makedirs(a.run, exist_ok=True)
-    pins = jload(os.path.join(ROOT, "class", "frozen_inputs.json"), {})
-    scripts = {}
+REL_RECORD = "docs/m0/prereg/X0-census.md"
+FROZEN_DIRS = ("experiments/x0-census/class", "experiments/x0-census/scripts", "experiments/x0-census/flags")
+REPO = os.path.dirname(os.path.dirname(ROOT))               # experiments/x0-census -> repository root
+
+
+def pinned_script_hashes(pins):
+    """SHA-256 of every file of class/frozen_inputs.json "scripts" as it is on disk under this tree (None: missing)."""
+    out = {}
     for rel in sorted((pins.get("scripts") or {})):
         p = os.path.join(ROOT, *rel.split("/"))
-        scripts[rel] = sha256(p) if os.path.exists(p) else None
+        out[rel] = sha256(p) if os.path.exists(p) else None
+    return out
+
+
+def source_blob_check(source):
     blobs = (jload(os.path.join(ROOT, "class", "B_iform.json"), {}).get("inputs") or {}).get("hearth_blobs", {})
     src_check = {}
     for rel, want in sorted(blobs.items()):
-        p = os.path.join(a.source, *rel.split("/"))
+        p = os.path.join(source, *rel.split("/"))
         have = x0_extract.git_blob_sha1(open(p, "rb").read()) if os.path.exists(p) else None
         src_check[rel] = {"pinned": want, "found": have, "ok": have == want}
-    blobs_ok = bool(src_check) and all(x["ok"] for x in src_check.values())
+    return src_check, bool(src_check) and all(x["ok"] for x in src_check.values())
+
+
+def source_commit(source):
+    """HEAD of the source tree: `git rev-parse HEAD`, or (when git refuses the tree, e.g. a WSL-made clone seen from
+    Windows) a detached HEAD read from .git/HEAD; None otherwise."""
+    try:
+        p = subprocess.run(["git", "-C", source, "rev-parse", "HEAD"], capture_output=True, text=True)
+        c = p.stdout.strip() if p.returncode == 0 else ""
+        if re.match(r"^[0-9a-f]{40}$", c):
+            return c
+    except OSError:
+        pass
+    try:
+        with open(os.path.join(source, ".git", "HEAD"), encoding="ascii") as f:
+            c = f.read().strip()
+        return c if re.match(r"^[0-9a-f]{40}$", c) else None
+    except OSError:
+        return None
+
+
+def cmd_init(a):
+    os.makedirs(a.run, exist_ok=True)
+    pins = jload(os.path.join(ROOT, "class", "frozen_inputs.json"), {})
+    scripts = pinned_script_hashes(pins)
+    src_check, blobs_ok = source_blob_check(a.source)
     marker = os.path.exists(os.path.join(a.source, "X0_NOT_HEARTH"))
     status = record_status(a.record) if os.path.exists(a.record) else None
-    freeze_commit = None
+    tie = {}
+    commit = source_commit(a.source)
     if a.kind == "census":
         if a.mock:
             raise SystemExit("REFUSED: --mock is for kind smoke only")
@@ -176,55 +220,122 @@ def cmd_init(a):
             raise SystemExit("REFUSED: the record %s is not FROZEN (%r); no census collection before freeze" % (a.record, status))
         if not blobs_ok:
             raise SystemExit("REFUSED: Hearth source blobs differ from record §2: %s" % {k: v for k, v in src_check.items() if not v["ok"]})
-        freeze_commit = freeze_checkout(a.record, pins, scripts)
+        want = (jload(os.path.join(ROOT, "class", "B_iform.json"), {}).get("inputs") or {}).get("hearth_commit")
+        if commit != want:
+            raise SystemExit("REFUSED: the Hearth source tree is at %r, record §2 pins %s" % (commit, want))
+        tie = freeze_checkout(a.record, pins, scripts)
     else:
         if blobs_ok:
             raise SystemExit("REFUSED: the source tree is Hearth b5d3f14 (blobs match); kind smoke never runs on Hearth")
         if a.mock and not marker:
             raise SystemExit("REFUSED: --mock needs the marker file X0_NOT_HEARTH in %s" % a.source)
-    commit = None
-    try:
-        commit = subprocess.run(["git", "-C", a.source, "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip() or None
-    except OSError:
-        pass
     run = {"run_id": a.run_id or "%s-%s" % (a.kind, time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())), "kind": a.kind,
            "profile": a.profile, "mock": bool(a.mock), "utc_start": utc(), "host": platform.node(),
            "source": os.path.abspath(a.source), "hearth_commit": commit if a.kind == "census" else None,
            "source_commit": commit, "source_blobs": src_check, "source_blobs_ok": blobs_ok,
-           "record_status": status, "scripts_sha256": scripts, "freeze_commit": freeze_commit,
+           "record_status": status, "scripts_sha256": scripts, "freeze_commit": tie.get("freeze_commit"),
+           "run_commit": tie.get("run_commit"), "post_freeze_changes": tie.get("post_freeze_changes"),
+           "record_appended_bytes": tie.get("record_appended_bytes"),
            "scripts_match_pins": scripts == (pins.get("scripts") or {}), "driver_argv": sys.argv}
     jdump(run, os.path.join(a.run, "run.json"))
-    print(json.dumps({k: run[k] for k in ("run_id", "kind", "profile", "mock", "source_blobs_ok", "scripts_match_pins")}))
+    print(json.dumps({k: run[k] for k in ("run_id", "kind", "profile", "mock", "source_blobs_ok", "scripts_match_pins",
+                                          "freeze_commit", "run_commit", "post_freeze_changes")}))
     return 0
 
 
-def freeze_checkout(record, pins, scripts):
-    """record §7, judge.py V4 (x0final revision): a census runs only from a clean git checkout of the freeze commit.
-    Returns HEAD; refuses otherwise."""
-    repo = os.path.dirname(os.path.dirname(ROOT))           # experiments/x0-census -> repository root
-    rel_rec = "docs/m0/prereg/X0-census.md"
-
-    def git(*args):
+def _git_runner(repo):
+    def git(*args, binary=False):
         try:
-            p = subprocess.run(["git", "-C", repo] + list(args), capture_output=True, text=True)
+            p = subprocess.run(["git", "-C", repo] + list(args), capture_output=True)
         except OSError as e:
             raise SystemExit("REFUSED: git is needed to tie the census to the freeze commit (%s)" % e)
         if p.returncode != 0:
-            raise SystemExit("REFUSED: git %s failed in %s: %s" % (" ".join(args), repo, p.stderr.strip()[:300]))
-        return p.stdout
+            raise SystemExit("REFUSED: git %s failed in %s: %s" % (" ".join(args), repo,
+                                                                  p.stderr.decode("utf-8", "replace").strip()[:300]))
+        return p.stdout if binary else p.stdout.decode("utf-8", "replace")
+    return git
+
+
+def _status_line(text):
+    return next((ln.strip() for ln in text.splitlines() if ln.startswith("Status:")), "")
+
+
+def freeze_checkout(record, pins, scripts, git=None):
+    """record §7, §8 item 9, judge.py V4: a census runs only from a clean git checkout tied to the FREEZE POINT, the
+    first commit at which the record's status line reads FROZEN (docs/m0/README: "Its commit hash is the freeze
+    point"; pre-freeze review of 2026-10-17: before, HEAD was taken as the freeze commit). Refuses unless:
+      * the checkout is clean under experiments/x0-census and the record (`git status --porcelain`), and no ignored
+        file other than a __pycache__ directory lies under class/, scripts/ or flags/ (`--ignored`: a sourceless
+        scripts/<name>.pyc would be importable);
+      * the record at HEAD begins, byte for byte, with the record at the freeze point (only an appended amendment
+        may follow) and reads FROZEN;
+      * every path under class/, scripts/ or flags/ that differs between the freeze point and HEAD is named in the
+        appended amendment text (record §10: a logged tooling fix); such a run is post-freeze and lists them;
+      * --record is this checkout's record and every pinned script on disk equals its pin.
+    Returns {freeze_commit, run_commit (HEAD), post_freeze_changes, record_appended_bytes}."""
+    repo = REPO
+    git = git or _git_runner(repo)
     head = git("rev-parse", "HEAD").strip()
-    dirty = git("status", "--porcelain", "--", "experiments/x0-census", rel_rec).strip()
+    dirty = git("status", "--porcelain", "--", "experiments/x0-census", REL_RECORD).strip()
     if dirty:
         raise SystemExit("REFUSED: the checkout %s has changes under experiments/x0-census or the record:\n%s" % (repo, dirty[:2000]))
-    at_head = git("show", "HEAD:%s" % rel_rec)
-    st = next((ln.strip() for ln in at_head.splitlines() if ln.startswith("Status:")), "")
-    if not st.startswith("Status: FROZEN"):
-        raise SystemExit("REFUSED: the record at HEAD %s is not FROZEN (%r)" % (head, st))
-    if os.path.normcase(os.path.abspath(record)) != os.path.normcase(os.path.abspath(os.path.join(repo, *rel_rec.split("/")))):
+    ign = [ln[3:] for ln in git("status", "--porcelain", "--ignored", "--", *FROZEN_DIRS).splitlines()
+           if ln.startswith("!! ")]
+    bad_ign = [p for p in ign if "__pycache__" not in p.strip('"').rstrip("/").split("/")]
+    if bad_ign:
+        raise SystemExit("REFUSED: ignored files under class/, scripts/ or flags/ (an ignored .pyc is importable): %s"
+                         % bad_ign[:20])
+    if os.path.normcase(os.path.abspath(record)) != os.path.normcase(os.path.abspath(os.path.join(repo, *REL_RECORD.split("/")))):
         raise SystemExit("REFUSED: --record %s is not the record of the checkout %s" % (record, repo))
     if scripts != (pins.get("scripts") or {}) or not scripts:
         raise SystemExit("REFUSED: the scripts on disk differ from class/frozen_inputs.json \"scripts\"")
-    return head
+    at_head = git("show", "HEAD:%s" % REL_RECORD, binary=True)
+    if not _status_line(at_head.decode("utf-8", "replace")).startswith("Status: FROZEN"):
+        raise SystemExit("REFUSED: the record at HEAD %s is not FROZEN (%r)" % (head, _status_line(at_head.decode("utf-8", "replace"))))
+    freeze, at_freeze = None, None
+    for c in git("log", "--format=%H", "--reverse", "HEAD", "--", REL_RECORD).split():
+        txt = git("show", "%s:%s" % (c, REL_RECORD), binary=True)
+        if _status_line(txt.decode("utf-8", "replace")).startswith("Status: FROZEN"):
+            freeze, at_freeze = c, txt
+            break
+    if freeze is None:
+        raise SystemExit("REFUSED: no commit in HEAD's history has the record reading FROZEN")
+    if not at_head.startswith(at_freeze):
+        raise SystemExit("REFUSED: the record at HEAD differs from the record at the freeze point %s other than by an "
+                         "appended amendment (docs/m0/README: only a dated section appended at the end may change it)" % freeze)
+    appended = at_head[len(at_freeze):].decode("utf-8", "replace")
+    changed = [] if freeze == head else sorted(p for p in git("diff", "--name-only", freeze, head, "--", *FROZEN_DIRS).split() if p)
+    unnamed = [p for p in changed if p not in appended and p[len("experiments/x0-census/"):] not in appended]
+    if unnamed:
+        raise SystemExit("REFUSED: %s changed after the freeze point %s without an amendment naming them (record §10): %s"
+                         % (", ".join(FROZEN_DIRS), freeze, unnamed[:20]))
+    return {"freeze_commit": freeze, "run_commit": head, "post_freeze_changes": changed,
+            "record_appended_bytes": len(at_head) - len(at_freeze)}
+
+
+def recheck_census_tree(run, pins):
+    """config / assemble, kind census (pre-freeze review of 2026-10-17): the scripts these steps run (this tree) must
+    be the ones init verified: equal to run.json scripts_sha256 and to class/frozen_inputs.json "scripts". On Windows
+    (git installed on the desktop) the checkout's HEAD must still be run.json's run_commit with the record FROZEN; in
+    WSL that re-check is skipped (the pins above identify the code). Returns the hashes and what was checked."""
+    scripts = pinned_script_hashes(pins)
+    if not scripts or scripts != (pins.get("scripts") or {}) or scripts != (run.get("scripts_sha256") or {}):
+        diff = sorted(k for k in set(scripts) | set(run.get("scripts_sha256") or {})
+                      if scripts.get(k) != (run.get("scripts_sha256") or {}).get(k) or scripts.get(k) != (pins.get("scripts") or {}).get(k))
+        raise SystemExit("REFUSED: the scripts of this tree (%s) are not the ones init verified (run.json and "
+                         "class/frozen_inputs.json): %s" % (ROOT, diff[:20]))
+    checked = {"scripts": "equal to run.json and frozen_inputs.json"}
+    if os.name == "nt":
+        git = _git_runner(REPO)
+        head = git("rev-parse", "HEAD").strip()
+        if head != run.get("run_commit"):
+            raise SystemExit("REFUSED: this checkout is at %s, init ran at %s" % (head, run.get("run_commit")))
+        if not _status_line(git("show", "HEAD:%s" % REL_RECORD)).startswith("Status: FROZEN"):
+            raise SystemExit("REFUSED: the record at HEAD is not FROZEN")
+        checked["git"] = "HEAD %s equals run.json run_commit; record FROZEN" % head
+    else:
+        checked["git"] = "skipped outside Windows (WSL); the script pins identify the code"
+    return scripts, checked
 
 
 # ------------------------------------------------------------------------------------------- helpers
@@ -241,9 +352,13 @@ def compiler_banner(argv0):
 
 
 def resource_dir_tree(argv0):
+    """The include tree of clang's resource directory: {dir, files, sha256} (sha256 over the sorted relative paths, each
+    + NUL + the file's SHA-256 digest, as runbook steps 70 and 71 computed the Table 2.1 pins). Pre-freeze review of
+    2026-10-17: the clang-cl form `/clang:` is used for clang-cl only; before, any driver name containing "cl" got it,
+    so D's `clang` printed nothing and its tree was recorded as null (run smoke-20261017T054918Z, D/config.json)."""
     try:
-        p = subprocess.run([argv0, "-print-resource-dir"] if "cl" not in os.path.basename(argv0).lower()
-                           else [argv0, "/clang:-print-resource-dir"], capture_output=True, text=True)
+        p = subprocess.run([argv0, "/clang:-print-resource-dir"] if x0_flags.is_msvc_driver(argv0)
+                           else [argv0, "-print-resource-dir"], capture_output=True, text=True)
         r = os.path.join(p.stdout.strip(), "include")
     except OSError:
         return None
@@ -257,6 +372,9 @@ def resource_dir_tree(argv0):
 
 
 def headers_info(cfg, argv0):
+    """The header environment of Table 2.1 (record §2): Windows SDK, UCRT and MSVC toolset versions (vcvars), the
+    libc6-dev version (WSL), clang's resource-dir include tree. judge.py compares it with class/frozen_inputs.json
+    "headers" (pre-freeze review of 2026-10-17); a mismatch makes every build of the configuration tooling `other`."""
     out = {}
     if HOST.get(cfg) == "windows":
         out.update(sdk=os.environ.get("WindowsSDKVersion"), ucrt=os.environ.get("UCRTVersion"),
@@ -458,15 +576,45 @@ def build_replay(a, cfg, cfgdir, steps, tools, files, records, db=None, from_rec
                 records[bi][f["id"]] = r
 
 
-SHINGLE_SKIP = ("//", "/*", "*", "#include", "#pragma", "#endif", "#else")
+SHINGLE_SKIP = ("#include", "#pragma", "#endif", "#else")
+SHINGLE_K = 2
+SHINGLE_DEFINITION = "comments stripped; whitespace collapsed; trivial < 12 non-blank characters or #include/#pragma/#endif/#else; k = 2"
+
+
+def strip_c_comments(text):
+    """C source with every block and line comment removed (pre-freeze review of 2026-10-17: a trailing comment made
+    an otherwise equal line differ); string and character literals are kept; newlines inside block comments stay, so
+    line numbers do not move."""
+    out, i, n, bs = [], 0, len(text), chr(92)
+    while i < n:
+        c = text[i]
+        if c == "/" and text.startswith("/*", i):
+            j = text.find("*/", i + 2)
+            j = n if j < 0 else j + 2
+            out.append("".join("\n" if ch == "\n" else " " for ch in text[i:j]))
+            i = j
+        elif c == "/" and text.startswith("//", i):
+            j = text.find("\n", i)
+            i = n if j < 0 else j
+        elif c in "\"'":
+            j = i + 1
+            while j < n and text[j] != c and text[j] != "\n":
+                j += 2 if text[j] == bs else 1
+            out.append(text[i:j + 1])
+            i = j + 1
+        else:
+            out.append(c)
+            i += 1
+    return "".join(out)
 
 
 def nontrivial_lines(text):
-    """The normalised non-trivial lines of a C source (x0final revision; the unit of the shingle guard): whitespace
-    runs collapsed to one space and stripped; a line is trivial when it has fewer than 12 non-blank characters or
-    starts with a comment marker or #include, #pragma, #endif or #else."""
+    """The normalised non-trivial lines of a C source (x0final revision; the unit of the shingle guard). Pre-freeze
+    review of 2026-10-17: comments, including trailing ones, are stripped first, so a line starting with '*' (a
+    dereference) is no longer skipped as a comment. Whitespace runs are collapsed to one space and stripped; a line is
+    trivial when it has fewer than 12 non-blank characters or starts with #include, #pragma, #endif or #else."""
     out = []
-    for line in text.splitlines():
+    for line in strip_c_comments(text).splitlines():
         n = re.sub(r"\s+", " ", line.strip())
         if len(re.sub(r"\s", "", n)) < 12 or n.startswith(SHINGLE_SKIP):
             continue
@@ -474,44 +622,65 @@ def nontrivial_lines(text):
     return out
 
 
-def shingles(text, k=3):
-    """SHA-256 of every window of k consecutive normalised non-trivial lines (joined by a newline)."""
+def shingles(text, k=SHINGLE_K, allowed=frozenset()):
+    """SHA-256 of every window of k consecutive normalised non-trivial lines (joined by a newline), except windows
+    whose lines are all on the allow-list of structural lines (the dispatch-table shape a census mock must share)."""
     nt = nontrivial_lines(text)
-    return [hashlib.sha256("\n".join(nt[i:i + k]).encode("utf-8")).hexdigest() for i in range(len(nt) - k + 1)]
+    return [hashlib.sha256("\n".join(nt[i:i + k]).encode("utf-8")).hexdigest() for i in range(len(nt) - k + 1)
+            if not all(x in allowed for x in nt[i:i + k])]
+
+
+def guard_paths(a, sset, src_root):
+    """Every C source and header the smoke step compiles or can include from its source tree: all .c and .h files of
+    the source directories (the census files, the mock's other.c, the set's files and the files next to them) and of
+    an engine/include directory (pre-freeze review of 2026-10-17; before: the census files and the .h next to them)."""
+    if a.mode == "census":
+        dirs = [os.path.join(src_root, *HEARTH_SRC_REL.split("/")), os.path.join(src_root, "engine", "include")]
+        files = []
+    elif a.mode == "replay" and sset:
+        files = [set_path(f["source"], src_root) for f in sset["files"]]
+        dirs = [os.path.dirname(p) for p in files] + [set_path(d, src_root) for f in sset["files"] for d in f.get("source_dirs", [])]
+    else:
+        files = [os.path.join(ROOT, "scripts", "probes", "reduce_probe.c")]
+        dirs = [os.path.dirname(files[0])]
+    paths = list(files)
+    for d in sorted(set(dirs)):
+        if os.path.isdir(d):
+            paths += [os.path.join(d, f) for f in sorted(os.listdir(d)) if f.endswith((".c", ".h"))]
+    return sorted(set(os.path.normpath(p) for p in paths))
 
 
 def guard_sources(a, run, sset, src_root):
-    """A smoke run never compiles Hearth: refuse if any source it would compile (with the headers next to it)
-    carries the git blob hash of one of the pinned Hearth files (class/B_iform.json inputs.hearth_blobs), or shares
-    three consecutive normalised non-trivial lines with one of them (class/hearth_shingles.json; added by the
-    x0final revision after the census mock was found to contain verbatim Hearth helpers, record §2)."""
+    """A smoke run never compiles Hearth: refuse if any source it would compile (guard_paths) carries the git blob
+    hash of one of the pinned Hearth files (class/B_iform.json inputs.hearth_blobs), is not UTF-8, or shares a pair
+    of consecutive normalised non-trivial lines with one of them that is not made of allow-listed structural lines
+    (class/hearth_shingles.json; added by the x0final revision after the census mock was found to contain verbatim
+    Hearth helpers, record §2; pairs instead of runs of three, and comments stripped, since the pre-freeze review of
+    2026-10-17 found two-line Hearth runs in smoke_dispatch.c)."""
     if run.get("kind") == "census":
         return
     pinned = set(((jload(os.path.join(ROOT, "class", "B_iform.json"), {}).get("inputs") or {}).get("hearth_blobs") or {}).values())
     sh = jload(os.path.join(ROOT, "class", "hearth_shingles.json"))
-    if not sh or not sh.get("shingles") or set((sh.get("hearth_blobs") or {}).values()) != pinned:
-        raise SystemExit("REFUSED: class/hearth_shingles.json is missing or was not made from the pinned Hearth blobs")
+    if not sh or not sh.get("shingles") or set((sh.get("hearth_blobs") or {}).values()) != pinned \
+            or sh.get("k") != SHINGLE_K or sh.get("definition") != SHINGLE_DEFINITION:
+        raise SystemExit("REFUSED: class/hearth_shingles.json is missing, was not made from the pinned Hearth blobs, or "
+                         "uses another line definition than this script")
     known = set(sh["shingles"])
-    paths = []
-    if a.mode == "census":
-        sdir = os.path.join(src_root, *HEARTH_SRC_REL.split("/"))
-        paths = [os.path.join(sdir, f) for f in CENSUS_FILES]
-    elif a.mode == "replay" and sset:
-        paths = [set_path(f["source"], src_root) for f in sset["files"]]
-    else:
-        paths = [os.path.join(ROOT, "scripts", "probes", "reduce_probe.c")]
-    for d in sorted({os.path.dirname(p) for p in paths}):
-        if os.path.isdir(d):
-            paths += [os.path.join(d, f) for f in sorted(os.listdir(d)) if f.endswith(".h")]
-    for p in paths:
+    allowed = frozenset(sh.get("allowed_structural_lines") or [])
+    for p in guard_paths(a, sset, src_root):
         if not os.path.exists(p):
             continue
-        data = open(p, "rb").read()
+        with open(p, "rb") as fh:
+            data = fh.read()
         if x0_extract.git_blob_sha1(data) in pinned:
             raise SystemExit("REFUSED: %s is a pinned Hearth file; a smoke run never compiles Hearth" % p)
-        hits = [i for i, s in enumerate(shingles(data.decode("utf-8", errors="replace"))) if s in known]
+        try:
+            text = data.decode("utf-8")
+        except UnicodeDecodeError:
+            raise SystemExit("REFUSED: %s is not UTF-8; the shingle guard cannot read it" % p)
+        hits = [i for i, s in enumerate(shingles(text, allowed=allowed)) if s in known]
         if hits:
-            raise SystemExit("REFUSED: %s shares %d run(s) of 3 consecutive non-trivial lines with a pinned Hearth file "
+            raise SystemExit("REFUSED: %s shares %d pair(s) of consecutive non-trivial lines with a pinned Hearth file "
                              "(first at its non-trivial line %d); a smoke run never compiles Hearth code" % (p, len(hits), hits[0] + 1))
 
 
@@ -530,14 +699,28 @@ def cmd_config(a):
         raise SystemExit("no run.json in %s (run `init` first)" % a.run)
     cfg = a.config
     base_cfg = cfg.split(".")[-1]                  # P.<CFG> uses <CFG>'s host, ABI and twin flag
+    src_root = localpath(run["source"])
+    pins = jload(os.path.join(ROOT, "class", "frozen_inputs.json"), {})
+    src_check = None
+    if run.get("kind") == "census":
+        # pre-freeze review of 2026-10-17 (record §8 item 9): every configuration step re-checks that it runs the
+        # scripts init verified, from the same checkout, on the pinned Hearth blobs (record §2)
+        if a.frozen_db or a.design_time:
+            raise SystemExit("REFUSED: --frozen-db and --design-time replace the frozen captures; not in a census run")
+        scripts_now, checked = recheck_census_tree(run, pins)
+        src_check, ok = source_blob_check(src_root)
+        if not ok:
+            raise SystemExit("REFUSED: Hearth source blobs differ from record §2: %s" % {k: v for k, v in src_check.items() if not v["ok"]})
+    else:
+        scripts_now, checked = pinned_script_hashes(pins), {"scripts": "recorded only (smoke run)"}
     cfgdir = os.path.join(a.run, cfg)
     if os.path.exists(cfgdir):
         shutil.rmtree(cfgdir)
     os.makedirs(cfgdir)
     steps = Steps(cfgdir)
-    src_root = localpath(run["source"])
     cj = {"config": cfg, "role": ROLE.get(cfg, "secondary"), "host": HOST.get(base_cfg), "abi": ABI.get(base_cfg),
-          "mode": a.mode, "driver_argv": sys.argv, "tools": tools, "census_files": [], "effective_flags": {}, "p3a": {}}
+          "mode": a.mode, "driver_argv": sys.argv, "tools": tools, "census_files": [], "effective_flags": {}, "p3a": {},
+          "scripts_sha256": scripts_now, "tree_recheck": checked, "source_blobs": src_check}
     try:
         _config(a, cfg, base_cfg, cfgdir, steps, tools, run, src_root, cj)
     finally:
@@ -663,6 +846,13 @@ def _config(a, cfg, base_cfg, cfgdir, steps, tools, run, src_root, cj):
 
 def cmd_assemble(a):
     tools = jload(a.tools) if a.tools else {}
+    run = jload(os.path.join(a.run, "run.json"), {})
+    if run.get("kind") == "census":
+        # pre-freeze review of 2026-10-17: the commits come from init only, and the assembler and the Gatekeeper run
+        # from the tree init verified
+        if a.freeze_commit or a.scripts_commit:
+            raise SystemExit("REFUSED: in a census run the freeze point and the run commit come from init (run.json) only")
+        recheck_census_tree(run, jload(os.path.join(ROOT, "class", "frozen_inputs.json"), {}))
     out = os.path.join(a.run, "census.json")
     argv = py(tools) + [script("x0_census.py"), "--run", a.run, "-o", out]
     if a.xml:

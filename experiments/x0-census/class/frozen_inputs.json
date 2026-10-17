@@ -2,6 +2,7 @@
  "B_iform.json": "a66e1a935d887a272d5f3fb868d10a1877f8e4d7b26137a3962079b1edcb1eaa",
  "_provenance": {
   "compilers": "Table 2.1 compiler binaries per configuration (TOOLCHAINS.md section 11; full hashes [M, x0prep, steps 70 and 71, 2026-10-16]); every census build record's compiler_sha256 must equal its configuration's map",
+  "headers": "Table 2.1 header environment per configuration (pre-freeze review of 2026-10-17): Windows SDK, UCRT and MSVC toolset versions as vcvars sets them (WindowsSDKVersion, UCRTVersion, VCToolsVersion) [M, x0prep, step 70, runbook/logs/x0prep_70_prefreeze_win.log; recorded by run smoke-20261017T054918Z for A, A-ninja and B-cmake]; libc6-dev 2.39-0ubuntu8.9 [M, step 71; same run for C and D]; clang's resource-dir include tree (files, sha256 over sorted relative path + NUL + file SHA-256 digest) [M, steps 70 and 71: Windows 322 files, Linux 327 files; the run recorded the Windows tree equal for B-cmake and null for D, a driver bug fixed by the pre-freeze review]; judge.py makes every build of a configuration whose census.json configs.<cfg>.headers differ tooling 'other'",
   "scripts": "SHA-256 of every file under experiments/x0-census/scripts/ except run outputs (runbook/logs/, smoke/results/, __pycache__) and documentation (*.md), by path under experiments/x0-census; recomputed by scripts/runbook/pin_inputs.py; judge.py V4 compares the files on disk and census.json record.scripts_sha256 with this map",
   "written": "2026-10-16 by x0prep; scripts map widened to every script file and recomputed by x0final (2026-10-16) with scripts/runbook/pin_inputs.py; recompute and compare with FREEZE.md before freezing",
   "x86-intel.xml": "rust-lang/stdarch eb9b3025937c85bd271a3ca46a681cd52739db12 intrinsics_data/x86-intel.xml (not stored in this repository)"
@@ -31,12 +32,43 @@
  "fp_class.csv": "7cabb6913437c364f7d02c988a839ed5807462a3812cacd86e68a1c72a686c2f",
  "fp_flag_patterns.txt": "181ab6e8b9cffbe12dd2d7bbeb4bf7a6aeed36161bc8e4ec2692261bf8a42dbc",
  "hand_map.csv": "008f558ead3ee86b9484f8891470f51db0e10dbf8591a8509ca20c4219ad5d3e",
+ "headers": {
+  "A": {
+   "sdk": "10.0.26100.0",
+   "ucrt": "10.0.26100.0",
+   "vctools": "14.44.35207"
+  },
+  "A-ninja": {
+   "sdk": "10.0.26100.0",
+   "ucrt": "10.0.26100.0",
+   "vctools": "14.44.35207"
+  },
+  "B-cmake": {
+   "resource_dir_sha256": {
+    "files": 322,
+    "sha256": "5587c91b9f11abacb950bb82cdd5b4f854180c04d0bfc04e5fbea5c243a61a12"
+   },
+   "sdk": "10.0.26100.0",
+   "ucrt": "10.0.26100.0",
+   "vctools": "14.44.35207"
+  },
+  "C": {
+   "libc_dev": "2.39-0ubuntu8.9"
+  },
+  "D": {
+   "libc_dev": "2.39-0ubuntu8.9",
+   "resource_dir_sha256": {
+    "files": 327,
+    "sha256": "18b182d3296bb6fdb75800eadbf1f57419c7ce414a5bf1bc35c86dc015e2f31c"
+   }
+  }
+ },
  "loop_table.csv": "0d94b2e636fb355e3c3c56d9b452dfef6a00925860adda05e116fe99b22a35be",
  "objdump_norm.csv": "d6196d60246a08733ca1581d83e81cc8be9891223e2750323b250c50dbc6e2e7",
  "scripts": {
   "scripts/baseline.py": "6245e3017d43d550679e1ebb86e36837e85fd613b63a4e775d5c07a1cd67a9e6",
   "scripts/classify.py": "9f094eff8cb12551ea0b5a7f4b41cd68dca3ece161e8ab273336076e065e1b4c",
-  "scripts/judge.py": "1ad84039cfe05d3d2880f1c0412d5a4d18148cf2ce33978a0022fa28f19b5b58",
+  "scripts/judge.py": "d8c8da25d8f65b76e6910b415a17c716c1863786c68ad4d4da49c15913567cc5",
   "scripts/probes/reduce_probe.c": "1c04d4157d733a6dc5f8c0e7d5284973e7855345345ffbd4366680965b5d7888",
   "scripts/runbook/05_clone_sources.sh": "5784af19f7d0a468b0ef23c08392310ba77de22f17adcd96507a9fef66833c6c",
   "scripts/runbook/10_fetch_llvm.cmd": "0f347586ae948b2ec7f24b9621026933ae8a9abd87c8e0ce370601c9a99a382b",
@@ -62,10 +94,10 @@
   "scripts/runbook/71_prefreeze_wsl.sh": "8f83ecb6517c26ee5c43fa4ef850d47a5eb42c71c58fa219763ffd7579efe351",
   "scripts/runbook/71b_regression_compile_wsl.sh": "4fd3bc705875458d76dc8ec43d420d118e5173674e981855c1579b1d0f501c60",
   "scripts/runbook/72_smoke_dispatch_check.cmd": "7e5b85f13499ffe19a71f14cbb6221d33b03df563f47bd66a7db77e757c0ed26",
-  "scripts/runbook/79_census_init.cmd": "3a2846818737c3f494c6ed1c9540836962cb47aedb113cfef4f94c232d97f796",
-  "scripts/runbook/80_census_win.cmd": "dbc703b64607c18d8146d9c045f85a904b0cbb14c4ea8ac6e0ed75ff725c13f6",
-  "scripts/runbook/81_census_wsl.sh": "671c98e54b8632e9427665d971820767c9a475e9942835b90b305e9ea3e0a1b7",
-  "scripts/runbook/82_census_assemble.cmd": "5ecfe6094216114b28cd4a2e37049d443cc4c0a428924b84be15b43124e684c6",
+  "scripts/runbook/79_census_init.cmd": "df01e496f080aae1e9b0978f60dc8321cff8d6aebbb9a9e5f46879aba53ded61",
+  "scripts/runbook/80_census_win.cmd": "cbda42f370622c7efa133ceb30783a155f788b83922346616f514c1732c069d2",
+  "scripts/runbook/81_census_wsl.sh": "e97d9ad0399549ee12af76db288b018b9efa851f212a70b64afd0f313287a93c",
+  "scripts/runbook/82_census_assemble.cmd": "122bad870e9470e8164d825080f02f4525cf1775fc9771dde82ff763b52c7619",
   "scripts/runbook/86_mock_prefreeze_win.cmd": "ccd47ff2dc0f3ec7d4a673716c75cf64ee82a06e8b785f2a1e87c9f9b17ce05f",
   "scripts/runbook/86_mock_prefreeze_wsl.sh": "2377aeca99f47894fa8978309aa179c416a2d0ba506c4c806eab573484f90f35",
   "scripts/runbook/88_x0final_smoke_runs.ps1": "2314abe3d5125d5c6cdf6fc973f5195a4e2cf05c9bd931801597c2fe8bb1c211",
@@ -76,10 +108,10 @@
   "scripts/runbook/compare_decodes.py": "c57d89dfcd3fae363fbed16e2a02ab068c01f4f62536e7fe789cc6ef6448cefb",
   "scripts/runbook/design_time_lines.py": "3c9ce976eb477c07201c406f07769117b0afa9b11d0d8c4346dd65e6bcffbf7e",
   "scripts/runbook/gen_norm_csv.py": "8b9f6f441b89881565d3dc24dd0de8dd594e8267592c09c4a7647115a1dfa0ef",
-  "scripts/runbook/hearth_shingles.py": "4e60e541b3214e4df7d08a6dd439e6defb3f343f3686489b5aac3f9b2924ae12",
+  "scripts/runbook/hearth_shingles.py": "5dd2457b6073f00e0488f1d140f47ca40f3e136a6e30d1c3bfd4c704372d3f3f",
   "scripts/runbook/negtest.py": "8e4d1dc04560b83c742259ffca1409aeec4fc844a04c8f5d2b8060146737a242",
   "scripts/runbook/negtest_dispatch.py": "09471e5ae80a9e87758f401c1a11ea8f044529e64e2e13af3b1de2d5621689a4",
-  "scripts/runbook/pin_inputs.py": "0e0cf40c75b0c2ba8a533a1e074817bb4a03ab2e257f3443de426b6c94878e4b",
+  "scripts/runbook/pin_inputs.py": "4c87f3bb7b50e2dc94c07d221d9949fc6cd9bf35a40930cd1c424edc7cedd953",
   "scripts/runbook/probes/atomic_probe.c": "16f9a0ee48afab092e0efed7f3c23e4633eba1f0d6766c33571ecf4a7e9cded3",
   "scripts/runbook/probes/fpc.c": "77904ec7d0c2aebaff68cc9bae1ab60cc832e56e7d12e72293bf849329e6c1a4",
   "scripts/runbook/probes/hello_avx2.c": "305a3a147bcb91179ee7c879a871909940d4e23f85628fa2f622d4603604b626",
@@ -106,24 +138,25 @@
   "scripts/smoke/rv_tricky.c": "121e60b05a0898dff90b2820f55bb56c03637c770478aae4826412ae916499e8",
   "scripts/smoke/rv_tricky2.c": "0045a5a968fa308e2ac1f19a9a8aeeebe395ce9e2808c1e589cca4b01059a9b5",
   "scripts/smoke/smoke.c": "e43e2690a45b958994c3ebdbe3301a11f494fc1989e5a8365d3d9f33d3bd99a7",
-  "scripts/smoke/smoke_dispatch.c": "a59508a6bf989d6b264b4716c3bd77abc759b3b75b200243aae93f525bee55a2",
+  "scripts/smoke/smoke_dispatch.c": "4424e77647e08a5c75c590b9f3c1b4ba0b798eb82419bb759951a6c9d0a24269",
   "scripts/smoke/smoke_loop_table.csv": "0ee7ee7da78eacd1331ef59204b67e72ddc71e1fcb2b7de97cb73b6e0a266681",
   "scripts/smoke/tricky_expect.json": "c5aa1f8c8a2ca82babffbb603012e02fbac5b5f5f7f303af36e0fa5733928a61",
   "scripts/tests/test_build.py": "4a16108ec4c79a7a4d785bf7be8b5e8f6a8b25388d3dc84dd7c6405f985747b2",
-  "scripts/tests/test_census.py": "6d0ef319ed897921525c661fb391118fe62bd78729f0fdd3f966db5925c9b56f",
-  "scripts/tests/test_driver_guard.py": "2a206f89757ff653d593e2dfab54e4a33ae3a0f26f60ee33e352f302be181a8f",
+  "scripts/tests/test_census.py": "e4e33ec8858e688d7e336e6d765c25949928e19ec2577e599d430933d2e87854",
+  "scripts/tests/test_driver_guard.py": "199fed0ed0ea793f140cc51b619597645e6ea222d26324ee0bed856ef4ea2d48",
   "scripts/tests/test_flags.py": "358209c1edafebcaefb4d39da26bf5ff177c4c284364bdc7712dd4be10e84112",
-  "scripts/tests/test_judge.py": "5a6512554565e5f9eb0062ab9a7b36b0a6bfc70c7314698c4f2d964eb078c8a3",
+  "scripts/tests/test_judge.py": "0a44d881e49bc7bf411ca70f2fd8b2480bb220bdd769551e201f4cd0b60cd72a",
   "scripts/tests/test_loops.py": "1f8c5e9c2c343f138a65342a1525834bc063f1214b1c32cb3e383da22967f811",
+  "scripts/tests/test_loops_prefreeze.py": "5f3f00a4ee910ca0720bf1f02bef94644b34f81817717cc4d7d687da41a3f687",
   "scripts/tests/test_loops_x0final.py": "a4cc721eea6f13f2c090e5445e0bd60ad3a4055e970982785d687a099adf9530",
   "scripts/tests/test_twin.py": "e7ffdbfc1ec3000b57f69a490189d35e01ee0b4f572347e0133521a0a89bb581",
   "scripts/x0_build.py": "24914445b6545ae332ad4683e0a779fbdbb54c3373719c8c7b509a2f25f85d2a",
-  "scripts/x0_census.py": "d0de1d1e697ee4b90f6b9ea053dffad8841f1c7060ba5c85893dfec76752aa67",
+  "scripts/x0_census.py": "37bb743918899a5a752d47184e905423e75a40b073d860976c91fe8aa1992176",
   "scripts/x0_decode.py": "f2eae8e33fc08f9b2ca8cb3ee7c9f42f1910d0c5b943d2404d162753a83eaa8d",
-  "scripts/x0_driver.py": "73eac10f37b7ee708d6f05be3024a69a7c185dfe4363b880b790b7e5cce653ee",
+  "scripts/x0_driver.py": "924302e3c2051456afb6552ca3b97a5444dd27b83ba0c4140b80b73b4fc6da01",
   "scripts/x0_extract.py": "97c1f52f4b3730cd9431e2da0f2f3f3b3c22ec723f6150ab95631291708e05df",
   "scripts/x0_flags.py": "60b1e74da0560cbb95ba4016fc38fd0c23b6381a05dc3a06f70280a32c059233",
-  "scripts/x0_loops.py": "3e8e1ab323a9b56c79e55870f9b88645ed6657ab11482503722cb959f9e9e72f",
+  "scripts/x0_loops.py": "d9ce99903473417055a972f1e7994eae2241e833f190245f8690e985242d4a92",
   "scripts/x0_norm.py": "a165b3572c91ffc544c8bd4b54f8475f2769b6b1e5888bc6a660464cd11fc0a6",
   "scripts/x0_twin.py": "d6d34b344e98fe64d17b4d7cb743a5929846563204a2d983dd7888383349d341",
   "scripts/x0obj.py": "dbd4e07c836cfd189a1f10dfca2535b9de3c4142b733aee7b32d594c5fbbe981",

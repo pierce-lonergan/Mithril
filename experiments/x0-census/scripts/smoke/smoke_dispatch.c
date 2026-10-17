@@ -16,8 +16,8 @@
  *     memcpy with a variable size (allow-listed, not FP);
  *   switch statements dense enough for jump tables (MSVC: in .text after the function; GCC/Clang: .rodata);
  *   a cold path (GCC: foo.cold in .text.unlikely);
- *   q_rint's magic constant pair (v + 12582912.0f) - 12582912.0f (canary d1 shape);
- *   a 16-lane accumulator loop and the s = 8, 4, 2, 1 tree (canary d2 shape);
+ *   the canary d1 shape (v + M) - M, M = 12582912.0f, and an amax loop (texts rewritten 2026-10-17, record §2);
+ *   a 16-lane accumulator loop and the s = 8, 4, 2, 1 tree (canary d2 shape; its text rewritten 2026-10-17);
  *   a local byte array whose address escapes (GCC stack protector; MSVC /GS cookie).
  */
 #include <immintrin.h>
@@ -73,14 +73,14 @@ size_t sd_row_bytes(int dt, int64_t n)
 static float sd_tree16(float *L)
 {
     for (int s = 8; s >= 1; s >>= 1)
-        for (int j = 0; j < s; j++) L[j] = L[j] + L[j + s];
+        for (int j = 0; j < s; ++j) L[j] += L[j + s];
     return L[0];
 }
 
 static float sd_rint(float v)
 {
-    const float magic = 12582912.0f;
-    return (v + magic) - magic;
+    const float big = 12582912.0f;   /* M = 0x4B400000 */
+    return (v + big) - big;
 }
 
 static SD_NOINLINE void sd_float_common(int dt, const void *W, int64_t n, const void *act, int T,
@@ -166,8 +166,8 @@ static void sd_act(const float *x, void *out, int64_t n)
     int8_t *q = (int8_t *)out;
     float amax = 0.0f, id;
     for (int64_t i = 0; i < n; i++) {
-        float a = fabsf(x[i]);
-        if (a > amax) amax = a;
+        float m = fabsf(x[i]);
+        amax = m > amax ? m : amax;
     }
     id = amax != 0.0f ? 127.0f / amax : 0.0f;
     for (int64_t i = 0; i < n; i++) {
