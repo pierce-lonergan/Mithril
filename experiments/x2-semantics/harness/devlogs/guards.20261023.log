@@ -1,0 +1,43 @@
+---- G1 budget rows under the default BUDGET label: x2fuzz run refuses the label
+{"records": 34, "rows": 1, "vectors_sha256": "30e555e66e5a2b0d15b200836c4486434a7ead40d095879d1d3c0eb7e1982a59"}
+cmd : x2fuzz: refusing to execute a non-development vector set without --collection-authorised 
+(X2 collection rule)
+At line:1 char:1
++ cmd /c D:\mithril\x2\src\harness\run_guards.cmd > D:\mithril\jobs\x2b ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (x2fuzz: refusin...ollection rule):String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+G1_RC=2 want 2
+---- G2 the same rows under a DEV label (--dev): x2fuzz run refuses the budget set ids
+{"records": 34, "rows": 1, "vectors_sha256": "36d0158934aebfdd55c146adffe48594508c53abb94a45ce1525b5af644b302b"}
+x2fuzz: record 0 has budget set id 6
+x2fuzz: refusing to execute budget-set records (V1-V4, BCAST, F-MEMFAULT) without 
+--collection-authorised (X2 collection rule); development vectors use the sets DEV or VALID
+G2_RC=2 want 2
+---- G3 a DEV label without --dev: the generator refuses
+usage: gen_vectors.py [-h] --sem-root SEM_ROOT --manifest MANIFEST [--out OUT]
+                      [--iform IFORM] [--set SET] [--class CLS]
+                      [--limit LIMIT] [--label LABEL] [--dev] [--selftest]
+gen_vectors.py: error: a development label (DEV, SELFTEST, VALID) needs --dev; budget-row vectors 
+carry BUDGET labels
+G3_RC=2 want 2
+---- G4 --dev without --limit: the generator refuses
+usage: gen_vectors.py [-h] --sem-root SEM_ROOT --manifest MANIFEST [--out OUT]
+                      [--iform IFORM] [--set SET] [--class CLS]
+                      [--limit LIMIT] [--label LABEL] [--dev] [--selftest]
+gen_vectors.py: error: --dev needs --limit between 1 and 100000
+G4_RC=2 want 2
+---- G5 exhaustive on silicon without --collection-authorised: refused
+x2fuzz: refusing a silicon exhaustive sweep without --collection-authorised (X2 collection rule)
+G5_RC=2 want 2
+---- G6 exhaustive with a preset sticky flag (MXCSR 1F81), self oracle: refused
+x2fuzz: --mxcsr must mask every exception (bits 12:7 set), have no reserved bit and no sticky 
+flag (bits 5:0 clear)
+G6_RC=2 want 2
+---- G7 exhaustive with an unmasked exception (MXCSR 1F00), self oracle: refused
+x2fuzz: --mxcsr must mask every exception (bits 12:7 set), have no reserved bit and no sticky 
+flag (bits 5:0 clear)
+G7_RC=2 want 2
+---- END guards

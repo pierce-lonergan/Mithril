@@ -1,0 +1,690 @@
+{
+ "tool": "run_mutants.py",
+ "spec": {
+  "spec_sha256": "a74d50412a976ececc9355ff2434e3d7c3c08c40eea9f0627378dc4a6ab2802c",
+  "n_mutants": 24,
+  "design_list": [
+   "M01_tiny_before_rounding",
+   "M02_max_returns_src1_on_nan",
+   "M03_nan_not_quieted",
+   "M04_cmp_pred_shift",
+   "M05_indefinite_7fffffff",
+   "M06_ftz_no_flush_exact",
+   "M07_daz_applies_to_h2f",
+   "M08_masked_lanes_raise_flags",
+   "M09_pmaddubsw_swapped",
+   "M10_er_disables_daz"
+  ],
+  "mutant_sha256": {
+   "M01_tiny_before_rounding": "7fd580e1ade1b1588090ddf095de8fc044bbd3d1033640c063550e51d56510c2",
+   "M02_max_returns_src1_on_nan": "776b742cd832474b48212eabb50b69d28b3903b7857119b70d863e9d749e61e5",
+   "M03_nan_not_quieted": "d415f60e9719cd12a7605620718a65eee25609b3c9495014c7c9a70a723d08e4",
+   "M04_cmp_pred_shift": "fb42da479167522aeeeff78f0289e46dc566760887cf1b92d7c6b8f397cb97bd",
+   "M05_indefinite_7fffffff": "108e17ae7e883b7dcefb34b2c3780a2a81d7573569abbf5f3c3d1f01c2d42a2d",
+   "M06_ftz_no_flush_exact": "5b5acd2cbbec76f4d0daf9a590ad99236401638c2d81c6bff10057223230ecd0",
+   "M07_daz_applies_to_h2f": "bdb55f3815797b10f6c2819484ec1dfa3d55a8dc7aff8e0ac40b6912ba2b4590",
+   "M08_masked_lanes_raise_flags": "fb2e474df60dae20ab4a493f10f2b40a7fb985d088d98249c63035b51081ecbd",
+   "M09_pmaddubsw_swapped": "d1bbc421a0c1a408b567564a8584903b27e083e80709e0d4dd114593cf6d65ed",
+   "M10_er_disables_daz": "8b77768e789bf7c5c0fb92a2aeefa4186dc63bccd86c487d2d1e9b7e1337e009",
+   "M11_zeroing_as_merge": "1b4e0746d5e8f5711a5a0f1ba1a9c59f64140c6a1821859e73bea4b2a9b669a7",
+   "M12_vex_evex_upper_preserved": "c2a1be481ea68e48515257e17245b3c23dc9a0ada3e5bc5cee9b01781ab63fbf",
+   "M13_bcast_ignored": "f4396385dccb1e7128f6c65444f69ac6286165edb33f142c80faff930068412f",
+   "M14_comis_sets_of": "3cab6061e0ce5e50397cdc343b8bcc5a4c7ca819fcbf9526f1924eb557f264cb",
+   "M15_cvt2si_sign_extends": "857d6d6a2b322889cdc106ddf402edc0ce2ae75420fc1e5ce2983966239929cb",
+   "M16_kdest_upper_not_zeroed": "b5029a7004d63bbf83250cc2b90b742ba1a6a42f67d3842176e28ebcd8e5aae3",
+   "M17_add_never_pe": "a49f14af3fe53b579244b95d80a600a87c132198be3d7fddfa934f6ce43b4071",
+   "M18_legacy_upper_zeroed": "4abcb792aea1a4aef435b0e947942b974b3e916d47ea915f953db9317d5adcb6",
+   "M19_er_without_sae": "1ff45a30ad100f9c28be7416418ebc19346616dbdc18db2a1611f9a297485461",
+   "M20_rd_ru_swapped": "639cb3e12b33aa485e70e74d5cc12a3d1757e9e9becedcd8db78a63947a13f80",
+   "M21_i2f_always_rne": "84db8d6c0c8b29d2b98b7595601d3c7e9c7afcb36c444ffecf24287439e6efc2",
+   "M22_scalar_upper_from_src2": "8d8fd62ea7cd723640dd1b02f0c8ef8e50f1f5960d301dde4519ad0b23ef6a37",
+   "M23_vpdpbusd_saturates": "098a1a9a709d093fe299db322fb1d02404fe89bab9535faf7b1e842aa9df263a",
+   "M24_daz_raises_de": "0da1cbd847ef8d08930b77da9253ecaa14d6b543b0347c389fbd6865cdbb39d0"
+  }
+ },
+ "provenance": {
+  "vectors_sha256": "2ed8b426042a53b34d0490bf22f6b40106276eca7c40d7ef26a6d0f52221f10a",
+  "silicon_sha256": "c2259ec4bfa4a5c1df600e6ee0ff8eb857159569043b9180d2bfdff204688cfb",
+  "silicon2_sha256": "b9cb973152f656773b820d16eca895aaf04f1311ecf1cec206e493ab951bfeda",
+  "manifest_sha256": "63aa76b2dfe98614429071ef996adb7e4e7ef4d54f00c6fde87c55b19abe3a32",
+  "vectors_label": "DEV-SMOKE"
+ },
+ "baseline": {
+  "records": 1593,
+  "lane_cases": 1593,
+  "lane_mismatches": 0,
+  "flag_mismatch_executions": 0,
+  "cells_with_mismatch": 0,
+  "interpreter_divergences": 0,
+  "nondeterminism": 0,
+  "harness_anomalies": 0
+ },
+ "baseline_disagreement_records": [],
+ "mutants": {
+  "M01_tiny_before_rounding": {
+   "design_list": true,
+   "detected": true,
+   "new_disagreeing_executions": 16,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 8,
+    "upper": 0,
+    "flag_only": 8,
+    "fault": 0
+   },
+   "lane_mismatches": 8,
+   "flag_mismatch_executions": 16,
+   "anomalies": 0,
+   "n_stubs_hit": 8,
+   "stubs_hit": [
+    "MULPS_XMMps_XMMps:plain",
+    "MULSS_XMMss_MEMss:plain",
+    "MULSS_XMMss_XMMss:plain",
+    "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512:plain",
+    "VMULPS_YMMqq_YMMqq_MEMqq:plain",
+    "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512:plain",
+    "VMULSS_XMMdq_XMMdq_XMMd:plain",
+    "VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512:plain"
+   ]
+  },
+  "M02_max_returns_src1_on_nan": {
+   "design_list": true,
+   "detected": true,
+   "new_disagreeing_executions": 39,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 39,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 39,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 11,
+   "stubs_hit": [
+    "MAXPS_XMMps_XMMps:plain",
+    "MAXSS_XMMss_MEMss:plain",
+    "MAXSS_XMMss_XMMss:plain",
+    "MINPS_XMMps_XMMps:plain",
+    "MINSS_XMMss_XMMss:plain",
+    "VMAXPS_YMMqq_YMMqq_MEMqq:plain",
+    "VMAXPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512:plain",
+    "VMAXSS_XMMdq_XMMdq_XMMd:plain",
+    "VMAXSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512:plain",
+    "VMINPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512:plain",
+    "VMINSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512:plain"
+   ]
+  },
+  "M03_nan_not_quieted": {
+   "design_list": true,
+   "detected": true,
+   "new_disagreeing_executions": 29,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 29,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 29,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 11,
+   "stubs_hit": [
+    "ADDPS_XMMps_MEMps:plain",
+    "ADDPS_XMMps_XMMps:plain",
+    "ADDSS_XMMss_MEMss:plain",
+    "ADDSS_XMMss_XMMss:plain",
+    "SUBSS_XMMss_XMMss:plain",
+    "VADDPS_XMMdq_XMMdq_MEMdq:plain",
+    "VADDPS_YMMqq_YMMqq_MEMqq:plain",
+    "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512:merge",
+    "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512:plain",
+    "VADDSS_XMMdq_XMMdq_XMMd:plain",
+    "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512:plain"
+   ]
+  },
+  "M04_cmp_pred_shift": {
+   "design_list": true,
+   "detected": true,
+   "new_disagreeing_executions": 520,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 499,
+    "upper": 0,
+    "flag_only": 21,
+    "fault": 0
+   },
+   "lane_mismatches": 373,
+   "flag_mismatch_executions": 86,
+   "anomalies": 0,
+   "n_stubs_hit": 145,
+   "stubs_hit": [
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm00",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm01",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm02",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm03",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm04",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm05",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm06",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm07",
+    "CMPSS_XMMss_XMMss_IMMb:plain_imm00",
+    "CMPSS_XMMss_XMMss_IMMb:plain_imm01",
+    "CMPSS_XMMss_XMMss_IMMb:plain_imm02",
+    "CMPSS_XMMss_XMMss_IMMb:plain_imm03"
+   ]
+  },
+  "M05_indefinite_7fffffff": {
+   "design_list": true,
+   "detected": true,
+   "new_disagreeing_executions": 18,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 18,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 18,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 8,
+   "stubs_hit": [
+    "CVTSS2SI_GPR32d_XMMss:plain",
+    "CVTTPS2DQ_XMMdq_XMMps:plain",
+    "CVTTSS2SI_GPR32d_XMMss:plain",
+    "VCVTPS2DQ_XMMdq_XMMdq:plain",
+    "VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512:plain",
+    "VCVTTPS2DQ_XMMdq_XMMdq:plain",
+    "VCVTTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512:plain",
+    "VCVTTSS2SI_GPR32d_XMMd:plain"
+   ]
+  },
+  "M06_ftz_no_flush_exact": {
+   "design_list": true,
+   "detected": true,
+   "new_disagreeing_executions": 16,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 16,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 16,
+   "flag_mismatch_executions": 16,
+   "anomalies": 0,
+   "n_stubs_hit": 8,
+   "stubs_hit": [
+    "MULPS_XMMps_XMMps:plain",
+    "MULSS_XMMss_MEMss:plain",
+    "MULSS_XMMss_XMMss:plain",
+    "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512:plain",
+    "VMULPS_YMMqq_YMMqq_MEMqq:plain",
+    "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512:plain",
+    "VMULSS_XMMdq_XMMdq_XMMd:plain",
+    "VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512:plain"
+   ]
+  },
+  "M07_daz_applies_to_h2f": {
+   "design_list": true,
+   "detected": true,
+   "new_disagreeing_executions": 4,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 4,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 4,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 4,
+   "stubs_hit": [
+    "VCVTPH2PS_XMMdq_XMMq:plain",
+    "VCVTPH2PS_YMMqq_MEMdq:plain",
+    "VCVTPH2PS_ZMMf32_MASKmskw_MEMf16_AVX512:plain",
+    "VCVTPH2PS_ZMMf32_MASKmskw_YMMf16_AVX512:plain"
+   ]
+  },
+  "M08_masked_lanes_raise_flags": {
+   "design_list": true,
+   "detected": true,
+   "new_disagreeing_executions": 1,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 0,
+    "upper": 0,
+    "flag_only": 1,
+    "fault": 0
+   },
+   "lane_mismatches": 0,
+   "flag_mismatch_executions": 1,
+   "anomalies": 0,
+   "n_stubs_hit": 1,
+   "stubs_hit": [
+    "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512:merge"
+   ]
+  },
+  "M09_pmaddubsw_swapped": {
+   "design_list": true,
+   "detected": false,
+   "new_disagreeing_executions": 0,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 0,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 0,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 0,
+   "stubs_hit": []
+  },
+  "M10_er_disables_daz": {
+   "design_list": true,
+   "detected": false,
+   "new_disagreeing_executions": 0,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 0,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 0,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 0,
+   "stubs_hit": []
+  },
+  "M11_zeroing_as_merge": {
+   "design_list": false,
+   "detected": true,
+   "new_disagreeing_executions": 1,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 1,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 12,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 1,
+   "stubs_hit": [
+    "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512:zero"
+   ]
+  },
+  "M12_vex_evex_upper_preserved": {
+   "design_list": false,
+   "detected": true,
+   "new_disagreeing_executions": 693,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 0,
+    "upper": 693,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 0,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 86,
+   "stubs_hit": [
+    "VADDPS_XMMdq_XMMdq_MEMdq:plain",
+    "VADDPS_YMMqq_YMMqq_MEMqq:plain",
+    "VADDSS_XMMdq_XMMdq_XMMd:plain",
+    "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512:plain",
+    "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512:zero",
+    "VCMPPS_XMMdq_XMMdq_XMMdq_IMMb:plain_imm00",
+    "VCMPPS_XMMdq_XMMdq_XMMdq_IMMb:plain_imm01",
+    "VCMPPS_XMMdq_XMMdq_XMMdq_IMMb:plain_imm02",
+    "VCMPPS_XMMdq_XMMdq_XMMdq_IMMb:plain_imm03",
+    "VCMPPS_XMMdq_XMMdq_XMMdq_IMMb:plain_imm04",
+    "VCMPPS_XMMdq_XMMdq_XMMdq_IMMb:plain_imm05",
+    "VCMPPS_XMMdq_XMMdq_XMMdq_IMMb:plain_imm06"
+   ]
+  },
+  "M13_bcast_ignored": {
+   "design_list": false,
+   "detected": true,
+   "new_disagreeing_executions": 1,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 1,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 15,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 1,
+   "stubs_hit": [
+    "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512:plain_bcast"
+   ]
+  },
+  "M14_comis_sets_of": {
+   "design_list": false,
+   "detected": true,
+   "new_disagreeing_executions": 19,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 19,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 19,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 6,
+   "stubs_hit": [
+    "COMISS_XMMss_MEMss:plain",
+    "COMISS_XMMss_XMMss:plain",
+    "UCOMISS_XMMss_XMMss:plain",
+    "VCOMISS_XMMd_XMMd:plain",
+    "VUCOMISS_XMMdq_XMMd:plain",
+    "VUCOMISS_XMMf32_XMMf32_AVX512:plain"
+   ]
+  },
+  "M15_cvt2si_sign_extends": {
+   "design_list": false,
+   "detected": true,
+   "new_disagreeing_executions": 13,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 13,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 13,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 3,
+   "stubs_hit": [
+    "CVTSS2SI_GPR32d_XMMss:plain",
+    "CVTTSS2SI_GPR32d_XMMss:plain",
+    "VCVTTSS2SI_GPR32d_XMMd:plain"
+   ]
+  },
+  "M16_kdest_upper_not_zeroed": {
+   "design_list": false,
+   "detected": true,
+   "new_disagreeing_executions": 346,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 0,
+    "upper": 346,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 0,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 66,
+   "stubs_hit": [
+    "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512:merge_imm03",
+    "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512:plain_imm00",
+    "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512:plain_imm01",
+    "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512:plain_imm02",
+    "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512:plain_imm03",
+    "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512:plain_imm04",
+    "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512:plain_imm05",
+    "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512:plain_imm06",
+    "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512:plain_imm07",
+    "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512:plain_imm08",
+    "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512:plain_imm09",
+    "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512:plain_imm0A"
+   ]
+  },
+  "M17_add_never_pe": {
+   "design_list": false,
+   "detected": true,
+   "new_disagreeing_executions": 73,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 0,
+    "upper": 0,
+    "flag_only": 73,
+    "fault": 0
+   },
+   "lane_mismatches": 0,
+   "flag_mismatch_executions": 73,
+   "anomalies": 0,
+   "n_stubs_hit": 9,
+   "stubs_hit": [
+    "ADDPS_XMMps_MEMps:plain",
+    "ADDPS_XMMps_XMMps:plain",
+    "ADDSS_XMMss_MEMss:plain",
+    "ADDSS_XMMss_XMMss:plain",
+    "VADDPS_XMMdq_XMMdq_MEMdq:plain",
+    "VADDPS_YMMqq_YMMqq_MEMqq:plain",
+    "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512:plain",
+    "VADDSS_XMMdq_XMMdq_XMMd:plain",
+    "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512:plain"
+   ]
+  },
+  "M18_legacy_upper_zeroed": {
+   "design_list": false,
+   "detected": true,
+   "new_disagreeing_executions": 374,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 0,
+    "upper": 374,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 0,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 34,
+   "stubs_hit": [
+    "ADDPS_XMMps_MEMps:plain",
+    "ADDPS_XMMps_XMMps:plain",
+    "ADDSS_XMMss_MEMss:plain",
+    "ADDSS_XMMss_XMMss:plain",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm00",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm01",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm02",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm03",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm04",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm05",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm06",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm07"
+   ]
+  },
+  "M19_er_without_sae": {
+   "design_list": false,
+   "detected": true,
+   "new_disagreeing_executions": 1,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 0,
+    "upper": 0,
+    "flag_only": 1,
+    "fault": 0
+   },
+   "lane_mismatches": 0,
+   "flag_mismatch_executions": 1,
+   "anomalies": 0,
+   "n_stubs_hit": 1,
+   "stubs_hit": [
+    "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512:plain_er2"
+   ]
+  },
+  "M20_rd_ru_swapped": {
+   "design_list": false,
+   "detected": true,
+   "new_disagreeing_executions": 126,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 126,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 126,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 26,
+   "stubs_hit": [
+    "ADDPS_XMMps_MEMps:plain",
+    "ADDPS_XMMps_XMMps:plain",
+    "ADDSS_XMMss_MEMss:plain",
+    "ADDSS_XMMss_XMMss:plain",
+    "CVTDQ2PS_XMMps_XMMdq:plain",
+    "CVTSI2SS_XMMss_GPR32d:plain",
+    "CVTSI2SS_XMMss_GPR64q:plain",
+    "CVTSS2SI_GPR32d_XMMss:plain",
+    "MULPS_XMMps_XMMps:plain",
+    "MULSS_XMMss_MEMss:plain",
+    "MULSS_XMMss_XMMss:plain",
+    "VADDPS_XMMdq_XMMdq_MEMdq:plain"
+   ]
+  },
+  "M21_i2f_always_rne": {
+   "design_list": false,
+   "detected": true,
+   "new_disagreeing_executions": 10,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 10,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 10,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 5,
+   "stubs_hit": [
+    "CVTDQ2PS_XMMps_XMMdq:plain",
+    "CVTSI2SS_XMMss_GPR32d:plain",
+    "VCVTDQ2PS_XMMdq_XMMdq:plain",
+    "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512:plain",
+    "VCVTSI2SS_XMMdq_XMMdq_GPR32d:plain"
+   ]
+  },
+  "M22_scalar_upper_from_src2": {
+   "design_list": false,
+   "detected": true,
+   "new_disagreeing_executions": 317,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 0,
+    "upper": 317,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 0,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 21,
+   "stubs_hit": [
+    "ADDSS_XMMss_MEMss:plain",
+    "ADDSS_XMMss_XMMss:plain",
+    "DIVSS_XMMss_XMMss:plain",
+    "MAXSS_XMMss_MEMss:plain",
+    "MAXSS_XMMss_XMMss:plain",
+    "MINSS_XMMss_XMMss:plain",
+    "MULSS_XMMss_MEMss:plain",
+    "MULSS_XMMss_XMMss:plain",
+    "SUBSS_XMMss_XMMss:plain",
+    "VADDSS_XMMdq_XMMdq_XMMd:plain",
+    "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512:merge",
+    "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512:plain"
+   ]
+  },
+  "M23_vpdpbusd_saturates": {
+   "design_list": false,
+   "detected": false,
+   "new_disagreeing_executions": 0,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 0,
+    "upper": 0,
+    "flag_only": 0,
+    "fault": 0
+   },
+   "lane_mismatches": 0,
+   "flag_mismatch_executions": 0,
+   "anomalies": 0,
+   "n_stubs_hit": 0,
+   "stubs_hit": []
+  },
+  "M24_daz_raises_de": {
+   "design_list": false,
+   "detected": true,
+   "new_disagreeing_executions": 46,
+   "changed_baseline_records": 0,
+   "baseline_records_no_longer_disagreeing": 0,
+   "kinds": {
+    "lane": 0,
+    "upper": 0,
+    "flag_only": 46,
+    "fault": 0
+   },
+   "lane_mismatches": 0,
+   "flag_mismatch_executions": 46,
+   "anomalies": 0,
+   "n_stubs_hit": 30,
+   "stubs_hit": [
+    "ADDPS_XMMps_MEMps:plain",
+    "ADDPS_XMMps_XMMps:plain",
+    "ADDSS_XMMss_MEMss:plain",
+    "ADDSS_XMMss_XMMss:plain",
+    "CMPPS_XMMps_XMMps_IMMb:plain_imm00",
+    "CMPSS_XMMss_XMMss_IMMb:plain_imm00",
+    "MAXPS_XMMps_XMMps:plain",
+    "MAXSS_XMMss_MEMss:plain",
+    "MAXSS_XMMss_XMMss:plain",
+    "MULPS_XMMps_XMMps:plain",
+    "MULSS_XMMss_MEMss:plain",
+    "MULSS_XMMss_XMMss:plain"
+   ]
+  }
+ },
+ "summary": {
+  "mutants_run": 24,
+  "detected": 21,
+  "design_list_detected": 8,
+  "design_list_run": 10,
+  "not_detected": [
+   "M09_pmaddubsw_swapped",
+   "M10_er_disables_daz",
+   "M23_vpdpbusd_saturates"
+  ]
+ }
+}

@@ -26,26 +26,37 @@ ONE, TWO = 0x3F800000, 0x40000000
 FLAGBITS = {"IE": 1, "DE": 2, "ZE": 4, "OE": 8, "UE": 16, "PE": 32}
 FAMILY_STUBS = {      # function -> [(iform, variant)] ; lane 0 carries the hand vector
     "add": [("VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512", "plain"), ("VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512", "plain"),
-            ("VADDSS_XMMdq_XMMdq_XMMd", "plain"), ("ADDSS_XMMss_XMMss", "plain")],
+            ("VADDSS_XMMdq_XMMdq_XMMd", "plain"), ("ADDSS_XMMss_XMMss", "plain"),
+            # census-union forms added 2026-10-23
+            ("ADDPS_XMMps_XMMps", "plain"), ("ADDPS_XMMps_MEMps", "plain"), ("ADDSS_XMMss_MEMss", "plain"),
+            ("VADDPS_XMMdq_XMMdq_MEMdq", "plain"), ("VADDPS_YMMqq_YMMqq_MEMqq", "plain")],
     "sub": [("SUBSS_XMMss_XMMss", "plain")],
     "mul": [("VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512", "plain"), ("VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512", "plain"),
-            ("VMULSS_XMMdq_XMMdq_XMMd", "plain"), ("MULSS_XMMss_XMMss", "plain")],
+            ("VMULSS_XMMdq_XMMdq_XMMd", "plain"), ("MULSS_XMMss_XMMss", "plain"),
+            ("MULPS_XMMps_XMMps", "plain"), ("MULSS_XMMss_MEMss", "plain"), ("VMULPS_YMMqq_YMMqq_MEMqq", "plain"),
+            ("VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512", "plain")],
     "div": [("VDIVSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512", "plain"), ("VDIVSS_XMMdq_XMMdq_XMMd", "plain"),
-            ("DIVSS_XMMss_XMMss", "plain")],
+            ("DIVSS_XMMss_XMMss", "plain"), ("VDIVSS_XMMdq_XMMdq_MEMd", "plain")],
     "max_": [("VMAXSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512", "plain"), ("VMAXPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512", "plain"),
-             ("VMAXSS_XMMdq_XMMdq_XMMd", "plain"), ("MAXSS_XMMss_XMMss", "plain")],
+             ("VMAXSS_XMMdq_XMMdq_XMMd", "plain"), ("MAXSS_XMMss_XMMss", "plain"),
+             ("MAXPS_XMMps_XMMps", "plain"), ("MAXSS_XMMss_MEMss", "plain"), ("VMAXPS_YMMqq_YMMqq_MEMqq", "plain")],
     "min_": [("VMINSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512", "plain"), ("VMINPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512", "plain"),
-             ("MINSS_XMMss_XMMss", "plain")],
-    "cmp_pred": [("VCMPPS_XMMdq_XMMdq_XMMdq_IMMb", "plain_imm%02X"), ("VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512", "plain_imm%02X")],
-    "comis0": [("UCOMISS_XMMss_XMMss", "plain"), ("VUCOMISS_XMMdq_XMMd", "plain")],
-    "comis1": [("COMISS_XMMss_XMMss", "plain"), ("VCOMISS_XMMd_XMMd", "plain")],
+             ("MINSS_XMMss_XMMss", "plain"), ("MINPS_XMMps_XMMps", "plain")],
+    "cmp_pred": [("VCMPPS_XMMdq_XMMdq_XMMdq_IMMb", "plain_imm%02X"), ("VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512", "plain_imm%02X"),
+                 ("CMPPS_XMMps_XMMps_IMMb", "plain_imm%02X"), ("CMPSS_XMMss_XMMss_IMMb", "plain_imm%02X"),
+                 ("VCMPSS_XMMdq_XMMdq_XMMd_IMMb", "plain_imm%02X"),
+                 ("VCMPSS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512", "plain_imm%02X")],
+    "comis0": [("UCOMISS_XMMss_XMMss", "plain"), ("VUCOMISS_XMMdq_XMMd", "plain"), ("VUCOMISS_XMMf32_XMMf32_AVX512", "plain")],
+    "comis1": [("COMISS_XMMss_XMMss", "plain"), ("VCOMISS_XMMd_XMMd", "plain"), ("COMISS_XMMss_MEMss", "plain")],
     "cvt_i32_to_f32": [("VCVTDQ2PS_XMMdq_XMMdq", "plain"), ("VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512", "plain"),
-                       ("CVTSI2SS_XMMss_GPR32d", "plain"), ("VCVTSI2SS_XMMdq_XMMdq_GPR32d", "plain")],
+                       ("CVTSI2SS_XMMss_GPR32d", "plain"), ("VCVTSI2SS_XMMdq_XMMdq_GPR32d", "plain"),
+                       ("CVTDQ2PS_XMMps_XMMdq", "plain"), ("CVTSI2SS_XMMss_GPR64q", "plain")],
     "cvt0": [("VCVTPS2DQ_XMMdq_XMMdq", "plain"), ("VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512", "plain"),
              ("CVTSS2SI_GPR32d_XMMss", "plain")],
     "cvt1": [("VCVTTPS2DQ_XMMdq_XMMdq", "plain"), ("VCVTTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512", "plain"),
-             ("CVTTSS2SI_GPR32d_XMMss", "plain"), ("VCVTTSS2SI_GPR32d_XMMd", "plain")],
-    "cvt_f16_to_f32": [("VCVTPH2PS_XMMdq_XMMq", "plain"), ("VCVTPH2PS_ZMMf32_MASKmskw_YMMf16_AVX512", "plain")],
+             ("CVTTSS2SI_GPR32d_XMMss", "plain"), ("VCVTTSS2SI_GPR32d_XMMd", "plain"), ("CVTTPS2DQ_XMMdq_XMMps", "plain")],
+    "cvt_f16_to_f32": [("VCVTPH2PS_XMMdq_XMMq", "plain"), ("VCVTPH2PS_ZMMf32_MASKmskw_YMMf16_AVX512", "plain"),
+                       ("VCVTPH2PS_YMMqq_MEMdq", "plain"), ("VCVTPH2PS_ZMMf32_MASKmskw_MEMf16_AVX512", "plain")],
 }
 ER_STUBS = {"add": [("VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512", "plain_er%d"),
                     ("VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512", "plain_er%d")],
@@ -152,8 +163,14 @@ def lanes_case(stub_sem, roles, lanes, mxcsr, k=0):
     s2 = sum(((b or 0) & 0xFFFFFFFF) << (32 * i) for i, (_, b) in enumerate(lanes))
     if stub_sem["builder"] == 8:                       # CVTSI2SS: the integer comes from EAX
         c.gpr_in = 0xDEADBEEF00000000 | (lanes[0][0] & 0xFFFFFFFF)
-    if "dst_src1" in roles and stub_sem["builder"] == 2:
-        c.dst_old = (dst_old & ~0xFFFFFFFF) | (s1 & 0xFFFFFFFF)
+        if stub_sem["src_eb"] == 64:                   # CVTSI2SS r64 (2026-10-23): the i32 hand value sign-extended
+            v = lanes[0][0] & 0xFFFFFFFF
+            c.gpr_in = (v - (1 << 32)) & ((1 << 64) - 1) if v >> 31 else v
+    if "dst_src1" in roles and stub_sem["builder"] in (1, 2, 5, 11):   # legacy: src1 IS the destination
+        m = (1 << (32 if stub_sem["scalar"] else stub_sem["vl"])) - 1
+        c.dst_old = (dst_old & ~m) | (s1 & m)
+    if stub_sem["builder"] == 3 and stub_sem["mem"]:  # a memory source is read through RAX = &src2
+        s2 = s1
     c.src1, c.src2 = s1, s2
     return c
 
@@ -244,6 +261,23 @@ def build(a):
          C(k=0b0011, src1=P([ONE, 0x7FC00000, TWO, 0x7F800001]), src2=P([ONE, 0x7FC00000, TWO, 0x7F800001]))),
         ("C3 vex unord lanes", ("VCMPPS_XMMdq_XMMdq_XMMdq_IMMb", "plain_imm03"),
          C(src1=P([ONE, 0x7FC00000, TWO, 0x7F800001]), src2=P([ONE, 0x7FC00000, TWO, 0x7F800001]))),
+        # E9 (2026-10-23): the census-union forms
+        ("E9 ADDPS legacy: dst is src1, 511:128 kept", ("ADDPS_XMMps_XMMps", "plain"),
+         C(src2=P([ONE, ONE, ONE, 0]), dst_old=P([ONE, TWO, 0x7FC00001, 0x80000000] + [0x11110000 + i for i in range(4, 16)]))),
+        ("E9 CMPSS legacy lane 0 mask, lanes 1-3 from dst", ("CMPSS_XMMss_XMMss_IMMb", "plain_imm01"),
+         C(src2=P([TWO]), dst_old=P([ONE, 5, 6, 7] + [0x11110000 + i for i in range(4, 16)]))),
+        ("E9 VCMPSS VEX QNaN LT_OS", ("VCMPSS_XMMdq_XMMdq_XMMd_IMMb", "plain_imm01"),
+         C(src1=P([0x7FC00000, 5, 6, 7]), src2=P([TWO]), dst_old=P([0x11110000 + i for i in range(16)]))),
+        ("E9 VCMPSS k: bit 0 only", ("VCMPSS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512", "merge_imm00"),
+         C(k=0xF, src1=P([ONE] * 4), src2=P([ONE] * 4))),
+        ("E9 VCMPSS k: k2[0] = 0 compares nothing", ("VCMPSS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512", "merge_imm00"),
+         C(k=0xE, src1=P([0x7F800001]), src2=P([ONE]))),
+        ("E9 CVTSI2SS r64 2^63-1 RNE", ("CVTSI2SS_XMMss_GPR64q", "plain"), C(gpr=(1 << 63) - 1)),
+        ("E9 CVTSI2SS r64 2^63-1 RZ", ("CVTSI2SS_XMMss_GPR64q", "plain"), C(gpr=(1 << 63) - 1, mxcsr=0x7F80)),
+        ("E9 CVTSI2SS r64 -2^63 exact", ("CVTSI2SS_XMMss_GPR64q", "plain"), C(gpr=1 << 63)),
+        ("E9 CVTSI2SS r64 2^32+1 RNE", ("CVTSI2SS_XMMss_GPR64q", "plain"), C(gpr=(1 << 32) + 1)),
+        ("E9 CVTSI2SS r64 -1 keeps lanes 1-3", ("CVTSI2SS_XMMss_GPR64q", "plain"),
+         C(gpr=(1 << 64) - 1, dst_old=P([9, 5, 6, 7] + [0x11110000 + i for i in range(4, 16)]))),
     ]
     for label, key, case in vec_cases:
         if label not in src:
@@ -287,7 +321,7 @@ def report(a):
             if sem["dst_kind"] == 3:
                 return o.gpr & 0xFFFFFFFF
             v = o.dst & 0xFFFFFFFF
-            return int(v == 0xFFFFFFFF) if sem["builder"] == 5 else v
+            return int(v == 0xFFFFFFFF) if sem["builder"] in (5, 11) else v
         hand["checked"] += 1
         wb, wf = m["want_bits"], m["want_flags"]
         res = {}

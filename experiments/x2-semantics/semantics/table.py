@@ -34,6 +34,7 @@ import os
 from . import fp_ops, int_ops, vec
 from .bits import MASK32
 from .fpenv import DE, IE, OE, PE, UE, ZE  # noqa: F401  (documented flag vocabulary)
+from .fpenv import UnmodeledEnvironment
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _SEM_MODULES = ["bits.py", "fpenv.py", "rounding.py", "fp_ops.py", "int_ops.py", "vec.py", "table.py"]
@@ -108,7 +109,7 @@ _FN = {
     "fp_ops.add": fp_ops.add, "fp_ops.sub": fp_ops.sub, "fp_ops.mul": fp_ops.mul, "fp_ops.div": fp_ops.div,
     "fp_ops.max_": fp_ops.max_, "fp_ops.min_": fp_ops.min_, "fp_ops.cmp_pred": fp_ops.cmp_pred,
     "fp_ops.cvt_i32_to_f32": fp_ops.cvt_i32_to_f32, "fp_ops.cvt_f16_to_f32": fp_ops.cvt_f16_to_f32,
-    "fp_ops.cvt_f32_to_i32": fp_ops.cvt_f32_to_i32,
+    "fp_ops.cvt_f32_to_i32": fp_ops.cvt_f32_to_i32, "fp_ops.cvt_i64_to_f32": fp_ops.cvt_i64_to_f32,
     "int_ops.pmaddubsw": int_ops.pmaddubsw, "int_ops.pmaddwd": int_ops.pmaddwd,
     "int_ops.phaddd": int_ops.phaddd, "int_ops.pdpbusd": int_ops.pdpbusd,
 }
@@ -122,18 +123,34 @@ def _lane1(spec):
     return f
 
 
+def _imm_in_domain(imm, imax):
+    """Compare immediates: VEX/EVEX use imm8[4:0] (0-31); the legacy forms declare imm_max 7 (SDM: imm8 bits 7:3
+    reserved). Outside the declared domain the entry gives no prediction."""
+    if not 0 <= imm <= imax:
+        raise UnmodeledEnvironment("compare imm8 %d outside the declared domain [0, %d] (SDM: legacy CMPPS/CMPSS "
+                                   "imm8 bits 7:3 reserved)" % (imm, imax))
+
+
 def build_sem(spec, vl):
     """Turn a declarative sem spec into the entry's executable semantics. Signatures by builder:
       packed_fp2    sem(src1, src2, env, k=None, z=False, dst=0, bcast_src2=None) -> (vl-bit value, flags)
       scalar_fp2    sem(src1, src2, env, k=None, z=False, dst=0) -> (128-bit value, flags);
                     lanes 1-3 from src1 (legacy: pass dst as src1, it is the same register)
       packed_fp1    sem(src, env, k=None, z=False, dst=0) -> (vl-bit value, flags)
-      cmp_k         sem(src1, src2, imm, env, k=None, bcast_src2=None) -> (opmask, flags)
+      cmp_k         sem(src1, src2, imm, env, k=None, bcast_src2=None) -> (opmask, flags); spec
+                    "scalar": true compares lane 0 only (EVEX VCMPSS into k: bits >= 1 are zero)
       cmp_vec       sem(src1, src2, imm, env) -> (vl-bit all-ones/zero lanes, flags)
+                    (legacy CMPPS: pass dst as src1, it is the same register)
+      cmp_scalar    sem(src1, src2, imm, env) -> (128-bit value, flags): lane 0 all-ones/zero from
+                    pred(src1[0], src2[0]); lanes 1-3 from src1 (legacy CMPSS: pass dst as src1)
+                    cmp_vec and cmp_scalar: spec "imm_max": 7 declares the legacy domain imm8 in [0, 7]
+                    (SDM: bits 7:3 reserved); an imm outside [0, imm_max] raises UnmodeledEnvironment
+                    (no prediction; review 2026-10-23)
       comis         sem(src1, src2, env) -> ({ZF,PF,CF,OF,SF,AF}, flags)
       cvt_f2i_gpr   sem(src, env) -> (64-bit GPR value, flags); a 32-bit result is zero-extended
-      cvt_i2f_scalar sem(upper_src, gpr32, env) -> (128-bit value, flags); lanes 1-3 from upper_src
-                    (legacy: the old destination; VEX: src1)
+      cvt_i2f_scalar sem(upper_src, gpr, env) -> (128-bit value, flags); lanes 1-3 from upper_src
+                    (legacy: the old destination; VEX: src1); spec "src_eb": 64 reads a 64-bit GPR
+                    (CVTSI2SS r64), otherwise the low 32 bits
       int2          sem(src1, src2, k=None, z=False, dst=0) -> vl-bit value
       int_acc       sem(acc, src1, src2, k=None, z=False) -> vl-bit value (dst = acc register)
     Full 512-bit destination: write_full(entry, result, old512) (upper-bit policy of the encoding)."""
@@ -155,11 +172,25 @@ def build_sem(spec, vl):
         def sem(src, env, k=None, z=False, dst=0):
             return vec.packed_fp1(f, src, env, vl, k=k, z=z, dst=dst, src_eb=se, dst_eb=de)
     elif b == "cmp_k":
+        kvl = 32 if spec.get("scalar") else vl
+
         def sem(src1, src2, imm, env, k=None, bcast_src2=None):
-            return vec.packed_cmp_k(fp_ops.cmp_pred, src1, src2, imm, env, vl, k=k, bcast_b=bcast_src2)
+            _imm_in_domain(imm, 31)
+            return vec.packed_cmp_k(fp_ops.cmp_pred, src1 & ((1 << kvl) - 1), src2 & ((1 << kvl) - 1), imm, env, kvl,
+                                    k=k, bcast_b=bcast_src2)
     elif b == "cmp_vec":
+        imax = spec.get("imm_max", 31)
+
         def sem(src1, src2, imm, env):
+            _imm_in_domain(imm, imax)
             return vec.packed_cmp_vec(fp_ops.cmp_pred, src1, src2, imm, env, vl)
+    elif b == "cmp_scalar":
+        imax = spec.get("imm_max", 31)
+
+        def sem(src1, src2, imm, env):
+            _imm_in_domain(imm, imax)
+            t, fl = fp_ops.cmp_pred(src1 & MASK32, src2 & MASK32, imm, env)
+            return (src1 & (((1 << 128) - 1) ^ MASK32)) | (MASK32 if t else 0), (0 if env.sae else fl)
     elif b == "comis":
         sig = spec["signalling"]
 
@@ -173,8 +204,13 @@ def build_sem(spec, vl):
             r, fl = fp_ops.cvt_f32_to_i32(src & MASK32, env, trunc)
             return r & MASK32, fl                       # 32-bit GPR write zero-extends to 64 bits
     elif b == "cvt_i2f_scalar":
-        def sem(upper_src, gpr32, env):
-            r, fl = fp_ops.cvt_i32_to_f32(gpr32 & MASK32, env)
+        wide = spec.get("src_eb", 32) == 64
+
+        def sem(upper_src, gpr, env):
+            if wide:
+                r, fl = fp_ops.cvt_i64_to_f32(gpr & ((1 << 64) - 1), env)
+            else:
+                r, fl = fp_ops.cvt_i32_to_f32(gpr & MASK32, env)
             return (upper_src & (((1 << 128) - 1) ^ MASK32)) | r, (0 if env.sae else fl)
     elif b == "int2":
         f, eb = _FN[spec["fn"]], spec["dst_eb"]
@@ -489,6 +525,148 @@ for icl, enc, ifm, ops, frm, upper in (
           nan_role={"src2": OB}, lane_fn="fp_ops.cvt_i32_to_f32", sem={"builder": "cvt_i2f_scalar"},
           sdm=["Vol2 CVTSI2SS"], notes="predicted from scalar `(float)isum`")
 
+# ---------------------------------------------------------------- census-union FP forms (2026-10-23)
+# Added in the X2 freeze preparation from X0 census run 1 (census.json sha256 3d54f0d5...6f06,
+# run census-20261017T141025Z; instructions.jsonl of A, B-cmake, C, D read from the desktop run root):
+# every FP-sensitive (iclass, iform) the dispatched closures use and v0 lacked. Lane functions, NaN
+# rules and environment profiles are the families' own; what is new is the operand shape (legacy
+# packed SSE with dst = src1 and upper bits preserved, memory sources, scalar compares, the EVEX
+# VUCOMISS, a 64-bit integer source). XED operand order follows the pattern of TABLE-SCHEMA §3 and is
+# checked by the stub generator's decode-back step.
+def ops_legacy_ps(mem=False):
+    src2 = _o("MEM0", "src2", "mem", 128) if mem else _o("REG1", "src2", "xmm", 128)
+    return [_o("REG0", "dst_src1", "xmm", 128, "rw"), src2]
+
+
+_CENSUS = "xed-decode"     # decoded by XED v2026.08.23 in X0 census run 1
+for icl, fam, mem in (("ADDPS", "FP.ADD.f32", False), ("ADDPS", "FP.ADD.f32", True), ("MULPS", "FP.MUL.f32", False),
+                      ("MAXPS", "FP.MAX.f32", False), ("MINPS", "FP.MIN.f32", False)):
+    env_, nan, role, src, unc = _fp2_meta(fam)
+    entry(iclass=icl, iform="%s_XMMps_%s" % (icl, "MEMps" if mem else "XMMps"), iform_status=_CENSUS, family=fam,
+          encoding="legacy", vl=128, lanes=4, elem={"src": "f32", "dst": "f32"}, operands=ops_legacy_ps(mem),
+          masking=["none"], upper="preserve", scalar=None, fp_env=env_, nan_rule=nan,
+          nan_role=role, lane_fn=_FP2[fam],
+          sem={"builder": "packed_fp2", "fn": _FP2[fam]}, table_source=src,
+          uncertain=unc + (["F-MEMFAULT"] if mem else []), sdm=_sdm(icl),
+          notes="legacy SSE: src1 IS the destination (REG0 rw); bits 511:128 preserved; m128 must be 16-byte "
+                "aligned (#GP otherwise: a footprint fact)" if mem else
+                "legacy SSE: src1 IS the destination (REG0 rw); bits 511:128 preserved")
+entry(iclass="CMPPS", iform="CMPPS_XMMps_XMMps_IMMb", iform_status=_CENSUS, family="FP.CMP.f32", encoding="legacy",
+      vl=128, lanes=4, elem={"src": "f32", "dst": "mask32"}, operands=ops_legacy_ps() + [_o("IMM0", "imm", "imm8")],
+      masking=["none"], upper="preserve", scalar=None, fp_env=ENV_CMP, nan_rule="NAN.CMP",
+      nan_role={"src1": ER, "src2": ER}, lane_fn="fp_ops.cmp_pred",
+      sem={"builder": "cmp_vec", "fn": "fp_ops.cmp_pred", "imm_max": 7}, uncertain=["F-FLAGPRI"], sdm=["Vol2 CMPPS"],
+      notes="legacy: declared domain imm8 in [0, 7] (SDM: bits 7:3 reserved), imm 8-255 refused; src1 IS the "
+            "destination")
+for icl, fam, env_, trunc, ifm in (("CVTDQ2PS", "FP.CVT.i32_f32", ENV_CVT_I2F, None, "CVTDQ2PS_XMMps_XMMdq"),
+                                   ("CVTTPS2DQ", "FP.CVT.f32_i32.trunc", ENV_CVTT_F2I, True, "CVTTPS2DQ_XMMdq_XMMps")):
+    i2f = trunc is None
+    entry(iclass=icl, iform=ifm, iform_status=_CENSUS, family=fam, encoding="legacy", vl=128, lanes=4,
+          elem={"src": "i32", "dst": "f32"} if i2f else {"src": "f32", "dst": "i32"},
+          operands=[_o("REG0", "dst", "xmm", 128, "w"), _o("REG1", "src", "xmm", 128)], masking=["none"],
+          upper="preserve", scalar=None, fp_env=env_, nan_rule="none" if i2f else "NAN.CVT_F2I",
+          nan_role={"src": OB if i2f else ER},
+          lane_fn="fp_ops.cvt_i32_to_f32" if i2f else "fp_ops.cvt_f32_to_i32(trunc=True)",
+          sem={"builder": "packed_fp1", "fn": "fp_ops.cvt_i32_to_f32", "src_eb": 32, "dst_eb": 32} if i2f else
+          {"builder": "packed_fp1", "fn": "fp_ops.cvt_f32_to_i32", "trunc": True, "src_eb": 32, "dst_eb": 32},
+          uncertain=[] if i2f else ["F-DAZ-CVT"], sdm=_sdm(icl), notes="legacy SSE: bits 511:128 preserved")
+for icl, fam in (("ADDSS", "FP.ADD.f32"), ("MULSS", "FP.MUL.f32"), ("MAXSS", "FP.MAX.f32")):
+    env_, nan, role, src, unc = _fp2_meta(fam)
+    entry(iclass=icl, iform="%s_XMMss_MEMss" % icl, iform_status=_CENSUS, family=fam, encoding="legacy", vl=128,
+          lanes=1, elem={"src": "f32", "dst": "f32"}, operands=ops_legacy_ss(mem=True), masking=["none"],
+          upper="preserve", scalar={"lane0_from": "op(dst[0], src2[0])", "upper_lanes_from": "dst"}, fp_env=env_,
+          nan_rule=nan, nan_role=role, lane_fn=_FP2[fam], sem={"builder": "scalar_fp2", "fn": _FP2[fam]},
+          table_source=src, uncertain=unc + ["F-MEMFAULT"], sdm=_sdm(icl),
+          notes="src1 IS the destination (REG0 rw); m32 source")
+entry(iclass="CMPSS", iform="CMPSS_XMMss_XMMss_IMMb", iform_status=_CENSUS, family="FP.CMP.f32", encoding="legacy",
+      vl=128, lanes=1, elem={"src": "f32", "dst": "mask32"}, operands=ops_legacy_ss() + [_o("IMM0", "imm", "imm8")],
+      masking=["none"], upper="preserve", scalar={"lane0_from": "cmp(dst[0], src2[0])", "upper_lanes_from": "dst"},
+      fp_env=ENV_CMP, nan_rule="NAN.CMP", nan_role={"src1": ER, "src2": ER}, lane_fn="fp_ops.cmp_pred",
+      sem={"builder": "cmp_scalar", "fn": "fp_ops.cmp_pred", "imm_max": 7}, uncertain=["F-FLAGPRI"], sdm=["Vol2 CMPSS"],
+      notes="legacy: declared domain imm8 in [0, 7] (SDM: bits 7:3 reserved), imm 8-255 refused; lane 0 "
+            "all-ones/zero, lanes 1-3 and bits 511:128 from the destination")
+entry(iclass="VCMPSS", iform="VCMPSS_XMMdq_XMMdq_XMMd_IMMb", iform_status=_CENSUS, family="FP.CMP.f32", encoding="vex",
+      vl=128, lanes=1, elem={"src": "f32", "dst": "mask32"},
+      operands=ops_vex2src(128, scalar=True) + [_o("IMM0", "imm", "imm8")], masking=["none"], upper="zero_to_vlmax",
+      scalar={"lane0_from": "cmp(src1[0], src2[0])", "upper_lanes_from": "src1"}, fp_env=ENV_CMP, nan_rule="NAN.CMP",
+      nan_role={"src1": ER, "src2": ER}, lane_fn="fp_ops.cmp_pred", sem={"builder": "cmp_scalar", "fn": "fp_ops.cmp_pred"},
+      uncertain=["F-FLAGPRI"], sdm=["Vol2 CMPSS"], notes="lane 0 all-ones/zero; lanes 1-3 from src1; bits 511:128 zeroed")
+entry(iclass="VCMPSS", iform="VCMPSS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512", iform_status=_CENSUS,
+      family="FP.CMP.f32", encoding="evex", vl=128, lanes=1, elem={"src": "f32", "dst": "k1"},
+      operands=[_o("REG0", "dst", "k", access="w"), _o("REG1", "mask", "k"), _o("REG2", "src1", "xmm", 128),
+                _o("REG3", "src2", "xmm", 32), _o("IMM0", "imm", "imm8")],
+      masking=["zero(k-dest)"], upper="n/a(k-dest: bits >= 1 zero)",
+      scalar={"lane0_from": "cmp(src1[0], src2[0])", "upper_lanes_from": "none (k bits >= 1 zero)"}, fp_env=ENV_CMP,
+      nan_rule="NAN.CMP", nan_role={"src1": ER, "src2": ER}, lane_fn="fp_ops.cmp_pred",
+      sem={"builder": "cmp_k", "fn": "fp_ops.cmp_pred", "scalar": True}, uncertain=["F-FLAGPRI", "F-MASKEXC"],
+      sdm=["Vol2 CMPSS"], notes="destination is an opmask: bit 0 = k2[0] AND pred(lane 0); bits >= 1 zero")
+entry(iclass="COMISS", iform="COMISS_XMMss_MEMss", iform_status=_CENSUS, family="FP.COMI.f32", encoding="legacy", vl=128,
+      lanes=1, elem={"src": "f32", "dst": "rflags"},
+      operands=[_o("REG0", "src1", "xmm", 128), _o("MEM0", "src2", "mem", 32), _o("implicit", "dst", "rflags", access="w")],
+      masking=["none"], upper="n/a(rflags)", scalar=None, fp_env=ENV_CMP, nan_rule="NAN.CMP",
+      nan_role={"src1": ER, "src2": ER}, lane_fn="fp_ops.comis(signalling=True)",
+      sem={"builder": "comis", "signalling": True}, uncertain=["F-FLAGPRI", "F-MEMFAULT"], sdm=["Vol2 COMISS"],
+      notes="configuration C only (not a release configuration) in census run 1")
+entry(iclass="VUCOMISS", iform="VUCOMISS_XMMf32_XMMf32_AVX512", iform_status=_CENSUS, family="FP.COMI.f32",
+      encoding="evex", vl=128, lanes=1, elem={"src": "f32", "dst": "rflags"},
+      operands=[_o("REG0", "src1", "xmm", 128), _o("REG1", "src2", "xmm", 32), _o("implicit", "dst", "rflags", access="w")],
+      masking=["none"], upper="n/a(rflags)", scalar=None, fp_env=ENV_CMP, nan_rule="NAN.CMP",
+      nan_role={"src1": ER, "src2": ER}, lane_fn="fp_ops.comis(signalling=False)",
+      sem={"builder": "comis", "signalling": False}, uncertain=["F-FLAGPRI"], sdm=["Vol2 UCOMISS"],
+      notes="EVEX encoding (MSVC, configuration A, avx512 act_q8): no write mask; {sae} unused (census: 0 SAE)")
+entry(iclass="CVTSI2SS", iform="CVTSI2SS_XMMss_GPR64q", iform_status=_CENSUS, family="FP.CVT.i64_f32", encoding="legacy",
+      vl=128, lanes=1, elem={"src": "i64", "dst": "f32"},
+      operands=[_o("REG0", "dst_src1", "xmm", 128, "rw"), _o("REG1", "src2", "gpr64", 64)], masking=["none"],
+      upper="preserve", scalar={"lane0_from": "cvt(src2)", "upper_lanes_from": "dst"}, fp_env=ENV_CVT_I2F,
+      nan_rule="none", nan_role={"src2": OB}, lane_fn="fp_ops.cvt_i64_to_f32",
+      sem={"builder": "cvt_i2f_scalar", "src_eb": 64}, sdm=["Vol2 CVTSI2SS (REX.W)"],
+      notes="64-bit signed source (MSVC, configuration A, scalar variants); its own family: 2^64 inputs")
+for icl, fam, vl in (("VADDPS", "FP.ADD.f32", 128), ("VADDPS", "FP.ADD.f32", 256), ("VMAXPS", "FP.MAX.f32", 256),
+                     ("VMULPS", "FP.MUL.f32", 256)):
+    env_, nan, role, src, unc = _fp2_meta(fam)
+    q = {128: "XMMdq", 256: "YMMqq"}[vl]
+    m = {128: "MEMdq", 256: "MEMqq"}[vl]
+    entry(iclass=icl, iform="%s_%s_%s_%s" % (icl, q, q, m), iform_status=_CENSUS, family=fam, encoding="vex", vl=vl,
+          lanes=vl // 32, elem={"src": "f32", "dst": "f32"}, operands=ops_vex2src(vl, mem=True), masking=["none"],
+          upper="zero_to_vlmax", scalar=None, fp_env=env_, nan_rule=nan, nan_role=role, lane_fn=_FP2[fam],
+          sem={"builder": "packed_fp2", "fn": _FP2[fam]}, table_source=src, uncertain=unc + ["F-MEMFAULT"], sdm=_sdm(icl),
+          notes="VEX memory source: no alignment requirement")
+env_, nan, role, src, unc = _fp2_meta("FP.DIV.f32")
+entry(iclass="VDIVSS", iform="VDIVSS_XMMdq_XMMdq_MEMd", iform_status=_CENSUS, family="FP.DIV.f32", encoding="vex",
+      vl=128, lanes=1, elem={"src": "f32", "dst": "f32"}, operands=ops_vex2src(128, mem=True, scalar=True),
+      masking=["none"], upper="zero_to_vlmax", scalar={"lane0_from": "op(src1[0], src2[0])", "upper_lanes_from": "src1"},
+      fp_env=env_, nan_rule=nan, nan_role=role, lane_fn=_FP2["FP.DIV.f32"],
+      sem={"builder": "scalar_fp2", "fn": _FP2["FP.DIV.f32"]}, table_source=src, uncertain=unc + ["F-MEMFAULT"],
+      sdm=_sdm("VDIVSS"), notes="lanes 1-3 from src1 (xmm2); bits 511:128 zeroed; m32 source")
+entry(iclass="VMULPS", iform="VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512", iform_status=_CENSUS, family="FP.MUL.f32",
+      encoding="evex", vl=128, lanes=4, elem={"src": "f32", "dst": "f32"}, operands=ops_evex2src(128, mem=True),
+      masking=["merge", "zero"], upper="zero_to_vlmax", scalar=None, fp_env=ENV_ARITH, nan_rule="NAN.ARITH2",
+      nan_role={"src1": T, "src2": T}, lane_fn="fp_ops.mul", sem={"builder": "packed_fp2", "fn": "fp_ops.mul"},
+      table_source="sdm+bochs", uncertain=["F-TINY", "F-FTZ-EXACT", "F-FLAGPRI", "F-MASKEXC", "F-MEMFAULT", "BCAST"],
+      sdm=_sdm("VMULPS"), notes="memory form: {1to4} broadcast when EVEX.b = 1 (census: used, XED BCRC)")
+entry(iclass="VCVTPH2PS", iform="VCVTPH2PS_YMMqq_MEMdq", iform_status=_CENSUS, family="FP.CVT.f16_f32", encoding="vex",
+      vl=256, lanes=8, elem={"src": "f16", "dst": "f32"},
+      operands=[_o("REG0", "dst", "ymm", 256, "w"), _o("MEM0", "src", "mem", 128)], masking=["none"],
+      upper="zero_to_vlmax", scalar=None, fp_env=ENV_CVT_H2F, nan_rule="NAN.CVT_H2F", nan_role={"src": OB},
+      lane_fn="fp_ops.cvt_f16_to_f32", sem={"builder": "packed_fp1", "fn": "fp_ops.cvt_f16_to_f32", "src_eb": 16, "dst_eb": 32},
+      table_source="sdm+bochs", uncertain=["F-H2F", "F-MEMFAULT"], sdm=["Vol2 VCVTPH2PS (F16C)"],
+      notes="m128 source of 8 f16 values (the harness reads it from the src2 slot)")
+entry(iclass="VCVTPH2PS", iform="VCVTPH2PS_ZMMf32_MASKmskw_MEMf16_AVX512", iform_status=_CENSUS, family="FP.CVT.f16_f32",
+      encoding="evex", vl=512, lanes=16, elem={"src": "f16", "dst": "f32"},
+      operands=[_o("REG0", "dst", "zmm", 512, "w"), _o("REG1", "mask", "k"), _o("MEM0", "src", "mem", 256)],
+      masking=["merge", "zero"], upper="zero_to_vlmax", scalar=None, fp_env=ENV_CVT_H2F, nan_rule="NAN.CVT_H2F",
+      nan_role={"src": OB}, lane_fn="fp_ops.cvt_f16_to_f32",
+      sem={"builder": "packed_fp1", "fn": "fp_ops.cvt_f16_to_f32", "src_eb": 16, "dst_eb": 32}, table_source="sdm+bochs",
+      uncertain=["F-H2F", "F-MASKEXC", "F-MEMFAULT"], sdm=["Vol2 VCVTPH2PS"],
+      notes="m256 source of 16 f16 values; no embedded broadcast; masked-off lanes suppress faults")
+entry(iclass="VPMADDWD", iform="VPMADDWD_YMMqq_YMMqq_MEMqq", iform_status=_CENSUS, family="INT.MADDWD.s16",
+      encoding="vex", vl=256, lanes=8, elem={"src": "int", "dst": "i32"}, operands=ops_vex2src(256, mem=True),
+      masking=["none"], upper="zero_to_vlmax", scalar=None, fp_env=ENV_NONE, nan_rule="n/a", nan_role={},
+      lane_fn="int_ops.pmaddwd", sem={"builder": "int2", "fn": "int_ops.pmaddwd", "dst_eb": 32}, sdm=["Vol2 PMADDWD"],
+      notes="m256 source (census run 1: A, B-cmake, C, D AVX2 Q4/Q8); the only census form of an existing integer "
+            "family without an entry")
+
+
 # ---------------------------------------------------------------- integer entries named by the task
 for vl in (128, 256, 512):
     R = {128: "XMM", 256: "YMM", 512: "ZMM"}[vl]
@@ -525,6 +703,44 @@ for vl in (128, 256):
               operands=ops_vex2src(vl), masking=["none"], upper="zero_to_vlmax", scalar=None, fp_env=ENV_NONE,
               nan_rule="n/a", nan_role={}, lane_fn=fn, sem={"builder": "int2", "fn": fn, "dst_eb": eb}, sdm=[sd],
               notes="pairs stay inside each 128-bit lane" if icl == "VPHADDD" else "")
+
+
+# ---------------------------------------------------------------- key status from X0 census run 1
+# FP-sensitive iforms decoded by XED v2026.08.23 in X0 census run 1 (x2_scope.json, sha256 a8058763...2422,
+# from census.json sha256 3d54f0d5...6f06). A provisional key the census decoded is promoted to xed-decode;
+# provisional keys the census did not produce stay provisional (they are in scope through intrinsic_map.v1
+# or a mutant operator, and the stub generator decodes each one exactly as written).
+CENSUS_RUN1_FP_IFORMS = frozenset("""
+ADDPS_XMMps_MEMps ADDPS_XMMps_XMMps ADDSS_XMMss_MEMss ADDSS_XMMss_XMMss CMPPS_XMMps_XMMps_IMMb CMPSS_XMMss_XMMss_IMMb
+COMISS_XMMss_MEMss COMISS_XMMss_XMMss CVTDQ2PS_XMMps_XMMdq CVTSI2SS_XMMss_GPR32d CVTSI2SS_XMMss_GPR64q
+CVTTPS2DQ_XMMdq_XMMps CVTTSS2SI_GPR32d_XMMss DIVSS_XMMss_XMMss MAXPS_XMMps_XMMps MAXSS_XMMss_MEMss MAXSS_XMMss_XMMss
+MINPS_XMMps_XMMps MINSS_XMMss_XMMss MULPS_XMMps_XMMps MULSS_XMMss_MEMss MULSS_XMMss_XMMss SUBSS_XMMss_XMMss
+UCOMISS_XMMss_XMMss VADDPS_XMMdq_XMMdq_MEMdq VADDPS_XMMdq_XMMdq_XMMdq VADDPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512
+VADDPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512 VADDPS_YMMqq_YMMqq_MEMqq VADDPS_YMMqq_YMMqq_YMMqq
+VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512 VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512 VADDSS_XMMdq_XMMdq_MEMd
+VADDSS_XMMdq_XMMdq_XMMd VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512
+VCMPPS_MASKmskw_MASKmskw_ZMMf32_ZMMf32_IMM8_AVX512 VCMPPS_XMMdq_XMMdq_XMMdq_IMMb VCMPPS_YMMqq_YMMqq_YMMqq_IMMb
+VCMPSS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512 VCMPSS_XMMdq_XMMdq_XMMd_IMMb VCVTDQ2PS_XMMdq_XMMdq
+VCVTDQ2PS_YMMqq_YMMqq VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512 VCVTPH2PS_XMMdq_XMMq
+VCVTPH2PS_XMMf32_MASKmskw_XMMf16_AVX512 VCVTPH2PS_YMMqq_MEMdq VCVTPH2PS_YMMqq_XMMdq
+VCVTPH2PS_ZMMf32_MASKmskw_MEMf16_AVX512 VCVTPH2PS_ZMMf32_MASKmskw_YMMf16_AVX512 VCVTPS2DQ_YMMqq_YMMqq
+VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512 VDIVSS_XMMdq_XMMdq_MEMd VDIVSS_XMMdq_XMMdq_XMMd
+VDIVSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512 VMAXPS_XMMdq_XMMdq_XMMdq VMAXPS_YMMqq_YMMqq_MEMqq VMAXPS_YMMqq_YMMqq_YMMqq
+VMAXPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512 VMAXSS_XMMdq_XMMdq_XMMd VMINPS_YMMqq_YMMqq_YMMqq
+VMINPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512 VMULPS_XMMdq_XMMdq_XMMdq VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512
+VMULPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512 VMULPS_YMMqq_YMMqq_MEMqq VMULPS_YMMqq_YMMqq_YMMqq
+VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512 VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512 VMULSS_XMMdq_XMMdq_MEMd
+VMULSS_XMMdq_XMMdq_XMMd VUCOMISS_XMMdq_XMMd VUCOMISS_XMMf32_XMMf32_AVX512
+""".split())
+# Integer entries whose (iclass, iform) the census decoded in the dispatched closures (census_absorb, A, B-cmake,
+# C, D; build 1).
+CENSUS_RUN1_INT_IFORMS = frozenset({"VPDPBUSD_ZMMi32_MASKmskw_ZMMu8_ZMMu32_AVX512", "VPHADDD_YMMqq_YMMqq_YMMqq",
+                                    "VPMADDUBSW_YMMqq_YMMqq_YMMqq", "VPMADDWD_YMMqq_YMMqq_YMMqq",
+                                    "VPMADDWD_YMMqq_YMMqq_MEMqq"})
+for _e in ENTRIES:
+    if (_e["key"]["iform"] in CENSUS_RUN1_FP_IFORMS | CENSUS_RUN1_INT_IFORMS
+            and _e["key"]["iform_status"] == "provisional"):
+        _e["key"]["iform_status"] = "xed-decode"
 
 
 def find(iclass, iform=None, encoding=None, vl=None, mem=False):

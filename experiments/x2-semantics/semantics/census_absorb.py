@@ -1,12 +1,21 @@
 """Absorb X0's census into a table-coverage report and the fuzz budget (TABLE-SCHEMA.md §9).
 
 Primary input (the census of record, X0-census.md Appendix C):
-  census.json         variants[]: {config, table, slot, symbol, closure: [{symbol, ...}], iforms: {iform: n}}
-  instructions.jsonl  one record per decoded instruction: {label, object, function, iclass, iform,
-                      fields: {MASK, ZEROING, ROUNDC, SAE, BCAST, ...}, attributes, padding}
+  census.json         variants[]: {config, table, slot, build_index, closure: [{symbol, ...}], iforms: {iform: n}}
+  instructions.jsonl  one record per decoded instruction. X0 census run 1 writes, per configuration and
+                      build, {variant: "<config>:<table>:<slot>", function, iclass, iform, role, how,
+                      fields: {MASK, ZEROING, BCRC, ROUNDC, SAE, BCAST, MEM0, ...}, attributes, ...}
+                      (no `label` key; the configuration is the prefix of `variant`). A `label` key, as
+                      the smoke outputs and the v0 synthetic test have, is still accepted.
 The union is taken over the variants[] of the selected configurations only (the dispatched closures,
-not whole objects), and every (iclass, iform) is split by OPERAND VARIANT read from the XED fields:
+not whole objects; build 1 by default, since X0 shows builds 1 and 2 identical), and every
+(iclass, iform) is split by OPERAND VARIANT read from the XED fields:
   plain | merge | zeroing | bcast | sae | er:ROUNDC=<v>   (joined with '+', e.g. 'bcast+merge')
+Embedded broadcast is XED's BCRC bit on an instruction with a memory operand. XED's BCAST field is
+NOT a flag: it holds the broadcast TYPE and is also set on VBROADCASTSS/VPBROADCAST* themselves
+(census run 1: VPBROADCASTD_YMMqq_XMMd carries BCAST=3 with no EVEX.b) [M, 2026-10-23]; v0 read it as
+a flag, which would have tagged every broadcast instruction "bcast". MASK holds the mask register
+number (k1..k7); absent or 0 means unmasked.
 A join cross-check refuses the input if the iforms found in instructions.jsonl for a configuration's
 closure symbols differ from the iforms census.json lists for that configuration's variants.
 
@@ -23,6 +32,10 @@ Output buckets for the union:
   provisional_unseen     provisional iform strings in the table that the census never produced
   xed_mxcsr_disagree     FP-sensitivity of our family vs XED's MXCSR attribute, listed both ways
   entries_without_nan_role  table entries lacking a nan_role (RULES.md §2: they count as observers)
+  scope                  one row per union (iclass, iform) with its DISPOSITION (added 2026-10-23,
+                         X2 freeze preparation): `entry` (a table entry exists) or `object-level`
+                         with a written reason (SCOPE_REASONS). An FP-sensitive form without an entry
+                         is never given a reason: it lands in `fp_without_entry`, and --strict fails.
 The script refuses input whose shape it does not recognise and labels that match nothing (it never
 guesses).
 
@@ -78,28 +91,35 @@ def _nz(fields, k):
 
 def operand_variant(fields):
     """Operand variant of one decoded instruction from XED's operand fields (x0_decode.py
-    EVEX_FIELDS). ROUNDC values are kept raw: their mapping to RNE/RD/RU/RZ is read from XED at
-    freeze [inference: 1..4 in that order, unverified]."""
+    EVEX_FIELDS). Embedded broadcast = BCRC on a memory-operand form (module docstring); BCRC on a
+    register-only form is {er}/{sae}, told apart by ROUNDC. ROUNDC values are kept raw; the stub
+    generator showed ROUNDC = mode + 1 for rne/rd/ru/rz-sae (harness/stubgen.py check()) [M]."""
     f = fields or {}
     tags = []
-    if _nz(f, "BCAST"):
+    has_mem = _nz(f, "MEM0") or _nz(f, "MEM1")
+    if _nz(f, "BCRC") and has_mem:
         tags.append("bcast")
     if _nz(f, "ROUNDC"):
         tags.append("er:ROUNDC=%s" % f["ROUNDC"])
-    elif _nz(f, "SAE"):
+    elif _nz(f, "SAE") or (_nz(f, "BCRC") and not has_mem):
         tags.append("sae")
     if _nz(f, "MASK"):
         tags.append("zeroing" if _nz(f, "ZEROING") else "merge")
     return "+".join(tags) or "plain"
 
 
-def _rec(union, icl, ifm, attrs, isa_set, ext, n, where, variant=None):
+def _rec(union, icl, ifm, attrs, isa_set, ext, n, where, variant=None, variant_id=None, config=None):
     rec = union.setdefault((icl, ifm), {"count": 0, "functions": set(), "attributes": set(attrs or []),
-                                        "isa_set": isa_set, "extension": ext, "variants": collections.Counter()})
+                                        "isa_set": isa_set, "extension": ext, "variants": collections.Counter(),
+                                        "dispatched": set(), "configs": set()})
     rec["count"] += n
     rec["functions"].add(where)
     if variant is not None:
         rec["variants"][variant] += n
+    if variant_id:
+        rec["dispatched"].add(variant_id)
+    if config:
+        rec["configs"].add(config)
 
 
 def load_functions(paths, labels):
@@ -124,19 +144,31 @@ def load_functions(paths, labels):
     return union
 
 
-def load_census(census_path, insts_paths, configs, label_map=None):
-    """Census mode: closures of census.json variants[] joined with instructions.jsonl operand fields."""
+def _variant_id(v):
+    return "%s:%s:%s" % (v.get("config"), v.get("table"), v.get("slot"))
+
+
+def load_census(census_path, insts_paths, configs, label_map=None, build_index=1):
+    """Census mode: closures of census.json variants[] joined with instructions.jsonl operand fields.
+    A record's configuration is its `label` (mapped by label_map) or, in X0 census run 1's schema, the
+    prefix of its `variant` field; the record must lie in that variant's closure. Only variants of
+    `build_index` are read (X0: builds 1 and 2 identical); census.json entries without a build_index
+    are always read."""
     with open(census_path, encoding="utf-8") as fh:
         cen = json.load(fh)
     if not isinstance(cen, dict) or not isinstance(cen.get("variants"), list):
         raise SystemExit("%s: not an X0 census.json (expected an object with variants[])" % census_path)
     label_map = label_map or {}
     closure, iforms_cen = collections.defaultdict(set), collections.defaultdict(set)
+    vclosure = collections.defaultdict(set)
     for v in cen["variants"]:
         if v.get("config") not in configs:
             continue
+        if v.get("build_index") not in (None, build_index):
+            continue
         for c in v.get("closure", []):
             closure[v["config"]].add(c["symbol"])
+            vclosure[_variant_id(v)].add(c["symbol"])
         iforms_cen[v["config"]].update(v.get("iforms", {}).keys())
     missing = [c for c in configs if c not in closure]
     if missing:
@@ -148,14 +180,25 @@ def load_census(census_path, insts_paths, configs, label_map=None):
         with open(p, encoding="utf-8") as fh:
             for line in fh:
                 r = json.loads(line)
-                cfg = label_to_cfg.get(str(r.get("label")))
+                if "label" in r:
+                    cfg = label_to_cfg.get(str(r.get("label")))
+                    vid = None
+                else:
+                    vid = str(r.get("variant") or "")
+                    cfg = vid.split(":", 1)[0] if vid else None
+                    cfg = cfg if cfg in configs else None
                 if cfg is None or r.get("undecodable") or r.get("padding") or not r.get("iclass"):
+                    continue
+                if r.get("role") not in (None, "reachable"):
                     continue
                 if r.get("function") not in closure[cfg]:
                     continue
+                if vid is not None and r.get("function") not in vclosure.get(vid, ()):
+                    raise SystemExit("%s: record of %s outside that variant's closure: %s" % (p, vid, r.get("function")))
                 iforms_join[cfg].add(r["iform"])
                 _rec(union, r["iclass"], r["iform"], r.get("attributes"), r.get("isa_set"), r.get("extension"), 1,
-                     "%s:%s" % (cfg, r.get("function")), operand_variant(r.get("fields")))
+                     "%s:%s" % (cfg, r.get("function")), operand_variant(r.get("fields")),
+                     variant_id=vid, config=cfg)
     for cfg in configs:
         if not iforms_join[cfg]:
             raise SystemExit("config %s: no instruction record matched its closure (label %r); "
@@ -167,14 +210,50 @@ def load_census(census_path, insts_paths, configs, label_map=None):
     return union
 
 
+# Extensions of XED's category G in X0's partition (X0-census.md §4.3): GPR, control flow, NOP-class.
+_S_EXTENSIONS = {"SSE", "SSE2", "SSE3", "SSSE3", "SSE4", "AVX", "AVX2", "AVX2GATHER", "FMA", "F16C", "AVX512EVEX",
+                 "AVX512VEX"}
+SCOPE_REASONS = {
+    "object-level/G": "general-purpose, control-flow, hardening or NOP-class form (X0 category G). X2's T1 judges "
+                      "intrinsic-level IR (ROADMAP §3.3; DR-008 step 2), where scalar C integer operators are QF_BV "
+                      "terms with C semantics (TABLE-SCHEMA §8.1) and control flow is the loop structure (RULES.md "
+                      "§5); this form exists only in compiled objects and is consumed by the B1.5 object audit "
+                      "(DR-008 step 3)",
+    "object-level/S": "non-FP SIMD or opmask form that no intrinsic of the T1 hosts denotes (a compiler's choice: "
+                      "moves, spills, legacy SSE integer and logic code in the scalar variants, broadcasts lowered "
+                      "from set1, opmask moves, VZEROUPPER). FP-insensitive by X0's frozen classification; it exists "
+                      "only in compiled objects and is consumed by the B1.5 object audit (DR-008 step 3)",
+    "object-level/S, T1-image iclass": "non-FP SIMD form of an iclass that intrinsic_map.v1 names. The census form is "
+                      "the compiler's encoding (memory operand, VEX/EVEX, width); T1 consumes the intrinsic's own "
+                      "register form, whose entry is written before T1 accepts code containing it (TABLE-SCHEMA "
+                      "§8.1) and fuzzed under rows generated by budget_rows at its frozen hash. The census form "
+                      "itself is consumed by the B1.5 object audit",
+}
+
+
+def t1_image_iclasses():
+    """Iclasses named by intrinsic_map v0 (register forms, scalar C operators, sequence expansions)."""
+    from . import hearth_kernels as hk
+    out = set()
+    for v in list(hk.INTRINSIC_MAP_V0.values()) + list(hk.SCALAR_C_MAP_V0.values()):
+        if isinstance(v, tuple):
+            out.add(v[0])
+        else:
+            for tok in str(v).replace(",", " ").replace("+", " ").split():
+                if tok.isupper() and tok.startswith(("V", "P", "K")) and len(tok) > 3:
+                    out.add(tok)
+    return out
+
+
 def absorb(union, mode="census"):
     by_key = {(e["key"]["iclass"], e["key"]["iform"]): e for e in table.ENTRIES}
+    image = t1_image_iclasses()
     fam_of_iclass = {}
     for e in table.ENTRIES:
         fam_of_iclass.setdefault(e["key"]["iclass"], set()).add(e["family"])
     rep = {"mode": mode, "covered_exact": [], "needs_form_instance": [], "needs_family": [],
            "operand_variants_seen": [], "fp_env_instructions": [], "xed_mxcsr_disagree": [],
-           "provisional_unseen": [], "entries_without_nan_role": []}
+           "provisional_unseen": [], "entries_without_nan_role": [], "scope": [], "fp_without_entry": []}
     seen_iforms = set()
     for (icl, ifm), rec in union.items():
         seen_iforms.add(ifm)
@@ -201,6 +280,24 @@ def absorb(union, mode="census"):
         if ours is not None and ours != row["xed_mxcsr"]:
             rep["xed_mxcsr_disagree"].append({"iclass": icl, "iform": ifm, "table_fp_sensitive": ours,
                                               "xed_MXCSR_attribute": row["xed_mxcsr"]})
+        # disposition (2026-10-23): an entry, or object-level with a written reason; FP never gets a reason
+        fp = bool(row["xed_mxcsr"]) or bool(ours)
+        srow = {"iclass": icl, "iform": ifm, "extension": rec["extension"], "fp_sensitive": fp,
+                "configs": sorted(rec.get("configs", ())), "dispatched": sorted(rec.get("dispatched", ())),
+                "operand_variants": sorted(rec["variants"])}
+        if (icl, ifm) in by_key:
+            srow["disposition"] = "entry"
+            srow["content_hash"] = table.content_hash(by_key[(icl, ifm)])
+        elif fp:
+            srow["disposition"] = "MISSING (FP-sensitive)"
+            rep["fp_without_entry"].append(srow)
+        elif rec["extension"] not in _S_EXTENSIONS:
+            srow["disposition"] = "object-level/G"
+        elif icl in image:
+            srow["disposition"] = "object-level/S, T1-image iclass"
+        else:
+            srow["disposition"] = "object-level/S"
+        rep["scope"].append(srow)
     for e in table.ENTRIES:
         if e["key"]["iform_status"] == "provisional" and e["key"]["iform"] not in seen_iforms:
             rep["provisional_unseen"].append(e["key"]["iform"])
@@ -208,6 +305,11 @@ def absorb(union, mode="census"):
             rep["entries_without_nan_role"].append(e["key"]["iform"])
     rep["summary"] = {k: len(v) for k, v in rep.items() if isinstance(v, list)}
     rep["summary"]["union_size"] = len(union)
+    rep["summary"]["dispositions"] = dict(collections.Counter(r["disposition"] for r in rep["scope"]))
+    rep["summary"]["iclasses_by_disposition"] = {
+        d: len({r["iclass"] for r in rep["scope"] if r["disposition"] == d})
+        for d in sorted({r["disposition"] for r in rep["scope"]})}
+    rep["scope_reasons"] = SCOPE_REASONS
     fp_fams = set()
     for row in rep["covered_exact"]:
         if row["family"].startswith("FP."):
@@ -226,23 +328,44 @@ _V2 = {"FP.ADD.f32": ["TIE", "OVF", "UFL", "CANCEL", "ZEROS", "F-FTZ-EXACT", "F-
        "FP.DIV.f32": ["TIE", "OVF", "F-TINY", "UFL", "ZEROS", "F-FTZ-EXACT", "F-FLAGPRI"],
        "FP.MAX.f32": ["ZEROS", "F-DAZ-SEL", "F-FLAGPRI"], "FP.MIN.f32": ["ZEROS", "F-DAZ-SEL", "F-FLAGPRI"],
        "FP.CMP.f32": ["ZEROS", "F-FLAGPRI"], "FP.COMI.f32": ["ZEROS", "F-FLAGPRI"],
-       "FP.CVT.i32_f32": ["CVT-BND"], "FP.CVT.f32_i32.rc": ["CVT-BND", "F-DAZ-CVT"],
-       "FP.CVT.f32_i32.trunc": ["CVT-BND", "F-DAZ-CVT"], "FP.CVT.f16_f32": ["F-H2F"]}
+       "FP.CVT.i32_f32": ["CVT-BND"], "FP.CVT.i64_f32": ["CVT-BND"], "FP.CVT.f32_i32.rc": ["CVT-BND", "F-DAZ-CVT"],
+       "FP.CVT.f32_i32.trunc": ["CVT-BND", "F-DAZ-CVT"], "FP.CVT.f16_f32": ["F-H2F"],
+       # pre-registered 2026-10-23 for the FMA entries a mutant operator (M-FMA) introduces; no entry yet
+       "FP.FMA.f32": ["TIE", "OVF", "F-TINY", "UFL", "CANCEL", "ZEROS", "F-FTZ-EXACT", "F-FLAGPRI"]}
 
 
 def budget_rows(entries=None, variants_seen=None):
     """budget.v1 rows: (iform, operand variant, set, class, envs, lane cases). Formulas are those of
-    FUZZ-DESIGN.md §5; every count is in LANE CASES. variants_seen: {(iclass, iform): {variant}} from
-    a census absorption; without it, every EVEX memory form with a broadcast-capable operand gets a
-    BCAST row and register forms get 'plain' only."""
+    FUZZ-DESIGN.md §5 as fixed for the freeze on 2026-10-23; every count is in LANE CASES. The rows
+    are a function of the table alone: variants_seen (census operand variants) is accepted for the
+    report but no longer removes a row (v0 dropped BCAST rows of forms the census showed unbroadcast;
+    the freeze runs every broadcast-capable memory form broadcast, masked and unmasked, which is
+    stricter). Changes made for the freeze (X2 record, budget.v1):
+      * V3 only for forms with a write-mask operand (EVEX VUCOMISS has none);
+      * a scalar compare into k (zeroing by definition) has 1 masking mode in V3, not 2;
+      * FP.CVT.i64_f32 (CVTSI2SS r64): V1 and V2 as the 32-bit conversion, no V5 (2^64 inputs);
+      * F-MEMFAULT on an EVEX form with zero masking counts the zero-masking executions:
+        2 x (n + 1) x n (harness/README.md open item 6, strict choice);
+      * every EVEX memory form with EVEX.b gets the masked broadcast row
+        {merge, zero} x 144 class pairs x 10 x n (open item 8, strict choice);
+      * FP.FMA.f32 (no entry yet; M-FMA introduces it) has its formula here so that its rows are fixed
+        before its entries are written: V1 the 12^3 class-triple grid x 100 x E8, V2 its 8 classes x
+        10,000 x E8, V3 as every EVEX form, V4 {er} 4 modes x 1,728 x 10 x 2 on 512-bit register forms,
+        BCAST 144 x 100 x n."""
     rows = []
     for e in entries or table.ENTRIES:
         ifm, fam, n = e["key"]["iform"], e["family"], e["lanes"]
         evex, mem = e["encoding"] == "evex", any(o["kind"] == "mem" for o in e["operands"])
         bcast = any(o.get("broadcast") for o in e["operands"])
+        has_mask = any(o["role"] == "mask" for o in e["operands"])
+        kdest = e["masking"] == ["zero(k-dest)"]
         add = lambda s, c, envs, cases: rows.append(
             {"iform": ifm, "family": fam, "set": s, "class": c, "envs": envs, "lane_cases": cases})
-        if fam.startswith("FP.") and fam not in ("FP.CMP.f32", "FP.COMI.f32") and "CVT" not in fam:
+        if fam == "FP.FMA.f32":
+            add("V1", "class-triple grid 1728 x 100", "E8", 1728 * 100 * 8)
+            for c in _V2[fam]:
+                add("V2", c, "E8", 10000 * 8)
+        elif fam.startswith("FP.") and fam not in ("FP.CMP.f32", "FP.COMI.f32") and "CVT" not in fam:
             add("V1", "class-pair grid 144 x 1000", "E8", 144 * 1000 * 8)
             for c in _V2[fam]:
                 add("V2", c, "E8", 10000 * 8)
@@ -259,6 +382,8 @@ def budget_rows(entries=None, variants_seen=None):
                 add("V5", "all 2^16 inputs", "E8", (1 << 16) * 8)
             elif fam == "FP.CVT.i32_f32":
                 add("V5", "all 2^32 inputs", "4 RC", (1 << 32) * 4)
+            elif fam == "FP.CVT.i64_f32":
+                pass                                                 # 2^64 inputs: partition grade only
             else:
                 add("V5", "all 2^32 inputs", "4 RC x DAZ{0,1}", (1 << 32) * 8)
         else:                                                        # integer entries
@@ -266,28 +391,44 @@ def budget_rows(entries=None, variants_seen=None):
             add("V2", "wrap/saturation boundaries x 10000", "default", 10000)
             if fam == "INT.MADDUBS.u8s8":
                 add("V5", "pair domain u8^2 x s8^2", "default", 1 << 32)
-        if evex and n > 1:
+        if evex and has_mask and n > 1:
             if n <= 16:
-                per = (1 << n) * (1 if e["masking"] == ["zero(k-dest)"] else 2) * 4 * n
-                add("V3", "all %d masks x %s x 4 rotations" % (1 << n, "zero" if e["masking"] == ["zero(k-dest)"]
-                                                                else "{merge,zero}"), "default", per)
+                per = (1 << n) * (1 if kdest else 2) * 4 * n
+                add("V3", "all %d masks x %s x 4 rotations" % (1 << n, "zero" if kdest else "{merge,zero}"),
+                    "default", per)
             else:
                 nm = 2 + 2 * n + 4 + n + 4096                           # all-0, all-1, single bit/zero, alt., prefixes, random
                 add("V3", "structured %d masks x {merge,zero} x 4 rotations" % nm, "default", nm * 2 * 4 * n)
-        if evex and n == 1 and fam.startswith("FP."):
-            add("V3", "mask bit 0 x {merge,zero} x 4 rotations", "default", 2 * 2 * 4)
+        if evex and has_mask and n == 1 and fam.startswith("FP."):
+            add("V3", "mask bit 0 x %s x 4 rotations" % ("zero" if kdest else "{merge,zero}"), "default",
+                2 * (1 if kdest else 2) * 4)
         er = evex and not mem and ((e["vl"] == 512 and n > 1) or n == 1) and fam in (
-            "FP.ADD.f32", "FP.SUB.f32", "FP.MUL.f32", "FP.DIV.f32", "FP.CVT.i32_f32", "FP.CVT.f32_i32.rc")
+            "FP.ADD.f32", "FP.SUB.f32", "FP.MUL.f32", "FP.DIV.f32", "FP.CVT.i32_f32", "FP.CVT.f32_i32.rc", "FP.FMA.f32")
         if er:
-            add("V4", "{er} 4 modes x 144 x 100" if "CVT" not in fam else "{er} 4 modes x 12 x 100",
-                "{DAZ=FTZ=0, DAZ=FTZ=1}", 4 * (144 if "CVT" not in fam else 12) * 100 * 2)
+            ncell = {"FP.FMA.f32": 1728 * 10}.get(fam, 12 * 100 if "CVT" in fam else 144 * 100)
+            add("V4", "{er} 4 modes x %s" % ("1728 x 10" if fam == "FP.FMA.f32" else ("12 x 100" if "CVT" in fam
+                                                                                  else "144 x 100")),
+                "{DAZ=FTZ=0, DAZ=FTZ=1}", 4 * ncell * 2)
         if mem:
-            add("F-MEMFAULT", "prefix masks 0..n on a PAGE_NOACCESS boundary" if evex else "page-boundary load",
-                "default", (n + 1) * n if evex else n)
-            vs = (variants_seen or {}).get((e["key"]["iclass"], ifm))
-            if bcast and (vs is None or any("bcast" in v for v in vs)):
+            zero = evex and "zero" in e["masking"]
+            add("F-MEMFAULT", "prefix masks 0..n on a PAGE_NOACCESS boundary x %s" % ("{merge,zero}" if zero else "merge")
+                if evex else "page-boundary load", "default", ((n + 1) * n * (2 if zero else 1)) if evex else n)
+            if bcast:
                 add("BCAST", "{1to%d} x 144 x 100" % n, "default", 144 * 100 * n)
+                if evex and has_mask:
+                    add("BCAST", "masked {1to%d} x 144 x 10 x {merge,zero}" % n, "default", 2 * 144 * 10 * n)
     return rows
+
+
+def budget_by_iclass(rows, entries=None):
+    """Per-iclass totals of the budget (ROADMAP §3.3: 'The vector budget per iclass is pre-registered')."""
+    icl = {e["key"]["iform"]: e["key"]["iclass"] for e in (entries or table.ENTRIES)}
+    out = collections.OrderedDict()
+    for r in rows:
+        d = out.setdefault(icl[r["iform"]], collections.Counter())
+        d[r["set"]] += r["lane_cases"]
+    return {k: dict(sorted(v.items()), total=sum(v.values()), sampled=sum(x for s_, x in v.items() if s_ != "V5"))
+            for k, v in sorted(out.items())}
 
 
 def budget_summary(rows):
@@ -298,6 +439,14 @@ def budget_summary(rows):
 
 
 # ---------------------------------------------------------------- self-test
+# The 8 keys first verified in X0's smoke decode (TABLE-SCHEMA §2); since 2026-10-23 the census adds more
+# xed-decode keys, which the smoke outputs need not contain.
+SMOKE_DECODED_IFORMS = frozenset({
+    "VADDPS_XMMdq_XMMdq_XMMdq", "VADDSS_XMMdq_XMMdq_XMMd", "VADDSS_XMMdq_XMMdq_MEMd", "VMULSS_XMMdq_XMMdq_XMMd",
+    "VMULSS_XMMdq_XMMdq_MEMd", "VUCOMISS_XMMdq_XMMd", "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+    "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512"})
+
+
 def _selftest(smoke_dir=None):
     """(1) synthetic census.json + instructions.jsonl: closure join, operand variants, refusal of a
     join mismatch and of an unmatched label; (2) legacy functions.json; (3) if X0's smoke outputs are
@@ -315,7 +464,7 @@ def _selftest(smoke_dir=None):
         {"label": "A", "function": "act_q8_avx512", "iclass": "VADDPS", "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
          "fields": {"ROUNDC": "2"}, "attributes": ["MXCSR"], "isa_set": "AVX512F_512"},
         {"label": "A", "function": "act_q8_avx512", "iclass": "VADDPS", "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
-         "fields": {"BCAST": "1"}, "attributes": ["MXCSR"], "isa_set": "AVX512F_512"},
+         "fields": {"BCAST": "1", "BCRC": True, "MEM0": "ptr [RAX]"}, "attributes": ["MXCSR"], "isa_set": "AVX512F_512"},
         {"label": "A", "function": "act_q8_avx512", "iclass": "VPTERNLOGD",
          "iform": "VPTERNLOGD_ZMMu32_MASKmskw_ZMMu32_ZMMu32_IMM8_AVX512", "fields": {}, "attributes": []},
         {"label": "A", "function": "act_q8_avx512", "iclass": "VSQRTSS", "iform": "VSQRTSS_XMMdq_XMMdq_XMMd",
@@ -361,6 +510,26 @@ def _selftest(smoke_dir=None):
         fp = os.path.join(d, "functions.json")
         with open(fp, "w") as fh:
             json.dump(fake, fh)
+        # X0 census run 1 schema: no label, the configuration is the variant prefix; BCAST alone is not "bcast"
+        cen1 = {"variants": [{"config": "A", "table": "k_avx2", "slot": "act", "build_index": 1,
+                              "closure": [{"symbol": "act_q8_avx2"}],
+                              "iforms": {"VPBROADCASTD_YMMqq_XMMd": 1, "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512": 1}},
+                             {"config": "A", "table": "k_avx2", "slot": "act", "build_index": 2,
+                              "closure": [{"symbol": "act_q8_avx2"}], "iforms": {"NOP": 1}}]}
+        ins1 = [{"variant": "A:k_avx2:act", "function": "act_q8_avx2", "role": "reachable", "iclass": "VPBROADCASTD",
+                 "iform": "VPBROADCASTD_YMMqq_XMMd", "fields": {"BCAST": "3"}, "extension": "AVX2"},
+                {"variant": "A:k_avx2:act", "function": "act_q8_avx2", "role": "reachable", "iclass": "VMULPS",
+                 "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512", "attributes": ["MXCSR"],
+                 "fields": {"BCAST": "10", "BCRC": True, "MEM0": "ptr [RDX-0x18]"}, "extension": "AVX512EVEX"}]
+        with open(cp, "w") as fh:
+            json.dump(cen1, fh)
+        with open(ip, "w") as fh:
+            fh.write("\n".join(json.dumps(r) for r in ins1) + "\n")
+        rep1 = absorb(load_census(cp, [ip], ["A"]))
+        v1 = {(r["iclass"], r["variant"]) for r in rep1["operand_variants_seen"]}
+        checks["run-1 schema: variant prefix, BCRC broadcast"] = v1 == {("VPBROADCASTD", "plain"), ("VMULPS", "bcast")}
+        checks["run-1 schema: dispositions"] = {r["iclass"]: r["disposition"] for r in rep1["scope"]} == {
+            "VPBROADCASTD": "object-level/S, T1-image iclass", "VMULPS": "entry"} and not rep1["fp_without_entry"]
         rep2 = absorb(load_functions([fp], {"A-msvc"}), mode="legacy-functions")
         checks["legacy: buckets"] = rep2["summary"]["covered_exact"] == 2 and rep2["summary"]["needs_form_instance"] == 1
         try:
@@ -378,8 +547,7 @@ def _selftest(smoke_dir=None):
     if all(os.path.exists(p) for p in paths):
         rep3 = absorb(load_functions(paths, None), mode="legacy-functions")
         cov = {r["iform"] for r in rep3["covered_exact"]}
-        checks["smoke: xed-decode keys covered"] = {e["key"]["iform"] for e in table.ENTRIES
-                                                    if e["key"]["iform_status"] == "xed-decode"} <= cov
+        checks["smoke: xed-decode keys covered"] = SMOKE_DECODED_IFORMS <= cov
     else:
         checks["smoke: outputs absent (skipped)"] = True
     return all(checks.values()), checks
@@ -396,6 +564,9 @@ def main(argv=None):
     ap.add_argument("--budget", action="store_true")
     ap.add_argument("-o", "--out")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--strict", action="store_true", help="exit 1 if any FP-sensitive union form has no entry")
+    ap.add_argument("--x2-scope", help="X0's x2_scope.json: cross-check the union's iform and FP sets against it")
+    ap.add_argument("--build-index", type=int, default=1)
     a = ap.parse_args(argv)
     if a.selftest or not (a.census or a.functions or a.budget):
         ok, checks = _selftest()
@@ -403,8 +574,25 @@ def main(argv=None):
         return 0 if ok else 1
     if a.census:
         lm = dict(x.split("=", 1) for x in a.label_map.split(",") if x)
-        union = load_census(a.census, a.insts, [c for c in a.configs.split(",") if c], lm)
+        union = load_census(a.census, a.insts, [c for c in a.configs.split(",") if c], lm, a.build_index)
         rep = absorb(union)
+        rep["inputs"] = {"census": a.census, "census_sha256": _sha256(a.census), "configs": a.configs,
+                         "build_index": a.build_index,
+                         "insts": [{"path": os.path.basename(p), "sha256": _sha256(p)} for p in a.insts]}
+        if a.x2_scope:
+            with open(a.x2_scope, encoding="utf-8") as fh:
+                xs = json.load(fh)
+            cfgs = set(a.configs.split(","))
+            want = {f["iform"] for f in xs["iforms"] if cfgs & set(f["configs"])}
+            want_fp = {f["iform"] for f in xs["iforms"] if f["fp_sensitive"] and cfgs & set(f["configs"])}
+            got = {ifm for (_, ifm) in union}
+            got_fp = {r["iform"] for r in rep["scope"] if r["fp_sensitive"]}
+            rep["x2_scope_crosscheck"] = {"x2_scope_sha256": _sha256(a.x2_scope), "iforms_equal": got == want,
+                                          "only_here": sorted(got - want), "only_in_x2_scope": sorted(want - got),
+                                          "fp_equal": got_fp == want_fp, "fp_only_here": sorted(got_fp - want_fp),
+                                          "fp_only_in_x2_scope": sorted(want_fp - got_fp)}
+            rep["summary"]["x2_scope_crosscheck"] = {k: v for k, v in rep["x2_scope_crosscheck"].items()
+                                                     if k in ("iforms_equal", "fp_equal")}
     elif a.functions:
         rep = absorb(load_functions(a.functions, set(a.labels.split(",")) if a.labels else None), mode="legacy-functions")
     else:
@@ -414,14 +602,23 @@ def main(argv=None):
         for r in rep.get("operand_variants_seen", []):
             vs[(r["iclass"], r["iform"])].add(r["variant"])
         rows = budget_rows(variants_seen=vs or None)
-        rep["budget_v1"] = {"rows": rows, "summary": budget_summary(rows)}
+        rep["budget_v1"] = {"rows": rows, "summary": budget_summary(rows), "by_iclass": budget_by_iclass(rows)}
         rep["summary"]["budget_v1"] = rep["budget_v1"]["summary"]
     txt = json.dumps(rep, indent=1, default=sorted)
     if a.out:
         with open(a.out, "w") as fh:
             fh.write(txt)
     print(json.dumps(rep["summary"], indent=1))
+    if a.strict and rep.get("fp_without_entry"):
+        print("STRICT: FP-sensitive union forms without an entry:", [r["iform"] for r in rep["fp_without_entry"]])
+        return 1
     return 0
+
+
+def _sha256(path):
+    import hashlib
+    with open(path, "rb") as fh:
+        return hashlib.sha256(fh.read()).hexdigest()
 
 
 if __name__ == "__main__":

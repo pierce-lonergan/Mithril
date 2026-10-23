@@ -62,6 +62,7 @@ int x2_cmp_pred(uint32_t a, uint32_t b, int imm, const x2env *e, uint32_t *fl); 
 void x2_comis(uint32_t a, uint32_t b, const x2env *e, int signalling, int *zf, int *pf, int *cf,
               uint32_t *fl);
 uint32_t x2_cvt_i2f(uint32_t i, const x2env *e, uint32_t *fl);
+uint32_t x2_cvt_i64_2f(uint64_t i, const x2env *e, uint32_t *fl);   /* CVTSI2SS r64 (2026-10-23) */
 uint32_t x2_cvt_f2i(uint32_t b, const x2env *e, int trunc, uint32_t *fl);
 uint32_t x2_cvt_h2f(uint32_t h, const x2env *e, uint32_t *fl);
 
@@ -78,9 +79,11 @@ void x2_masked(const x2reg *res, const x2reg *dst, uint64_t k, int z, int vl, in
 
 /* ------------------------------------------------------------------ entry-level prediction */
 enum { X2B_PACKED_FP2 = 1, X2B_SCALAR_FP2, X2B_PACKED_FP1, X2B_CMP_K, X2B_CMP_VEC, X2B_COMIS,
-       X2B_CVT_F2I_GPR, X2B_CVT_I2F_SCALAR, X2B_INT2, X2B_INT_ACC };
+       X2B_CVT_F2I_GPR, X2B_CVT_I2F_SCALAR, X2B_INT2, X2B_INT_ACC,
+       X2B_CMP_SCALAR /* 11, added 2026-10-23: (V)CMPSS into an xmm lane 0 */ };
 enum { X2F_NONE = 0, X2F_ADD, X2F_SUB, X2F_MUL, X2F_DIV, X2F_MAX, X2F_MIN, X2F_CMP, X2F_CVT_I2F,
-       X2F_CVT_F2I, X2F_CVT_H2F, X2F_PMADDUBSW, X2F_PMADDWD, X2F_PHADDD, X2F_PDPBUSD };
+       X2F_CVT_F2I, X2F_CVT_H2F, X2F_PMADDUBSW, X2F_PMADDWD, X2F_PHADDD, X2F_PDPBUSD,
+       X2F_CVT_I64_2F /* 15, added 2026-10-23 */ };
 enum { X2E_LEGACY = 0, X2E_VEX = 1, X2E_EVEX = 2 };
 enum { X2M_NONE = 0, X2M_MERGE = 1, X2M_ZERO = 2 };
 enum { X2D_VEC = 0, X2D_K = 1, X2D_RFLAGS = 2, X2D_GPR = 3 };

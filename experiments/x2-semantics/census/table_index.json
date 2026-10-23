@@ -1,0 +1,917 @@
+{
+ "semantics_bundle": "0c2a041c363e34ee27a62a873fd0adad5cf8f5711ec2aa3a16cb2f5c9709ff2d",
+ "entries": [
+  {
+   "iclass": "VADDPS",
+   "iform": "VADDPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.ADD.f32",
+   "encoding": "evex",
+   "content_hash": "7255289ea55c5f26504ac684105793e66ad7f8122ef77ee032de26412ccfd743"
+  },
+  {
+   "iclass": "VMULPS",
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.MUL.f32",
+   "encoding": "evex",
+   "content_hash": "3a5fd030052b51b38381e970257818d9e909de9b107e697f600d1c948476adad"
+  },
+  {
+   "iclass": "VMAXPS",
+   "iform": "VMAXPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.MAX.f32",
+   "encoding": "evex",
+   "content_hash": "67d4b1a080c93628f8535e26a68632267c9a4a47ffe538cace309ba1cc9cb93d"
+  },
+  {
+   "iclass": "VMINPS",
+   "iform": "VMINPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.MIN.f32",
+   "encoding": "evex",
+   "content_hash": "d6d7a2d3f2a5cfd935fce286fff2d4c5def01d2ece4a2aeb497ab7cb3d238075"
+  },
+  {
+   "iclass": "VCMPPS",
+   "iform": "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CMP.f32",
+   "encoding": "evex",
+   "content_hash": "785916dfe10bb7490eb0b60060154be2ebed3759fcad261beaa2be3fc2dd434a"
+  },
+  {
+   "iclass": "VCVTDQ2PS",
+   "iform": "VCVTDQ2PS_XMMf32_MASKmskw_XMMi32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CVT.i32_f32",
+   "encoding": "evex",
+   "content_hash": "d593adc38a4c2980764e3b838c479527ee8ead232d5e95c083cdc8222d3ebce7"
+  },
+  {
+   "iclass": "VCVTPS2DQ",
+   "iform": "VCVTPS2DQ_XMMi32_MASKmskw_XMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CVT.f32_i32.rc",
+   "encoding": "evex",
+   "content_hash": "287cdc91d5e65240afc91feeef6fee7ae411e0c1160b5a2e74bfd398c7808242"
+  },
+  {
+   "iclass": "VCVTTPS2DQ",
+   "iform": "VCVTTPS2DQ_XMMi32_MASKmskw_XMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CVT.f32_i32.trunc",
+   "encoding": "evex",
+   "content_hash": "84bab6dc93861c1694beb18e7eedf139b257140d4da54b98be0cfb517f01481c"
+  },
+  {
+   "iclass": "VCVTPH2PS",
+   "iform": "VCVTPH2PS_XMMf32_MASKmskw_XMMf16_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CVT.f16_f32",
+   "encoding": "evex",
+   "content_hash": "6a6b08556348f7bf04dc595ebe92ba780f51b938b50dc0b9935c048cbcceb22a"
+  },
+  {
+   "iclass": "VADDPS",
+   "iform": "VADDPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.ADD.f32",
+   "encoding": "evex",
+   "content_hash": "1bdce7164c6fcb27edd3c916d991cb1ba23ce755107ca4422949d976b2cb570f"
+  },
+  {
+   "iclass": "VMULPS",
+   "iform": "VMULPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.MUL.f32",
+   "encoding": "evex",
+   "content_hash": "9f6465eee1af463640b6eaa88ce95feb2cf4ac00479dc39337855d643ba720bf"
+  },
+  {
+   "iclass": "VMAXPS",
+   "iform": "VMAXPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.MAX.f32",
+   "encoding": "evex",
+   "content_hash": "820260e62cbf386b6c2dff8b097b371b83b82934149e03c730446c5547188410"
+  },
+  {
+   "iclass": "VMINPS",
+   "iform": "VMINPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.MIN.f32",
+   "encoding": "evex",
+   "content_hash": "2374c7cd6d97f8df7890c63c7e82e8d3238eefdd80f14fc45840289a14ab0aef"
+  },
+  {
+   "iclass": "VCMPPS",
+   "iform": "VCMPPS_MASKmskw_MASKmskw_YMMf32_YMMf32_IMM8_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CMP.f32",
+   "encoding": "evex",
+   "content_hash": "006f7819d4cb93fa861fee4c290f5f7bb482cd57781ad3125b045f077299faac"
+  },
+  {
+   "iclass": "VCVTDQ2PS",
+   "iform": "VCVTDQ2PS_YMMf32_MASKmskw_YMMi32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CVT.i32_f32",
+   "encoding": "evex",
+   "content_hash": "52e86f0af1c8e45d7ca32f7511a7cd35bd28428493b3241b7b97969d383b0a1a"
+  },
+  {
+   "iclass": "VCVTPS2DQ",
+   "iform": "VCVTPS2DQ_YMMi32_MASKmskw_YMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CVT.f32_i32.rc",
+   "encoding": "evex",
+   "content_hash": "39b601574d170599d33ad20c200f24796916e3b70b62718d43e500896fca5b4f"
+  },
+  {
+   "iclass": "VCVTTPS2DQ",
+   "iform": "VCVTTPS2DQ_YMMi32_MASKmskw_YMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CVT.f32_i32.trunc",
+   "encoding": "evex",
+   "content_hash": "1d970c8c84d8696717cf57eb7916688ed9b5fa9024481a6a5734dfeca30fb65d"
+  },
+  {
+   "iclass": "VCVTPH2PS",
+   "iform": "VCVTPH2PS_YMMf32_MASKmskw_XMMf16_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CVT.f16_f32",
+   "encoding": "evex",
+   "content_hash": "7cbe4fa02bc1fbb06e15ae20eb498cd35df14461a10f52030ea7304ee9fa7b58"
+  },
+  {
+   "iclass": "VADDPS",
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.ADD.f32",
+   "encoding": "evex",
+   "content_hash": "d0fe5fece2cafb5585cd6a07a06a8209704b309baf4b53a738fc5cfa7ba13917"
+  },
+  {
+   "iclass": "VMULPS",
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.MUL.f32",
+   "encoding": "evex",
+   "content_hash": "f083f7abc2bac4ac65deeb36bc8e0fcd39c55f74f780ea24c0cadd137e87ec88"
+  },
+  {
+   "iclass": "VMAXPS",
+   "iform": "VMAXPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.MAX.f32",
+   "encoding": "evex",
+   "content_hash": "544387f56718018e2f1646dea6665110de79c29f27416c48f8a63b49b21e3300"
+  },
+  {
+   "iclass": "VMINPS",
+   "iform": "VMINPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.MIN.f32",
+   "encoding": "evex",
+   "content_hash": "0e60bf46e7e0bcb13f18cad4b1c152ffa50ef5503c77490b66b293e7b4d2e165"
+  },
+  {
+   "iclass": "VCMPPS",
+   "iform": "VCMPPS_MASKmskw_MASKmskw_ZMMf32_ZMMf32_IMM8_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CMP.f32",
+   "encoding": "evex",
+   "content_hash": "2355e615ee2ae033d815893e27ecff3cb384d8db1259930e71f0196548de9849"
+  },
+  {
+   "iclass": "VCVTDQ2PS",
+   "iform": "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CVT.i32_f32",
+   "encoding": "evex",
+   "content_hash": "7fda4621328849a1db6ab3833ec48d2378642f767b0e6406684e0c7ff7302b54"
+  },
+  {
+   "iclass": "VCVTPS2DQ",
+   "iform": "VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CVT.f32_i32.rc",
+   "encoding": "evex",
+   "content_hash": "730704f0e2dc7006891848d863d406e06d6950240bb95cd90c19837356f14c5b"
+  },
+  {
+   "iclass": "VCVTTPS2DQ",
+   "iform": "VCVTTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CVT.f32_i32.trunc",
+   "encoding": "evex",
+   "content_hash": "4f78e69ed87e9456096cd38396f36f131d577322aff8285a64e910ffff4da562"
+  },
+  {
+   "iclass": "VCVTPH2PS",
+   "iform": "VCVTPH2PS_ZMMf32_MASKmskw_YMMf16_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.CVT.f16_f32",
+   "encoding": "evex",
+   "content_hash": "9fbf8d430928c03e6524bd891048a52eeb9de20d5bdff2f72ab91e34c4aa32b7"
+  },
+  {
+   "iclass": "VADDPS",
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "iform_status": "xed-decode",
+   "family": "FP.ADD.f32",
+   "encoding": "evex",
+   "content_hash": "07a210da8d7d0c46ede6b553186bc689fca24671282920b43abe360b4b068813"
+  },
+  {
+   "iclass": "VMULPS",
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "iform_status": "xed-decode",
+   "family": "FP.MUL.f32",
+   "encoding": "evex",
+   "content_hash": "c9bc8b5847a2c4782d83de80fd379a3d7fa766e0336eb4eabb81f22bde83e045"
+  },
+  {
+   "iclass": "VADDSS",
+   "iform": "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.ADD.f32",
+   "encoding": "evex",
+   "content_hash": "d58fbc449ba9e0fcdd0f675e3b0847c03fdfe50d857a8214302d771639ab6184"
+  },
+  {
+   "iclass": "VMULSS",
+   "iform": "VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.MUL.f32",
+   "encoding": "evex",
+   "content_hash": "8e40d10adfd0335fbc1e298884e8f119b302ab4bf9b375d3f4f938db53f0a243"
+  },
+  {
+   "iclass": "VDIVSS",
+   "iform": "VDIVSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.DIV.f32",
+   "encoding": "evex",
+   "content_hash": "34380ba2fa77f5796cbd0c3ee5db14b4f29db3c6df5c7e2f9e2bf74052693f98"
+  },
+  {
+   "iclass": "VMAXSS",
+   "iform": "VMAXSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.MAX.f32",
+   "encoding": "evex",
+   "content_hash": "63eef1d7a326ccd5629683d5c96ff345a4c0e70db42b0e475ffe72943805a169"
+  },
+  {
+   "iclass": "VMINSS",
+   "iform": "VMINSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "FP.MIN.f32",
+   "encoding": "evex",
+   "content_hash": "fb856ec25e0bd76eda9c93e6a0a888a86134679ec59d5e6f05dbb23173064e57"
+  },
+  {
+   "iclass": "VADDPS",
+   "iform": "VADDPS_XMMdq_XMMdq_XMMdq",
+   "iform_status": "xed-decode",
+   "family": "FP.ADD.f32",
+   "encoding": "vex",
+   "content_hash": "cc01ae2bb4082b200360c7f8e920827d4943a07a98c30a9694de1197d332547a"
+  },
+  {
+   "iclass": "VADDPS",
+   "iform": "VADDPS_YMMqq_YMMqq_YMMqq",
+   "iform_status": "xed-decode",
+   "family": "FP.ADD.f32",
+   "encoding": "vex",
+   "content_hash": "d89d95df32694d7d1e6491707a95e6bb96073deda3a3e0e19661bee2d710a980"
+  },
+  {
+   "iclass": "VMULPS",
+   "iform": "VMULPS_XMMdq_XMMdq_XMMdq",
+   "iform_status": "xed-decode",
+   "family": "FP.MUL.f32",
+   "encoding": "vex",
+   "content_hash": "cd3d3d0378b7c4ab9e258cb93786160c21eb7e2abe2f02115ea870ec8de40059"
+  },
+  {
+   "iclass": "VMULPS",
+   "iform": "VMULPS_YMMqq_YMMqq_YMMqq",
+   "iform_status": "xed-decode",
+   "family": "FP.MUL.f32",
+   "encoding": "vex",
+   "content_hash": "0d6e4a22042cf39281fc951c25bdc11d6731e72cbc24d794670243e131dede6b"
+  },
+  {
+   "iclass": "VMAXPS",
+   "iform": "VMAXPS_XMMdq_XMMdq_XMMdq",
+   "iform_status": "xed-decode",
+   "family": "FP.MAX.f32",
+   "encoding": "vex",
+   "content_hash": "9a46cef64781b04af4c18048ddcde6b059028dda38224fe58a2c5b2c7b891b05"
+  },
+  {
+   "iclass": "VMAXPS",
+   "iform": "VMAXPS_YMMqq_YMMqq_YMMqq",
+   "iform_status": "xed-decode",
+   "family": "FP.MAX.f32",
+   "encoding": "vex",
+   "content_hash": "bc925fae473150b37f2e0ba34c45e4dc9fb69d29c313175a3e4cd240d03726d0"
+  },
+  {
+   "iclass": "VMINPS",
+   "iform": "VMINPS_XMMdq_XMMdq_XMMdq",
+   "iform_status": "provisional",
+   "family": "FP.MIN.f32",
+   "encoding": "vex",
+   "content_hash": "06284a60da07db46a9b93b24db4e19b2416a618c2bccbc35328f49be21c7bbaf"
+  },
+  {
+   "iclass": "VMINPS",
+   "iform": "VMINPS_YMMqq_YMMqq_YMMqq",
+   "iform_status": "xed-decode",
+   "family": "FP.MIN.f32",
+   "encoding": "vex",
+   "content_hash": "2e6da606f68665ca510c8121a66f5cb2410ea3fe2d83eca05cc9df2c6ba8d871"
+  },
+  {
+   "iclass": "VADDSS",
+   "iform": "VADDSS_XMMdq_XMMdq_XMMd",
+   "iform_status": "xed-decode",
+   "family": "FP.ADD.f32",
+   "encoding": "vex",
+   "content_hash": "037088bdd1d1d9c08662bc6e2fea2d28fd984b950e5c915f27c0f3d3a8a45dd8"
+  },
+  {
+   "iclass": "VADDSS",
+   "iform": "VADDSS_XMMdq_XMMdq_MEMd",
+   "iform_status": "xed-decode",
+   "family": "FP.ADD.f32",
+   "encoding": "vex",
+   "content_hash": "a317a882bd24fbb652af7b12814e0806eb9772e6871a76c2522e20d16793ee2d"
+  },
+  {
+   "iclass": "VMULSS",
+   "iform": "VMULSS_XMMdq_XMMdq_XMMd",
+   "iform_status": "xed-decode",
+   "family": "FP.MUL.f32",
+   "encoding": "vex",
+   "content_hash": "6d88f607b648fbedb9685681f93693f55a9d1f12d90f9a63751e7a26dc1b3f49"
+  },
+  {
+   "iclass": "VMULSS",
+   "iform": "VMULSS_XMMdq_XMMdq_MEMd",
+   "iform_status": "xed-decode",
+   "family": "FP.MUL.f32",
+   "encoding": "vex",
+   "content_hash": "627ca8d732c4a75518b8e75728ff9b485ad83a601e344323cf90ead98027bd25"
+  },
+  {
+   "iclass": "VMAXSS",
+   "iform": "VMAXSS_XMMdq_XMMdq_XMMd",
+   "iform_status": "xed-decode",
+   "family": "FP.MAX.f32",
+   "encoding": "vex",
+   "content_hash": "273d7e979684db8538ccf37b07712284705b89afbe42e3288a649062f7edd94a"
+  },
+  {
+   "iclass": "VDIVSS",
+   "iform": "VDIVSS_XMMdq_XMMdq_XMMd",
+   "iform_status": "xed-decode",
+   "family": "FP.DIV.f32",
+   "encoding": "vex",
+   "content_hash": "a7c8728390747ffa49c85534d8b8cd3a53a9165295d944c4205506d3f90cb330"
+  },
+  {
+   "iclass": "VCMPPS",
+   "iform": "VCMPPS_XMMdq_XMMdq_XMMdq_IMMb",
+   "iform_status": "xed-decode",
+   "family": "FP.CMP.f32",
+   "encoding": "vex",
+   "content_hash": "32583104b9bdb69fa99455e4be0255146ced3c1d901f3043a01181981b4c9014"
+  },
+  {
+   "iclass": "VCVTDQ2PS",
+   "iform": "VCVTDQ2PS_XMMdq_XMMdq",
+   "iform_status": "xed-decode",
+   "family": "FP.CVT.i32_f32",
+   "encoding": "vex",
+   "content_hash": "4c2d1c145d2ecfa7d2d1d20ee40fc94d741e0a03c02d9946daf170d9b9b78fec"
+  },
+  {
+   "iclass": "VCVTPS2DQ",
+   "iform": "VCVTPS2DQ_XMMdq_XMMdq",
+   "iform_status": "provisional",
+   "family": "FP.CVT.f32_i32.rc",
+   "encoding": "vex",
+   "content_hash": "0c1cbc1339dfac006e6bc4453c75b7745ae333340242840efadd7009815dc577"
+  },
+  {
+   "iclass": "VCVTTPS2DQ",
+   "iform": "VCVTTPS2DQ_XMMdq_XMMdq",
+   "iform_status": "provisional",
+   "family": "FP.CVT.f32_i32.trunc",
+   "encoding": "vex",
+   "content_hash": "fda0de8ab19fc93af1eb069231714674ed8de31f901c31206c0d35938bccb206"
+  },
+  {
+   "iclass": "VCVTPH2PS",
+   "iform": "VCVTPH2PS_XMMdq_XMMq",
+   "iform_status": "xed-decode",
+   "family": "FP.CVT.f16_f32",
+   "encoding": "vex",
+   "content_hash": "87c23b86b73fe0a9671482bd8de05dc1e75dc5b1180af71b37261b9ebec09583"
+  },
+  {
+   "iclass": "VCMPPS",
+   "iform": "VCMPPS_YMMqq_YMMqq_YMMqq_IMMb",
+   "iform_status": "xed-decode",
+   "family": "FP.CMP.f32",
+   "encoding": "vex",
+   "content_hash": "7178a03169699164ec075603ea178b91d4591a2e6f360f1f905972dcb8483338"
+  },
+  {
+   "iclass": "VCVTDQ2PS",
+   "iform": "VCVTDQ2PS_YMMqq_YMMqq",
+   "iform_status": "xed-decode",
+   "family": "FP.CVT.i32_f32",
+   "encoding": "vex",
+   "content_hash": "b7ec07b0c2de90e72581277a1d49380537129f1aa0458ba8079fe951d0b7e016"
+  },
+  {
+   "iclass": "VCVTPS2DQ",
+   "iform": "VCVTPS2DQ_YMMqq_YMMqq",
+   "iform_status": "xed-decode",
+   "family": "FP.CVT.f32_i32.rc",
+   "encoding": "vex",
+   "content_hash": "5010060519f9f64fd16297e1cf5981288f4b25841d764339eefd86d49a727ce8"
+  },
+  {
+   "iclass": "VCVTTPS2DQ",
+   "iform": "VCVTTPS2DQ_YMMqq_YMMqq",
+   "iform_status": "provisional",
+   "family": "FP.CVT.f32_i32.trunc",
+   "encoding": "vex",
+   "content_hash": "68d791821bb26bc0630d3852bc5545987d7b8f2e3951f0238a180853b31ea3da"
+  },
+  {
+   "iclass": "VCVTPH2PS",
+   "iform": "VCVTPH2PS_YMMqq_XMMdq",
+   "iform_status": "xed-decode",
+   "family": "FP.CVT.f16_f32",
+   "encoding": "vex",
+   "content_hash": "3dc29de7d5e1d376c66b67bcea06653b1e65b635aa3c323a0ce5e248f1b8c79b"
+  },
+  {
+   "iclass": "ADDSS",
+   "iform": "ADDSS_XMMss_XMMss",
+   "iform_status": "xed-decode",
+   "family": "FP.ADD.f32",
+   "encoding": "legacy",
+   "content_hash": "aafb4d794667278c7d319de67b73a3ed7e973091d45643771c1869bf9a69c5c0"
+  },
+  {
+   "iclass": "SUBSS",
+   "iform": "SUBSS_XMMss_XMMss",
+   "iform_status": "xed-decode",
+   "family": "FP.SUB.f32",
+   "encoding": "legacy",
+   "content_hash": "1f1b84a1b4100c0d98bb46b9fd02613ee5b642ef32edb32fa722aa898f976d9d"
+  },
+  {
+   "iclass": "MULSS",
+   "iform": "MULSS_XMMss_XMMss",
+   "iform_status": "xed-decode",
+   "family": "FP.MUL.f32",
+   "encoding": "legacy",
+   "content_hash": "347456eed6d4537622c90b4bdb42ee98d1a451301c7ac5e4a66693e1440e4d11"
+  },
+  {
+   "iclass": "DIVSS",
+   "iform": "DIVSS_XMMss_XMMss",
+   "iform_status": "xed-decode",
+   "family": "FP.DIV.f32",
+   "encoding": "legacy",
+   "content_hash": "12055a7072321dfa642c78af93a76105b9cce38f69a405a2e1d6aeef60c48b88"
+  },
+  {
+   "iclass": "MAXSS",
+   "iform": "MAXSS_XMMss_XMMss",
+   "iform_status": "xed-decode",
+   "family": "FP.MAX.f32",
+   "encoding": "legacy",
+   "content_hash": "9e03569d0a6ca06a7e550cba01714fb6d53bb96a7d10f6f2268a85ac22226f41"
+  },
+  {
+   "iclass": "MINSS",
+   "iform": "MINSS_XMMss_XMMss",
+   "iform_status": "xed-decode",
+   "family": "FP.MIN.f32",
+   "encoding": "legacy",
+   "content_hash": "af90028e97a68d0642aea7fb7ed4dc7c892c340c89d40f04e4ed8db05448e97f"
+  },
+  {
+   "iclass": "UCOMISS",
+   "iform": "UCOMISS_XMMss_XMMss",
+   "iform_status": "xed-decode",
+   "family": "FP.COMI.f32",
+   "encoding": "legacy",
+   "content_hash": "e7d2769db9ac519a0ddd740017515f247dd87d835b5140bef546a30c8c9155dd"
+  },
+  {
+   "iclass": "COMISS",
+   "iform": "COMISS_XMMss_XMMss",
+   "iform_status": "xed-decode",
+   "family": "FP.COMI.f32",
+   "encoding": "legacy",
+   "content_hash": "76202647115a0675516979d8d98c0b8ab01837cebe4ab7d0d7245715335ae80d"
+  },
+  {
+   "iclass": "VUCOMISS",
+   "iform": "VUCOMISS_XMMdq_XMMd",
+   "iform_status": "xed-decode",
+   "family": "FP.COMI.f32",
+   "encoding": "vex",
+   "content_hash": "f3548f6806610ff05d7c702d21c4062c91e892979524af437950dd42964b25cc"
+  },
+  {
+   "iclass": "VCOMISS",
+   "iform": "VCOMISS_XMMd_XMMd",
+   "iform_status": "provisional",
+   "family": "FP.COMI.f32",
+   "encoding": "vex",
+   "content_hash": "f4a500ad394c1da4de7b8f14dc70af01d45f954b5a9f6b16e17148ea3cf57c72"
+  },
+  {
+   "iclass": "CVTTSS2SI",
+   "iform": "CVTTSS2SI_GPR32d_XMMss",
+   "iform_status": "xed-decode",
+   "family": "FP.CVT.f32_i32.trunc",
+   "encoding": "legacy",
+   "content_hash": "1174e689ca2cf82aa5f9eea2a89f96bca2f60a4025630f1fd8628712d32a0040"
+  },
+  {
+   "iclass": "VCVTTSS2SI",
+   "iform": "VCVTTSS2SI_GPR32d_XMMd",
+   "iform_status": "provisional",
+   "family": "FP.CVT.f32_i32.trunc",
+   "encoding": "vex",
+   "content_hash": "759bdfe0c058408899ef238aefb733c5a26a7d84bb77edb3b94b00e8c3f1f9bf"
+  },
+  {
+   "iclass": "CVTSS2SI",
+   "iform": "CVTSS2SI_GPR32d_XMMss",
+   "iform_status": "provisional",
+   "family": "FP.CVT.f32_i32.rc",
+   "encoding": "legacy",
+   "content_hash": "1cfbdff2b90b9f9b3a150491fad4acc1cb4e480f10c82189a50f89af866147ca"
+  },
+  {
+   "iclass": "CVTSI2SS",
+   "iform": "CVTSI2SS_XMMss_GPR32d",
+   "iform_status": "xed-decode",
+   "family": "FP.CVT.i32_f32",
+   "encoding": "legacy",
+   "content_hash": "d18468dd88c4fbc0e399d6c8165a1f0828954b03dcf6341d0d9f80ba6a22851e"
+  },
+  {
+   "iclass": "VCVTSI2SS",
+   "iform": "VCVTSI2SS_XMMdq_XMMdq_GPR32d",
+   "iform_status": "provisional",
+   "family": "FP.CVT.i32_f32",
+   "encoding": "vex",
+   "content_hash": "7dc3748edf8813b150642455b46cefb86b8777ebbf786cb8de9f2acceaacc00b"
+  },
+  {
+   "iclass": "ADDPS",
+   "iform": "ADDPS_XMMps_XMMps",
+   "iform_status": "xed-decode",
+   "family": "FP.ADD.f32",
+   "encoding": "legacy",
+   "content_hash": "30e5840252b865535241fe645b223f4d47914c3ad393b87ab2eb8d0b002d6c58"
+  },
+  {
+   "iclass": "ADDPS",
+   "iform": "ADDPS_XMMps_MEMps",
+   "iform_status": "xed-decode",
+   "family": "FP.ADD.f32",
+   "encoding": "legacy",
+   "content_hash": "30d0d269c4b2e1f6ba5cc6f93b8281b0e0475079048f6afc514c83fbc3f11602"
+  },
+  {
+   "iclass": "MULPS",
+   "iform": "MULPS_XMMps_XMMps",
+   "iform_status": "xed-decode",
+   "family": "FP.MUL.f32",
+   "encoding": "legacy",
+   "content_hash": "064978fef56b1b98246086f8a27725e050115904694d32c1e072513adfdb5f20"
+  },
+  {
+   "iclass": "MAXPS",
+   "iform": "MAXPS_XMMps_XMMps",
+   "iform_status": "xed-decode",
+   "family": "FP.MAX.f32",
+   "encoding": "legacy",
+   "content_hash": "2dd75fbe18aadec60dd9e5741ef6b3172f2780c569123e49ed05caf9db84f457"
+  },
+  {
+   "iclass": "MINPS",
+   "iform": "MINPS_XMMps_XMMps",
+   "iform_status": "xed-decode",
+   "family": "FP.MIN.f32",
+   "encoding": "legacy",
+   "content_hash": "9ba46755cd3345bb04ff7e59e9560c86df68b158683a3057d8eb6a47e032db59"
+  },
+  {
+   "iclass": "CMPPS",
+   "iform": "CMPPS_XMMps_XMMps_IMMb",
+   "iform_status": "xed-decode",
+   "family": "FP.CMP.f32",
+   "encoding": "legacy",
+   "content_hash": "935f87c414377a2eb412b1916ab52605f214a74fad31a82980d00191108c6732"
+  },
+  {
+   "iclass": "CVTDQ2PS",
+   "iform": "CVTDQ2PS_XMMps_XMMdq",
+   "iform_status": "xed-decode",
+   "family": "FP.CVT.i32_f32",
+   "encoding": "legacy",
+   "content_hash": "afcb5651a1ada13a72ae8507b7fe85dd5a924698cca5e18d1c8c0e77b4a74eb2"
+  },
+  {
+   "iclass": "CVTTPS2DQ",
+   "iform": "CVTTPS2DQ_XMMdq_XMMps",
+   "iform_status": "xed-decode",
+   "family": "FP.CVT.f32_i32.trunc",
+   "encoding": "legacy",
+   "content_hash": "c801a93d3d6e609f3ba6d1b3bd2891520b567489b8f9e064154ff40049051ee2"
+  },
+  {
+   "iclass": "ADDSS",
+   "iform": "ADDSS_XMMss_MEMss",
+   "iform_status": "xed-decode",
+   "family": "FP.ADD.f32",
+   "encoding": "legacy",
+   "content_hash": "21c2ca7f3868a93359ff81b0bde4424cf11f16c109b259a9f3baf415dd5c1441"
+  },
+  {
+   "iclass": "MULSS",
+   "iform": "MULSS_XMMss_MEMss",
+   "iform_status": "xed-decode",
+   "family": "FP.MUL.f32",
+   "encoding": "legacy",
+   "content_hash": "5d8041098990a88faa055df063a4d0ce0569176a80192d7ea709125e641243dd"
+  },
+  {
+   "iclass": "MAXSS",
+   "iform": "MAXSS_XMMss_MEMss",
+   "iform_status": "xed-decode",
+   "family": "FP.MAX.f32",
+   "encoding": "legacy",
+   "content_hash": "e51caedb0d38234de488b684b0f8553cbdc5213cb76239be476cae0ed1b19a19"
+  },
+  {
+   "iclass": "CMPSS",
+   "iform": "CMPSS_XMMss_XMMss_IMMb",
+   "iform_status": "xed-decode",
+   "family": "FP.CMP.f32",
+   "encoding": "legacy",
+   "content_hash": "bcefd9f975ffb4dd67a91646648092423d9379c86ea13ed910b26759b3e04f6c"
+  },
+  {
+   "iclass": "VCMPSS",
+   "iform": "VCMPSS_XMMdq_XMMdq_XMMd_IMMb",
+   "iform_status": "xed-decode",
+   "family": "FP.CMP.f32",
+   "encoding": "vex",
+   "content_hash": "756b5186de373626954c9ae5ca25191a819112d5fab638a9e25d0f165d82ef3f"
+  },
+  {
+   "iclass": "VCMPSS",
+   "iform": "VCMPSS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512",
+   "iform_status": "xed-decode",
+   "family": "FP.CMP.f32",
+   "encoding": "evex",
+   "content_hash": "1bf46832ea489cfb113c0fcfce9e2a183a95fd6ac2ccbd1cfc4c14445be63bf3"
+  },
+  {
+   "iclass": "COMISS",
+   "iform": "COMISS_XMMss_MEMss",
+   "iform_status": "xed-decode",
+   "family": "FP.COMI.f32",
+   "encoding": "legacy",
+   "content_hash": "6fa7165d21524ae50c21ede618159e5f5fa475a4bfb5d6de5834756dd623c9d8"
+  },
+  {
+   "iclass": "VUCOMISS",
+   "iform": "VUCOMISS_XMMf32_XMMf32_AVX512",
+   "iform_status": "xed-decode",
+   "family": "FP.COMI.f32",
+   "encoding": "evex",
+   "content_hash": "b9d499667e38ba79686b008ee8b478de59e515ac485093eca5537f3c6236debd"
+  },
+  {
+   "iclass": "CVTSI2SS",
+   "iform": "CVTSI2SS_XMMss_GPR64q",
+   "iform_status": "xed-decode",
+   "family": "FP.CVT.i64_f32",
+   "encoding": "legacy",
+   "content_hash": "720cad02445014dad9b86d3ea696fda3a6477ee9b8c1c9642c21d989488c19b3"
+  },
+  {
+   "iclass": "VADDPS",
+   "iform": "VADDPS_XMMdq_XMMdq_MEMdq",
+   "iform_status": "xed-decode",
+   "family": "FP.ADD.f32",
+   "encoding": "vex",
+   "content_hash": "974b93739c882b872d5d5fe5413a7d49ad9582c32f9f2af27def2d3d48b5411a"
+  },
+  {
+   "iclass": "VADDPS",
+   "iform": "VADDPS_YMMqq_YMMqq_MEMqq",
+   "iform_status": "xed-decode",
+   "family": "FP.ADD.f32",
+   "encoding": "vex",
+   "content_hash": "c4b412558e53b363f81b0868aff027eac9f42aa6225acebd21285212f80b79d3"
+  },
+  {
+   "iclass": "VMAXPS",
+   "iform": "VMAXPS_YMMqq_YMMqq_MEMqq",
+   "iform_status": "xed-decode",
+   "family": "FP.MAX.f32",
+   "encoding": "vex",
+   "content_hash": "fce3866a30cfc7d11430aaba4e115bc751c84aa8923541f1ec03bd9197e221c4"
+  },
+  {
+   "iclass": "VMULPS",
+   "iform": "VMULPS_YMMqq_YMMqq_MEMqq",
+   "iform_status": "xed-decode",
+   "family": "FP.MUL.f32",
+   "encoding": "vex",
+   "content_hash": "ddf579ea1262f2d03afa6fb2eede09c9a70fe207af594b317cc2f044780fbe63"
+  },
+  {
+   "iclass": "VDIVSS",
+   "iform": "VDIVSS_XMMdq_XMMdq_MEMd",
+   "iform_status": "xed-decode",
+   "family": "FP.DIV.f32",
+   "encoding": "vex",
+   "content_hash": "f01f9302227e37d52805eef8a21cdd420d35358f6b44124d29a4c57d34048f96"
+  },
+  {
+   "iclass": "VMULPS",
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512",
+   "iform_status": "xed-decode",
+   "family": "FP.MUL.f32",
+   "encoding": "evex",
+   "content_hash": "0f1c6950ec98f323476aa13bbf35d11511f1f5a0e830e94a11303f1a9b7eed11"
+  },
+  {
+   "iclass": "VCVTPH2PS",
+   "iform": "VCVTPH2PS_YMMqq_MEMdq",
+   "iform_status": "xed-decode",
+   "family": "FP.CVT.f16_f32",
+   "encoding": "vex",
+   "content_hash": "780cb6d68a3bbd84ff69a6b2f0bdb510a3305d82f4ccaa682bbdee1b97325db6"
+  },
+  {
+   "iclass": "VCVTPH2PS",
+   "iform": "VCVTPH2PS_ZMMf32_MASKmskw_MEMf16_AVX512",
+   "iform_status": "xed-decode",
+   "family": "FP.CVT.f16_f32",
+   "encoding": "evex",
+   "content_hash": "f1bbc53b1d6793f7f457e81c4e4d829b7b4c740ad61e719026064cf6d8d77e50"
+  },
+  {
+   "iclass": "VPMADDWD",
+   "iform": "VPMADDWD_YMMqq_YMMqq_MEMqq",
+   "iform_status": "xed-decode",
+   "family": "INT.MADDWD.s16",
+   "encoding": "vex",
+   "content_hash": "c015a490e5f3cb5f994c64f570c3c2c6fc51cceb440a6bde1f41165e73ccfeb4"
+  },
+  {
+   "iclass": "VPMADDUBSW",
+   "iform": "VPMADDUBSW_XMMi16_MASKmskw_XMMi16_XMMi16_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "INT.MADDUBS.u8s8",
+   "encoding": "evex",
+   "content_hash": "443c64648b29252cf6c322420b064eb8a8823a1cc317a1e48c7ac39f161090db"
+  },
+  {
+   "iclass": "VPMADDWD",
+   "iform": "VPMADDWD_XMMi32_MASKmskw_XMMi16_XMMi16_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "INT.MADDWD.s16",
+   "encoding": "evex",
+   "content_hash": "b8a8ef9da9d4ba6250afd2c38e3da46e4622631dcd46b6296410bc032fedc14e"
+  },
+  {
+   "iclass": "VPDPBUSD",
+   "iform": "VPDPBUSD_XMMi32_MASKmskw_XMMu8_XMMu32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "INT.DPBUSD.u8s8",
+   "encoding": "evex",
+   "content_hash": "2594bb5ef0d5a8e517dd0a8cb54a7c1f0f0aebdc2d282622ad7294a19bc79ce8"
+  },
+  {
+   "iclass": "VPMADDUBSW",
+   "iform": "VPMADDUBSW_YMMi16_MASKmskw_YMMi16_YMMi16_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "INT.MADDUBS.u8s8",
+   "encoding": "evex",
+   "content_hash": "9bebbe2d17d94b579e62c426f055beec13c788c7eb59e3d1532d957db84f2813"
+  },
+  {
+   "iclass": "VPMADDWD",
+   "iform": "VPMADDWD_YMMi32_MASKmskw_YMMi16_YMMi16_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "INT.MADDWD.s16",
+   "encoding": "evex",
+   "content_hash": "e1ca6e46febe162d142b22a304dd2902b8c84b66ad393ed75d75422a9c92e643"
+  },
+  {
+   "iclass": "VPDPBUSD",
+   "iform": "VPDPBUSD_YMMi32_MASKmskw_YMMu8_YMMu32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "INT.DPBUSD.u8s8",
+   "encoding": "evex",
+   "content_hash": "279dcb1d194a5e55ecbcf50e8f30f2f7a8ac4b5cffaf5dd6b8e7ce965490bc98"
+  },
+  {
+   "iclass": "VPMADDUBSW",
+   "iform": "VPMADDUBSW_ZMMi16_MASKmskw_ZMMi16_ZMMi16_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "INT.MADDUBS.u8s8",
+   "encoding": "evex",
+   "content_hash": "50bdde949376be2de71417b4031f453cd5e6dd958f78b8bcfe60ee1c50819a1a"
+  },
+  {
+   "iclass": "VPMADDWD",
+   "iform": "VPMADDWD_ZMMi32_MASKmskw_ZMMi16_ZMMi16_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "INT.MADDWD.s16",
+   "encoding": "evex",
+   "content_hash": "1943c5857b4096c7ba446b696db73803fff383ec427f9e51d7dcb6a38041e7a8"
+  },
+  {
+   "iclass": "VPDPBUSD",
+   "iform": "VPDPBUSD_ZMMi32_MASKmskw_ZMMu8_ZMMu32_AVX512",
+   "iform_status": "xed-datafile",
+   "family": "INT.DPBUSD.u8s8",
+   "encoding": "evex",
+   "content_hash": "676196de6d83c88a22edd4c73b0d9ee75a8eb47517086fb1d5b5a0b4a7018f07"
+  },
+  {
+   "iclass": "VPMADDUBSW",
+   "iform": "VPMADDUBSW_XMMdq_XMMdq_XMMdq",
+   "iform_status": "provisional",
+   "family": "INT.MADDUBS.u8s8",
+   "encoding": "vex",
+   "content_hash": "1d9e33ae2b73210ca1d943453c6779f3f320d924bf71da067bf1c0eee398d942"
+  },
+  {
+   "iclass": "VPMADDWD",
+   "iform": "VPMADDWD_XMMdq_XMMdq_XMMdq",
+   "iform_status": "provisional",
+   "family": "INT.MADDWD.s16",
+   "encoding": "vex",
+   "content_hash": "a21ccff8101780be5b7bce0f4b585cc3f276f92fd3c5bf07e5ed0614b206b991"
+  },
+  {
+   "iclass": "VPHADDD",
+   "iform": "VPHADDD_XMMdq_XMMdq_XMMdq",
+   "iform_status": "provisional",
+   "family": "INT.HADDD",
+   "encoding": "vex",
+   "content_hash": "bcaa541b28f863eea49abdef587e384f7f51ef02e072c1b299f2b323287fc9fc"
+  },
+  {
+   "iclass": "VPMADDUBSW",
+   "iform": "VPMADDUBSW_YMMqq_YMMqq_YMMqq",
+   "iform_status": "xed-decode",
+   "family": "INT.MADDUBS.u8s8",
+   "encoding": "vex",
+   "content_hash": "f8af090f6912dc5a543c1f8372ddfb3d469b496da4eaa5b03034d1b2eed12fab"
+  },
+  {
+   "iclass": "VPMADDWD",
+   "iform": "VPMADDWD_YMMqq_YMMqq_YMMqq",
+   "iform_status": "xed-decode",
+   "family": "INT.MADDWD.s16",
+   "encoding": "vex",
+   "content_hash": "c3811d968060a1e243fafa751600f44b3f7db784bb38c191f6fa8a656531ae94"
+  },
+  {
+   "iclass": "VPHADDD",
+   "iform": "VPHADDD_YMMqq_YMMqq_YMMqq",
+   "iform_status": "xed-decode",
+   "family": "INT.HADDD",
+   "encoding": "vex",
+   "content_hash": "7f64a21f038f4459e0b269bd6ef6ca2c5a78db8e57214726d72f8bec4820b7c6"
+  }
+ ]
+}

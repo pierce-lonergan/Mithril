@@ -1,0 +1,70 @@
+START Fri 10/23/2026 16:23:30.07
+{
+ "spec_sha256": "a74d50412a976ececc9355ff2434e3d7c3c08c40eea9f0627378dc4a6ab2802c",
+ "n_mutants": 24,
+ "design_list": [
+  "M01_tiny_before_rounding",
+  "M02_max_returns_src1_on_nan",
+  "M03_nan_not_quieted",
+  "M04_cmp_pred_shift",
+  "M05_indefinite_7fffffff",
+  "M06_ftz_no_flush_exact",
+  "M07_daz_applies_to_h2f",
+  "M08_masked_lanes_raise_flags",
+  "M09_pmaddubsw_swapped",
+  "M10_er_disables_daz"
+ ],
+ "mutant_sha256": {
+  "M01_tiny_before_rounding": "7fd580e1ade1b1588090ddf095de8fc044bbd3d1033640c063550e51d56510c2",
+  "M02_max_returns_src1_on_nan": "776b742cd832474b48212eabb50b69d28b3903b7857119b70d863e9d749e61e5",
+  "M03_nan_not_quieted": "d415f60e9719cd12a7605620718a65eee25609b3c9495014c7c9a70a723d08e4",
+  "M04_cmp_pred_shift": "fb42da479167522aeeeff78f0289e46dc566760887cf1b92d7c6b8f397cb97bd",
+  "M05_indefinite_7fffffff": "108e17ae7e883b7dcefb34b2c3780a2a81d7573569abbf5f3c3d1f01c2d42a2d",
+  "M06_ftz_no_flush_exact": "5b5acd2cbbec76f4d0daf9a590ad99236401638c2d81c6bff10057223230ecd0",
+  "M07_daz_applies_to_h2f": "bdb55f3815797b10f6c2819484ec1dfa3d55a8dc7aff8e0ac40b6912ba2b4590",
+  "M08_masked_lanes_raise_flags": "fb2e474df60dae20ab4a493f10f2b40a7fb985d088d98249c63035b51081ecbd",
+  "M09_pmaddubsw_swapped": "d1bbc421a0c1a408b567564a8584903b27e083e80709e0d4dd114593cf6d65ed",
+  "M10_er_disables_daz": "8b77768e789bf7c5c0fb92a2aeefa4186dc63bccd86c487d2d1e9b7e1337e009",
+  "M11_zeroing_as_merge": "1b4e0746d5e8f5711a5a0f1ba1a9c59f64140c6a1821859e73bea4b2a9b669a7",
+  "M12_vex_evex_upper_preserved": "c2a1be481ea68e48515257e17245b3c23dc9a0ada3e5bc5cee9b01781ab63fbf",
+  "M13_bcast_ignored": "f4396385dccb1e7128f6c65444f69ac6286165edb33f142c80faff930068412f",
+  "M14_comis_sets_of": "3cab6061e0ce5e50397cdc343b8bcc5a4c7ca819fcbf9526f1924eb557f264cb",
+  "M15_cvt2si_sign_extends": "857d6d6a2b322889cdc106ddf402edc0ce2ae75420fc1e5ce2983966239929cb",
+  "M16_kdest_upper_not_zeroed": "b5029a7004d63bbf83250cc2b90b742ba1a6a42f67d3842176e28ebcd8e5aae3",
+  "M17_add_never_pe": "a49f14af3fe53b579244b95d80a600a87c132198be3d7fddfa934f6ce43b4071",
+  "M18_legacy_upper_zeroed": "4abcb792aea1a4aef435b0e947942b974b3e916d47ea915f953db9317d5adcb6",
+  "M19_er_without_sae": "1ff45a30ad100f9c28be7416418ebc19346616dbdc18db2a1611f9a297485461",
+  "M20_rd_ru_swapped": "639cb3e12b33aa485e70e74d5cc12a3d1757e9e9becedcd8db78a63947a13f80",
+  "M21_i2f_always_rne": "84db8d6c0c8b29d2b98b7595601d3c7e9c7afcb36c444ffecf24287439e6efc2",
+  "M22_scalar_upper_from_src2": "8d8fd62ea7cd723640dd1b02f0c8ef8e50f1f5960d301dde4519ad0b23ef6a37",
+  "M23_vpdpbusd_saturates": "098a1a9a709d093fe299db322fb1d02404fe89bab9535faf7b1e842aa9df263a",
+  "M24_daz_raises_de": "0da1cbd847ef8d08930b77da9253ecaa14d6b543b0347c389fbd6865cdbb39d0"
+ }
+}
+M01_tiny_before_rounding         detected=True  new=16    changed=0   {"lane": 8, "upper": 0, "flag_only": 8, "fault": 0}
+M02_max_returns_src1_on_nan      detected=True  new=39    changed=0   {"lane": 39, "upper": 0, "flag_only": 0, "fault": 0}
+M03_nan_not_quieted              detected=True  new=29    changed=0   {"lane": 29, "upper": 0, "flag_only": 0, "fault": 0}
+M04_cmp_pred_shift               detected=True  new=520   changed=0   {"lane": 499, "upper": 0, "flag_only": 21, "fault": 0}
+M05_indefinite_7fffffff          detected=True  new=18    changed=0   {"lane": 18, "upper": 0, "flag_only": 0, "fault": 0}
+M06_ftz_no_flush_exact           detected=True  new=16    changed=0   {"lane": 16, "upper": 0, "flag_only": 0, "fault": 0}
+M07_daz_applies_to_h2f           detected=True  new=4     changed=0   {"lane": 4, "upper": 0, "flag_only": 0, "fault": 0}
+M08_masked_lanes_raise_flags     detected=True  new=1     changed=0   {"lane": 0, "upper": 0, "flag_only": 1, "fault": 0}
+M09_pmaddubsw_swapped            detected=False new=0     changed=0   {"lane": 0, "upper": 0, "flag_only": 0, "fault": 0}
+M10_er_disables_daz              detected=False new=0     changed=0   {"lane": 0, "upper": 0, "flag_only": 0, "fault": 0}
+M11_zeroing_as_merge             detected=True  new=1     changed=0   {"lane": 1, "upper": 0, "flag_only": 0, "fault": 0}
+M12_vex_evex_upper_preserved     detected=True  new=693   changed=0   {"lane": 0, "upper": 693, "flag_only": 0, "fault": 0}
+M13_bcast_ignored                detected=True  new=1     changed=0   {"lane": 1, "upper": 0, "flag_only": 0, "fault": 0}
+M14_comis_sets_of                detected=True  new=19    changed=0   {"lane": 19, "upper": 0, "flag_only": 0, "fault": 0}
+M15_cvt2si_sign_extends          detected=True  new=13    changed=0   {"lane": 13, "upper": 0, "flag_only": 0, "fault": 0}
+M16_kdest_upper_not_zeroed       detected=True  new=346   changed=0   {"lane": 0, "upper": 346, "flag_only": 0, "fault": 0}
+M17_add_never_pe                 detected=True  new=73    changed=0   {"lane": 0, "upper": 0, "flag_only": 73, "fault": 0}
+M18_legacy_upper_zeroed          detected=True  new=374   changed=0   {"lane": 0, "upper": 374, "flag_only": 0, "fault": 0}
+M19_er_without_sae               detected=True  new=1     changed=0   {"lane": 0, "upper": 0, "flag_only": 1, "fault": 0}
+M20_rd_ru_swapped                detected=True  new=126   changed=0   {"lane": 126, "upper": 0, "flag_only": 0, "fault": 0}
+M21_i2f_always_rne               detected=True  new=10    changed=0   {"lane": 10, "upper": 0, "flag_only": 0, "fault": 0}
+M22_scalar_upper_from_src2       detected=True  new=317   changed=0   {"lane": 0, "upper": 317, "flag_only": 0, "fault": 0}
+M23_vpdpbusd_saturates           detected=False new=0     changed=0   {"lane": 0, "upper": 0, "flag_only": 0, "fault": 0}
+M24_daz_raises_de                detected=True  new=46    changed=0   {"lane": 0, "upper": 0, "flag_only": 46, "fault": 0}
+{"mutants_run": 24, "detected": 21, "design_list_detected": 8, "design_list_run": 10, "not_detected": ["M09_pmaddubsw_swapped", "M10_er_disables_daz", "M23_vpdpbusd_saturates"]}
+MUTANTS_RC=0
+END Fri 10/23/2026 16:23:35.69

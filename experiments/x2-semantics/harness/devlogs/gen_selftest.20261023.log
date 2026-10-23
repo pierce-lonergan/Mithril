@@ -1,0 +1,22 @@
+{
+ "targeted_checked": 5400,
+ "plan_vs_budget": {
+  "rows_checked": 576,
+  "plan_total": 539690903,
+  "budget_total": 539690903,
+  "mismatching_rows": []
+ },
+ "determinism_rows": 7,
+ "memfault_rows": 18,
+ "memfault_zero_mask_executions_counted": 56,
+ "int_classes": [
+  12,
+  12
+ ],
+ "masked_bcast_synthetic_row": {
+  "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+  "lane_cases": 46080,
+  "executions": 2880
+ }
+}
+gen_vectors selftest: PASS (0 failures)

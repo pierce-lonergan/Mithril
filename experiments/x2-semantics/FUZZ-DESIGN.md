@@ -1,6 +1,8 @@
 # X2: Zen 5 fuzz harness design
 
-Status: DESIGN, DRAFT, revised 2026-10-16 after two same-family reviews (review log in
+Status: DESIGN, DRAFT. **Budget made final for the X2 freeze on 2026-10-23 (x2freeze track; §5, §9.5, §9.7):
+census run 1 absorbed, open items resolved, harness rebuilt; no budget vector generated for silicon or run.**
+Revised 2026-10-16 after two same-family reviews (review log in
 [TABLE-SCHEMA.md §15](TABLE-SCHEMA.md#15-review-log)). **Harness built and self-tested 2026-10-16
 (x2build track; [harness/](harness/README.md), status in §9), then revised the same day after one
 same-family, independent-context review of the build (§9.6).** No vector of the budget has been
@@ -110,23 +112,26 @@ each operand position against every other class, including NaN against NaN with 
 (the operand-order test). Draws use a counter-based generator (SplitMix64 keyed by entry hash, class
 pair, environment and index), so any single case can be regenerated from its coordinates. Integer
 sources of conversions use 12 integer classes: 0, ±1, ±(2^24 − 1), ±2^24, ±(2^24 + 1), 2^31 − 1,
-−2^31, small random, large random, random with a tie at 24 bits.
+−2^31, small random, large random, random with a tie at 24 bits, **±(2^31 − 1 … 2^31 − 255)** (where every RC
+decides between 2^31 − 128 and 2^31) and **odd |v| > 2^25** (never exact, never a tie). v0 named 12 and listed 10;
+the last two were added on 2026-10-23 so the budget's 12 classes are met (§9.5 item 1). CVTSI2SS with a 64-bit
+source (FP.CVT.i64_f32) uses the same design over 64-bit integers (`gen_vectors.INT64_CLASSES`).
 
 ### 3.2 Targeted classes (constructed, not sampled)
 
 | Class | Construction | Entries |
 |---|---|---|
 | `TIE` | exact RNE ties: a + b with b = half an ulp of a (and odd/even mantissas); for MUL, products of 24-bit significands whose low bits are exactly a half | ADD SUB MUL DIV CVT |
-| `OVF` | results within 2 ulps of 2^128, both signs, every RC | ADD SUB MUL DIV CVTDQ2PS |
+| `OVF` | results within 2 ulps of 2^128, both signs, every RC | ADD SUB MUL DIV (no int32 overflows binary32, so not CVTDQ2PS; §9.5 item 5) |
 | `F-TINY` | products and quotients whose exact value lies in [2^−126 − 2^−150, 2^−126), plus the hand vector `0x00800001 × 0x3F7FFFFE` | MUL DIV (with FTZ = 0 and 1) |
 | `UFL` | exact and inexact results on the subnormal grid, results that round up to 2^−126 | ADD SUB MUL DIV |
 | `CANCEL` | a + (−a), a − a, and sums whose exact value is a nonzero subnormal | ADD SUB |
 | `ZEROS` | all four ±0 pairs; ±0 against DEN under DAZ | ADD SUB MUL DIV MAX MIN CMP COMI |
-| `CVT-BND` | ±2^31, ±(2^31 − 128), −(2^31 + 256), ±2^24 ± k, ±0.5, ±1.5, ±2.5, (−1, 0), every RC, DAZ on DEN | CVTPS2DQ CVTTPS2DQ CVT(T)SS2SI CVTDQ2PS CVTSI2SS |
+| `CVT-BND` | ±2^31, ±(2^31 − 128), −(2^31 + 256), ±2^24 ± k, ±0.5, ±1.5, ±2.5, (−1, 0), every RC, DAZ on DEN. For the 64-bit source (CVTSI2SS r64, no V5): the 32-bit boundaries sign-extended, the 2^63 and 2^32 neighbourhoods, exact ties above 2^32, and ties ± 1 above 2^32 (just above halfway: round bit set and only bit 0 set below it, 8 to 38 places down; just below: round bit clear and every bit below set; added 2026-10-23 after review), each a fifth of the draws | CVTPS2DQ CVTTPS2DQ CVT(T)SS2SI CVTDQ2PS CVTSI2SS |
 | `F-DAZ-SEL` | MAX/MIN with a DEN in either position and DAZ = 1 | MAX MIN |
 | `F-DAZ-CVT` | CVT(T)PS2DQ of DEN± under RU/RD with DAZ = 0 and 1 | CVTPS2DQ CVTTPS2DQ CVT(T)SS2SI |
 | `F-FTZ-EXACT` | exact tiny results (e.g. `2^−126 × 0.5`) with FTZ = 1 | MUL DIV ADD |
-| `F-FLAGPRI` | coexisting conditions: a NaN in one source and a DEN in the other; an SNaN with an overflow-producing partner; **DEN / ±0** (model: DE and ZE); **DEN × ∞ under DAZ** and **DEN / DEN under DAZ** (model: invalid after flushing, IE only); **DEN + ∞** (model: DE with an exact ∞ result) (extended 2026-10-16, finding R1-11) | all FP |
+| `F-FLAGPRI` | coexisting conditions: a NaN in one source and a DEN in the other; an SNaN with an overflow-producing partner; **DEN / ±0** (model since 2026-10-23: ZE alone; v0 said DE and ZE); **DEN × ∞ under DAZ** and **DEN / DEN under DAZ** (model: invalid after flushing, IE only); **DEN + ∞** (model: DE with an exact ∞ result) (extended 2026-10-16, finding R1-11) | all FP |
 | `F-MASKEXC` | SNaN / DEN / overflow-producing values in masked-off lanes, flag-free values in active lanes | all EVEX FP |
 | `F-ER` | {er} in each of the 4 modes with DAZ and FTZ set, on DEN and tiny-result classes | 512-bit reg-reg and scalar EVEX forms that allow {er} |
 | `F-H2F` | every f16 subnormal under DAZ = 0 and 1 (model: DAZ ignored, no DE); every f16 SNaN (model: quieted, IE) (new, finding R1-11) | VCVTPH2PS |
@@ -271,6 +276,17 @@ rows (more iforms, more operand variants), never the formulas below.
 | V5 | i32→f32 | 2^32 × 4 RC = 17,179,869,184 (DAZ, FTZ do not apply to an integer source; they are still sampled in V1 across E8) | 4 RC |
 | V5 | VCVTPH2PS | 2^16 × 8 = 524,288 | E8 |
 | V5 | VPMADDUBSW | pair domain 2^32 | default |
+
+**Final totals for the X2 freeze (114 entries) [D: `budget_rows` over the 2026-10-23 table; file
+`census/budget.v1.json`, sha256 `7b905f54…5258` (revision 4; the rows are revision 3's)]:** 610 rows; sampled **539,690,903** lane cases (V1 348,928,000; V2
+66,640,000; V3 122,903,896; V4 595,200; BCAST 622,080; F-MEMFAULT 1,727) in 576 rows; V5 **639,953,797,120** in 34
+rows. Formula changes made for the freeze, each stricter or forced by the census: V3 only for forms with a write
+mask; a scalar compare into k has one masking mode; FP.CVT.i64_f32 has V1 and V2 and no V5; F-MEMFAULT counts its
+zero-masking executions (2 × (n + 1) × n); every EVEX memory form with EVEX.b also gets the masked-broadcast row
+{merge, zero} × 144 × 10 × n; BCAST rows no longer depend on the census showing a broadcast; FP.FMA.f32 has its
+formula ahead of its entries (V1 the 12^3 class-triple grid × 100 × E8, V2 its eight classes, V4 4 × 1,728 × 10 × 2
+on 512-bit register forms). Per-iclass totals: the X2 record §6 and `budget.v1.json` `by_iclass`. The generator's
+plan equals the budget on all 576 sampled rows [M, desktop, 2026-10-23].
 
 **Totals for the v0 table (88 entries) [D: `budget_rows` over `table.ENTRIES`, X2 reviser
 2026-10-16]:** V1 237,756,000; V2 46,470,000; V3 114,514,768; V4 595,200; BCAST 460,800;
@@ -559,6 +575,21 @@ across environments and signs. These three cases belong in the record's pre-free
 11. (Review R1-3) The record's collection procedure should state that collection runs pass
     `--collection-authorised` and that budget vectors carry `BUDGET-v1-*` labels and budget set ids.
 
+**Resolution for the freeze (2026-10-23, x2freeze track; the X2 record carries it):**
+
+| Item | Resolution |
+|---|---|
+| 1 | two integer classes added (§3.1); the rows stay 12 × 1,000 × 8; plan = budget on every row |
+| 2 | F-DAZ-CVT's RU/RD with DAZ = 0 and 1 is covered exhaustively by V5 (every f32 → i32 form runs all 2^32 inputs under 4 RC × DAZ {0, 1}); its V2 rows stay under E8 |
+| 3, 4 | the generator's constructions are the definitions: DIV ties on the subnormal grid; F-TINY for DIV in the directed-rounding band (1 − 1/q)·2^−126 |
+| 5 | OVF dropped from CVTDQ2PS in §3.2 (the rows never had it) |
+| 6 | the zero-masking executions are counted: 2 × (n + 1) × n (stricter) |
+| 7 | F-MASKEXC stays inside V3's heterogeneous vector, as designed |
+| 8 | B6: the table is corrected (ZE alone); the X2 record discloses it (§2.1) |
+| 9 | masked broadcast: a row for every EVEX memory form with EVEX.b (stricter); masked `{er}`/`{sae}`: out of scope, because census run 1 found 0 `{er}`/`{sae}` instructions in every variant [M]; the unmasked V4 rows stay |
+| 10 | the record names the seal `a74d5041…` and keeps the target "every §6.4 mutant detected on the frozen budget's silicon results" |
+| 11 | the record's §10.1 states the collection procedure |
+
 ### 9.6 Review of the build (log)
 
 | Date | Reviewer | Lens | Family | Findings | Outcome |
@@ -569,3 +600,31 @@ across environments and signs. These three cases belong in the record's pre-free
 The blocker (exhaustive mode compared unmodelled bytes, so a V5 sweep on silicon would have reported every
 execution as a mismatch) was found before any V5 sweep ran. Same-family review is weaker than ROADMAP's
 different-family requirement (docs/m0/README.md); that gap stays open until D0-10.
+
+### 9.7 Rebuild for the freeze (2026-10-23, x2freeze track) [M, desktop]
+
+Census run 1 added 26 entries and the B6 correction changed one reading, so the stubs were regenerated and the
+harness rebuilt (`build.cmd`, MSVC 19.44.35229, `/MP1`): **664 stubs, 0 encode or decode-back errors, every stub
+decodes to its entry's key**, 432 immediates checked with a negative control; stub manifest `63aa76b2…3a32`,
+`x2fuzz.exe` `4e33feb0…73b8`, semantics bundle `c7cd6851…3eb8`. Self-tests (`run_selftests.cmd`): x2fuzz PASS
+(31 interpreter known answers, the B6 ones corrected; exhaustive plumbing check on 42 V5-eligible stubs × 4,096
+inputs, 0 disagreeing), `semantics.selftest` 720/0, `compare.py` PASS, `gen_vectors.py` PASS (plan = budget on 576
+rows), interpreter validation 1,000,006 lane cases over all 664 stubs, 0 divergences. Guards G1-G7: all refused.
+Development smoke (label DEV-SMOKE, not data): 1,593 executions on CPU 4 and CPU 20, **0 lane mismatches, 0 flag
+mismatches** (the B6 disagreement is gone), 0 divergences, 0 nondeterminism, 0 anomalies; hand expectation =
+silicon on 1,563 of 1,563 lane executions. The 24 sealed table mutants against those smoke results: 21 detected;
+not detected M09 (VPMADDUBSW operands), M10 ({er} disabling DAZ) and M23 (VPDPBUSD saturation), because the hand
+vectors hold no integer case and no {er} case under DAZ. Details: harness/README.md §13.
+
+### 9.8 Revision 4 rebuild (2026-10-23, after the review of the X2 record's revision 3) [M, desktop]
+
+Changes: the legacy compare entries declare imm8 ∈ [0, 7] (table `sem` spec, `x2ref.c`, `pyref.py`; self-tests E10
+and x2fuzz step 4b), the 64-bit CVT-BND gained its sticky-bit cases (§3.2; `gen_vectors.py`), stale docstrings were
+corrected. Rebuilt with `build.cmd` (`/MP1`): 664 stubs, 0 errors; stub manifest `430fc526…6260`, `x2fuzz.exe`
+`0feae933…de4c`, semantics bundle `0c2a041c…ff2d`. Self-tests: x2fuzz PASS (exhaustive plumbing check 42 stubs ×
+4,096, 0 disagreeing), `semantics.selftest` 725/0, `compare.py` PASS, `gen_vectors.py` PASS (plan = budget on 576
+rows; 5,700 targeted cases checked), interpreter validation 1,000,006 lane cases, 0 divergences; guards G1-G7 all
+refused; dev smoke (the same 1,593 hand-vector executions) 0 lane and 0 flag mismatches, CPU 4 = CPU 20; sealed
+table mutants 21 of 24 detected, the same three missed. A docstring correction of `gen_vectors.py` followed (final
+file `4261242d…a6e2`); its self-test and the guards were re-run on the desktop with it: PASS, G1-G7 refused.
+Details: harness/README.md §14.

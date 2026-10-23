@@ -41,13 +41,13 @@ the same day (same family, independent context) and partly re-run with corrected
     §4 are instance facts with certificates.
   - *Definitional identities.* Where the KIR operation is *defined* by the same bit operation the
     code performs (bf16 → f32 is a 16-bit shift in `canon.v1`), both sides evaluate to the same term.
-- **Integer identities (strict default, provisional pending Owner question RQ-2).** An equality
+- **Integer identities (strict default; fixed by DELEGATED P33 on 2026-10-23, Pierce reviews at sitting 2).** An equality
   between two *different* integer terms that T1 or T2 invokes (a reassociated dot product, a bias
   correction, the sign trick, a narrowing) is counted as a row, one row per named identity instance.
   The alternative reading, that per-instance QF_BV equalities decided by T2 with certificates are T2
   obligations (03 §6.3: "Integer subterms become T2 obligations"), would count them as 0. P2 reports
-  both counts; the gate uses the larger until the Owner rules.
-- **Loop rules (strict default, provisional pending Owner question RQ-1).** ROADMAP §3.3 names "the
+  both counts; the gate uses the per-instance count, the larger (fixed by DELEGATED P33, 2026-10-23).
+- **Loop rules (strict default; fixed by DELEGATED P32 on 2026-10-23, Pierce reviews at sitting 2).** ROADMAP §3.3 names "the
   lockstep loop rule, extended to the unroll, rotation and peel shapes X0 finds", with one written
   proof. Draft 2 counts LOOP-LOCKSTEP with all its extensions as **1 rule** when the extensions are
   lemmas inside that one written proof; any extension that needs its own proof counts as a further
@@ -56,9 +56,8 @@ the same day (same family, independent context) and partly re-run with corrected
 - **Proved** means: the primary proof succeeded **and** an independent second route agreed. Primary:
   Z3 FPA with the bit-vector NaN layer, or exhaustive enumeration over all binary32 inputs of the
   rule's free variables. For integer rows the primary is exhaustive enumeration over the per-product
-  domain (at most 2^32 inputs) or a Z3 QF_BV proof; whether QF_BV counts as ROADMAP's "Z3" is Owner
-  question RQ-3 (provisional: a QF_BV primary counts only with an agreeing exhaustive or
-  second-solver route). Second route: exhaustive enumeration where the free inputs fit in 32 bits;
+  domain (at most 2^32 inputs) or a Z3 QF_BV proof; a QF_BV primary counts only with an agreeing
+  exhaustive or second-solver route (RQ-3, fixed by DELEGATED P34, 2026-10-23). Second route: exhaustive enumeration where the free inputs fit in 32 bits;
   otherwise a second solver, or the case-exhaustive check of the NaN and signed-zero layer plus the
   IEEE 754 definition for non-NaN values (03 §6.3). Solvers are untrusted (03 §6.5); unknown or
   timeout is "not proved".
@@ -156,7 +155,8 @@ DAZ = FTZ = 0 (MXCSR 0x1F80). "v0" gives the v0 row the draft-2 row came from.
 rows (R19-R21) needed only under option (b), + LOOP-LOCKSTEP counted once. Sensitivity:
 - if all 7 loop rules count separately (RQ-1): 21 + 7 = **28**;
 - if integer identities are T2 instances (RQ-2): 14 + 1 = **15**;
-- if option (a) of Owner question 8 is chosen instead of (b): R19-R21 drop, 18 + 1 = **19**.
+- under option (a) of P3's denominator (excluded by DELEGATED P31 as a loosening; shown for comparison only):
+  R19-R21 drop, 18 + 1 = **19**.
 Every reading is ≤ 30 before T1 runs. The remaining risk is that T1 development on the real variants
 needs rows this reading did not foresee; rows may be added until `rules.v1` is frozen, which happens
 before the mutant pool is revealed (§6). At intrinsic level the census cannot add rewrite rows (it
@@ -305,7 +305,7 @@ take well under a second [G].
 
 ## 5. Loop rules
 
-Counting: provisional default 1 (§1, RQ-1). The architecture states them in 03 §6.4; this is the
+Counting: 1 (§1, RQ-1; fixed by DELEGATED P32, 2026-10-23). The architecture states them in 03 §6.4; this is the
 statement X2 will prove in writing and X0's shapes will extend.
 
 **LOOP-LOCKSTEP.** Let the meaning loop be `for i in 0..N { σ_M := S_M(σ_M, i) }` and the machine loop
@@ -386,6 +386,10 @@ labelled as such, with the gap visible in the review log (docs/m0/README.md).
 2. 03 §6.3 lists MAXPS/MINPS among NaN observers. §2 above shows they are transparent for NaN-class
    equality. Keeping them as observers is sound and, for Hearth, costs nothing [inference]; relaxing
    it would need its own proof row.
+*RQ-1 to RQ-3 were answered on 2026-10-23 under the batch-4 delegation with their strict defaults (DELEGATED P32,
+P33, P34); the X2 record item 4.4 states them. Question 1 (R02/R03 against 03 §6.3) and the question whether the
+R02/R03 written proof may serve as the primary stay Pierce's (OWNER-QUEUE D11; the X2 record §13 O5).*
+
 3. **RQ-1 (Owner): do loop rules count toward ≤ 30?** Provisional default (strict): LOCKSTEP with
    its extensions as lemmas of one written proof counts as 1; each separately proved extension counts
    1 more. Options: 0 (v0's reading, looser), 1 (default), 7 (strictest).

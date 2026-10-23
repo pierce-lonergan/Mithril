@@ -1,6 +1,7 @@
 # X2: the x86 semantics table, entry schema v0
 
-Status: DRAFT, M0 week 0, revised 2026-10-16 after two same-family reviews (§15). Track X2
+Status: DRAFT, M0 week 0, revised 2026-10-16 after two same-family reviews (§15); **census run 1 absorbed and
+the B6 reading corrected on 2026-10-23 (x2freeze track; §9.1, §4 rule 7)**. Track X2
 ([ROADMAP §3.3](../../docs/ROADMAP.md#33-x2-t1-spike-on-transliterated-hearth-intrinsics-weeks-05-verdict-in-week-6),
 DR-008, DR-010, [03-trust §6.7](../../docs/architecture/03-trust.md)). This file defines what one
 table entry is, how it carries its evidence, and how T1 and T2 consume it. The executable index
@@ -70,7 +71,9 @@ Facts about the key that the schema must respect (read from the pinned XED dataf
    `VUCOMISS_XMMdq_XMMd` [M]. The VEX `VCVTSI2SS`, `VCVTTSS2SI` and `VCOMISS` placeholders were
    reshaped to the operand widths of their datafile records (`…_XMMdq_XMMdq_GPR32d`,
    `…_GPR32d_XMMd`, `VCOMISS_XMMd_XMMd`) [inference from XED's naming convention].
-   `census_absorb.py` lists every provisional key the census never produced.
+   `census_absorb.py` lists every provisional key the census never produced. **Since 2026-10-23** every key
+   X0 census run 1 decoded is `xed-decode` (the table now has 41 `xed-datafile`, 62 `xed-decode`, 11
+   `provisional`; all 664 stubs decode to their entry's key, the 11 provisional ones included) [M].
 2. **{er} and {sae} variants share an iform.** In `avx512-foundation-isa.xed.txt`, e.g.
    `VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512` appears twice: once for the plain form and once
    for the EVEX.b rounding form (`TXT=ROUNDC` on REG0). The iform therefore does not determine the
@@ -218,10 +221,12 @@ Rules the layer implements ([semantics/rounding.py](semantics/rounding.py)):
    profile reports DE).
 7. **Flag priority.** A NaN source suppresses DE: SNaN invalid, then QNaN operand, then other
    invalid, then denormal, then overflow/underflow, then inexact (SDM Vol 1 §4.9.2, reading;
-   UNCERTAIN class F-FLAGPRI). Coexisting non-NaN conditions are all recorded in this model: a
-   denormal divided by ±0 gives DE|ZE; DEN + ∞ gives DE; under DAZ, DEN × ∞ and DEN / DEN are
-   invalid after flushing and give IE only (self-test B6). Each of these is a reading that
-   F-FLAGPRI tests (finding R1-11).
+   UNCERTAIN class F-FLAGPRI). Divide-by-zero sits at the level of "other invalid", above denormal.
+   **Corrected 2026-10-23 (B6): a denormal divided by ±0 gives ZE alone** (v0 said DE|ZE; the 9950X set ZE
+   alone on four development vectors, three encodings, RZ, FTZ and −0, both CCDs, and Bochs 3.1 agreed
+   [M, harness/README.md §7, §10]; the X2 record discloses it, §2.1). The other coexisting readings stand:
+   DEN + ∞ gives DE; under DAZ, DEN × ∞ and DEN / DEN are invalid after flushing and give IE only (self-test
+   B6, which checks the four silicon vectors too). F-FLAGPRI still tests all of them (finding R1-11).
 8. **Instructions that override MXCSR** (VDPBF16PS, VCVTNEPS2BF16: forced RNE, DAZ and FTZ; MXCSR
    neither read nor written [G02 §6]) and approximations (RCP14, RSQRT14) are **special entries**:
    out of v0, admitted one at a time with their own fuzz record, and kept out of kernels whose
@@ -512,6 +517,38 @@ smoke decode already shows VSQRTSS (from a smoke helper) and FMA forms (from the
 compiler emits them there. This stays below ROADMAP §3.1's amber threshold of 20 unless a compiler
 introduces classes no source line asks for, which is exactly what X0 measures.
 
+### 9.1 Census run 1 absorbed (2026-10-23, x2freeze track)
+
+X0 census run 1 (`census.json` sha256 `3d54f0d5…6f06`; build-1 `instructions.jsonl` of A, B-cmake, C, D read from
+the desktop run root, hashes equal to X0's `run1_files.sha256`) was absorbed with the revised absorber:
+
+```text
+python -B -m semantics.census_absorb --census census.json --insts A.b1.instructions.jsonl B-cmake.b1.instructions.jsonl \
+       C.b1.instructions.jsonl D.b1.instructions.jsonl --configs A,B-cmake,C,D \
+       --x2-scope x2_scope.json --budget --strict -o census/coverage_run1_ABCD.json
+```
+
+- **Absorber fixes found on the real data** [M]: run 1's instruction records carry no `label` (the configuration is
+  the prefix of `variant`), and XED's `BCAST` field is the broadcast *type*, set also on VBROADCASTSS and
+  VPBROADCAST*; embedded broadcast is `BCRC` on a memory form. v0 would have refused the input and, after a label
+  map, tagged every broadcast instruction "bcast". Both are fixed and self-tested.
+- **Result** [M]: 446 forms in 222 iclasses (release subset A, D: 384 forms), equal to X0's `x2_scope.json` and to
+  its re-derivation; 72 FP-sensitive forms in 32 iclasses; 0 FP-environment instructions; 0 `{er}`/`{sae}`; 0
+  disagreements between this table's FP sensitivity and XED's `MXCSR` attribute. Operand variants on FP forms:
+  EVEX.b broadcast on VMULPS xmm and zmm memory forms, merge and zero masking on VADDPS zmm.
+- **Entries added** (26): 25 FP forms the census found beyond v0 (legacy packed ADDPS (reg, m128), MULPS, MAXPS,
+  MINPS, CMPPS, CVTDQ2PS, CVTTPS2DQ; legacy ADDSS, MULSS, MAXSS m32 and COMISS m32; CMPSS; VEX and EVEX VCMPSS;
+  EVEX VUCOMISS; CVTSI2SS with a 64-bit source, a new family FP.CVT.i64_f32; VEX VADDPS xmm/ymm, VMAXPS ymm,
+  VMULPS ymm and VDIVSS memory forms; EVEX VMULPS xmm m128/m32bcst; VCVTPH2PS VEX m128 and EVEX m256) and the
+  VPMADDWD ymm memory form. New builder `cmp_scalar`; `cmp_k` takes `scalar`; `cvt_i2f_scalar` takes a 64-bit
+  source. Every FP-sensitive census form now has an entry (`--strict` passes).
+- **Dispositions** of every census form (the X2 record, item 4.9): `entry` 77, `object-level/G` 125,
+  `object-level/S` 117, `object-level/S, T1-image iclass` 127, each with its written reason in the coverage file.
+- **`intrinsic_map` against the census** [D]: every census FP iclass is named by the map up to the VEX/legacy
+  spelling except VCMPSS, CMPSS, MINSS and CVTTPS2DQ, which compilers introduce from scalar C (if-conversion,
+  vectorisation); they have entries and rows, and T1 at intrinsic level does not consume them.
+- **FP-semantic operation classes**: 13 (v0's 12 plus FP.CVT.i64_f32).
+
 ## 10. The v0 index
 
 `python -B -m semantics.table` prints the index; `table.index()` returns every entry with its
@@ -532,6 +569,22 @@ content hash. At the time of writing [M] X2 reviser 2026-10-16:
   `intrinsic_map` v0 names 43 such iclasses (§8.1).
 - **Semantics bundle hash** `4c48899cb3cad78c5bba6e29129d1eb9391cb8160148b33e1ba91c7968a3ea31`
   (changes whenever a bundled module, `table.py` included, changes).
+
+**Revision of 2026-10-23** [M]: **114 entries** (41 `xed-datafile`, 62 `xed-decode`, 11 `provisional`), **13
+FP-sensitive families** (FP.CVT.i64_f32 added), semantics bundle
+`c7cd6851b574af85ebd36091c66f336156f8ab657869a059302e91fc29793eb8`; every content hash is in
+`census/table_index.json`. `python -B -m semantics.selftest` runs **720 checks, 0 failures** on the laptop and on
+the desktop (B6 corrected and extended; E9 checks the new forms; I6 admits the maskless EVEX VUCOMISS).
+
+**Revision 4 (2026-10-23, after the review of the X2 record's revision 3)** [M]: compare immediates have a declared
+domain. The legacy CMPPS and CMPSS entries carry `imm_max: 7` in their hashed `sem` spec (SDM: imm8 bits 7:3
+reserved for the legacy encoding) and the VEX and EVEX compares take 0-31; outside it the builder raises
+`UnmodeledEnvironment`, `pyref.py` reports "unmodeled" and the C interpreter refuses, so no consumer gets a
+prediction for a reserved immediate (v0 masked imm with 31 and predicted the VEX predicate, e.g. EQ_UQ for legacy
+CMPPS imm 8). Semantics bundle `0c2a041c363e34ee27a62a873fd0adad5cf8f5711ec2aa3a16cb2f5c9709ff2d`; every content
+hash changed with it (`census/table_index.json`). `python -B -m semantics.selftest` runs **725 checks, 0 failures**
+on the laptop and on the desktop (E10: imm 7 predicted, imm 8 refused on both legacy entries, VEX VCMPSS imm 8
+predicted). The v0 figures follow.
 
 Self-test status: `python -B -m semantics.selftest` runs **706 checks, 0 failures** in about 6 s
 wall time; `--full` runs the same 706 checks with the complete 1,536-case witness scan in about 15 s
@@ -581,13 +634,17 @@ agreement on that class is not independent evidence (§7).
 | F-FTZ-EXACT | FTZ flushes exact tiny results too, flags UE\|PE | exact tiny results pass through | no (FTZ = 1) | sdm+bochs |
 | F-DAZ-SEL | MAX/MIN under DAZ return the flushed zero | return the original denormal bits | no (DAZ = 1) | sdm+bochs |
 | F-DAZ-CVT | CVT(T)PS2DQ honour DAZ | ignore DAZ | no (DAZ = 1) | sdm |
-| F-FLAGPRI | a NaN source suppresses DE; DEN / ±0 gives DE\|ZE; DEN + ∞ gives DE; under DAZ, DEN × ∞ and DEN / DEN are invalid (IE only) | DE also raised with a NaN; ZE alone for DEN / 0; no DE when the result is ∞; DAZ applied after the invalid check | flags only | sdm |
+| F-FLAGPRI | a NaN source suppresses DE; DEN / ±0 gives **ZE alone** (corrected 2026-10-23 from DE\|ZE on silicon and Bochs evidence, §4 rule 7); DEN + ∞ gives DE; under DAZ, DEN × ∞ and DEN / DEN are invalid (IE only) | DE also raised with a NaN; DE\|ZE for DEN / 0; no DE when the result is ∞; DAZ applied after the invalid check | flags only | sdm |
 | F-MASKEXC | masked-off lanes raise no exception | flags from masked lanes | flags only | sdm |
 | F-ER | {er} leaves DAZ/FTZ in force | {er} also suppresses DAZ/FTZ | no ({er} unused by Hearth) | sdm |
 | F-H2F | VCVTPH2PS ignores DAZ and never raises DE on f16 subnormals; IE on an f16 SNaN, which comes back quiet | DAZ flushes f16 subnormals; DE raised; no IE | flags (DE, IE); value only with DAZ = 1 | sdm+bochs |
 | F-MEMFAULT | masked-off lanes of masked loads and stores neither fault nor write | a fault or a write in a masked-off lane | footprint only | sdm |
 
 ## 13. Owner questions
+
+*Answered 2026-10-23 under the batch-4 delegation (DELEGATED.md; Pierce reviews at sitting 2): question 1 by P14
+(SDM only), question 2 by P9 (flags count, per execution), question 3 by P30 (secondary; their mutants count in
+P3).*
 
 1. **Licence (G02 open question 2).** v0 is written from SDM reading only, with no mechanical
    derivation from Intel's intrinsics XML. Should the table stay that way, or may a local draft
@@ -628,7 +685,23 @@ agreement on that class is not independent evidence (§7).
 | 2026-10-16 | Reviewer 1: semantics and tests (witness analysis, domains, flag observables, operand roles, hashing, coverage) | Claude (same family as author; independent context) | 13: 0 blocker, 5 major, 8 minor | 13 (2 with a corrected sub-claim, below) | 0 |
 | 2026-10-16 | Reviewer 2: pre-registration and gate logic (premise kinds, P3 reachability, mutant classification, false accepts, amber, rule count, intrinsic map, census scope, budget, oracle independence, MXCSR premise, tools) | Claude (same family as author; independent context) | 21: 3 blocker, 12 major, 6 minor | 21 (2 with a modification, below) | 0 |
 
-Totals: 34 findings (3 blocker, 17 major, 14 minor); 34 accepted, 0 rejected outright. Two pairs
+| 2026-10-23 | Reviewer 1 of the X2 record's revision 3 (census absorption, B6 correction, the 26 new entries, budget changes, gate script, §8 rows, scope dispositions) | Claude (same family as author; independent context) | 9: 0 blocker, 3 major, 6 minor | 9 (8 fixed in revision 4; 1 forwarded to the lead engineer; 4 with a modification, below) | 0 |
+
+**Disposition of the 2026-10-23 review (revision 3 → revision 4).** Findings in the reviewer's order:
+
+| # | Severity | Finding | Disposition |
+|---|---|---|---|
+| 1 | major | O1 offered a binary choice and did not split the 186 iclasses without an entry | fixed (modified: the 48 T1-image entries are due before T1 accepts code using them, and a Pass needs all 48 [inference], rather than "by the verdict"): record §4 item 9, §9, §13 O1 (138 deferred = 55 G + 83 S [D]); §14 has three options |
+| 2 | major | O4's carve-out was the registered default although OWNER-QUEUE C20 is class B (narrows a false accept); the P3 exclusion could drop an intrinsic-level FP-changing mutant | fixed: strict reading registered (record §4 item 6, §13 O4, §14 line); P3 exclusion narrowed to mutants not FP-changing at intrinsic level (record item 5; MUTANTS.md §1, §6) |
+| 3 | major | cited working-document sections were not pinned at the freeze commit; E8 undefined in the record | fixed: record §2 "Working-document text"; item 8 defines environment and E8 |
+| 4 | minor | §8 `gate_missed` attributed three extra conditions to P28 | fixed: §8 row names P28's conditions and the three added ones; §13 O9; §14 line |
+| 5 | minor | `verdict.json` lacked P1-P6; no range checks | fixed: field `inputs`; ValueError on impossible inputs; 24 self-test cases (modified: negative counts and a non-boolean `p2_all_proved` also refused) |
+| 6 | minor | legacy CMPPS/CMPSS predicted imm 8-31 | fixed (modified: the domain is a hashed `sem` field checked in the compare builders, not in `fp_ops.cmp_pred`, where sealed mutant M04 anchors; VEX/EVEX compares refuse imm > 31; `pyref.py` reports unmodeled) |
+| 7 | minor | FP.CVT.i64_f32 had no sticky-bit class and "the same 12-class design" was inexact | fixed (modified: the construction is in CVT-BND (V2), not a replaced V1 class, so no row count changes; s ∈ [8, 38] since s = 39 can exceed 2^63 − 1; comment corrected) |
+| 8 | minor | stale passages after the DELEGATED adoptions | fixed: MUTANTS.md §6, RULES.md §1, §3.1, §5, `gen_vectors.py` docstrings and comments, harness/README.md §4, §6 |
+| 9 | minor | DELEGATED.md says no proposed row is adopted above rows marked ADOPTED | accepted, outside this track's files: forwarded to the lead engineer (record §12) |
+
+Totals of the 2026-10-16 reviews: 34 findings (3 blocker, 17 major, 14 minor); 34 accepted, 0 rejected outright. Two pairs
 overlap (R1-5 with R2-10, the hash; R1-4 with R2-9's missing schema fields) and were fixed once.
 Parts of findings **not** adopted, with the reason:
 

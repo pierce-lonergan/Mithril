@@ -1,0 +1,24 @@
+START Fri 10/23/2026 16:55:04.36
+{
+ "n_stubs": 664,
+ "errors": 0,
+ "provisional_key_mismatches": 0,
+ "imm_stubs_checked": 432,
+ "imm_check_negative_control_detected": true,
+ "manifest_sha256": "430fc5266ef730afb2d280ce3d1c0bf9c701b6ebd80ee7d9ea98083108876260",
+ "semantics_bundle": "0c2a041c363e34ee27a62a873fd0adad5cf8f5711ec2aa3a16cb2f5c9709ff2d"
+}
+STUBGEN_RC=0
+interp_src_sha256 44e29a371dfb0799804fcbaf9fc36d8781f2de6efb5d275acac800d4dbada17c
+harness_src_sha256 a17f41baf1b6ca886a5273dab63a3b1925df57a16df16f6bb1c53811ad2eb112
+ML64_STUBS_RC=0
+ Assembling: D:\mithril\x2\src\harness\x2probe.asm
+ML64_PROBE_RC=0
+x2fuzz.c
+x2ref.c
+x2sha256.c
+stubs_table.c
+Generating Code...
+CL_RC=0
+Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64
+END Fri 10/23/2026 16:55:11.75

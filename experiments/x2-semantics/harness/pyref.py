@@ -44,8 +44,9 @@ def predict(table, fpenv, stub, c):
         env = fpenv.Env(c.mxcsr, er=opt["er"], sae=opt["sae"])
     except fpenv.UnmodeledEnvironment:
         return vecfmt.ST_UNMODELED, o
+    legacy = e["encoding"] == "legacy"                  # legacy SSE: src1 IS the destination register
     if b == "packed_fp2":
-        res, fl = e["_sem"](c.src1, c.src2, env, k=k, z=z, dst=c.dst_old,
+        res, fl = e["_sem"](c.dst_old if legacy else c.src1, c.src2, env, k=k, z=z, dst=c.dst_old,
                             bcast_src2=(c.src2 & MASK32) if opt["bcast"] else None)
         o.dst = table.write_full(e, res, c.dst_old)
     elif b == "scalar_fp2":
@@ -53,13 +54,18 @@ def predict(table, fpenv, stub, c):
         res, fl = e["_sem"](s1, c.src2, env, k=k, z=z, dst=c.dst_old)
         o.dst = table.write_full(e, res, c.dst_old)
     elif b == "packed_fp1":
-        res, fl = e["_sem"](c.src1, env, k=k, z=z, dst=c.dst_old)
+        mem = any(o["kind"] == "mem" for o in e["operands"])    # a memory source is read through RAX = &src2
+        res, fl = e["_sem"](c.src2 if mem else c.src1, env, k=k, z=z, dst=c.dst_old)
         o.dst = table.write_full(e, res, c.dst_old)
-    elif b == "cmp_k":
-        o.kdst, fl = e["_sem"](c.src1, c.src2, opt["imm"], env, k=k)
-    elif b == "cmp_vec":
-        res, fl = e["_sem"](c.src1, c.src2, opt["imm"], env)
-        o.dst = table.write_full(e, res, c.dst_old)
+    elif b in ("cmp_k", "cmp_vec", "cmp_scalar"):
+        try:                                            # an imm8 outside the entry's declared domain: no prediction
+            if b == "cmp_k":
+                o.kdst, fl = e["_sem"](c.src1, c.src2, opt["imm"], env, k=k)
+            else:
+                res, fl = e["_sem"](c.dst_old if legacy else c.src1, c.src2, opt["imm"], env)
+                o.dst = table.write_full(e, res, c.dst_old)
+        except fpenv.UnmodeledEnvironment:              # (legacy CMPPS/CMPSS: imm8 in [0, 7]; review 2026-10-23)
+            return vecfmt.ST_UNMODELED, o
     elif b == "comis":
         rf, fl = e["_sem"](c.src1, c.src2, env)
         o.rflags = (rf["ZF"] << 6) | (rf["PF"] << 2) | rf["CF"] | (rf["OF"] << 11) | (rf["SF"] << 7) | (rf["AF"] << 4)
@@ -67,7 +73,7 @@ def predict(table, fpenv, stub, c):
         o.gpr, fl = e["_sem"](c.src1, env)
     elif b == "cvt_i2f_scalar":
         up = c.dst_old if e["encoding"] == "legacy" else c.src1
-        res, fl = e["_sem"](up, c.gpr_in & MASK32, env)
+        res, fl = e["_sem"](up, c.gpr_in if e["sem"].get("src_eb", 32) == 64 else c.gpr_in & MASK32, env)
         o.dst = table.write_full(e, res, c.dst_old)
     else:
         raise KeyError(b)

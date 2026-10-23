@@ -34,7 +34,7 @@ def gen(a):
 
     def lanes_of(s):
         sem = s["sem"]
-        if sem["builder"] in (2, 6, 7, 8):
+        if sem["builder"] in (2, 6, 7, 8, 11) or (sem["builder"] == 4 and sem["scalar"]):
             return 1
         if sem["builder"] == 3:
             return sem["vl"] // sem["dst_eb"]
@@ -55,7 +55,7 @@ def gen(a):
             eb = 16 if src == "f16" else 32
             s1 = s2 = 0
             for j in range(512 // eb):
-                if sem["builder"] >= 9:
+                if sem["builder"] in (9, 10):
                     v1, v2 = rng.bits(eb), rng.bits(eb)
                 else:
                     c1, c2 = rng.choice(G.F32_CLASSES), rng.choice(G.F32_CLASSES)

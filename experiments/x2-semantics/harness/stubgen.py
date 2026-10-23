@@ -30,11 +30,11 @@ import subprocess
 import sys
 
 BUILDER = {"packed_fp2": 1, "scalar_fp2": 2, "packed_fp1": 3, "cmp_k": 4, "cmp_vec": 5, "comis": 6,
-           "cvt_f2i_gpr": 7, "cvt_i2f_scalar": 8, "int2": 9, "int_acc": 10}
+           "cvt_f2i_gpr": 7, "cvt_i2f_scalar": 8, "int2": 9, "int_acc": 10, "cmp_scalar": 11}
 FN = {None: 0, "fp_ops.add": 1, "fp_ops.sub": 2, "fp_ops.mul": 3, "fp_ops.div": 4, "fp_ops.max_": 5,
       "fp_ops.min_": 6, "fp_ops.cmp_pred": 7, "fp_ops.cvt_i32_to_f32": 8, "fp_ops.cvt_f32_to_i32": 9,
       "fp_ops.cvt_f16_to_f32": 10, "int_ops.pmaddubsw": 11, "int_ops.pmaddwd": 12, "int_ops.phaddd": 13,
-      "int_ops.pdpbusd": 14}
+      "int_ops.pdpbusd": 14, "fp_ops.cvt_i64_to_f32": 15}
 ENC = {"legacy": 0, "vex": 1, "evex": 2}
 MASKMODE = {"plain": 0, "merge": 1, "zero": 2}
 DSTKIND = {"vec": 0, "k": 1, "rflags": 2, "gpr": 3}
@@ -62,7 +62,8 @@ def variants(e):
     bcast_ok = any(o.get("broadcast") for o in e["operands"])
     has_imm = any(o["role"] == "imm" for o in e["operands"])
     masks = ["plain"]
-    if enc == "evex":
+    has_mask = any(o["role"] == "mask" for o in e["operands"])     # EVEX VUCOMISS has no write mask (2026-10-23)
+    if enc == "evex" and has_mask:
         masks = ["plain", "merge"] if e["masking"] == ["zero(k-dest)"] else ["plain", "merge", "zero"]
     imms = list(range(32 if enc != "legacy" else 8)) if has_imm else [None]
     for imm in imms:
@@ -86,7 +87,7 @@ def build_asm(e, opt):
             "vex": {"dst": 0, "src1": 1, "src": 1, "src2": 2},
             "legacy": {"dst_src1": 0, "dst": 0, "src1": 1, "src": 1, "src2": 2}}[enc]
     if e["family"] == "FP.COMI.f32":
-        base = {"src1": 1, "src2": 2}
+        base = {"src1": 17, "src2": 18} if enc == "evex" else {"src1": 1, "src2": 2}   # xmm17/18 force EVEX
     texts, expect = [], {}
     for o in e["operands"]:
         role, kind, xed = o["role"], o["kind"], o["xed"]
@@ -113,6 +114,10 @@ def build_asm(e, opt):
         if kind == "gpr32":
             texts.append("eax")
             expect[xed] = "EAX"
+            continue
+        if kind == "gpr64":                  # CVTSI2SS r64 (2026-10-23): RAX holds the 64-bit integer
+            texts.append("rax")
+            expect[xed] = "RAX"
             continue
         if kind == "k":                      # compare into a mask
             r = "k2"

@@ -152,7 +152,16 @@ def sec_b_minmax():
     # B6: coexisting-flag READINGS (class F-FLAGPRI; added 2026-10-16, review R1-11). Derived from the
     # model's rules (TABLE-SCHEMA §4 rules 6-7): DAZ flushes before any check; only a NaN source
     # suppresses DE; every other detected condition is recorded. Silicon decides each of these.
-    check("B6 den / +0: DE and ZE both recorded", r(fp_ops.div, DEN1, 0, D), ("0x7F800000", "DE|ZE"))
+    # B6 den / +-0, CORRECTED 2026-10-23 (table correction, X2 freeze preparation): ZE alone. The v0
+    # expectation was DE|ZE; the 9950X set ZE alone on VDIVSS EVEX, VDIVSS VEX and DIVSS for this vector,
+    # and on three review cross-section vectors (RZ, FTZ, -0), and Bochs 3.1 agreed with silicon
+    # [M, harness/README.md §7, §10]. Divide-by-zero outranks the denormal-operand exception (SDM Vol 1
+    # §4.9.2, priority 3 vs 4). The four silicon vectors are checked here.
+    check("B6 den / +0: ZE alone (corrected)", r(fp_ops.div, DEN1, 0, D), ("0x7F800000", "ZE"))
+    check("B6 xsec 0x004C24E3 / +0 under RZ: ZE alone", r(fp_ops.div, 0x004C24E3, 0, RZ), ("0x7F800000", "ZE"))
+    check("B6 xsec 0x8078165D / -0 under RZ: ZE alone", r(fp_ops.div, 0x8078165D, 0x80000000, RZ), ("0x7F800000", "ZE"))
+    check("B6 xsec 0x80717657 / +0 under FTZ: ZE alone", r(fp_ops.div, 0x80717657, 0, FTZ), ("0xFF800000", "ZE"))
+    check("B6 den / den without DAZ: DE (no zero divisor)", r(fp_ops.div, DEN1, DEN1, D), ("0x3F800000", "DE"))
     check("B6 +inf * den under DAZ: 0*inf invalid after flushing", r(fp_ops.mul, PINF, DEN1, DAZ), ("0xFFC00000", "IE"))
     check("B6 den / den under DAZ: 0/0 invalid after flushing", r(fp_ops.div, DEN1, DEN1, DAZ), ("0xFFC00000", "IE"))
     check("B6 den + inf: DE recorded although the result is inf", r(fp_ops.add, DEN1, PINF, D), ("0x7F800000", "DE"))
@@ -329,7 +338,7 @@ def sec_e_masks():
     check("E7 legacy write preserves upper bits", vec.write_dest(1 << 300, 0xABC, 128, "legacy"), (1 << 300) | 0xABC)
     # E8: full-width destinations of the scalar converts (review R1-6; SDM Vol 2 CVTSI2SS, CVTTSS2SI).
     old = pack([0x11110000 + i for i in range(16)], 32)             # recognisable 512-bit old destination
-    e = table.find("CVTSI2SS")                                      # legacy: lanes 1-3 AND bits 511:128 kept
+    e = table.find("CVTSI2SS", iform="CVTSI2SS_XMMss_GPR32d")                                      # legacy: lanes 1-3 AND bits 511:128 kept
     r128, fl = e["_sem"](old, 5, D)
     check("E8 CVTSI2SS legacy full width", lanes(table.write_full(e, r128, old), 32, 16),
           [0x40A00000] + [0x11110000 + i for i in range(1, 16)])
@@ -351,8 +360,47 @@ def sec_e_masks():
     e = table.find("VADDSS", encoding="evex")
     r128, _ = e["_sem"](pack([ONE, 7, 8, 9], 32), pack([TWO], 32), D)
     check("E8 EVEX VADDSS zeroes 511:128", lanes(table.write_full(e, r128, old), 32, 16), [0x40400000, 7, 8, 9] + [0] * 12)
-    rf, fl = table.find("VUCOMISS")["_sem"](ONE, 0x7FC00000, D)
+    rf, fl = table.find("VUCOMISS", encoding="vex")["_sem"](ONE, 0x7FC00000, D)
     check("E8 VUCOMISS RFLAGS full", (rf, fl), ({"ZF": 1, "PF": 1, "CF": 1, "OF": 0, "SF": 0, "AF": 0}, 0))
+    # E9 (2026-10-23): forms added from X0 census run 1. Legacy packed SSE: src1 is the destination, bits
+    # 511:128 preserved; scalar compares; the EVEX scalar compare into k; CVTSI2SS with a 64-bit source.
+    e = table.find("ADDPS", iform="ADDPS_XMMps_XMMps")
+    src_old = pack([ONE, TWO, 0x7FC00001, 0x80000000] + [0x11110000 + i for i in range(4, 16)], 32)
+    r128, fl = e["_sem"](src_old, pack([ONE, ONE, ONE, 0], 32), D)
+    check("E9 ADDPS legacy: dst is src1, 511:128 kept", (lanes(table.write_full(e, r128, src_old), 32, 16), fl),
+          ([TWO, 0x40400000, 0x7FC00001, 0] + [0x11110000 + i for i in range(4, 16)], 0))
+    e = table.find("CMPSS")
+    r128, fl = e["_sem"](pack([ONE, 5, 6, 7], 32), pack([TWO], 32), 1, D)          # LT_OS: 1 < 2
+    check("E9 CMPSS legacy lane 0 mask, lanes 1-3 from dst", (lanes(r128, 32, 4), fl), ([0xFFFFFFFF, 5, 6, 7], 0))
+    # E10 (review 2026-10-23): legacy CMPPS/CMPSS declare imm8 in [0, 7] (SDM: bits 7:3 reserved). imm 7 is
+    # predicted; imm 8 (EQ_UQ under VEX) is refused, never predicted; VEX VCMPSS still takes imm 8.
+    for icl in ("CMPPS", "CMPSS"):
+        e = table.find(icl, encoding="legacy")
+        check("E10 %s legacy imm 7 predicted" % icl, e["_sem"](pack([ONE] * 4, 32), pack([0x7FC00000] * 4, 32), 7, D)[1], 0)
+        try:
+            e["_sem"](pack([ONE] * 4, 32), pack([0x7FC00000] * 4, 32), 8, D)
+            check("E10 %s legacy imm 8 refused" % icl, "predicted", "refused")
+        except UnmodeledEnvironment:
+            check("E10 %s legacy imm 8 refused" % icl, "refused", "refused")
+    check("E10 VCMPSS VEX imm 8 EQ_UQ on (1, QNaN)",
+          lanes(table.find("VCMPSS", encoding="vex")["_sem"](pack([ONE], 32), pack([0x7FC00000], 32), 8, D)[0], 32, 1),
+          [0xFFFFFFFF])
+    e = table.find("VCMPSS", encoding="vex")
+    r128, fl = e["_sem"](pack([0x7FC00000, 5, 6, 7], 32), pack([TWO], 32), 1, D)    # LT_OS on a QNaN signals
+    check("E9 VCMPSS VEX QNaN LT_OS", (lanes(table.write_full(e, r128, old), 32, 16), fl), ([0, 5, 6, 7] + [0] * 12, IE))
+    e = table.find("VCMPSS", encoding="evex")
+    check("E9 VCMPSS k: bit 0 only", e["_sem"](pack([ONE, ONE, ONE, ONE], 32), pack([ONE, ONE, ONE, ONE], 32), 0, D,
+                                               k=0xF), (1, 0))
+    check("E9 VCMPSS k: k2[0] = 0 compares nothing", e["_sem"](pack([0x7F800001], 32), pack([ONE], 32), 0, D, k=0xE),
+          (0, 0))
+    e = table.find("CVTSI2SS", iform="CVTSI2SS_XMMss_GPR64q")
+    i64 = lambda v: v & ((1 << 64) - 1)
+    check("E9 CVTSI2SS r64 2^63-1 RNE", e["_sem"](0, i64((1 << 63) - 1), D)[0] & 0xFFFFFFFF, 0x5F000000)
+    check("E9 CVTSI2SS r64 2^63-1 RZ", e["_sem"](0, i64((1 << 63) - 1), RZ), (0x5EFFFFFF, PE))
+    check("E9 CVTSI2SS r64 -2^63 exact", e["_sem"](0, i64(-(1 << 63)), D), (0xDF000000, 0))
+    check("E9 CVTSI2SS r64 2^32+1 RNE", e["_sem"](0, i64((1 << 32) + 1), D), (0x4F800000, PE))
+    check("E9 CVTSI2SS r64 -1 keeps lanes 1-3", lanes(e["_sem"](pack([9, 5, 6, 7], 32), i64(-1), D)[0], 32, 4),
+          [0xBF800000, 5, 6, 7])
 
 
 def sec_f_int():
@@ -601,7 +649,8 @@ def sec_i_registry():
             want = {"evex": "REG2", "vex": "REG1", "legacy": "REG0"}[e["encoding"]]
             if s1["xed"] != want or (e["encoding"] == "legacy" and s1["access"] != "rw"):
                 bad.append((e["key"]["iform"], "src1 at %s" % s1["xed"]))
-        if e["encoding"] == "evex" and "mask" not in roles:
+        if e["encoding"] == "evex" and "mask" not in roles and e["family"] != "FP.COMI.f32":
+            # EVEX VUCOMISS/VCOMISS have no write mask (XED: REG0, REG1, RFLAGS); added 2026-10-23
             bad.append((e["key"]["iform"], "EVEX without mask operand"))
     check("I6 operand roles consistent with nan_rule and encoding", bad, [])
     # I7: transparency is a whitelist (RULES.md §2): no operand is transparent or erasing unless its

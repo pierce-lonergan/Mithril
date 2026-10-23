@@ -396,7 +396,8 @@ static int ex_lanes(const x2stub *s) { return x2_lanes(&s->sem); }
 /* The V5 rows: plain register-form unary conversions and the VPMADDUBSW pair domain. */
 static int ex_eligible(const x2stub *s) {
     if (s->sem.maskmode != X2M_NONE || s->sem.mem) return 0;
-    return s->sem.builder == X2B_PACKED_FP1 || s->sem.builder == X2B_CVT_F2I_GPR || s->sem.builder == X2B_CVT_I2F_SCALAR ||
+    return s->sem.builder == X2B_PACKED_FP1 || s->sem.builder == X2B_CVT_F2I_GPR ||
+           (s->sem.builder == X2B_CVT_I2F_SCALAR && s->sem.src_eb != 64) ||     /* r64 source: 2^64, no V5 row */
            (s->sem.builder == X2B_INT2 && s->sem.fn == X2F_PMADDUBSW);
 }
 
@@ -600,7 +601,9 @@ static const kat KATS[] = {
     {K_ADD, 0x00000001, 0x00000000, 0x1FC0, 0x00000000, 0, "A15 den+0 DAZ=1"},
     {K_DIV, 0x3F800000, 0x40400000, 0x1F80, 0x3EAAAAAB, X2_PE, "A16 1/3"},
     {K_DIV, 0x3F800000, 0x00000001, 0x1F80, 0x7F800000, X2_DE | X2_OE | X2_PE, "A16 1/2^-149 overflow"},
-    {K_DIV, 0x00000001, 0x00000000, 0x1F80, 0x7F800000, X2_DE | X2_ZE, "B6 den / +0: DE and ZE both recorded"},
+    {K_DIV, 0x00000001, 0x00000000, 0x1F80, 0x7F800000, X2_ZE, "B6 den / +0: ZE alone (corrected)"},
+    {K_DIV, 0x004C24E3, 0x00000000, 0x7F80, 0x7F800000, X2_ZE, "B6 xsec 0x004C24E3 / +0 under RZ: ZE alone"},
+    {K_DIV, 0x80717657, 0x00000000, 0x9F80, 0xFF800000, X2_ZE, "B6 xsec 0x80717657 / +0 under FTZ: ZE alone"},
     {K_MAX, 0x00000000, 0x80000000, 0x1F80, 0x80000000, 0, "B1 max(+0,-0) -> src2"},
     {K_MAX, 0x3F800000, 0x7F800001, 0x1F80, 0x7F800001, X2_IE, "B2 max(1,SNaN) -> SNaN NOT quieted"},
     {K_MAX, 0x00000000, 0x80000001, 0x1FC0, 0x80000000, 0, "B4 max(0,-den) DAZ=1 -> -0 (UNCERTAIN F-DAZ-SEL)"},
@@ -675,11 +678,30 @@ static int selftest(int cpu, const char *scratch) {
         int bad = 0, keyok = 0;
         for (i = 0; i < X2_NSTUBS; i++) {
             const x2stub *s = &X2_STUBS[i];
-            if (s->id != i || !s->fn || s->sem.builder < 1 || s->sem.builder > 10 || s->nbytes < 2 || s->nbytes > 15) bad++;
+            if (s->id != i || !s->fn || s->sem.builder < 1 || s->sem.builder > X2B_CMP_SCALAR || s->nbytes < 2 || s->nbytes > 15) bad++;
             keyok += s->key_ok;
         }
         CHECK(bad == 0, "stub table integrity (%d bad)", bad);
         printf("stubs: %d, decoded iform == entry key: %d, manifest %s\n", X2_NSTUBS, keyok, X2_STUB_MANIFEST_SHA256);
+    }
+    /* 4b. legacy CMPPS/CMPSS declare imm8 in [0, 7] (SDM: bits 7:3 reserved): the interpreter predicts imm 7 and
+       refuses imm 8 (review 2026-10-23; table.py "imm_max": 7) */
+    {
+        static const char *leg[2] = {"CMPPS_XMMps_XMMps_IMMb", "CMPSS_XMMss_XMMss_IMMb"};
+        for (i = 0; i < 2; i++) {
+            const x2stub *s = find_stub(leg[i], "plain_imm07");
+            x2sem sm;
+            x2case c;
+            x2out o;
+            CHECK(s != NULL, "legacy compare stub %s plain_imm07 present", leg[i]);
+            if (!s) continue;
+            sm = s->sem;
+            memset(&c, 0, sizeof c);
+            c.mxcsr = X2_MXCSR_DEFAULT;
+            CHECK(x2_predict(&sm, &c, &o) == 0, "%s imm 7 predicted", leg[i]);
+            sm.imm = 8;
+            CHECK(x2_predict(&sm, &c, &o) != 0, "%s imm 8 refused (imm8 bits 7:3 reserved)", leg[i]);
+        }
     }
     /* 5. CPU */
     fingerprint(&fp);

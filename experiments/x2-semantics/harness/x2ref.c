@@ -195,7 +195,7 @@ uint32_t x2_div(uint32_t a, uint32_t b, const x2env *e, uint32_t *fl) {
     if ((ia && ib) || (za && zb)) { *fl |= X2_IE; return QNAN_INDEF; }
     if (ia) { *fl |= f; return s ? NINF : PINF; }
     if (ib) { *fl |= f; return s ? SIGN : 0; }
-    if (zb) { *fl |= f | X2_ZE; return s ? NINF : PINF; }
+    if (zb) { *fl |= X2_ZE; return s ? NINF : PINF; }   /* B6 correction 2026-10-23: ZE alone (fp_ops.div) */
     if (za) { *fl |= f; return s ? SIGN : 0; }
     decode(a, &Ma, &Ea);
     decode(b, &Mb, &Eb);
@@ -277,6 +277,14 @@ uint32_t x2_cvt_i2f(uint32_t i, const x2env *e, uint32_t *fl) {
     if (v == 0) return 0;
     mag = v < 0 ? (uint64_t)(-(int64_t)v) : (uint64_t)v;
     return round_pack(v < 0, mag, 0, e->rc, 0, fl);
+}
+
+uint32_t x2_cvt_i64_2f(uint64_t i, const x2env *e, uint32_t *fl) {
+    int neg = (i >> 63) != 0;
+    uint64_t mag;
+    if (i == 0) return 0;
+    mag = neg ? (0ull - i) : i;            /* 2^63 for INT64_MIN: round_pack takes a full 64-bit magnitude */
+    return round_pack(neg, mag, 0, e->rc, 0, fl);
 }
 
 uint32_t x2_cvt_f2i(uint32_t b, const x2env *e, int trunc, uint32_t *fl) {
@@ -428,7 +436,8 @@ static uint32_t lane_fp1(const x2sem *s, uint32_t a, const x2env *e, uint32_t *f
 
 int x2_lanes(const x2sem *s) {
     switch (s->builder) {
-    case X2B_PACKED_FP2: case X2B_CMP_K: case X2B_CMP_VEC: return s->vl / 32;
+    case X2B_CMP_K: return s->scalar ? 1 : s->vl / 32;
+    case X2B_PACKED_FP2: case X2B_CMP_VEC: return s->vl / 32;
     case X2B_PACKED_FP1: return s->vl / s->dst_eb;
     case X2B_INT2: return s->vl / s->dst_eb;
     case X2B_INT_ACC: return s->vl / 32;
@@ -447,7 +456,7 @@ int x2_predict(const x2sem *s, const x2case *c, x2out *o) {
     x2reg res;
     memset(o, 0, sizeof *o);
     memset(&res, 0, sizeof res);
-    if (s->builder >= X2B_INT2) {                         /* integer entries: no MXCSR input */
+    if (s->builder == X2B_INT2 || s->builder == X2B_INT_ACC) {   /* integer entries: no MXCSR input */
         x2reg r1;
         if (s->builder == X2B_INT2) {
             if (s->fn == X2F_PMADDUBSW) x2_pmaddubsw(&c->src1, &c->src2, s->vl, &r1);
@@ -465,13 +474,18 @@ int x2_predict(const x2sem *s, const x2case *c, x2out *o) {
         return 0;
     }
     if (x2_env_make(&env, c->mxcsr, s->er, s->sae) != 0) return -1;
+    /* Compare immediates outside the entry's declared domain: no prediction. VEX/EVEX use imm8[4:0]; the legacy
+       CMPPS/CMPSS entries declare imm8 in [0, 7] (SDM: bits 7:3 reserved; table.py "imm_max": 7; review 2026-10-23). */
+    if ((s->builder == X2B_CMP_K || s->builder == X2B_CMP_VEC || s->builder == X2B_CMP_SCALAR) &&
+        (s->imm < 0 || s->imm > (s->encoding == X2E_LEGACY ? 7 : 31))) return -1;
     switch (s->builder) {
     case X2B_PACKED_FP2: {
+        const x2reg *s1 = (s->encoding == X2E_LEGACY) ? &c->dst_old : &c->src1;   /* legacy ADDPS: src1 IS dst */
         n = s->vl / 32;
         for (i = 0; i < n; i++) {
             uint32_t b = s->bcast ? c->src2.d[0] : c->src2.d[i];
             if (!active(s, c->k, i)) res.d[i] = (s->maskmode == X2M_ZERO) ? 0 : c->dst_old.d[i];
-            else res.d[i] = lane_fp2(s->fn, c->src1.d[i], b, &env, &fl);
+            else res.d[i] = lane_fp2(s->fn, s1->d[i], b, &env, &fl);
         }
         write_full(s->encoding, s->vl, &res, &c->dst_old, &o->dst);
         break;
@@ -485,9 +499,10 @@ int x2_predict(const x2sem *s, const x2case *c, x2out *o) {
         break;
     }
     case X2B_PACKED_FP1: {
+        const x2reg *sp = s->mem ? &c->src2 : &c->src1;   /* a memory source is read through RAX = &src2 */
         n = s->vl / s->dst_eb;
         for (i = 0; i < n; i++) {
-            uint32_t a = (s->src_eb == 16) ? c->src1.w[i] : c->src1.d[i];
+            uint32_t a = (s->src_eb == 16) ? sp->w[i] : sp->d[i];
             if (!active(s, c->k, i)) res.d[i] = (s->maskmode == X2M_ZERO) ? 0 : c->dst_old.d[i];
             else res.d[i] = lane_fp1(s, a, &env, &fl);
         }
@@ -496,7 +511,7 @@ int x2_predict(const x2sem *s, const x2case *c, x2out *o) {
     }
     case X2B_CMP_K: {
         uint64_t k = 0;
-        n = s->vl / 32;
+        n = s->scalar ? 1 : s->vl / 32;                   /* EVEX VCMPSS: lane 0 only, bits >= 1 zero */
         for (i = 0; i < n; i++) {
             uint32_t b = s->bcast ? c->src2.d[0] : c->src2.d[i];
             if (!active(s, c->k, i)) continue;
@@ -506,9 +521,17 @@ int x2_predict(const x2sem *s, const x2case *c, x2out *o) {
         break;
     }
     case X2B_CMP_VEC: {
+        const x2reg *s1 = (s->encoding == X2E_LEGACY) ? &c->dst_old : &c->src1;   /* legacy CMPPS: src1 IS dst */
         n = s->vl / 32;
-        for (i = 0; i < n; i++) res.d[i] = x2_cmp_pred(c->src1.d[i], c->src2.d[i], s->imm, &env, &fl) ? 0xFFFFFFFFu : 0;
+        for (i = 0; i < n; i++) res.d[i] = x2_cmp_pred(s1->d[i], c->src2.d[i], s->imm, &env, &fl) ? 0xFFFFFFFFu : 0;
         write_full(s->encoding, s->vl, &res, &c->dst_old, &o->dst);
+        break;
+    }
+    case X2B_CMP_SCALAR: {
+        const x2reg *s1 = (s->encoding == X2E_LEGACY) ? &c->dst_old : &c->src1;   /* legacy CMPSS: src1 IS dst */
+        res.d[0] = x2_cmp_pred(s1->d[0], c->src2.d[0], s->imm, &env, &fl) ? 0xFFFFFFFFu : 0;
+        for (i = 1; i < 4; i++) res.d[i] = s1->d[i];
+        write_full(s->encoding, 128, &res, &c->dst_old, &o->dst);
         break;
     }
     case X2B_COMIS: {
@@ -523,7 +546,7 @@ int x2_predict(const x2sem *s, const x2case *c, x2out *o) {
     }
     case X2B_CVT_I2F_SCALAR: {
         const x2reg *up = (s->encoding == X2E_LEGACY) ? &c->dst_old : &c->src1;
-        res.d[0] = x2_cvt_i2f((uint32_t)c->gpr_in, &env, &fl);
+        res.d[0] = (s->src_eb == 64) ? x2_cvt_i64_2f(c->gpr_in, &env, &fl) : x2_cvt_i2f((uint32_t)c->gpr_in, &env, &fl);
         for (i = 1; i < 4; i++) res.d[i] = up->d[i];
         write_full(s->encoding, 128, &res, &c->dst_old, &o->dst);
         break;

@@ -1,0 +1,24 @@
+==== build 16:55:28.18
+[A arithmetic, rounding, signed zero, NaN, FTZ/DAZ]
+[B MAX/MIN operand order]
+[C comparisons]
+[D conversions]
+{"hand_vectors_extracted": 303, "vector_level_cases": 30, "records": 1593, "vectors_sha256": "aa3e9143c84442863b15d937b783caf5a2126268c6d0f3cfbced9e5c66ddbaa7"}
+BUILD_RC=0
+{"records": 1593, "vectors_sha256": "aa3e9143c84442863b15d937b783caf5a2126268c6d0f3cfbced9e5c66ddbaa7"}
+PREDICT_RC=0
+{"records": 1593}
+PYREF_RC=0
+==== silicon run 1 (CPU 4) 16:55:28.42
+{"records": 1593, "vectors_sha256": "aa3e9143c84442863b15d937b783caf5a2126268c6d0f3cfbced9e5c66ddbaa7"}
+RUN1_RC=0
+==== silicon run 2 (CPU 20) 16:55:28.44
+{"records": 1593, "vectors_sha256": "aa3e9143c84442863b15d937b783caf5a2126268c6d0f3cfbced9e5c66ddbaa7"}
+RUN2_RC=0
+{"vendor": "AuthenticAMD", "brand": "AMD Ryzen 9 9950X 16-Core Processor            ", "family": 26, "model": 68, "stepping": 0, "cpuid1_eax": "0x00b40f40", "microcode_update_revision_raw": "2340400b", "microcode_lo32": "0x0b404023", "microcode_hi32": "0x00000000", "os_build": "26200.9711 (25H2)", "features": {"avx2": 1, "avx512f": 1, "avx512bw": 1, "avx512vl": 1, "avx512vnni": 1, "f16c": 1, "os_zmm_state": 1}, "l3_groups": "0xffff,0xffff0000", "cpu": 4, "harness_exe_sha256": "0feae9334e9ba51bcae3bfa43bdbe1d9d3544a3295ce821bb5be9b8550dcde4c", "harness_src_sha256": "a17f41baf1b6ca886a5273dab63a3b1925df57a16df16f6bb1c53811ad2eb112", "interp_src_sha256": "44e29a371dfb0799804fcbaf9fc36d8781f2de6efb5d275acac800d4dbada17c", "stub_manifest_sha256": "430fc5266ef730afb2d280ce3d1c0bf9c701b6ebd80ee7d9ea98083108876260", "semantics_bundle": "0c2a041c363e34ee27a62a873fd0adad5cf8f5711ec2aa3a16cb2f5c9709ff2d", "compiler": "MSVC _MSC_FULL_VER=194435229"}
+{"vendor": "AuthenticAMD", "brand": "AMD Ryzen 9 9950X 16-Core Processor            ", "family": 26, "model": 68, "stepping": 0, "cpuid1_eax": "0x00b40f40", "microcode_update_revision_raw": "2340400b", "microcode_lo32": "0x0b404023", "microcode_hi32": "0x00000000", "os_build": "26200.9711 (25H2)", "features": {"avx2": 1, "avx512f": 1, "avx512bw": 1, "avx512vl": 1, "avx512vnni": 1, "f16c": 1, "os_zmm_state": 1}, "l3_groups": "0xffff,0xffff0000", "cpu": 20, "harness_exe_sha256": "0feae9334e9ba51bcae3bfa43bdbe1d9d3544a3295ce821bb5be9b8550dcde4c", "harness_src_sha256": "a17f41baf1b6ca886a5273dab63a3b1925df57a16df16f6bb1c53811ad2eb112", "interp_src_sha256": "44e29a371dfb0799804fcbaf9fc36d8781f2de6efb5d275acac800d4dbada17c", "stub_manifest_sha256": "430fc5266ef730afb2d280ce3d1c0bf9c701b6ebd80ee7d9ea98083108876260", "semantics_bundle": "0c2a041c363e34ee27a62a873fd0adad5cf8f5711ec2aa3a16cb2f5c9709ff2d", "compiler": "MSVC _MSC_FULL_VER=194435229"}
+==== report 16:55:28.46
+{"records": 1593, "lane_mismatches": 0, "flag_mismatch_executions": 0, "interpreter_divergences": 0, "nondeterminism": 0, "harness_anomalies": 0}
+{"checked": 1563, "silicon_eq_hand": 1563, "c_eq_hand": 1563, "py_eq_hand": 1563} disagreements: 0
+REPORT_RC=0
+==== END 16:55:28.54

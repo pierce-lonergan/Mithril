@@ -41,9 +41,20 @@ ENV_NAMES = [n for n, _ in E8] + [n for n, _ in V4ENVS]
 FLAG_BEARING = {"F-FLAGPRI", "F-TINY", "F-FTZ-EXACT", "F-DAZ-SEL", "F-DAZ-CVT", "F-H2F", "F-MASKEXC", "UFL", "OVF",
                 "TIE", "CVT-BND", "CANCEL"}
 F32_CLASSES = ["Z+", "Z-", "DEN+", "DEN-", "NORM+", "NORM-", "ONE", "BIG", "INF+", "INF-", "QNAN", "SNAN"]
-# FUZZ-DESIGN §3.1 says "12 integer classes" but lists 10; the generator implements the 10 listed (open item).
+# FUZZ-DESIGN §3.1 says "12 integer classes" but listed 10 (open item 1 of README §6). Resolved for the freeze
+# (2026-10-23) the strict way, keeping the budget's 12: two classes are added, I:near2^31 (|v| within 255 of
+# 2^31, where every RC must decide between 2^31 - 128 and 2^31) and I:inexact (odd |v| > 2^25: never exact,
+# never a tie).
 INT_CLASSES = ["I:0", "I:+-1", "I:+-(2^24-1)", "I:+-2^24", "I:+-(2^24+1)", "I:2^31-1", "I:-2^31", "I:small",
-               "I:large", "I:tie24"]
+               "I:large", "I:tie24", "I:near2^31", "I:inexact"]
+# CVTSI2SS r64 (FP.CVT.i64_f32, added 2026-10-23): 12 classes over signed 64-bit integers, parallel to the 32-bit
+# set but not identical: the 64-bit boundaries replace the 32-bit ones (L:2^63-1, L:-2^63, L:near2^63), L:large
+# draws from [2^32, 2^63), and L:i32 (the int32 range through the 64-bit path) takes the place of I:inexact
+# (L:large is never exact in practice). Values one above a halfway point (round bit set, only bit 0 set below it,
+# 8 to 38 places down) or one below it (round bit clear, every bit below set) are constructed in CVT-BND (V2;
+# c_tie_sticky64, review 2026-10-23), since this form has no V5 sweep.
+INT64_CLASSES = ["L:0", "L:+-1", "L:+-(2^24-1)", "L:+-2^24", "L:+-(2^24+1)", "L:2^63-1", "L:-2^63", "L:small",
+                 "L:large", "L:tie24", "L:near2^63", "L:i32"]
 PAT = 0xA5A50000
 # --dev slices (development measurements such as generator throughput) are capped at this many executions per
 # row. Whatever the label, x2fuzz refuses records of the budget sets V1-V4, BCAST, F-MEMFAULT without
@@ -183,9 +194,34 @@ def draw_int(cls, rng, idx):
         elif cls == "I:tie24":            # odd 25-bit significand times 2^s: halfway between two floats
             sh = rng.range(0, 6)
             v = sg * (((1 << 24) | (rng.bits(23) << 1) | 1) << sh)
+        elif cls == "I:near2^31":
+            v = sg * rng.range((1 << 31) - 255, (1 << 31) - 1)
+        elif cls == "I:inexact":          # odd and > 2^25: needs >= 26 significant bits, never halfway
+            v = sg * (rng.range(1 << 25, (1 << 31) - 1) | 1)
         else:
             raise KeyError(cls)
     return v & 0xFFFFFFFF
+
+
+def draw_int64(cls, rng, idx):
+    """Signed 64-bit integer classes for CVTSI2SS r64; returns the 64-bit two's-complement pattern."""
+    sg = -1 if rng.bits(1) else 1
+    v = {"L:0": 0, "L:+-1": sg, "L:+-(2^24-1)": sg * ((1 << 24) - 1), "L:+-2^24": sg * (1 << 24),
+         "L:+-(2^24+1)": sg * ((1 << 24) + 1), "L:2^63-1": (1 << 63) - 1, "L:-2^63": -(1 << 63)}.get(cls)
+    if v is None:
+        if cls == "L:small":
+            v = sg * rng.range(0, (1 << 24) - 1)
+        elif cls == "L:large":
+            v = sg * rng.range(1 << 32, (1 << 63) - 1)
+        elif cls == "L:tie24":
+            v = sg * (((1 << 24) | (rng.bits(23) << 1) | 1) << rng.range(0, 38))
+        elif cls == "L:near2^63":
+            v = sg * ((1 << 63) - rng.range(1, 1 << 40))
+        elif cls == "L:i32":
+            v = rng.range(-(1 << 31), (1 << 31) - 1)
+        else:
+            raise KeyError(cls)
+    return v & ((1 << 64) - 1)
 
 
 # ------------------------------------------------------------------ exact class predicates (self-test)
@@ -422,6 +458,36 @@ def c_cvt_bnd_i2f(rng):
     return v & 0xFFFFFFFF
 
 
+def c_cvt_bnd_i2f64(rng):
+    """CVT-BND for the 64-bit source: the 32-bit boundaries sign-extended, 2^63 and 2^32 neighbourhoods, exact ties
+    above 2^32, and ties +- 1 (c_tie_sticky64; each of the five kinds 1/5 of draws)."""
+    k = rng.range(0, 4)
+    sg = -1 if rng.bits(1) else 1
+    if k == 0:
+        v = c_cvt_bnd_i2f(rng)
+        v = v - (1 << 32) if v >> 31 else v                       # sign-extend the 32-bit boundary value
+    elif k == 1:
+        v = rng.choice([(1 << 63) - 1, -(1 << 63), (1 << 63) - (1 << 39), -(1 << 63) + (1 << 39),
+                        (1 << 63) - (1 << 38), -(1 << 63) + (1 << 38)])
+    elif k == 2:
+        v = sg * ((1 << 32) + rng.range(-300, 300))
+    elif k == 3:
+        v = sg * (((1 << 24) | (rng.bits(23) << 1) | 1) << rng.range(8, 38))   # ties above 2^32
+    else:
+        v = c_tie_sticky64(rng)                                               # tie +- 1 (just above / below half)
+    return v & ((1 << 64) - 1)
+
+
+def c_tie_sticky64(rng):
+    """A tie T = (2^24 | odd23 << 1 | 1) << s, s in [8, 38], moved by +-1. T + 1: the round bit (bit s) is set and the
+    only nonzero bit below it is bit 0, s places further down, so it lies just above halfway and RNE rounds up.
+    T - 1: the round bit is clear and every bit below it is set, just below halfway, so RNE rounds down. RU/RD/RZ
+    by sign. |v| < 2^63 for every s (review 2026-10-23: sticky-bit defects in the 64-bit conversion)."""
+    sg = -1 if rng.bits(1) else 1
+    t = ((1 << 24) | (rng.bits(23) << 1) | 1) << rng.range(8, 38)
+    return sg * (t + (1 if rng.bits(1) else -1))
+
+
 def c_h2f(rng, idx):
     """F-H2F: every f16 subnormal (both signs), then every f16 SNaN, then random from both."""
     if idx < 2046:
@@ -438,6 +504,7 @@ ONE_, TWO_ = 0x3F800000, 0x40000000
 FILL = {"FP.ADD.f32": (ONE_, ONE_), "FP.SUB.f32": (ONE_, ONE_), "FP.MUL.f32": (ONE_, ONE_), "FP.DIV.f32": (ONE_, ONE_),
         "FP.MAX.f32": (ONE_, TWO_), "FP.MIN.f32": (ONE_, TWO_), "FP.CMP.f32": (ONE_, TWO_), "FP.COMI.f32": (ONE_, TWO_),
         "FP.CVT.f32_i32.rc": (ONE_, 0), "FP.CVT.f32_i32.trunc": (ONE_, 0), "FP.CVT.i32_f32": (1, 0),
+        "FP.CVT.i64_f32": (1, 0),
         "FP.CVT.f16_f32": (0x3C00, 0)}
 OPNAME = {"FP.ADD.f32": "add", "FP.SUB.f32": "sub", "FP.MUL.f32": "mul", "FP.DIV.f32": "div", "FP.MAX.f32": "max",
           "FP.MIN.f32": "min", "FP.CMP.f32": "cmp", "FP.COMI.f32": "cmp"}
@@ -491,8 +558,13 @@ class Gen:
         if fam == "FP.CVT.i32_f32" and e["sem"]["builder"] == "cvt_i2f_scalar":
             c.gpr_in = 0xDEADBEEF00000000 | (lanes[0][0] & 0xFFFFFFFF)
             src1 = vecfmt.b2i(b"".join((0x3C3C0000 + i).to_bytes(4, "little") for i in range(16)))
-        if "dst_src1" in roles and e["sem"]["builder"] == "scalar_fp2":
-            c.dst_old = (dst_old & ~0xFFFFFFFF) | (src1 & 0xFFFFFFFF)
+        if fam == "FP.CVT.i64_f32":                            # CVTSI2SS r64: the whole 64-bit integer in RAX
+            c.gpr_in = lanes[0][0] & M64
+            src1 = vecfmt.b2i(b"".join((0x3C3C0000 + i).to_bytes(4, "little") for i in range(16)))
+        if "dst_src1" in roles and e["sem"]["builder"] in ("scalar_fp2", "cmp_scalar", "packed_fp2", "cmp_vec"):
+            # legacy SSE: src1 IS the destination register (2026-10-23: packed and compare forms too)
+            m = (1 << (32 if e["scalar"] is not None else e["vl"])) - 1
+            c.dst_old = (dst_old & ~m) | (src1 & m)
             src1 = dst_old
         else:
             if n < 16 and e["sem"]["builder"] != "cvt_i2f_scalar":     # upper source lanes: a recognisable pattern
@@ -501,6 +573,8 @@ class Gen:
         if b_any(lanes):                                         # upper src2 lanes: a second recognisable pattern
             for i in range(n, 16):
                 src2 |= (0x3D3D0000 + i) << (32 * i)
+        if e["sem"]["builder"] == "packed_fp1" and any(o["kind"] == "mem" for o in e["operands"]):
+            src2 = src1                                          # a memory source is read through RAX = &src2
         c.src1, c.src2 = src1, src2
         if extra:
             extra(c)
@@ -516,7 +590,7 @@ class Gen:
         fam, st = e["family"], self.by_entry[ei]
         if r["set"] == "V5":
             return 0, iter(())
-        if fam.startswith("INT."):
+        if fam.startswith("INT.") and r["set"] != "F-MEMFAULT":
             return self.int_rows(r, e, ei, st, limit)
         if r["set"] == "V1":
             return self.v1(r, e, st, limit)
@@ -547,10 +621,16 @@ class Gen:
             return "f16"
         if fam == "FP.CVT.i32_f32":
             return "int"
+        if fam == "FP.CVT.i64_f32":
+            return "int64"
         return "f32"
 
     def draw_src(self, kind, cls, rng, idx):
-        return {"f32": draw_f32, "f16": draw_f16, "int": draw_int}[kind](cls, rng, idx)
+        return {"f32": draw_f32, "f16": draw_f16, "int": draw_int, "int64": draw_int64}[kind](cls, rng, idx)
+
+    @staticmethod
+    def unary_cells(kind):
+        return [(c,) for c in {"int": INT_CLASSES, "int64": INT64_CLASSES}.get(kind, F32_CLASSES)]
 
     def pack_exec(self, e, stub, set_name, cname, env_i, lane_cases, idx0, mxcsr, k=0, flags=0, lane=0xFFFFFFFF,
                   counted=None, extra=None):
@@ -565,8 +645,7 @@ class Gen:
         ch = self.table.content_hash(e)
         stubs = self.stubs_for(e, st, "plain")
         unary = e["sem"]["builder"] in ("packed_fp1", "cvt_f2i_gpr", "cvt_i2f_scalar")
-        cells = [(c,) for c in (INT_CLASSES if kind == "int" else F32_CLASSES)] if unary else \
-            [(c1, c2) for c1 in F32_CLASSES for c2 in F32_CLASSES]
+        cells = self.unary_cells(kind) if unary else [(c1, c2) for c1 in F32_CLASSES for c2 in F32_CLASSES]
         per = 1000
         plan = len(stubs) * len(E8) * len(cells) * per
 
@@ -594,6 +673,8 @@ class Gen:
         op = OPNAME.get(fam)
         if fam == "FP.CVT.i32_f32":
             return (c_cvt_bnd_i2f(rng), None)
+        if fam == "FP.CVT.i64_f32":
+            return (c_cvt_bnd_i2f64(rng), None)
         if fam.startswith("FP.CVT.f32_i32"):
             if cname == "CVT-BND":
                 return (c_cvt_bnd_f2i(rng), None)
@@ -725,8 +806,7 @@ class Gen:
         kind = self.source_kind(e)
         ch = self.table.content_hash(e)
         unary = e["sem"]["builder"] in ("packed_fp1", "cvt_f2i_gpr", "cvt_i2f_scalar")
-        cells = [(c,) for c in (INT_CLASSES if kind == "int" else F32_CLASSES)] if unary else \
-            [(c1, c2) for c1 in F32_CLASSES for c2 in F32_CLASSES]
+        cells = self.unary_cells(kind) if unary else [(c1, c2) for c1 in F32_CLASSES for c2 in F32_CLASSES]
         per = 100
         plan = 4 * len(V4ENVS) * len(cells) * per
 
@@ -778,15 +858,16 @@ class Gen:
         loads folded into arithmetic (VADDPS/VMULPS zmm m512); no stub writes memory, so the store half of
         FUZZ-DESIGN §3.2 F-MEMFAULT needs the memory-window ABI extension (README §4) before the census adds
         masked moves or stores. EVEX forms run every prefix mask with merge masking (the budget row's
-        (n + 1) x n lane cases) and again with zero masking; the zero-masking executions are uncounted
-        duplicates (n_lane_cases = 0), as the flag-isolation duplicates are, so the row total is unchanged."""
+        (n + 1) x n lane cases) and again with zero masking (another (n + 1) x n). Since 2026-10-23 the zero-masking
+        executions are counted (record §6; FUZZ-DESIGN §9.5 item 6): an EVEX row with zero masking is
+        2 x (n + 1) x n lane cases."""
         n = self.lanes_of(e)
         ch = self.table.content_hash(e)
         if e["encoding"] == "evex":
             modes, bounds = ["merge"] + (["zero"] if "zero" in st else []), list(range(n + 1))
         else:
             modes, bounds = ["plain"], [n]
-        plan = len(bounds) * n
+        plan = len(bounds) * n * len(modes)          # since 2026-10-23 the zero-masking executions are counted
 
         def it():
             for b in bounds:
@@ -795,16 +876,16 @@ class Gen:
                 for mi, mode in enumerate(modes):
                     meta, c = self.pack_exec(e, st[mode], "F-MEMFAULT", "prefix%d" % b if mi == 0 else "prefix%d/zero" % b,
                                              0, lanes, b, 0x1F80, k=(1 << b) - 1 if e["encoding"] == "evex" else 0,
-                                             flags=vecfmt.FLAG_MEMFAULT, counted=None if mi == 0 else 0)
+                                             flags=vecfmt.FLAG_MEMFAULT)
                     meta["mf_boundary"] = b
                     yield meta, c
         return plan, it()
 
     def bcast_masked(self, r, e, st, limit):
         """Masked broadcast (merge_bcast and zero_bcast stubs; review 2026-10-16 found them generated but run by no
-        budget row). Reached only through a BCAST row whose class starts with "masked"; budget_rows emits no such
-        row today (proposed for the record, README §6 open item 8): per masking mode, the class-pair grid x 10
-        draws, each execution with its own random write mask, so 144 x 10 x n lane cases per mode."""
+        budget row). Reached through a BCAST row whose class starts with "masked"; since 2026-10-23 budget_rows
+        emits one for every EVEX memory form with EVEX.b (budget.v1 has three): per masking mode, the class-pair
+        grid x 10 draws, each execution with its own random write mask, so 144 x 10 x n lane cases per mode."""
         n = self.lanes_of(e)
         ch = self.table.content_hash(e)
         modes = [m for m in ("merge_bcast", "zero_bcast") if m in st]
@@ -1040,6 +1121,24 @@ def selftest(g):
         v = c_tie_f2i(keyed("tf", i))
         if (val(v) * 2).denominator != 1 or (val(v) * 2).numerator % 2 == 0:
             fails.append("TIE f2i %x" % v)
+    # CVT-BND 64-bit tie +- 1 (review 2026-10-23): one away from a binary32 halfway point, never a tie, never exact,
+    # inside int64; both directions drawn
+    def f32_exact_int(x):                     # an integer is a binary32 value iff its odd part has <= 24 bits
+        m = abs(x)
+        while m and m % 2 == 0:
+            m //= 2
+        return m.bit_length() <= 24
+    dirs = set()
+    for i in range(300):
+        v = c_tie_sticky64(keyed("ts64", i))
+        tie = [t for t in (v - 1, v + 1) if is_tie_rne(Fraction(t))]
+        if not (-(1 << 63) <= v < (1 << 63)) or len(tie) != 1 or is_tie_rne(Fraction(v)) or                 abs(v) < (1 << 32) or f32_exact_int(v):
+            fails.append("TIE-STICKY64 %d" % v)
+        else:
+            dirs.add((v - tie[0]) * (1 if v > 0 else -1))
+        n_t += 1
+    if dirs != {-1, 1}:
+        fails.append("TIE-STICKY64 draws only one direction: %s" % sorted(dirs))
     rep["targeted_checked"] = n_t
     # fillers raise no flag in any environment
     for fam, (fa, fb) in FILL.items():
@@ -1049,6 +1148,8 @@ def selftest(g):
                 fl = fp_ops.cvt_f32_to_i32(fa, env, fam.endswith("trunc"))[1]
             elif fam == "FP.CVT.i32_f32":
                 fl = fp_ops.cvt_i32_to_f32(fa, env)[1]
+            elif fam == "FP.CVT.i64_f32":
+                fl = fp_ops.cvt_i64_to_f32(fa, env)[1]
             elif fam == "FP.CVT.f16_f32":
                 fl = fp_ops.cvt_f16_to_f32(fa, env)[1]
             elif fam in ("FP.CMP.f32", "FP.COMI.f32"):
@@ -1088,8 +1189,8 @@ def selftest(g):
             fails.append("row %s %s yields %d lane cases, plan %d" % (r["iform"], r["set"],
                                                                      sum(m["n_lane_cases"] for m, _ in recs1), p))
     rep["determinism_rows"] = len(pick)
-    # F-MEMFAULT (review 2026-10-16): every EVEX row runs each prefix mask with merge (counted) and zero
-    # (uncounted duplicate) masking; the counted total stays the row's
+    # F-MEMFAULT (review 2026-10-16; counting 2026-10-23): every EVEX row runs each prefix mask with merge and
+    # zero masking, both counted; the counted total equals the row's
     mf_rows = [r for r in rows if r["set"] == "F-MEMFAULT"]
     n_zero = 0
     for r in mf_rows:
@@ -1102,14 +1203,35 @@ def selftest(g):
         if e["encoding"] == "evex":
             zr = [m for m, _ in recs if g.man["stubs"][m["stub"]]["variant"] == "zero"]
             n_zero += len(zr)
-            if len(zr) != e["lanes"] + 1 or any(m["n_lane_cases"] for m in zr) or variants.count("merge") != e["lanes"] + 1:
-                fails.append("F-MEMFAULT %s zero-masking duplicates: %d" % (r["iform"], len(zr)))
+            want_zero = e["lanes"] + 1 if "zero" in e["masking"] else 0
+            if len(zr) != want_zero or any(m["n_lane_cases"] != e["lanes"] for m in zr) or \
+                    variants.count("merge") != e["lanes"] + 1:
+                fails.append("F-MEMFAULT %s zero-masking executions: %d" % (r["iform"], len(zr)))
         if any(not (m["flags"] & vecfmt.FLAG_MEMFAULT) for m, _ in recs):
             fails.append("F-MEMFAULT %s record without the memfault flag" % r["iform"])
     rep["memfault_rows"] = len(mf_rows)
-    rep["memfault_zero_mask_duplicates"] = n_zero
+    rep["memfault_zero_mask_executions_counted"] = n_zero
+    # integer classes (2026-10-23): each draw lies in its class
+    for cls in INT_CLASSES:
+        for i in range(200):
+            v = draw_int(cls, keyed("int", cls, i), i)
+            sv = v - (1 << 32) if v >> 31 else v
+            ok = {"I:near2^31": (1 << 31) - 255 <= abs(sv) <= (1 << 31),
+                  "I:inexact": abs(sv) > (1 << 25) and abs(sv) % 2 == 1}.get(cls, True)
+            if not ok:
+                fails.append("int class %s draw %d" % (cls, sv))
+    for cls in INT64_CLASSES:
+        for i in range(200):
+            v = draw_int64(cls, keyed("int64", cls, i), i)
+            sv = v - (1 << 64) if v >> 63 else v
+            ok = {"L:large": (1 << 32) <= abs(sv) < (1 << 63), "L:i32": -(1 << 31) <= sv < (1 << 31),
+                  "L:near2^63": (1 << 63) - (1 << 40) <= abs(sv) < (1 << 63),
+                  "L:small": abs(sv) < (1 << 24)}.get(cls, True)
+            if not ok:
+                fails.append("int64 class %s draw %d" % (cls, sv))
+    rep["int_classes"] = [len(INT_CLASSES), len(INT64_CLASSES)]
     # masked broadcast (review 2026-10-16): reachable through a BCAST row whose class starts with "masked"
-    # (no such row in budget_rows today; proposed for the record); checked on a synthetic row
+    # (budget_rows emits one per EVEX memory form with EVEX.b since 2026-10-23); also checked on a synthetic row
     bc = [r for r in rows if r["set"] == "BCAST"]
     if bc:
         syn = dict(bc[0], **{"class": "masked {1to%d} x 144 x 10 x {merge,zero}" % g.table.ENTRIES[g.idx_of[bc[0]["iform"]]]["lanes"]})

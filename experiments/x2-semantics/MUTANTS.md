@@ -26,8 +26,8 @@ G misses") and the M2 gate. Tags as in [TABLE-SCHEMA.md](TABLE-SCHEMA.md).
   class needs it. Quantisers (`quantize_q8`, `quantize_q4`) are out of scope for T1 (they are not
   kernels) and are excluded from the pool. **Host groups:** *gating* (the 8 variants of prereg §4.1
   and their inlined helpers), *A4* (the 6 scalar and 4 F16/BF16 SIMD variants), *helpers* (`hx_*`).
-  Which groups enter P3's denominator is Owner question 8 of the prereg; the provisional default is
-  **option (b)**: every group, with T1 run on every host (finding R2-2; §6).
+  Which groups enter P3's denominator was Owner question 8 of the prereg; **option (b)** is fixed (DELEGATED
+  P31, 2026-10-23; Pierce reviews at sitting 2): every group, with T1 run on every host (finding R2-2; §6).
 - **Stillborn.** A mutant that fails to compile under X0 configuration A (MSVC `cl` 19.44.35229,
   toolset 14.44.35207, SDK 10.0.26100.0, as pinned in `experiments/x0-census/TOOLCHAINS.md`) or D
   (Clang 23.1.3, same file) with Hearth's flags. Counted and listed, then excluded from every rate.
@@ -46,7 +46,15 @@ G misses") and the M2 gate. Tags as in [TABLE-SCHEMA.md](TABLE-SCHEMA.md).
   changes the output. The comparator assigns a cause before the verdict:
   - *object level*: the compiled mutant's instruction sequence (decoded by X0's tools) differs from
     its transliteration, for example a contraction or reordering the compiler introduced. The mutant
-    is **level-divergent**: excluded from P3, reported with its cause, and forwarded to X0 and M2;
+    is **level-divergent**: reported with its cause and forwarded to X0 and M2. **If its table-semantics
+    evaluations differ at intrinsic level** while the native build does not show the difference, it **counts
+    as FP-changing and stays in P3's denominator** with its intrinsic-level witness (the native confirmation
+    above is waived for it, and its absence is reported): T1 judges intrinsic-level IR and must reject it.
+    Only a mutant that is **not** FP-changing at intrinsic level (its native difference comes from the
+    compiled object alone) is outside P3; if T1 accepts it, prereg §4 item 6 decides whether that is a false
+    accept (strict reading registered; the carve-out is Pierce's, prereg §13 O4). Narrowed on
+    2026-10-23 (review of the prereg's revision 3, finding 2): the earlier text excluded every object-caused
+    level-divergent mutant, which could drop an intrinsic-level FP-changing mutant from "rejects 100%";
   - *table*: a table entry's prediction differs from silicon on a vector that reproduces the
     divergence. That is a table bug: the entry is fixed under A2, the mutant is re-classified under
     the fixed table, and if T1 had accepted it, that acceptance is handled as a false accept under
@@ -227,14 +235,15 @@ input-class engineering" (§7) [inference].
 
 ## 6. Metrics
 
-Over the live, non-stillborn pool, excluding level-divergent mutants (§1):
+Over the live, non-stillborn pool, excluding only the level-divergent mutants that are not FP-changing at
+intrinsic level (§1):
 
 - **Primary (gate, P3).** The T1+T2 kill rate over FP-changing mutants (WITNESSED plus UNRESOLVED),
-  which must be 100% (ROADMAP §3.3). **Denominator, provisional default option (b):** every host
-  group (gating, A4, helpers), with T1 run on every host; a host T1 does not accept makes its mutants
-  non-kills. Option (a), an Owner-only choice (prereg Owner question 8), would restrict the
-  denominator to the gating group and report the rest as a secondary matrix; it would take M-ROPE
-  out of the gate, so it is a loosening and is not the default. Under either option the pool
+  which must be 100% (ROADMAP §3.3). **Denominator: option (b), fixed by DELEGATED P31 (2026-10-23;
+  Pierce reviews it at sitting 2):** every host group (gating, A4, helpers), with T1 run on every host; a
+  host T1 does not accept makes its mutants non-kills. Option (a), which would restrict the denominator to
+  the gating group and report the rest as a secondary matrix, is excluded: it would take M-ROPE out of the
+  gate, a loosening. Under either option the pool
   requirement (≥ 200 live mutants, every ROADMAP class present) applies to the whole pool, and the
   number of live FP-changing mutants per host group is reported.
 - **Primary (gate, P4).** The count of FP-changing mutants T1 accepts with a witness (false

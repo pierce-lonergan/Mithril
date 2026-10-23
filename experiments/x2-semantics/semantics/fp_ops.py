@@ -15,8 +15,17 @@ This is why NaN payloads are canonicalised in Hearth (NUMERICS §3) and why T1's
 carry the NaN-order side condition (RULES.md).
 
 Flag priority (masked): a NaN source suppresses DE (SDM Vol 1 §4.9.2 priority: SNaN invalid, then
-QNaN operand, then other invalid, then denormal, then overflow/underflow, then inexact). UNCERTAIN
-for silicon: fuzz class F-FLAGPRI.
+QNaN operand, then other invalid or divide-by-zero, then denormal, then overflow/underflow, then
+inexact). UNCERTAIN for silicon: fuzz class F-FLAGPRI.
+
+Table correction of 2026-10-23 (X2 freeze preparation, "B6"): a nonzero finite dividend divided by
++-0 raises ZE ALONE, also when the dividend is a denormal (no DE). Divide-by-zero sits at priority
+level 3 of the SDM list above, the denormal-operand exception at level 4, and both are
+pre-computation exceptions, so the lower one is not reported. The v0 reading (DE|ZE) disagreed with
+the 9950X on four development vectors (selftest B6 `0x00000001 / +0` on VDIVSS EVEX, VDIVSS VEX and
+DIVSS; and the review cross-section's `0x004C24E3 / +0` under RZ, `0x8078165D / -0` under RZ,
+`0x80717657 / +0` under FTZ) and with Bochs 3.1 on the B6 vector [M, harness/README.md §7, §10;
+FUZZ-DESIGN §9.3-§9.4]. In FUZZ-DESIGN §6.3 terms that is "table bug" (table != silicon = Bochs).
 """
 from fractions import Fraction
 
@@ -125,7 +134,10 @@ def div(a, b, env):
     if ib:
         return f32_signed_zero(sign), fl
     if zb:
-        return f32_signed_inf(sign), fl | ZE
+        # B6 correction (2026-10-23): divide-by-zero outranks the denormal-operand exception, so a
+        # denormal dividend over +-0 gives ZE only (module docstring). Under DAZ the dividend was
+        # already flushed (0/0 above), and a flushed divisor raised no DE.
+        return f32_signed_inf(sign), ZE
     if za:
         return f32_signed_zero(sign), fl
     q = f32_value(a) / f32_value(b)
@@ -257,6 +269,23 @@ def cvt_i32_to_f32(i_bits, env):
     if v == 0:
         return 0, 0
     return round_f32(v < 0, Fraction(abs(v)), env.rc, False)
+
+
+def cvt_i64_to_f32(i_bits, env):
+    """CVTSI2SS with a 64-bit GPR source (REX.W; XED iform CVTSI2SS_XMMss_GPR64q, emitted by MSVC for
+    Hearth's scalar `(float)` casts in configuration A, X0 census run 1). Rounds the signed 64-bit
+    integer by RC; PE if inexact. Integer 0 -> +0.0. DAZ/FTZ are irrelevant (integer source; the
+    result is never tiny: |v| >= 1 or v = 0). SDM Vol 2 CVTSI2SS: "the source operand is a signed
+    doubleword or quadword integer"; exceptions Precision only."""
+    v = i_bits & ((1 << 64) - 1)
+    if v >> 63:
+        v -= 1 << 64
+    if v == 0:
+        return 0, 0
+    # written differently from cvt_i32_to_f32's last line on purpose: the sealed table mutant M21 anchors on
+    # that line and must still occur exactly once (harness/mutants/mutants.py, spec a74d5041...)
+    mag = -v if v < 0 else v
+    return round_f32(v < 0, Fraction(mag), env.rc, False)
 
 
 def cvt_f32_to_i32(b, env, truncate):

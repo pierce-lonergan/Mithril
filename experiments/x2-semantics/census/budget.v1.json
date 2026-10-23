@@ -1,0 +1,5243 @@
+{
+ "record": "budget.v1 of the X2 record (docs/m0/prereg/X2-checker.md \u00a72, \u00a76; FUZZ-DESIGN \u00a75)",
+ "status": "DRAFT: generated 2026-10-23 by the x2freeze track; it becomes budget.v1 at the X2 record's freeze commit, unchanged. No vector of it has been generated for silicon or run.",
+ "unit": "lane case (FUZZ-DESIGN \u00a72); V5 rows are exhaustive sweeps, the other sets are sampled",
+ "generator": {
+  "function": "semantics.census_absorb.budget_rows",
+  "census_absorb_sha256_lf": "a5b82957ba982792607f60a10dad4e99d2af1d94abafd09aea13863612c89ef4",
+  "semantics_bundle": "0c2a041c363e34ee27a62a873fd0adad5cf8f5711ec2aa3a16cb2f5c9709ff2d",
+  "table_entries": 114,
+  "intrinsic_map_v0_sha256": "4aa8e2c5e0afeb35cbfebacd50091bfb2dcd4e1efd45d9c9dc35a5ab7d64d1d0"
+ },
+ "rule_for_entries_added_after_freeze": "An entry added after the freeze (an intrinsic-level integer or data-movement entry T1 needs, TABLE-SCHEMA \u00a78.1; an entry for an instruction a mutant operator introduces, MUTANTS.md \u00a72) gets exactly the rows budget_rows at the census_absorb hash above gives it. The row list below is the budget for the entries that exist at freeze; the function is frozen with it. A row formula change is an amendment (record \u00a710).",
+ "census_inputs": {
+  "census": "../x0-census/results/census.json",
+  "census_sha256": "3d54f0d50862e359b20e1c50904f7218092d27f680b9b2175891fb65dbef6f06",
+  "configs": "A,B-cmake,C,D",
+  "build_index": 1,
+  "insts": [
+   {
+    "path": "A.b1.instructions.jsonl",
+    "sha256": "12cd20e66aca24b819d7f3a327cfde30097fb4a0669c68b49759a96a45d9e2f2"
+   },
+   {
+    "path": "B-cmake.b1.instructions.jsonl",
+    "sha256": "fa1fcd5a532388d08210b048d0e9a548755f79d2fbf0a05bdbefa8740d8a9412"
+   },
+   {
+    "path": "C.b1.instructions.jsonl",
+    "sha256": "b8aabbf18b700a6b3fa53a2b8be74ad97216477d6fe2cc212a7aef9168ec75c7"
+   },
+   {
+    "path": "D.b1.instructions.jsonl",
+    "sha256": "428ebfc0194fb87c1a12cb3d4c8891974c38a39a9f4148d69a49e66ace221c0d"
+   }
+  ]
+ },
+ "x2_scope_crosscheck": {
+  "x2_scope_sha256": "a805876364cd088059fdc01ec326ffe580c6c74a4e30059e3e5e4eb082ad2422",
+  "iforms_equal": true,
+  "fp_equal": true
+ },
+ "summary": {
+  "by_set": {
+   "V1": 348928000,
+   "V2": 66640000,
+   "V3": 122903896,
+   "V5": 639953797120,
+   "V4": 595200,
+   "F-MEMFAULT": 1727,
+   "BCAST": 622080
+  },
+  "total": 640493488023,
+  "rows": 610
+ },
+ "by_iclass": {
+  "ADDPS": {
+   "F-MEMFAULT": 4,
+   "V1": 2304000,
+   "V2": 1120000,
+   "total": 3424004,
+   "sampled": 3424004
+  },
+  "ADDSS": {
+   "F-MEMFAULT": 1,
+   "V1": 2304000,
+   "V2": 1120000,
+   "total": 3424001,
+   "sampled": 3424001
+  },
+  "CMPPS": {
+   "V1": 9216000,
+   "V2": 1280000,
+   "total": 10496000,
+   "sampled": 10496000
+  },
+  "CMPSS": {
+   "V1": 9216000,
+   "V2": 1280000,
+   "total": 10496000,
+   "sampled": 10496000
+  },
+  "COMISS": {
+   "F-MEMFAULT": 1,
+   "V1": 2304000,
+   "V2": 320000,
+   "total": 2624001,
+   "sampled": 2624001
+  },
+  "CVTDQ2PS": {
+   "V1": 96000,
+   "V2": 80000,
+   "V5": 17179869184,
+   "total": 17180045184,
+   "sampled": 176000
+  },
+  "CVTSI2SS": {
+   "V1": 192000,
+   "V2": 160000,
+   "V5": 17179869184,
+   "total": 17180221184,
+   "sampled": 352000
+  },
+  "CVTSS2SI": {
+   "V1": 96000,
+   "V2": 160000,
+   "V5": 34359738368,
+   "total": 34359994368,
+   "sampled": 256000
+  },
+  "CVTTPS2DQ": {
+   "V1": 96000,
+   "V2": 160000,
+   "V5": 34359738368,
+   "total": 34359994368,
+   "sampled": 256000
+  },
+  "CVTTSS2SI": {
+   "V1": 96000,
+   "V2": 160000,
+   "V5": 34359738368,
+   "total": 34359994368,
+   "sampled": 256000
+  },
+  "DIVSS": {
+   "V1": 1152000,
+   "V2": 560000,
+   "total": 1712000,
+   "sampled": 1712000
+  },
+  "MAXPS": {
+   "V1": 1152000,
+   "V2": 240000,
+   "total": 1392000,
+   "sampled": 1392000
+  },
+  "MAXSS": {
+   "F-MEMFAULT": 1,
+   "V1": 2304000,
+   "V2": 480000,
+   "total": 2784001,
+   "sampled": 2784001
+  },
+  "MINPS": {
+   "V1": 1152000,
+   "V2": 240000,
+   "total": 1392000,
+   "sampled": 1392000
+  },
+  "MINSS": {
+   "V1": 1152000,
+   "V2": 240000,
+   "total": 1392000,
+   "sampled": 1392000
+  },
+  "MULPS": {
+   "V1": 1152000,
+   "V2": 560000,
+   "total": 1712000,
+   "sampled": 1712000
+  },
+  "MULSS": {
+   "F-MEMFAULT": 1,
+   "V1": 2304000,
+   "V2": 1120000,
+   "total": 3424001,
+   "sampled": 3424001
+  },
+  "SUBSS": {
+   "V1": 1152000,
+   "V2": 560000,
+   "total": 1712000,
+   "sampled": 1712000
+  },
+  "UCOMISS": {
+   "V1": 1152000,
+   "V2": 160000,
+   "total": 1312000,
+   "sampled": 1312000
+  },
+  "VADDPS": {
+   "BCAST": 276480,
+   "F-MEMFAULT": 556,
+   "V1": 9216000,
+   "V2": 4480000,
+   "V3": 16794112,
+   "V4": 115200,
+   "total": 30882348,
+   "sampled": 30882348
+  },
+  "VADDSS": {
+   "F-MEMFAULT": 1,
+   "V1": 3456000,
+   "V2": 1680000,
+   "V3": 16,
+   "V4": 115200,
+   "total": 5251217,
+   "sampled": 5251217
+  },
+  "VCMPPS": {
+   "V1": 184320000,
+   "V2": 25600000,
+   "V3": 4202752,
+   "total": 214122752,
+   "sampled": 214122752
+  },
+  "VCMPSS": {
+   "V1": 73728000,
+   "V2": 10240000,
+   "V3": 8,
+   "total": 83968008,
+   "sampled": 83968008
+  },
+  "VCOMISS": {
+   "V1": 1152000,
+   "V2": 160000,
+   "total": 1312000,
+   "sampled": 1312000
+  },
+  "VCVTDQ2PS": {
+   "V1": 480000,
+   "V2": 400000,
+   "V3": 8405504,
+   "V4": 9600,
+   "V5": 85899345920,
+   "total": 85908641024,
+   "sampled": 9295104
+  },
+  "VCVTPH2PS": {
+   "F-MEMFAULT": 552,
+   "V1": 672000,
+   "V2": 560000,
+   "V3": 16794112,
+   "V5": 3670016,
+   "total": 21696680,
+   "sampled": 18026664
+  },
+  "VCVTPS2DQ": {
+   "V1": 480000,
+   "V2": 800000,
+   "V3": 8405504,
+   "V4": 9600,
+   "V5": 171798691840,
+   "total": 171808386944,
+   "sampled": 9695104
+  },
+  "VCVTSI2SS": {
+   "V1": 96000,
+   "V2": 80000,
+   "V5": 17179869184,
+   "total": 17180045184,
+   "sampled": 176000
+  },
+  "VCVTTPS2DQ": {
+   "V1": 480000,
+   "V2": 800000,
+   "V3": 8405504,
+   "V5": 171798691840,
+   "total": 171808377344,
+   "sampled": 9685504
+  },
+  "VCVTTSS2SI": {
+   "V1": 96000,
+   "V2": 160000,
+   "V5": 34359738368,
+   "total": 34359994368,
+   "sampled": 256000
+  },
+  "VDIVSS": {
+   "F-MEMFAULT": 1,
+   "V1": 3456000,
+   "V2": 1680000,
+   "V3": 16,
+   "V4": 115200,
+   "total": 5251217,
+   "sampled": 5251217
+  },
+  "VMAXPS": {
+   "F-MEMFAULT": 8,
+   "V1": 6912000,
+   "V2": 1440000,
+   "V3": 8405504,
+   "total": 16757512,
+   "sampled": 16757512
+  },
+  "VMAXSS": {
+   "V1": 2304000,
+   "V2": 480000,
+   "V3": 16,
+   "total": 2784016,
+   "sampled": 2784016
+  },
+  "VMINPS": {
+   "V1": 5760000,
+   "V2": 1200000,
+   "V3": 8405504,
+   "total": 15365504,
+   "sampled": 15365504
+  },
+  "VMINSS": {
+   "V1": 1152000,
+   "V2": 240000,
+   "V3": 16,
+   "total": 1392016,
+   "sampled": 1392016
+  },
+  "VMULPS": {
+   "BCAST": 345600,
+   "F-MEMFAULT": 592,
+   "V1": 9216000,
+   "V2": 4480000,
+   "V3": 16794624,
+   "V4": 115200,
+   "total": 30952016,
+   "sampled": 30952016
+  },
+  "VMULSS": {
+   "F-MEMFAULT": 1,
+   "V1": 3456000,
+   "V2": 1680000,
+   "V3": 16,
+   "V4": 115200,
+   "total": 5251217,
+   "sampled": 5251217
+  },
+  "VPDPBUSD": {
+   "V1": 300000,
+   "V2": 30000,
+   "V3": 8405504,
+   "total": 8735504,
+   "sampled": 8735504
+  },
+  "VPHADDD": {
+   "V1": 200000,
+   "V2": 20000,
+   "total": 220000,
+   "sampled": 220000
+  },
+  "VPMADDUBSW": {
+   "V1": 500000,
+   "V2": 50000,
+   "V3": 9479680,
+   "V5": 21474836480,
+   "total": 21484866160,
+   "sampled": 10029680
+  },
+  "VPMADDWD": {
+   "F-MEMFAULT": 8,
+   "V1": 600000,
+   "V2": 60000,
+   "V3": 8405504,
+   "total": 9065512,
+   "sampled": 9065512
+  },
+  "VUCOMISS": {
+   "V1": 2304000,
+   "V2": 320000,
+   "total": 2624000,
+   "sampled": 2624000
+  }
+ },
+ "rows": [
+  {
+   "iform": "VADDPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VADDPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V3",
+   "class": "all 16 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 512
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V3",
+   "class": "all 16 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 512
+  },
+  {
+   "iform": "VMAXPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMAXPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V3",
+   "class": "all 16 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 512
+  },
+  {
+   "iform": "VMINPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMINPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V3",
+   "class": "all 16 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 512
+  },
+  {
+   "iform": "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 32 predicates",
+   "envs": "E8",
+   "lane_cases": 36864000
+  },
+  {
+   "iform": "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCMPPS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V3",
+   "class": "all 16 masks x zero x 4 rotations",
+   "envs": "default",
+   "lane_cases": 256
+  },
+  {
+   "iform": "VCVTDQ2PS_XMMf32_MASKmskw_XMMi32_AVX512",
+   "family": "FP.CVT.i32_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTDQ2PS_XMMf32_MASKmskw_XMMi32_AVX512",
+   "family": "FP.CVT.i32_f32",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTDQ2PS_XMMf32_MASKmskw_XMMi32_AVX512",
+   "family": "FP.CVT.i32_f32",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC",
+   "lane_cases": 17179869184
+  },
+  {
+   "iform": "VCVTDQ2PS_XMMf32_MASKmskw_XMMi32_AVX512",
+   "family": "FP.CVT.i32_f32",
+   "set": "V3",
+   "class": "all 16 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 512
+  },
+  {
+   "iform": "VCVTPS2DQ_XMMi32_MASKmskw_XMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTPS2DQ_XMMi32_MASKmskw_XMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPS2DQ_XMMi32_MASKmskw_XMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPS2DQ_XMMi32_MASKmskw_XMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "VCVTPS2DQ_XMMi32_MASKmskw_XMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V3",
+   "class": "all 16 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 512
+  },
+  {
+   "iform": "VCVTTPS2DQ_XMMi32_MASKmskw_XMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTTPS2DQ_XMMi32_MASKmskw_XMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTTPS2DQ_XMMi32_MASKmskw_XMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTTPS2DQ_XMMi32_MASKmskw_XMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "VCVTTPS2DQ_XMMi32_MASKmskw_XMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V3",
+   "class": "all 16 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 512
+  },
+  {
+   "iform": "VCVTPH2PS_XMMf32_MASKmskw_XMMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTPH2PS_XMMf32_MASKmskw_XMMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V2",
+   "class": "F-H2F",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPH2PS_XMMf32_MASKmskw_XMMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V5",
+   "class": "all 2^16 inputs",
+   "envs": "E8",
+   "lane_cases": 524288
+  },
+  {
+   "iform": "VCVTPH2PS_XMMf32_MASKmskw_XMMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V3",
+   "class": "all 16 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 512
+  },
+  {
+   "iform": "VADDPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VADDPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V3",
+   "class": "all 256 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16384
+  },
+  {
+   "iform": "VMULPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMULPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V3",
+   "class": "all 256 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16384
+  },
+  {
+   "iform": "VMAXPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMAXPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V3",
+   "class": "all 256 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16384
+  },
+  {
+   "iform": "VMINPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMINPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_YMMf32_MASKmskw_YMMf32_YMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V3",
+   "class": "all 256 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16384
+  },
+  {
+   "iform": "VCMPPS_MASKmskw_MASKmskw_YMMf32_YMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 32 predicates",
+   "envs": "E8",
+   "lane_cases": 36864000
+  },
+  {
+   "iform": "VCMPPS_MASKmskw_MASKmskw_YMMf32_YMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCMPPS_MASKmskw_MASKmskw_YMMf32_YMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCMPPS_MASKmskw_MASKmskw_YMMf32_YMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V3",
+   "class": "all 256 masks x zero x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8192
+  },
+  {
+   "iform": "VCVTDQ2PS_YMMf32_MASKmskw_YMMi32_AVX512",
+   "family": "FP.CVT.i32_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTDQ2PS_YMMf32_MASKmskw_YMMi32_AVX512",
+   "family": "FP.CVT.i32_f32",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTDQ2PS_YMMf32_MASKmskw_YMMi32_AVX512",
+   "family": "FP.CVT.i32_f32",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC",
+   "lane_cases": 17179869184
+  },
+  {
+   "iform": "VCVTDQ2PS_YMMf32_MASKmskw_YMMi32_AVX512",
+   "family": "FP.CVT.i32_f32",
+   "set": "V3",
+   "class": "all 256 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16384
+  },
+  {
+   "iform": "VCVTPS2DQ_YMMi32_MASKmskw_YMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTPS2DQ_YMMi32_MASKmskw_YMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPS2DQ_YMMi32_MASKmskw_YMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPS2DQ_YMMi32_MASKmskw_YMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "VCVTPS2DQ_YMMi32_MASKmskw_YMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V3",
+   "class": "all 256 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16384
+  },
+  {
+   "iform": "VCVTTPS2DQ_YMMi32_MASKmskw_YMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTTPS2DQ_YMMi32_MASKmskw_YMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTTPS2DQ_YMMi32_MASKmskw_YMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTTPS2DQ_YMMi32_MASKmskw_YMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "VCVTTPS2DQ_YMMi32_MASKmskw_YMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V3",
+   "class": "all 256 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16384
+  },
+  {
+   "iform": "VCVTPH2PS_YMMf32_MASKmskw_XMMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTPH2PS_YMMf32_MASKmskw_XMMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V2",
+   "class": "F-H2F",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPH2PS_YMMf32_MASKmskw_XMMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V5",
+   "class": "all 2^16 inputs",
+   "envs": "E8",
+   "lane_cases": 524288
+  },
+  {
+   "iform": "VCVTPH2PS_YMMf32_MASKmskw_XMMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V3",
+   "class": "all 256 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16384
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V4",
+   "class": "{er} 4 modes x 144 x 100",
+   "envs": "{DAZ=FTZ=0, DAZ=FTZ=1}",
+   "lane_cases": 115200
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V4",
+   "class": "{er} 4 modes x 144 x 100",
+   "envs": "{DAZ=FTZ=0, DAZ=FTZ=1}",
+   "lane_cases": 115200
+  },
+  {
+   "iform": "VMAXPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMAXPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VMINPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMINPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_ZMMf32_MASKmskw_ZMMf32_ZMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VCMPPS_MASKmskw_MASKmskw_ZMMf32_ZMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 32 predicates",
+   "envs": "E8",
+   "lane_cases": 36864000
+  },
+  {
+   "iform": "VCMPPS_MASKmskw_MASKmskw_ZMMf32_ZMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCMPPS_MASKmskw_MASKmskw_ZMMf32_ZMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCMPPS_MASKmskw_MASKmskw_ZMMf32_ZMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V3",
+   "class": "all 65536 masks x zero x 4 rotations",
+   "envs": "default",
+   "lane_cases": 4194304
+  },
+  {
+   "iform": "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512",
+   "family": "FP.CVT.i32_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512",
+   "family": "FP.CVT.i32_f32",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512",
+   "family": "FP.CVT.i32_f32",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC",
+   "lane_cases": 17179869184
+  },
+  {
+   "iform": "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512",
+   "family": "FP.CVT.i32_f32",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VCVTDQ2PS_ZMMf32_MASKmskw_ZMMi32_AVX512",
+   "family": "FP.CVT.i32_f32",
+   "set": "V4",
+   "class": "{er} 4 modes x 12 x 100",
+   "envs": "{DAZ=FTZ=0, DAZ=FTZ=1}",
+   "lane_cases": 9600
+  },
+  {
+   "iform": "VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VCVTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V4",
+   "class": "{er} 4 modes x 12 x 100",
+   "envs": "{DAZ=FTZ=0, DAZ=FTZ=1}",
+   "lane_cases": 9600
+  },
+  {
+   "iform": "VCVTTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "VCVTTPS2DQ_ZMMi32_MASKmskw_ZMMf32_AVX512",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VCVTPH2PS_ZMMf32_MASKmskw_YMMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTPH2PS_ZMMf32_MASKmskw_YMMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V2",
+   "class": "F-H2F",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPH2PS_ZMMf32_MASKmskw_YMMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V5",
+   "class": "all 2^16 inputs",
+   "envs": "E8",
+   "lane_cases": 524288
+  },
+  {
+   "iform": "VCVTPH2PS_ZMMf32_MASKmskw_YMMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "F-MEMFAULT",
+   "class": "prefix masks 0..n on a PAGE_NOACCESS boundary x {merge,zero}",
+   "envs": "default",
+   "lane_cases": 544
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "BCAST",
+   "class": "{1to16} x 144 x 100",
+   "envs": "default",
+   "lane_cases": 230400
+  },
+  {
+   "iform": "VADDPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "BCAST",
+   "class": "masked {1to16} x 144 x 10 x {merge,zero}",
+   "envs": "default",
+   "lane_cases": 46080
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "F-MEMFAULT",
+   "class": "prefix masks 0..n on a PAGE_NOACCESS boundary x {merge,zero}",
+   "envs": "default",
+   "lane_cases": 544
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "BCAST",
+   "class": "{1to16} x 144 x 100",
+   "envs": "default",
+   "lane_cases": 230400
+  },
+  {
+   "iform": "VMULPS_ZMMf32_MASKmskw_ZMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "BCAST",
+   "class": "masked {1to16} x 144 x 10 x {merge,zero}",
+   "envs": "default",
+   "lane_cases": 46080
+  },
+  {
+   "iform": "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V3",
+   "class": "mask bit 0 x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16
+  },
+  {
+   "iform": "VADDSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.ADD.f32",
+   "set": "V4",
+   "class": "{er} 4 modes x 144 x 100",
+   "envs": "{DAZ=FTZ=0, DAZ=FTZ=1}",
+   "lane_cases": 115200
+  },
+  {
+   "iform": "VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V3",
+   "class": "mask bit 0 x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16
+  },
+  {
+   "iform": "VMULSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V4",
+   "class": "{er} 4 modes x 144 x 100",
+   "envs": "{DAZ=FTZ=0, DAZ=FTZ=1}",
+   "lane_cases": 115200
+  },
+  {
+   "iform": "VDIVSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.DIV.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VDIVSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.DIV.f32",
+   "set": "V3",
+   "class": "mask bit 0 x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16
+  },
+  {
+   "iform": "VDIVSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.DIV.f32",
+   "set": "V4",
+   "class": "{er} 4 modes x 144 x 100",
+   "envs": "{DAZ=FTZ=0, DAZ=FTZ=1}",
+   "lane_cases": 115200
+  },
+  {
+   "iform": "VMAXSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMAXSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MAX.f32",
+   "set": "V3",
+   "class": "mask bit 0 x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16
+  },
+  {
+   "iform": "VMINSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMINSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINSS_XMMf32_MASKmskw_XMMf32_XMMf32_AVX512",
+   "family": "FP.MIN.f32",
+   "set": "V3",
+   "class": "mask bit 0 x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMULPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MAX.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMAXPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MAX.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMAXPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MIN.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMINPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_XMMdq_XMMdq_XMMdq",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MIN.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMINPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMINPS_YMMqq_YMMqq_YMMqq",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.ADD.f32",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 1
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.MUL.f32",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 1
+  },
+  {
+   "iform": "VMAXSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.MAX.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMAXSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.DIV.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_XMMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCMPPS_XMMdq_XMMdq_XMMdq_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 32 predicates",
+   "envs": "E8",
+   "lane_cases": 36864000
+  },
+  {
+   "iform": "VCMPPS_XMMdq_XMMdq_XMMdq_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCMPPS_XMMdq_XMMdq_XMMdq_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCVTDQ2PS_XMMdq_XMMdq",
+   "family": "FP.CVT.i32_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTDQ2PS_XMMdq_XMMdq",
+   "family": "FP.CVT.i32_f32",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTDQ2PS_XMMdq_XMMdq",
+   "family": "FP.CVT.i32_f32",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC",
+   "lane_cases": 17179869184
+  },
+  {
+   "iform": "VCVTPS2DQ_XMMdq_XMMdq",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTPS2DQ_XMMdq_XMMdq",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPS2DQ_XMMdq_XMMdq",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPS2DQ_XMMdq_XMMdq",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "VCVTTPS2DQ_XMMdq_XMMdq",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTTPS2DQ_XMMdq_XMMdq",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTTPS2DQ_XMMdq_XMMdq",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTTPS2DQ_XMMdq_XMMdq",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "VCVTPH2PS_XMMdq_XMMq",
+   "family": "FP.CVT.f16_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTPH2PS_XMMdq_XMMq",
+   "family": "FP.CVT.f16_f32",
+   "set": "V2",
+   "class": "F-H2F",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPH2PS_XMMdq_XMMq",
+   "family": "FP.CVT.f16_f32",
+   "set": "V5",
+   "class": "all 2^16 inputs",
+   "envs": "E8",
+   "lane_cases": 524288
+  },
+  {
+   "iform": "VCMPPS_YMMqq_YMMqq_YMMqq_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 32 predicates",
+   "envs": "E8",
+   "lane_cases": 36864000
+  },
+  {
+   "iform": "VCMPPS_YMMqq_YMMqq_YMMqq_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCMPPS_YMMqq_YMMqq_YMMqq_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCVTDQ2PS_YMMqq_YMMqq",
+   "family": "FP.CVT.i32_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTDQ2PS_YMMqq_YMMqq",
+   "family": "FP.CVT.i32_f32",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTDQ2PS_YMMqq_YMMqq",
+   "family": "FP.CVT.i32_f32",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC",
+   "lane_cases": 17179869184
+  },
+  {
+   "iform": "VCVTPS2DQ_YMMqq_YMMqq",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTPS2DQ_YMMqq_YMMqq",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPS2DQ_YMMqq_YMMqq",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPS2DQ_YMMqq_YMMqq",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "VCVTTPS2DQ_YMMqq_YMMqq",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTTPS2DQ_YMMqq_YMMqq",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTTPS2DQ_YMMqq_YMMqq",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTTPS2DQ_YMMqq_YMMqq",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "VCVTPH2PS_YMMqq_XMMdq",
+   "family": "FP.CVT.f16_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTPH2PS_YMMqq_XMMdq",
+   "family": "FP.CVT.f16_f32",
+   "set": "V2",
+   "class": "F-H2F",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPH2PS_YMMqq_XMMdq",
+   "family": "FP.CVT.f16_f32",
+   "set": "V5",
+   "class": "all 2^16 inputs",
+   "envs": "E8",
+   "lane_cases": 524288
+  },
+  {
+   "iform": "ADDSS_XMMss_XMMss",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "ADDSS_XMMss_XMMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDSS_XMMss_XMMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDSS_XMMss_XMMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDSS_XMMss_XMMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDSS_XMMss_XMMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDSS_XMMss_XMMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDSS_XMMss_XMMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "SUBSS_XMMss_XMMss",
+   "family": "FP.SUB.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "SUBSS_XMMss_XMMss",
+   "family": "FP.SUB.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "SUBSS_XMMss_XMMss",
+   "family": "FP.SUB.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "SUBSS_XMMss_XMMss",
+   "family": "FP.SUB.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "SUBSS_XMMss_XMMss",
+   "family": "FP.SUB.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "SUBSS_XMMss_XMMss",
+   "family": "FP.SUB.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "SUBSS_XMMss_XMMss",
+   "family": "FP.SUB.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "SUBSS_XMMss_XMMss",
+   "family": "FP.SUB.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_XMMss",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "MULSS_XMMss_XMMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_XMMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_XMMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_XMMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_XMMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_XMMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_XMMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "DIVSS_XMMss_XMMss",
+   "family": "FP.DIV.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "DIVSS_XMMss_XMMss",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "DIVSS_XMMss_XMMss",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "DIVSS_XMMss_XMMss",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "DIVSS_XMMss_XMMss",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "DIVSS_XMMss_XMMss",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "DIVSS_XMMss_XMMss",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "DIVSS_XMMss_XMMss",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MAXSS_XMMss_XMMss",
+   "family": "FP.MAX.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "MAXSS_XMMss_XMMss",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MAXSS_XMMss_XMMss",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MAXSS_XMMss_XMMss",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MINSS_XMMss_XMMss",
+   "family": "FP.MIN.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "MINSS_XMMss_XMMss",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MINSS_XMMss_XMMss",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MINSS_XMMss_XMMss",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "UCOMISS_XMMss_XMMss",
+   "family": "FP.COMI.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 1 predicates",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "UCOMISS_XMMss_XMMss",
+   "family": "FP.COMI.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "UCOMISS_XMMss_XMMss",
+   "family": "FP.COMI.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "COMISS_XMMss_XMMss",
+   "family": "FP.COMI.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 1 predicates",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "COMISS_XMMss_XMMss",
+   "family": "FP.COMI.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "COMISS_XMMss_XMMss",
+   "family": "FP.COMI.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VUCOMISS_XMMdq_XMMd",
+   "family": "FP.COMI.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 1 predicates",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VUCOMISS_XMMdq_XMMd",
+   "family": "FP.COMI.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VUCOMISS_XMMdq_XMMd",
+   "family": "FP.COMI.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCOMISS_XMMd_XMMd",
+   "family": "FP.COMI.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 1 predicates",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VCOMISS_XMMd_XMMd",
+   "family": "FP.COMI.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCOMISS_XMMd_XMMd",
+   "family": "FP.COMI.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "CVTTSS2SI_GPR32d_XMMss",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "CVTTSS2SI_GPR32d_XMMss",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "CVTTSS2SI_GPR32d_XMMss",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "CVTTSS2SI_GPR32d_XMMss",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "VCVTTSS2SI_GPR32d_XMMd",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTTSS2SI_GPR32d_XMMd",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTTSS2SI_GPR32d_XMMd",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTTSS2SI_GPR32d_XMMd",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "CVTSS2SI_GPR32d_XMMss",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "CVTSS2SI_GPR32d_XMMss",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "CVTSS2SI_GPR32d_XMMss",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "CVTSS2SI_GPR32d_XMMss",
+   "family": "FP.CVT.f32_i32.rc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "CVTSI2SS_XMMss_GPR32d",
+   "family": "FP.CVT.i32_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "CVTSI2SS_XMMss_GPR32d",
+   "family": "FP.CVT.i32_f32",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "CVTSI2SS_XMMss_GPR32d",
+   "family": "FP.CVT.i32_f32",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC",
+   "lane_cases": 17179869184
+  },
+  {
+   "iform": "VCVTSI2SS_XMMdq_XMMdq_GPR32d",
+   "family": "FP.CVT.i32_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTSI2SS_XMMdq_XMMdq_GPR32d",
+   "family": "FP.CVT.i32_f32",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTSI2SS_XMMdq_XMMdq_GPR32d",
+   "family": "FP.CVT.i32_f32",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC",
+   "lane_cases": 17179869184
+  },
+  {
+   "iform": "ADDPS_XMMps_XMMps",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "ADDPS_XMMps_XMMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_XMMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_XMMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_XMMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_XMMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_XMMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_XMMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_MEMps",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "ADDPS_XMMps_MEMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_MEMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_MEMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_MEMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_MEMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_MEMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_MEMps",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDPS_XMMps_MEMps",
+   "family": "FP.ADD.f32",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 4
+  },
+  {
+   "iform": "MULPS_XMMps_XMMps",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "MULPS_XMMps_XMMps",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULPS_XMMps_XMMps",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULPS_XMMps_XMMps",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULPS_XMMps_XMMps",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULPS_XMMps_XMMps",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULPS_XMMps_XMMps",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULPS_XMMps_XMMps",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MAXPS_XMMps_XMMps",
+   "family": "FP.MAX.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "MAXPS_XMMps_XMMps",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MAXPS_XMMps_XMMps",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MAXPS_XMMps_XMMps",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MINPS_XMMps_XMMps",
+   "family": "FP.MIN.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "MINPS_XMMps_XMMps",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MINPS_XMMps_XMMps",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MINPS_XMMps_XMMps",
+   "family": "FP.MIN.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "CMPPS_XMMps_XMMps_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 8 predicates",
+   "envs": "E8",
+   "lane_cases": 9216000
+  },
+  {
+   "iform": "CMPPS_XMMps_XMMps_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 640000
+  },
+  {
+   "iform": "CMPPS_XMMps_XMMps_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 640000
+  },
+  {
+   "iform": "CVTDQ2PS_XMMps_XMMdq",
+   "family": "FP.CVT.i32_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "CVTDQ2PS_XMMps_XMMdq",
+   "family": "FP.CVT.i32_f32",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "CVTDQ2PS_XMMps_XMMdq",
+   "family": "FP.CVT.i32_f32",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC",
+   "lane_cases": 17179869184
+  },
+  {
+   "iform": "CVTTPS2DQ_XMMdq_XMMps",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "CVTTPS2DQ_XMMdq_XMMps",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "CVTTPS2DQ_XMMdq_XMMps",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V2",
+   "class": "F-DAZ-CVT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "CVTTPS2DQ_XMMdq_XMMps",
+   "family": "FP.CVT.f32_i32.trunc",
+   "set": "V5",
+   "class": "all 2^32 inputs",
+   "envs": "4 RC x DAZ{0,1}",
+   "lane_cases": 34359738368
+  },
+  {
+   "iform": "ADDSS_XMMss_MEMss",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "ADDSS_XMMss_MEMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDSS_XMMss_MEMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDSS_XMMss_MEMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDSS_XMMss_MEMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDSS_XMMss_MEMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDSS_XMMss_MEMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDSS_XMMss_MEMss",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "ADDSS_XMMss_MEMss",
+   "family": "FP.ADD.f32",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 1
+  },
+  {
+   "iform": "MULSS_XMMss_MEMss",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "MULSS_XMMss_MEMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_MEMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_MEMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_MEMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_MEMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_MEMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_MEMss",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MULSS_XMMss_MEMss",
+   "family": "FP.MUL.f32",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 1
+  },
+  {
+   "iform": "MAXSS_XMMss_MEMss",
+   "family": "FP.MAX.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "MAXSS_XMMss_MEMss",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MAXSS_XMMss_MEMss",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MAXSS_XMMss_MEMss",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "MAXSS_XMMss_MEMss",
+   "family": "FP.MAX.f32",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 1
+  },
+  {
+   "iform": "CMPSS_XMMss_XMMss_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 8 predicates",
+   "envs": "E8",
+   "lane_cases": 9216000
+  },
+  {
+   "iform": "CMPSS_XMMss_XMMss_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 640000
+  },
+  {
+   "iform": "CMPSS_XMMss_XMMss_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 640000
+  },
+  {
+   "iform": "VCMPSS_XMMdq_XMMdq_XMMd_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 32 predicates",
+   "envs": "E8",
+   "lane_cases": 36864000
+  },
+  {
+   "iform": "VCMPSS_XMMdq_XMMdq_XMMd_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCMPSS_XMMdq_XMMdq_XMMd_IMMb",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCMPSS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 32 predicates",
+   "envs": "E8",
+   "lane_cases": 36864000
+  },
+  {
+   "iform": "VCMPSS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCMPSS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 2560000
+  },
+  {
+   "iform": "VCMPSS_MASKmskw_MASKmskw_XMMf32_XMMf32_IMM8_AVX512",
+   "family": "FP.CMP.f32",
+   "set": "V3",
+   "class": "mask bit 0 x zero x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8
+  },
+  {
+   "iform": "COMISS_XMMss_MEMss",
+   "family": "FP.COMI.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 1 predicates",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "COMISS_XMMss_MEMss",
+   "family": "FP.COMI.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "COMISS_XMMss_MEMss",
+   "family": "FP.COMI.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "COMISS_XMMss_MEMss",
+   "family": "FP.COMI.f32",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 1
+  },
+  {
+   "iform": "VUCOMISS_XMMf32_XMMf32_AVX512",
+   "family": "FP.COMI.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000 x 1 predicates",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VUCOMISS_XMMf32_XMMf32_AVX512",
+   "family": "FP.COMI.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VUCOMISS_XMMf32_XMMf32_AVX512",
+   "family": "FP.COMI.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "CVTSI2SS_XMMss_GPR64q",
+   "family": "FP.CVT.i64_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "CVTSI2SS_XMMss_GPR64q",
+   "family": "FP.CVT.i64_f32",
+   "set": "V2",
+   "class": "CVT-BND",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_MEMdq",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_MEMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_MEMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_MEMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_MEMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_MEMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_MEMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_MEMdq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_XMMdq_XMMdq_MEMdq",
+   "family": "FP.ADD.f32",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 4
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.ADD.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "CANCEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.ADD.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VADDPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.ADD.f32",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 8
+  },
+  {
+   "iform": "VMAXPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MAX.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMAXPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-DAZ-SEL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MAX.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMAXPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MAX.f32",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 8
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_YMMqq_YMMqq_MEMqq",
+   "family": "FP.MUL.f32",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 8
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.DIV.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.DIV.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VDIVSS_XMMdq_XMMdq_MEMd",
+   "family": "FP.DIV.f32",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 1
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V1",
+   "class": "class-pair grid 144 x 1000",
+   "envs": "E8",
+   "lane_cases": 1152000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "TIE",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "OVF",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-TINY",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "UFL",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "ZEROS",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FTZ-EXACT",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V2",
+   "class": "F-FLAGPRI",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "V3",
+   "class": "all 16 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 512
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "F-MEMFAULT",
+   "class": "prefix masks 0..n on a PAGE_NOACCESS boundary x {merge,zero}",
+   "envs": "default",
+   "lane_cases": 40
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "BCAST",
+   "class": "{1to4} x 144 x 100",
+   "envs": "default",
+   "lane_cases": 57600
+  },
+  {
+   "iform": "VMULPS_XMMf32_MASKmskw_XMMf32_MEMf32_AVX512",
+   "family": "FP.MUL.f32",
+   "set": "BCAST",
+   "class": "masked {1to4} x 144 x 10 x {merge,zero}",
+   "envs": "default",
+   "lane_cases": 11520
+  },
+  {
+   "iform": "VCVTPH2PS_YMMqq_MEMdq",
+   "family": "FP.CVT.f16_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTPH2PS_YMMqq_MEMdq",
+   "family": "FP.CVT.f16_f32",
+   "set": "V2",
+   "class": "F-H2F",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPH2PS_YMMqq_MEMdq",
+   "family": "FP.CVT.f16_f32",
+   "set": "V5",
+   "class": "all 2^16 inputs",
+   "envs": "E8",
+   "lane_cases": 524288
+  },
+  {
+   "iform": "VCVTPH2PS_YMMqq_MEMdq",
+   "family": "FP.CVT.f16_f32",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 8
+  },
+  {
+   "iform": "VCVTPH2PS_ZMMf32_MASKmskw_MEMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V1",
+   "class": "12 classes x 1000",
+   "envs": "E8",
+   "lane_cases": 96000
+  },
+  {
+   "iform": "VCVTPH2PS_ZMMf32_MASKmskw_MEMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V2",
+   "class": "F-H2F",
+   "envs": "E8",
+   "lane_cases": 80000
+  },
+  {
+   "iform": "VCVTPH2PS_ZMMf32_MASKmskw_MEMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V5",
+   "class": "all 2^16 inputs",
+   "envs": "E8",
+   "lane_cases": 524288
+  },
+  {
+   "iform": "VCVTPH2PS_ZMMf32_MASKmskw_MEMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VCVTPH2PS_ZMMf32_MASKmskw_MEMf16_AVX512",
+   "family": "FP.CVT.f16_f32",
+   "set": "F-MEMFAULT",
+   "class": "prefix masks 0..n on a PAGE_NOACCESS boundary x {merge,zero}",
+   "envs": "default",
+   "lane_cases": 544
+  },
+  {
+   "iform": "VPMADDWD_YMMqq_YMMqq_MEMqq",
+   "family": "INT.MADDWD.s16",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPMADDWD_YMMqq_YMMqq_MEMqq",
+   "family": "INT.MADDWD.s16",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPMADDWD_YMMqq_YMMqq_MEMqq",
+   "family": "INT.MADDWD.s16",
+   "set": "F-MEMFAULT",
+   "class": "page-boundary load",
+   "envs": "default",
+   "lane_cases": 8
+  },
+  {
+   "iform": "VPMADDUBSW_XMMi16_MASKmskw_XMMi16_XMMi16_AVX512",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPMADDUBSW_XMMi16_MASKmskw_XMMi16_XMMi16_AVX512",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPMADDUBSW_XMMi16_MASKmskw_XMMi16_XMMi16_AVX512",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V5",
+   "class": "pair domain u8^2 x s8^2",
+   "envs": "default",
+   "lane_cases": 4294967296
+  },
+  {
+   "iform": "VPMADDUBSW_XMMi16_MASKmskw_XMMi16_XMMi16_AVX512",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V3",
+   "class": "all 256 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16384
+  },
+  {
+   "iform": "VPMADDWD_XMMi32_MASKmskw_XMMi16_XMMi16_AVX512",
+   "family": "INT.MADDWD.s16",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPMADDWD_XMMi32_MASKmskw_XMMi16_XMMi16_AVX512",
+   "family": "INT.MADDWD.s16",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPMADDWD_XMMi32_MASKmskw_XMMi16_XMMi16_AVX512",
+   "family": "INT.MADDWD.s16",
+   "set": "V3",
+   "class": "all 16 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 512
+  },
+  {
+   "iform": "VPDPBUSD_XMMi32_MASKmskw_XMMu8_XMMu32_AVX512",
+   "family": "INT.DPBUSD.u8s8",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPDPBUSD_XMMi32_MASKmskw_XMMu8_XMMu32_AVX512",
+   "family": "INT.DPBUSD.u8s8",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPDPBUSD_XMMi32_MASKmskw_XMMu8_XMMu32_AVX512",
+   "family": "INT.DPBUSD.u8s8",
+   "set": "V3",
+   "class": "all 16 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 512
+  },
+  {
+   "iform": "VPMADDUBSW_YMMi16_MASKmskw_YMMi16_YMMi16_AVX512",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPMADDUBSW_YMMi16_MASKmskw_YMMi16_YMMi16_AVX512",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPMADDUBSW_YMMi16_MASKmskw_YMMi16_YMMi16_AVX512",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V5",
+   "class": "pair domain u8^2 x s8^2",
+   "envs": "default",
+   "lane_cases": 4294967296
+  },
+  {
+   "iform": "VPMADDUBSW_YMMi16_MASKmskw_YMMi16_YMMi16_AVX512",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VPMADDWD_YMMi32_MASKmskw_YMMi16_YMMi16_AVX512",
+   "family": "INT.MADDWD.s16",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPMADDWD_YMMi32_MASKmskw_YMMi16_YMMi16_AVX512",
+   "family": "INT.MADDWD.s16",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPMADDWD_YMMi32_MASKmskw_YMMi16_YMMi16_AVX512",
+   "family": "INT.MADDWD.s16",
+   "set": "V3",
+   "class": "all 256 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16384
+  },
+  {
+   "iform": "VPDPBUSD_YMMi32_MASKmskw_YMMu8_YMMu32_AVX512",
+   "family": "INT.DPBUSD.u8s8",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPDPBUSD_YMMi32_MASKmskw_YMMu8_YMMu32_AVX512",
+   "family": "INT.DPBUSD.u8s8",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPDPBUSD_YMMi32_MASKmskw_YMMu8_YMMu32_AVX512",
+   "family": "INT.DPBUSD.u8s8",
+   "set": "V3",
+   "class": "all 256 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 16384
+  },
+  {
+   "iform": "VPMADDUBSW_ZMMi16_MASKmskw_ZMMi16_ZMMi16_AVX512",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPMADDUBSW_ZMMi16_MASKmskw_ZMMi16_ZMMi16_AVX512",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPMADDUBSW_ZMMi16_MASKmskw_ZMMi16_ZMMi16_AVX512",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V5",
+   "class": "pair domain u8^2 x s8^2",
+   "envs": "default",
+   "lane_cases": 4294967296
+  },
+  {
+   "iform": "VPMADDUBSW_ZMMi16_MASKmskw_ZMMi16_ZMMi16_AVX512",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V3",
+   "class": "structured 4198 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 1074688
+  },
+  {
+   "iform": "VPMADDWD_ZMMi32_MASKmskw_ZMMi16_ZMMi16_AVX512",
+   "family": "INT.MADDWD.s16",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPMADDWD_ZMMi32_MASKmskw_ZMMi16_ZMMi16_AVX512",
+   "family": "INT.MADDWD.s16",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPMADDWD_ZMMi32_MASKmskw_ZMMi16_ZMMi16_AVX512",
+   "family": "INT.MADDWD.s16",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VPDPBUSD_ZMMi32_MASKmskw_ZMMu8_ZMMu32_AVX512",
+   "family": "INT.DPBUSD.u8s8",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPDPBUSD_ZMMi32_MASKmskw_ZMMu8_ZMMu32_AVX512",
+   "family": "INT.DPBUSD.u8s8",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPDPBUSD_ZMMi32_MASKmskw_ZMMu8_ZMMu32_AVX512",
+   "family": "INT.DPBUSD.u8s8",
+   "set": "V3",
+   "class": "all 65536 masks x {merge,zero} x 4 rotations",
+   "envs": "default",
+   "lane_cases": 8388608
+  },
+  {
+   "iform": "VPMADDUBSW_XMMdq_XMMdq_XMMdq",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPMADDUBSW_XMMdq_XMMdq_XMMdq",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPMADDUBSW_XMMdq_XMMdq_XMMdq",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V5",
+   "class": "pair domain u8^2 x s8^2",
+   "envs": "default",
+   "lane_cases": 4294967296
+  },
+  {
+   "iform": "VPMADDWD_XMMdq_XMMdq_XMMdq",
+   "family": "INT.MADDWD.s16",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPMADDWD_XMMdq_XMMdq_XMMdq",
+   "family": "INT.MADDWD.s16",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPHADDD_XMMdq_XMMdq_XMMdq",
+   "family": "INT.HADDD",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPHADDD_XMMdq_XMMdq_XMMdq",
+   "family": "INT.HADDD",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPMADDUBSW_YMMqq_YMMqq_YMMqq",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPMADDUBSW_YMMqq_YMMqq_YMMqq",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPMADDUBSW_YMMqq_YMMqq_YMMqq",
+   "family": "INT.MADDUBS.u8s8",
+   "set": "V5",
+   "class": "pair domain u8^2 x s8^2",
+   "envs": "default",
+   "lane_cases": 4294967296
+  },
+  {
+   "iform": "VPMADDWD_YMMqq_YMMqq_YMMqq",
+   "family": "INT.MADDWD.s16",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPMADDWD_YMMqq_YMMqq_YMMqq",
+   "family": "INT.MADDWD.s16",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  },
+  {
+   "iform": "VPHADDD_YMMqq_YMMqq_YMMqq",
+   "family": "INT.HADDD",
+   "set": "V1",
+   "class": "SS3.5 classes x 100000",
+   "envs": "default",
+   "lane_cases": 100000
+  },
+  {
+   "iform": "VPHADDD_YMMqq_YMMqq_YMMqq",
+   "family": "INT.HADDD",
+   "set": "V2",
+   "class": "wrap/saturation boundaries x 10000",
+   "envs": "default",
+   "lane_cases": 10000
+  }
+ ]
+}

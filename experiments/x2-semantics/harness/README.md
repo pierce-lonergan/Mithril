@@ -1,7 +1,8 @@
 # X2 native fuzz harness (Zen 5)
 
-Status: BUILT, SELF-TESTED and REVISED after one review, 2026-10-16 (x2build track; review log §11). **No
-vector under the X2 record has been generated for silicon or run.** The record
+Status: BUILT, SELF-TESTED and REVISED after one review, 2026-10-16 (x2build track; review log §11);
+**REBUILT for the X2 freeze on 2026-10-23 (x2freeze track, §13): 26 census entries, the B6 correction, the final
+budget formula; rebuilt again the same day for the record's revision 4 (§14).** **No vector under the X2 record has been generated for silicon or run.** The record
 ([docs/m0/prereg/X2-checker.md](../../../docs/m0/prereg/X2-checker.md)) is DRAFT; under the
 [collection rule](../../../docs/m0/README.md) the budget (`budget.v1`) waits for it to be FROZEN and SIGNED
 (D0-12, provisional chat answer: batch weekly review). What ran on silicon here: the harness's own plumbing
@@ -24,7 +25,7 @@ Claude: **same family, independent context** (§11).
 | Driver: sampled mode, exhaustive mode (in-process compare **of the observable bytes only**, mismatches with a flood cap, stream hash), fingerprint, affinity pinning, SEH fault capture, `PAGE_NOACCESS` data page for F-MEMFAULT (**load side only**, §4), collection guard (label **and** budget set ids), MXCSR precondition | [x2fuzz.c](x2fuzz.c), [x2harness.h](x2harness.h), [x2sha256.c](x2sha256.c) | built, self-test PASS (9 steps), guards checked ([run_guards.cmd](run_guards.cmd)) |
 | Reference interpreter in C, exact integer arithmetic, one port of each Python lane function and builder | [x2ref.c](x2ref.c), [x2ref.h](x2ref.h) | validated against Python on 1,000,006 lane cases, 0 divergences; unchanged by the revision |
 | Python oracle (predictions from `semantics/table.py`) | [pyref.py](pyref.py) | used by the validation, the dev smoke and the mutant runner |
-| Operand-class generators (12 f32 classes, f16 and integer analogues, 17 targeted classes), E8 environments, V3 masks, flag isolation (fillers + single-active-lane), BCAST (and masked BCAST, for a proposed row), F-MEMFAULT (merge counted, zero as uncounted duplicates), V4 `{er}`; counter-based SplitMix64 per lane case; BUDGET labels by default | [gen_vectors.py](gen_vectors.py) | self-test PASS; plan = budget on 420 of 428 rows (§6) |
+| Operand-class generators (12 f32 classes, f16 and integer analogues, 17 targeted classes), E8 environments, V3 masks, flag isolation (fillers + single-active-lane), BCAST and masked BCAST (a row per EVEX memory form with EVEX.b since 2026-10-23), F-MEMFAULT (merge and zero masking both counted since 2026-10-23), V4 `{er}`; counter-based SplitMix64 per lane case; BUDGET labels by default | [gen_vectors.py](gen_vectors.py) | self-test PASS; plan = budget on all 576 sampled rows of `budget.v1` (§13, §14) |
 | Comparator: lane and execution-flag mismatches per (iform, set, class, env) cell, C-vs-Python divergence, two-run nondeterminism, harness anomalies (incl. preset sticky flags), three-way verdict of §6.3 **with Bochs compared on every record**, provenance checks of every input | [compare.py](compare.py) | self-test PASS |
 | Seeded table mutants (FUZZ-DESIGN §6.4 calibration arm) and their runner | [mutants/](mutants/) | built; calibrated on development data (§9) |
 | Binary formats | [vecfmt.py](vecfmt.py) | used throughout |
@@ -158,9 +159,8 @@ small rows yields exactly the planned lane cases.
    omit it).
 6. F-MEMFAULT's text names prefix, single-bit and alternating masks; its budget row counts prefix masks
    only ((n + 1) × n). The generator follows the row. Since the review it also runs every prefix mask with
-   **zero** masking, as uncounted duplicates (`n_lane_cases` = 0, like the flag-isolation duplicates), so the
-   row total is unchanged; proposed for the record: count them (2 × (n + 1) × n). F-MEMFAULT is load-side
-   only (§4).
+   **zero** masking. At the review they were uncounted duplicates; since 2026-10-23 they are counted, so an
+   EVEX row with zero masking is 2 × (n + 1) × n (FUZZ-DESIGN §9.5 item 6). F-MEMFAULT is load-side only (§4).
 7. F-MASKEXC has no budget row of its own. It is exercised by V3, whose heterogeneous lane vector puts an
    SNaN, a QNaN, a DEN and an overflow-producing value into masked-off lanes under every mask.
 8. **Masked broadcast has no budget row (review finding R1-8).** `merge_bcast` and `zero_bcast` stubs exist for
@@ -359,3 +359,80 @@ Reviewer 1, finding by finding (verified by the reviser before acting; "[M] rev.
 - The 10^6-case interpreter validation is the pre-use check of FUZZ-DESIGN §4; the week-1 measurement of
   interpreter ns per case is in §8; silicon throughput was not measured on table instructions (that would
   need non-hand vectors).
+
+## 13. Rebuild for the X2 freeze (2026-10-23, x2freeze track) [M] desktop
+
+Why: X0 census run 1 added 26 table entries (TABLE-SCHEMA §9.1), the B6 reading was corrected (ZE alone for a
+denormal over ±0; TABLE-SCHEMA §4 rule 7), and the budget formula was made final (FUZZ-DESIGN §5, §9.5). Sources
+were copied to `D:\mithril\x2\src` (zip sha256 `77367fa0…6ed3`); the previous trees are kept as
+`D:\mithril\x2\{src,build,dev}.20261016` and the two intermediate rebuilds of the day as `.20261023a`/`.20261023b`.
+Desktop rules kept: 2 threads at most (`/MP1`, single-thread runs, the 2-thread exhaustive self-test step),
+`CUDA_VISIBLE_DEVICES=-1`, TEMP and TMP on D:, daytime, no WSL. Logs: `devlogs/*.20261023.*`.
+
+Code changes:
+- `stubgen.py`: builder `cmp_scalar` (11), lane function `cvt_i64_to_f32` (15), GPR64 operands (`rax`), EVEX
+  forms without a write mask get the plain variant only, EVEX (V)UCOMISS uses xmm17/xmm18.
+- `x2ref.c`/`x2ref.h`: B6 (ZE alone), `x2_cvt_i64_2f`, `X2B_CMP_SCALAR`, the scalar compare into k, legacy packed
+  forms read src1 from the destination, a unary memory source is read from the src2 slot (RAX = &src2), the
+  integer path no longer keys on `builder >= X2B_INT2`.
+- `x2fuzz.c`: the B6 known answers corrected (plus two silicon vectors), the stub-table check admits builder 11,
+  CVTSI2SS r64 is not V5-eligible (2^64 inputs).
+- `pyref.py`, `gen_vectors.py`, `validate_interp.py`, `devsmoke.py`: the same semantics; 12 integer classes and
+  12 64-bit classes; F-MEMFAULT zero-masking executions counted; the new forms in the dev smoke (E9 vector cases).
+- `run_mutants_devsmoke.cmd` (new): the sealed table mutants against the dev smoke results.
+
+| Item | Value |
+|---|---|
+| Stubs | **664**, 0 encode or decode-back errors, 432 immediates checked, negative control reported; **every stub decodes to its entry's key** (the 11 provisional keys included) |
+| Stub manifest | `63aa76b2dfe98614429071ef996adb7e4e7ef4d54f00c6fde87c55b19abe3a32` |
+| Semantics bundle | `c7cd6851b574af85ebd36091c66f336156f8ab657869a059302e91fc29793eb8` |
+| Interpreter sources / harness sources | `bbac5d7c45e529b484cdcfc00f0163af0d7a71afd8a1e655850e046fe53f6c35` / `40038ee26787168ce41eaf706c09b6074698dabe2af9ce283dc1482b0cc8d273` |
+| `x2fuzz.exe` | `4e33feb04dcad538ab624badc7cdbd0f8e3fb3abe3e502e731407c8ce1f173b8`, MSVC `_MSC_FULL_VER` 194435229, `/O2 /W4 /MP1` |
+| Fingerprint | family 26 model 68 stepping 0, microcode `0x0B404023`, Windows 26200.9711, L3 groups `0xFFFF`, `0xFFFF0000` |
+| `x2fuzz selftest` | PASS; 31 interpreter known answers; exhaustive engine and the silicon plumbing check (**42** V5-eligible stubs × 4,096 inputs, 0 disagreeing; stream hash of the self-oracle test `0bc9da37…`, unchanged) |
+| `semantics.selftest` | 720 checks, 0 failures |
+| `compare.py --selftest`, `gen_vectors.py --selftest` | PASS, PASS (plan = budget on 576 sampled rows, 539,690,903 lane cases) |
+| Interpreter validation | 1,000,006 lane cases in 140,531 executions over all 664 stubs, **0 divergences** (2,032 outside the model in both); vectors `8b0fa839…1b85` |
+| Guards G1-G7 | all refused (exit 2, no results file) |
+| Dev smoke (DEV-SMOKE) | 303 hand vectors extracted + 30 vector cases, 1,593 executions on CPU 4 and CPU 20: **0 lane mismatches, 0 flag mismatches, 0 divergences, 0 nondeterminism, 0 anomalies**; hand = silicon on 1,563 of 1,563 lane executions; vectors `2ed8b426…f10a` |
+| Seeded table mutants on the dev smoke | 21 of 24 detected (8 of the 10 of §6.4); not detected M09, M10, M23: the hand vectors have no integer case and no `{er}` case under DAZ. Not the calibration the record asks for (that runs on the frozen budget's silicon results) |
+
+Not done here: no budget vector generated for silicon; no cross-section of the 26 new forms beyond the dev smoke's
+hand vectors (they run through every new form's plain stub); the Bochs production image; the F-MEMFAULT store side.
+
+## 14. Revision 4 rebuild (2026-10-23, after the review of the X2 record's revision 3) [M] desktop
+
+Why: the review found that the legacy CMPPS/CMPSS entries predicted reserved immediates (8-31), that the 64-bit
+conversion had no sticky-bit construction, and stale docstrings (record §12, TABLE-SCHEMA §15). Sources: zip sha256
+`ee452553…0c5b` (the same 47 files as §13's) to `D:\mithril\x2\src`; the §13 trees are kept as
+`D:\mithril\x2\{src,build,dev}.20261023c`. Desktop clock 16:55:03 to 16:56:25 (laptop 13:55-13:56 PT); 2 threads
+at most. Logs: `devlogs/*.20261023d.*`.
+
+Code changes:
+- `x2ref.c`: `x2_predict` refuses a compare whose imm8 is outside the entry's domain (legacy 0-7, VEX/EVEX 0-31).
+- `x2fuzz.c`: self-test step 4b: the legacy CMPPS and CMPSS stubs predict imm 7 and refuse imm 8.
+- `pyref.py`: a refused compare immediate is reported as unmodeled (as the C interpreter does).
+- `gen_vectors.py`: CVT-BND for CVTSI2SS r64 adds ties ± 1 above 2^32 (`c_tie_sticky64`: T + 1 has the round bit
+  set and only bit 0 below it, 8-38 places down; T − 1 has the round bit clear and every bit below set; a fifth of
+  the row's draws, 16,024 of 80,000 lane cases [M, laptop]) with a self-test (300 draws: one away from a tie, never
+  a tie, never exact, both directions); docstrings and comments on F-MEMFAULT counting, masked broadcast and the
+  64-bit classes corrected. Final file `4261242d38952a1487819c8aa1b17bdd103e7d55f3bb6736f8282ac5245aa6e2` (LF): a
+  docstring-only correction after the run below; its self-test and the guards were re-run on the desktop with it
+  (PASS; G1-G7 refused; `devlogs/gen_selftest.20261023e.log`, `devlogs/guards.20261023e.log`).
+
+| Item | Value |
+|---|---|
+| Stubs | **664**, 0 encode or decode-back errors, 432 immediates checked, negative control detected; every stub decodes to its entry's key |
+| Stub manifest | `430fc5266ef730afb2d280ce3d1c0bf9c701b6ebd80ee7d9ea98083108876260` |
+| Semantics bundle | `0c2a041c363e34ee27a62a873fd0adad5cf8f5711ec2aa3a16cb2f5c9709ff2d` |
+| Interpreter sources / harness sources | `44e29a371dfb0799804fcbaf9fc36d8781f2de6efb5d275acac800d4dbada17c` / `a17f41baf1b6ca886a5273dab63a3b1925df57a16df16f6bb1c53811ad2eb112` |
+| `x2fuzz.exe` | `0feae9334e9ba51bcae3bfa43bdbe1d9d3544a3295ce821bb5be9b8550dcde4c`, MSVC `_MSC_FULL_VER` 194435229, `/O2 /W4 /MP1` |
+| Fingerprint | family 26 model 68 stepping 0, microcode `0x0B404023`, Windows 26200.9711, L3 groups `0xFFFF`, `0xFFFF0000` |
+| `x2fuzz selftest` | PASS (step 4b included); exhaustive plumbing check 42 V5-eligible stubs × 4,096 inputs, 0 disagreeing; self-oracle stream `0bc9da37…`, unchanged |
+| `semantics.selftest` | 725 checks, 0 failures |
+| `compare.py --selftest`, `gen_vectors.py --selftest` | PASS, PASS (plan = budget on 576 sampled rows, 539,690,903 lane cases; 5,700 targeted cases checked) |
+| Interpreter validation | 1,000,006 lane cases in 140,531 executions over all 664 stubs, **0 divergences** (2,032 outside the model in both); vectors `70e63c11…2452` |
+| Guards G1-G7 | all refused (exit 2). The first invocation stopped after G1's refusal because the PowerShell wrapper treated the refusal message on stderr as an error; it was re-run with the redirection inside `cmd` and all seven refused |
+| Dev smoke (DEV-SMOKE) | the same 303 hand vectors + 30 vector cases, 1,593 executions on CPU 4 and CPU 20: **0 lane mismatches, 0 flag mismatches, 0 divergences, 0 nondeterminism, 0 anomalies**; hand = silicon on 1,563 of 1,563; vectors `aa3e9143…baa7` |
+| Seeded table mutants on the dev smoke | 21 of 24 detected; not detected M09, M10, M23 (as in §13) |
+| `x2_gate.py --selftest` | PASS, 24 cases (laptop and desktop) |
