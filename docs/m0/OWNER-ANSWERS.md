@@ -107,3 +107,23 @@ sitting 2 (Sun 2026-10-25), when he re-signs with his key:
    - It never invents an Owner statement.
    - Gate verdicts are computed by `judge.py` and reported to Pierce before they are acted on.
    - Spending money stays excluded: R1 still says no metered API.
+
+## 2026-10-23, batch 5: X1 smoke-run approval (about 12:30 PT)
+
+Pierce's message, verbatim:
+
+> I approve the X1 smoke-run deviations in experiments/x1-harness/smoke/SMOKE.md §2 (development items only), the
+> D-* item substitution (§1.1), the counting rules (§4.4), and the run root C:\Users\Pierce Lonergan\x1s\s1. I'll
+> give you an idle window before you start the controller session there.
+
+Context: the lead engineer had first tried to adopt these items under the batch-4 delegation. The permission system
+blocked that step, and rightly so: departures from a signed record's controls are the Owner's to approve. They were
+put to Pierce instead, and this is his answer.
+
+Consequences:
+- The smoke run may use the kit as it stands (x1smoke/2), on the 8 public development items only, from run root
+  `C:\Users\Pierce Lonergan\x1s\s1`. That root was prepared on 2026-10-23 with mithi SHA-256 `78d9fec7…8cb8` and
+  plan_sha256 `d2d36644…0ca9` [M].
+- The full X1-amendment-1 §2.3 controls remain required before any sealed item is used (SMOKE.md §3).
+- Nothing runs until Pierce names an idle window. In that window the whole account stays quiet, his GEMS session
+  included. The controller session is started in the run root only then.
