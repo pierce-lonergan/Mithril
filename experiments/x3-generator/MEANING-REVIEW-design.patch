@@ -1,0 +1,175 @@
+diff --git a/experiments/x3-generator/DESIGN.md b/experiments/x3-generator/DESIGN.md
+--- a/experiments/x3-generator/DESIGN.md
++++ b/experiments/x3-generator/DESIGN.md
+@@ -287,13 +287,18 @@
+ 
+ ### 3.3 Preconditions, exactness facts and integer views
+ 
++Preconditions are named PRE1–PRE6, not P1–P6, so that they cannot be confused with the schedule
++primitives P1–P15 of §4.2 (2026-10-23 meaning review, finding 6). `meaning.py` carries them as
++`REQUIRES`, and the checker evaluates the shape conditions (PRE5, PRE6) from that text.
++
+ | ID | Statement | Source | Role |
+ |---|---|---|---|
+-| P1 | xq ∈ [−127, 127] | `quant_avx2.c:11`; guaranteed by `act_q8_*` (`quant.c:339-340`); checked by `test_act_quant` (`test_quant.c:979`) | Needed by the AVX2 `vpsignb` trick: `sign(-128)` overflows |
+-| P2 | `A[t][g].sum = Σ_i xq(t,g,i)` | `quant.c:343-346`; `NUMERICS.md:35`; `test_quant.c:981` | Licenses the bias identities (Q4 −8·sum; AVX-512 Q8 −128·sum) |
+-| P3 | MXCSR is the default: RNE, FTZ = DAZ = 0 | 02 §2; Hearth never asserts it today (B1 MXCSR item) | dx can be subnormal (`test_act_quant` subnormal blocks, `test_quant.c:957`), so DAZ would change results |
+-| P4 | Y is disjoint from W and A, W and A are read-only, and all are readable over their extents | `hx_quant.h:45-57` | Licenses hoisting, and the footprint check |
+-| P5 | n % 64 = 0 | `hx_row_bytes`, `quant.c:86-87` | G is an integer |
++| PRE1 | xq ∈ [−127, 127] | `quant_avx2.c:11`; guaranteed by `act_q8_*` (`quant.c:339-340`); checked by `test_act_quant` (`test_quant.c:979`) | Needed by the AVX2 `vpsignb` trick: `sign(-128)` overflows |
++| PRE2 | `A[t][g].sum = Σ_i xq(t,g,i)` | `quant.c:343-346`; `NUMERICS.md:35`; `test_quant.c:981` | Licenses the bias identities (Q4 −8·sum; AVX-512 Q8 −128·sum) |
++| PRE3 | (MXCSR & 0xFFC0) = 0x1F80: rounding to nearest even, FTZ = DAZ = 0, all six exceptions masked; the status flags (bits 0–5) are unconstrained | 02 §2; Hearth never asserts it today (B1 MXCSR item). The precision flag is set during normal runs: MXCSR reads 0x1FA0 or 0x1FBB [M, x3 prototype, laptop, 2026-10-23] | dx can be subnormal (`test_act_quant` subnormal blocks, `test_quant.c:957`), so DAZ would change results; an unmasked invalid or overflow exception would trap on inf − inf or overflow, which the corpus reaches |
++| PRE4 | Y is disjoint from W and A, W and A are read-only, and W, A and Y are readable (Y writable) over their extents | [G] implicit in `hx_quant.h:49-57`, which has no aliasing clause (line 45 is about `hx_act_prepare`); Hearth's callers pass separate buffers (`model.c:341-352`, `mm_set`; prepared activations in `m->xact` or `m->act`, `act_of` `:370-382`) | Licenses hoisting, and the footprint check |
++| PRE5 | n ≥ 0 and n % 64 = 0; T ≥ 0; 0 ≤ r0 ≤ r1 ≤ rows(W) | `hx_row_bytes`, `quant.c:86-87`; `hx_quant.h:50-53` (rows [r0, r1) of W, T activations) | G is an integer; the row range is inside W |
++| PRE6 | T ≤ 1 or ldy ≥ r1 − r0 | [G] implicit in `hx_quant.h:49-57`; callers pass ldy = the row count (`model.c:448-452`, `:881`, `:888`) with r1 ≤ rows (`model.c:298-300`) | The output map (t, r) → t·ldy + r is injective, so the meaning and C4's "written exactly once" are defined. A domain restriction, not a change to the arithmetic: outside it Hearth's own AVX2 and scalar kernels disagree (4 words on one shape [M, x3 prototype, 2026-10-23]) |
+ | E1 | \|I\| ≤ 64·8·127 = **65,024** (Q4); \|I\| ≤ 64·128·127 = **1,040,384** (Q8, **storage range** [−128, 127]); both < 2^24 = 16,777,216 [D] | Q8 raw-byte weights are fed by `test_nonfinite` (`test_quant.c:1238`) | `i2f` is exact, so its rounding mode is irrelevant |
+ | E2 | f16→f32 is exact; `vcvtph2ps` = `q_f16` on all 65,536 inputs | `quant.c:16`; `test_half_all_values`, `test_quant.c:1000-1024` | "Exact widening" row of 03 §6.3 |
+ 
+@@ -328,9 +333,9 @@
+ # x3gen/hearth/meaning.py: meaning text M (counted and reported, not schedule text)
+ BlockQ4 = fmt("BlockQ4", size=34, d=f16, q=nibbles(64, offset=8, hi_at=32))   # hx_quant.h:23
+ BlockQ8 = fmt("BlockQ8", size=66, d=f16, q=i8(64))                           # hx_quant.h:22
+-ActQ8 = fmt("ActQ8", size=72, d=f32, sum=i32, q=i8(64, range=(-127, 127)))   # hx_quant.h:24, P1
+-
+-@kernel(slot="hx_matmul_fn", requires=["A.sum == sum(A.q)", "mxcsr == default"])  # P2, P3
++ActQ8 = fmt("ActQ8", size=72, d=f32, sum=i32, q=i8(64, range=(-127, 127)))   # hx_quant.h:24, PRE1
++
++@kernel(slot="hx_matmul_fn", requires=REQUIRES)  # PRE1-PRE6, the strings of §3.3
+ def q_matmul(F, W: F[R, G], A: ActQ8[T, G], Y: out_f32[T * ldy], r0, r1):
+     for t in outputs(T):
+         for r in outputs(r0, r1):
+@@ -401,14 +406,14 @@
+ | P2 | `reorder(L1, L2)`, interchange | exact | **Only loops that carry no FP dependence move past each other.** A loop is *FP-carried* if its index appears in the affine map from loop indices to g (so after a P1 split of g, both g_o and g_i are FP-carried). **No interchange is allowed between two FP-carried loops**, and an FP-carried loop never moves past another FP-carried loop of the same nest. Every FP accumulator in the moved body is private (expanded, P3) to each iteration of any loop moved outside its initialisation | Interchange never reverses a loop. Each chain (t, r) still sees g = 0..G−1 in increasing order. Distinct chains share no FP value, so their interleaving cannot be observed | Dependence analysis: the loop-carried FP set must be {acc[t,r] via the FP-carried loops}, and no accumulator instance may be shared across the moved loops' iterations. Backstopped by C1's per-chain visit-order check (§4.3), which does not trust this precondition |
+ | P3 | `expand(acc, over=loop)` | exact | The scalar is re-initialised in every iteration of `loop` | Storage only: one location per chain | Liveness check |
+ | P4 | `vectorize(loop, lanes, kind="outputs")` | exact | The loop ranges over independent outputs (r or t), and the lane count is fixed | Lanes never meet in an FP operation. Each lane executes its own scalar chain, and the lane map records lane ↔ output | No FP operation reads two lanes that hold different outputs (no horizontal FP op, no FP shuffle feeding an FP op); the lane map is emitted |
+-| P5 | `lower_isum(using, layout, signed=bias\|sign_transfer)` | int_assoc | The target is an `exact_sum` leaf; every instruction used has validated semantics (§5.4); P1 and P2 hold | Only the integer leaf I(r,g,t) changes form. Its value over Z is unchanged, and i2f of it is exact by E1 | C3, two layers (§4.3): the bit-vector layer proves each integer-consumer input lane equal to a named term (nibble, q+128, \|w\|, x·sgn(w)) by per-lane exhaustive enumeration; the ring layer proves the normal form equals Σ wq·xq. Interval proofs of no saturation (`vpmaddubsw` pair ≤ 3,810 for Q4 and ≤ 32,512 for Q8; Q4 low+high int16 sum ≤ 7,620 [D]) and no int32 wrap (`vpdpbusd` partials ≤ 64·255·127 = 2,072,640 for Q8, unsigned + bias [D]) |
++| P5 | `lower_isum(using, layout, signed=bias\|sign_transfer)` | int_assoc | The target is an `exact_sum` leaf; every instruction used has validated semantics (§5.4); PRE1 and PRE2 hold | Only the integer leaf I(r,g,t) changes form. Its value over Z is unchanged, and i2f of it is exact by E1 | C3, two layers (§4.3): the bit-vector layer proves each integer-consumer input lane equal to a named term (nibble, q+128, \|w\|, x·sgn(w)) by per-lane exhaustive enumeration; the ring layer proves the normal form equals Σ wq·xq. Interval proofs of no saturation (`vpmaddubsw` pair ≤ 3,810 for Q4 and ≤ 32,512 for Q8; Q4 low+high int16 sum ≤ 7,620 [D]) and no int32 wrap (`vpdpbusd` partials ≤ 64·255·127 = 2,072,640 for Q8, unsigned + bias [D]) |
+ | P6 | `tail(loop, narrow(w)\|mask\|dup_last, store=mask)` | exact | The tail covers `(r1−r0) mod lanes` rows. Dead lanes are never stored and never meet a live lane in an FP op. Every load is in bounds | Live lanes compute their own chain. Dead-lane values cannot be observed | C4, value-carrying: every store writes, in each live lane, canon(F_{t,r}(G)) to the address t·ldy + r recomputed from the store's own symbolic address and mask, for every tail width; every load lies in a declared extent. Dead-lane isolation as in P4 |
+ | P7 | `unroll(loop, u\|full)` | exact | Constant trip count, or a remainder loop | u consecutive iterations composed in order (03 §6.4, "unroll by u") | C1 on the unrolled body against u meaning iterations |
+ | P8 | `specialize(pred)` | exact | pred ∈ {`T == 1`} plus the tail predicates of P6. **No specialisation on n, R, r0, r1 or data values** | Each copy is the same program on a sub-domain | C1–C4 run on every copy |
+-| P9 | `hoist(op, out_of=loop)` | exact | op is pure: a load of read-only input (P4), an integer op, an exact conversion, or an IEEE op whose operands are invariant in `loop` (under P3, the same op on the same operands gives the same bits). It does not cross a store that may alias | The same node is computed once and shared (hash-consed). The DAG is identical | Invariance analysis plus the read-only and no-alias facts |
++| P9 | `hoist(op, out_of=loop)` | exact | op is pure: a load of read-only input (PRE4), an integer op, an exact conversion, or an IEEE op whose operands are invariant in `loop` (under PRE3, the same op on the same operands gives the same bits). It does not cross a store that may alias | The same node is computed once and shared (hash-consed). The DAG is identical | Invariance analysis plus the read-only and no-alias facts |
+ | P10 | `block(r by L, t by B)`, register blocking | exact | A composite of P1, P2, P3, P4 and P7 | As its components | As its components, plus C1–C4 |
+ | P11 | `prefetch(buf, ahead=k, unit, hint)` | timing_only | Inserts only `_mm_prefetch`: no destination register, no store; address arithmetic is integer | `PREFETCHh` has no architectural data result | Removing every prefetch op yields the unprefetched lane program exactly (IR diff) |
+-| P12 | `map_fp(op → instr)` | exact | The instruction's table semantics is the same IEEE op, lane-wise, RNE under P3 (`vaddps`, `vmulps`, `vcvtdq2ps`, `vcvtph2ps`) | One-to-one op replacement | The table entry equals the lifted scalar op; the entry is validated against silicon (§5.4) |
++| P12 | `map_fp(op → instr)` | exact | The instruction's table semantics is the same IEEE op, lane-wise, RNE under PRE3 (`vaddps`, `vmulps`, `vcvtdq2ps`, `vcvtph2ps`) | One-to-one op replacement | The table entry equals the lifted scalar op; the entry is validated against silicon (§5.4) |
+ | P13 | `canon_store(lowering)` | exact | lowering ∈ {`cmp_unord` + `mask_mov`, `cmpunord` + `blendv`, scalar branch}. **Lifting rule:** before P15's dataflow check and C1 run, a lowering is lifted to one `canon(v)` node only if its selector is `cmp_unord(v, v)` on the same SSA value v that it selects from, and its replacement operand is the constant 0x7fc00000 in every lane. Any other `blendv`, `mask_mov` or branch on a comparison is not canon; it is a NaN-observing consumer (03 §6.3) | `canon` at the sink, exactly once per output | Each lowering is checked exhaustively over all 2^32 binary32 inputs against `q_canon` (daytime, compiled C). C1 requires exactly one lifted canon on every path from an accumulator's final value to its store |
+ | P14 | `load_scales(pack=gpr64, convert)` | exact | Integer packing of the f16 bit patterns, then an exact widening | Data movement plus exact widening (03 §6.3 rows) | Symbolic bit identity of each packed lane with its source `d` field |
+ | P15 | `commute(op)` | exact, with side condition | No NaN-observing consumer between op and `canon` (03 §6.3). For this meaning that holds: the chain has no MAX/MIN, no bitwise op and no sign-driven select before `canon` | Exact for every non-NaN value. NaN-ness is preserved and the payload is erased at the sink | Dataflow check on the DAG **after** P13's lifting rule, so a valid canon lowering is the sink and is not itself flagged; an unlifted select is flagged |
+@@ -475,13 +480,13 @@
+     q + 128 (the xor bias); \|w\| as u8; x·sgn(w) as s8; an activation byte; or a constant. The proof
+     is exhaustive enumeration of that lane's inputs under the declared ranges, which is at most 2^16
+     cases: the two source bytes of a 16-bit shift, or the (w, x) byte pair of `sign_epi8`, with
+-    x ∈ [−127, 127] (P1) and w ∈ [−128, 127]. Example: after `srli_epi16(v, 4)`, the low byte of a
++    x ∈ [−127, 127] (PRE1) and w ∈ [−128, 127]. Example: after `srli_epi16(v, 4)`, the low byte of a
+     word holds (b_lo >> 4) | ((b_hi & 0x0f) << 4); only the following `& 0x0f` makes it the high
+     nibble of b_lo, and only enumeration over (b_lo, b_hi) shows it.
+   - **(b) Ring layer.** With the leaves named by (a), each `I` is normalised as a polynomial over Z.
+     One lemma is used: abs_u8(w)·sign_s8(x, w) = w·x for w ∈ [−128, 127] and x ∈ [−127, 127],
+     proved by enumerating all 2^16 cases and listed in the report as a checker lemma. The bias
+-    identities (Q4 −8·sum, AVX-512 −bias·sum) use P2, `sum = Σ xq`. Saturating and wrapping integer
++    identities (Q4 −8·sum, AVX-512 −bias·sum) use PRE2, `sum = Σ xq`. Saturating and wrapping integer
+     ops are replaced by exact ops only after interval arithmetic proves that they neither saturate
+     nor wrap; otherwise the check rejects. The normal form must equal Σ wq·xq: at most 64 bilinear
+     terms plus linear bias terms. The check is deterministic, not randomised.
+@@ -514,7 +519,7 @@
+ | B4 | Additive-identity edits: dropping `acc_0 = +0.0`, or `x + 0.0 → x` | `+0.0 + (−0.0) = +0.0`, so the sign of a zero result changes (03 §6.3 "never" list) | `simplify` on data |
+ | B5 | Precision changes: double accumulation, f16 arithmetic | Not the meaning's ops | `set_precision` |
+ | B6 | Approximation instructions (RCP*, RSQRT*) or non-default rounding | Not exact | — |
+-| B7 | MXCSR or FP-environment writes | Violates P3 | — |
++| B7 | MXCSR or FP-environment writes | Violates PRE3 | — |
+ | B8 | Cross-lane FP operations between different outputs | Reassociation across outputs | — |
+ | B9 | Escape hatches: verbatim C or intrinsic text in a schedule, an unchecked instruction template, `unsafe_*` flags, editing generated C by hand (07 §7) | Unchecked | `make_instr`, `rewrite_expr`, `call_eqv` |
+ | B10 | Threads (`parallel`) | X3 is single-thread. Hearth's pool splits rows outside the kernel | `parallelize_loop` |
+@@ -555,7 +560,7 @@
+ 19. a T-blocked accumulator array indexed `acc[t mod 4]` with TCH = 8 (two chains share storage);
+ 20. Q4 `srli_epi16(v, 4)` without the following `& 0x0f`;
+ 21. Q8 `sign_epi8` with its operands swapped;
+-22. x = −128 admitted in the declared activation range (breaks P1 and the sign lemma);
++22. x = −128 admitted in the declared activation range (breaks PRE1 and the sign lemma);
+ 23. canon on the T == 1 path only, missing on the T > 1 path;
+ 24. canon applied before the final add of the chain;
+ 25. acc_0 = `set1(−0.0)`, which differs from +0.0 whenever I = 0 and dw·dx < 0;
+@@ -566,6 +571,44 @@
+ Items 16–28 were added after review (§17): 16–19 target C1's visit-order and injectivity checks,
+ 20–22 C3's bit-vector layer, 23–25 the canon and initial-value rules, and 26–28 C4's
+ value-carrying store check.
++
++Items 29–57 were added after the two 2026-10-23 reviews of the prototype (§17); their programs are
++in `proto/tests/planted.py`:
++29. FMA on `acc + q`, only when G ≥ 6;
++30. inside the g loop, `if (G >= 6)` FMA else add;
++31. g reversed, only when G ≥ 6;
++32. `(i2f(I)·dw)·dx` on the T > 1 path, only when T ≥ 18;
++33. accumulation in double, only when r1 − r0 ≥ 64;
++34. canon omitted, only when n ≥ 4096;
++35. AVX-512 quad lanes swapped, only when G ≥ 6;
++36. activation address `ap + (g >= 6 ? 24 : 40)` (the llama order from block 6);
++37. a copy `G2 = G` decides: g reversed when G2 ≥ 6;
++38. activation address + (G−1)(G−2)(G−3)(G−4)(G−5)·72;
++39. loop-carried counters C(g, 5) shift the high half from block 5;
++40. a G-dependent constant selects `(i2f·dw)·dx` when G ≥ 6;
++41. canon into shadowing declarations, so C stores the outer value;
++42. the x1 activation offset computed through a `size_t` wrap and a division (C reads ap + 24);
++43. the same through a `0u` literal;
++44. the same through an `(int)` narrowing of 2^32;
++45. the same through `(size_t)G − 6`, which wraps for G ≤ 5;
++46. a `uint32_t` declared as 0 − 1 decides the x1 offset;
++47. comment text that closes the comment and adds `acc = acc + acc`;
++48. a declared identifier that carries `acc = acc * acc`;
++49. a declared C type that carries `acc = acc − acc`;
++50. a cast type string that rewrites the x1 offset;
++51. the accumulator update object placed a second time, in a loop that runs only for T ≥ 19;
++52. rb = 34·G held in an `int16_t` array element;
++53. comment text that closes the comment and adds an FMA;
++54. a call nested in an operator-spelled argument (`mul(sub(c, 8), x)` printed `c - 8 * x`);
++55. a placeholder glued to a suffix (`x3_f32bits(q0u)` reads another variable);
++56. a call result declared with another type (`const int32_t ad = x3_ldf(ap)`);
++57. an integer passed to a float parameter (`_mm256_set1_ps(0x7fc00000)` is 2.1·10^9, not NaN).
++
++29–36 and 42–53 are the reviewers' (29–36 guard a DAG change behind a shape outside the bounded
++set; 42–53 use C integer semantics, verbatim print channels, object identity and a narrow array);
++37–41 and 54–57 are the revisers', found while fixing them. All 57 are rejected by the prototype's
++checker [M, 2026-10-23]; that is evidence about these mutants only, and every one was written by
++the same model family as x3gen.
+ 
+ The suite is written by the same model family as x3gen, and the review log says so (m0/README
+ independence rule).
+@@ -847,7 +890,7 @@
+ | 3 | Object scan (reusing X0's XED tooling on B's generated functions and their call closure) | Zero FMA-class iclasses, zero approximation iclasses (RCP*, RSQRT*, VRCP14*, VRSQRT14*) and zero MXCSR writes. Any instruction outside X0's census union is listed (needed for T1) |
+ | 4 | `test_quant --no-bench` on A and on B, under each compiler; also with `HEARTH_ISA=avx2` and `HEARTH_ISA=scalar` set for the parent, as T02 did | B: exit code 0, "0 failures", and **a check count equal to A's count under the same compiler and machine**. For context, the count was 117,681 checks at T02-kernels-gen-002 (MSVC 14.44, /O2, `--no-bench`) [R11]; the count at b5d3f14 is whatever A reports [M at run time]. B's printed ISA list must be "scalar avx2 avx512" |
+ | 5 | Golden suite through `check_golden.py --run` against B's library | All tests pass, with no skips. Specifically `test_isa_identity` (`test_golden_invariants.py:124-135`) and `test_kernel_isa_and_batch_identity` for Q8 and Q4 (`:138-162`). The X3 runner first asserts `hearth_cpu_isa() == AVX512`, because `test_isa_identity` silently drops an ISA that raises `HearthError` (`:131-132`) |
+-| 6 | Cross-binary kernel corpus (X3-local, in the shape of 07 §2.3's "Kernels" part) | `hearth_matmul` output bytes from B equal A's for Q4 and Q8 × ISA {1, 2, 3} × T ∈ {1..9, 16} × rows ∈ {1..67} × n ∈ {64, 128, 192, 320, 4096} × r-splits as in `test_quant.c:1078-1088`. That is 2 × 3 × 10 × 67 × 5 = 20,100 whole-range calls per compiler [D], plus the row-split repetitions, each output hashed with SHA-256. **Input rule, so that P1 and P2 always hold:** activation codes q and `sum` always come from the hand `act_quantize_q8` of the **scalar** ISA, as in `test_nonfinite` (`test_quant.c:1238-1251`, which randomises only W and builds activations with `act_quantize_q8`). Raw or special values are injected only into W's code bytes, W's f16 `d` (NaN, ±inf, subnormal) and A's f32 `d` after quantisation (NaN, ±inf, subnormal). A separate descriptive "precondition-violating" corpus (raw activation bytes, inconsistent `sum`) may be run; it is never gated |
++| 6 | Cross-binary kernel corpus (X3-local, in the shape of 07 §2.3's "Kernels" part) | `hearth_matmul` output bytes from B equal A's for Q4 and Q8 × ISA {1, 2, 3} × T ∈ {1..9, 16} × rows ∈ {1..67} × n ∈ {64, 128, 192, 320, 4096} × r-splits as in `test_quant.c:1078-1088`. That is 2 × 3 × 10 × 67 × 5 = 20,100 whole-range calls per compiler [D], plus the row-split repetitions, each output hashed with SHA-256. **Input rule, so that PRE1 and PRE2 always hold:** activation codes q and `sum` always come from the hand `act_quantize_q8` of the **scalar** ISA, as in `test_nonfinite` (`test_quant.c:1238-1251`, which randomises only W and builds activations with `act_quantize_q8`). Raw or special values are injected only into W's code bytes, W's f16 `d` (NaN, ±inf, subnormal) and A's f32 `d` after quantisation (NaN, ±inf, subnormal). A separate descriptive "precondition-violating" corpus (raw activation bytes, inconsistent `sum`) may be run; it is never gated |
+ | 7 | Meaning and printer differentials (§3.5, §5.4) | Byte equality |
+ | 8 | WSL2 Linux Clang (X0 configuration D, the actual Linux release compiler): steps 1, 4 and 6 on Linux builds of A and B | As above |
+ | 9 | If X2 is ready (§11): T1 on the four SIMD lane programs (Q4/Q8 × AVX2/AVX-512) | T1 accepts all four |
+@@ -1753,6 +1796,16 @@
+ | 2026-10-16 | Reviewer 1: statistics, measurement protocol, quiet-hour cost, calendar | Claude (same family as author; independent context) | 1 / 9 / 5 | 15 | 0 |
+ | 2026-10-16 | Reviewer 2: checker soundness (C1–C4), instruction semantics, toolchains, Exo classification, test oracle | Claude (same family as author; independent context) | 0 / 3 / 6 | 9 | 0 |
+ | **Total** | | | **1 / 12 / 11 = 24** | **24** | **0** |
++| 2026-10-23 | Prototype review 1: checker soundness, primitives, meaning preconditions, bit-identity corpus | Claude (same family; independent context) | 0 / 2 / 3 | 5 | 0 |
++| 2026-10-23 | Prototype review 2, reviewer 1: the meaning against `NUMERICS.md:38-62` and `quant.c:388-427` (§3.5) | Claude (same family; independent context) | 0 / 1 / 6 (one a no-change result) | 7 | 0 |
++| 2026-10-23 | Prototype review 2, reviewer 2: the revised checker (fresh mutants by other methods) | Claude (same family; independent context) | 0 / 3 / 4 | 7 | 0 |
++
++The 2026-10-23 rows review the prototype in `proto/`, not this document's text; their per-finding
++records are in [proto/README.md](proto/README.md#review-log) and
++[MEANING-REVIEW.md](MEANING-REVIEW.md). The meaning review found no transcription error. Its
++wording findings changed §3.3: PRE3 is the MXCSR predicate above, PRE4 is sourced as a judgment,
++PRE5 states the whole shape domain, PRE6 is new (a domain restriction, not a change to the
++arithmetic), and the preconditions were renamed PRE1–PRE6.
+ 
+ The reviser (same family, a third independent context) checked every finding against the sources
+ before applying it: Hearth b5d3f14 (`CMakeLists.txt`, `quant_avx2.c`, `quant_avx512.c`, `quant.c`,
+diff --git a/docs/m0/prereg/X3-generator.md b/docs/m0/prereg/X3-generator.md
+--- a/docs/m0/prereg/X3-generator.md
++++ b/docs/m0/prereg/X3-generator.md
+@@ -489,7 +489,7 @@
+ | Generator and checker share an author, so their bugs can be correlated | Oracles independent of x3gen: `ref_qrow`, the pinned hashes and `memcmp` identities in `test_quant`; the cross-binary corpus (D§7 step 6); T1 if X2 is ready. The checker recomputes identities from load and store addresses and treats lane maps as untrusted hints (D§4.3). Before T0 it must reject every planted lane program (items 1–28 of D§4.5 and every item added since) and accept the six hand-kernel transliterations (D§4.5) |
+ | The checker trusts an unvalidated multi-instruction idiom | C3's bit-vector layer proves each integer-consumer lane by enumeration (≤ 2^16 cases); one named lemma for the AVX2 sign trick; one named multi-op `isa/` entry (`scalar.h2f_bits`), validated over all 65,536 inputs (D§4.3, D§5.1) |
+ | The test oracle mis-rounds binary32 | `rne_f32` with explicit overflow and NaN handling, tested against compiled C (D§5.1) |
+-| The corpus violates P1 or P2 | Activation codes and sums come only from the scalar `act_quantize_q8`; special values only in W's bytes, W.d and A.d (D§7 step 6) |
++| The corpus violates PRE1 or PRE2 | Activation codes and sums come only from the scalar `act_quantize_q8`; special values only in W's bytes, W.d and A.d (D§7 step 6) |
+ | Code layout and alignment differ between the two binaries | K = 3 link-order variants per arm and compiler, drawn per block; equal-length paths; a fixed environment block; per-variant ratios and a "layout-sensitive" label; the one-binary control for attribution (D§6, D§8.2, D§8.4, D§8.6) |
+ | Common work inside the timed segment compresses the ratio toward 1 | Two clock reads around the R calls only; traces only in separate descriptive runs; decode timed by `wall_s` with hashing outside (D§8.2, D§8.3) |
+ | Frequency, thermal and background drift | Quiet windows; the per-LP load gate with sibling and same-CCD voids; the clock probe before and after each run; the calibration envelope; A/A sentinels; trend (p and magnitude) and median-envelope voids (D§8.4) |

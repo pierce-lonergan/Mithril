@@ -4,12 +4,16 @@ Sources, all at Hearth b5d3f14 (blob ids in DESIGN.md section 6):
   formats              engine/src/hx_quant.h:20-28
   slot contract        engine/src/hx_quant.h:49-57 (rows [r0, r1), T tokens, Y[t*ldy + r])
   canonical matvec     docs/NUMERICS.md:38-48; Q4 wq = nibble - 8 (:45); acc order (:46)
-  Q4 bias identity     docs/NUMERICS.md:50 (licenses lower_isum's bias form, with P2)
+  Q4 bias identity     docs/NUMERICS.md:50 (licenses lower_isum's bias form, with PRE2)
   canonical NaN        docs/NUMERICS.md:56-58; engine/src/quant.c:53-65 (HX_CANON_NAN, q_canon)
   batched == single    docs/NUMERICS.md:60-62
   scalar definition    engine/src/quant.c:388-405 (mm_q8_scalar), :407-427 (mm_q4_scalar)
   f16 -> f32           engine/src/quant.c:16-35 (q_f16), exact (E2)
-  activation range/sum engine/src/quant.c:339-346 (P1, P2); precondition quant_avx2.c:11
+  activation range/sum engine/src/quant.c:339-346 (PRE1, PRE2); precondition quant_avx2.c:11
+
+Preconditions are named PRE1-PRE6 (REQUIRES), not P1-P6, so that they cannot be confused with the
+schedule primitives P1-P15 (review 2026-10-23, meaning lens, finding 6). The checker evaluates the
+shape conditions (PRE5, PRE6) from this text and refuses a REQUIRES string it does not know.
 """
 
 from x3gen.core.fmt import Codes, Format, Scalar, SlotSig
@@ -48,15 +52,28 @@ SLOT = SlotSig(
 )
 
 REQUIRES = (
-    "A.sum == sum(A.q)",  # P2: quant.c:343-346; NUMERICS.md:35
-    "mxcsr == default",  # P3: RNE, FTZ = DAZ = 0
-    "n % 64 == 0",  # P5: quant.c:86-87
-    "Y disjoint from W and A",  # P4: hx_quant.h:45-57
-    # P6 (proposed for DESIGN 3.3): the output map (t, r) -> t*ldy + r is injective, so "written
-    # exactly once" is defined. The slot contract hx_quant.h:49-57 leaves it implicit; the callers
-    # pass ldy = the matrix's row count (e.g. model.c:448-452, 881, 888) and split rows inside
-    # [0, rows) (model.c:298-300), so ldy >= r1 >= r1 - r0. Without it Hearth's own scalar and
-    # AVX2 kernels disagree (their store orders differ).
+    # PRE1: quant_avx2.c:11; guaranteed by act_q8_* (quant.c:339-340). Carried by ActQ8.q.value_range.
+    "A.q in [-127, 127]",
+    # PRE2: quant.c:343-346; NUMERICS.md:35. Licenses the bias forms of lower_isum.
+    "A.sum == sum(A.q)",
+    # PRE3: rounding to nearest even, FTZ = DAZ = 0, all six exceptions masked (bits 6-15 of MXCSR);
+    # the status flags (bits 0-5) are unconstrained: the precision flag is set during normal runs.
+    "(mxcsr & 0xFFC0) == 0x1F80",
+    # PRE4: [G] implicit in hx_quant.h:49-57, which has no aliasing clause (line 45 is about
+    # hx_act_prepare). Hearth's callers pass separate buffers: mm_set (model.c:341-352) gets the
+    # weights, a prepared activation buffer (m->xact or m->act, act_of :370-382) and a scratch Y.
+    "Y disjoint from W and A",
+    "W and A readable, Y writable, over their extents",
+    # PRE5: the shape. n: hx_row_bytes (quant.c:86-87); rows [r0, r1) of W and T activations:
+    # hx_quant.h:50-53. rows(W) is the number of rows the W buffer holds.
+    "n >= 0 and n % 64 == 0",
+    "T >= 0",
+    "0 <= r0 <= r1 <= rows(W)",
+    # PRE6: the output map (t, r) -> t*ldy + r is injective, so "written exactly once" is defined.
+    # [G] implicit in hx_quant.h:49-57; the callers pass ldy = the matrix's row count (e.g.
+    # model.c:448-452, 881, 888) and split rows inside [0, rows) (model.c:298-300), so
+    # ldy >= r1 >= r1 - r0. Without it Hearth's own scalar and AVX2 kernels disagree (their store
+    # orders differ).
     "T <= 1 or ldy >= r1 - r0",
 )
 

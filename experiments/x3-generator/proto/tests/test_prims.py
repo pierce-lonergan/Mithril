@@ -122,7 +122,7 @@ class P5LowerIsum(unittest.TestCase):
         with self.assertRaises(PrimError):
             fresh(Q8).lower_isum("maddubs", signed="bias")
 
-    def test_sign_transfer_needs_P1(self):
+    def test_sign_transfer_needs_PRE1(self):
         # planted 22 at primitive level
         import planted
 

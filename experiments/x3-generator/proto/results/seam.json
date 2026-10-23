@@ -6,22 +6,22 @@
     "hx_x3_mm_q8_scalar"
    ],
    "warnings": [
-    "C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\seam\\patched\\engine\\src\\quant.c(388,13): warning: unused function 'mm_q8_scalar' [-Wunused-function]",
-    "C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\seam\\patched\\engine\\src\\quant.c(407,13): warning: unused function 'mm_q4_scalar' [-Wunused-function]",
+    "C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3meaning-rev\\seam\\patched\\engine\\src\\quant.c(388,13): warning: unused function 'mm_q8_scalar' [-Wunused-function]",
+    "C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3meaning-rev\\seam\\patched\\engine\\src\\quant.c(407,13): warning: unused function 'mm_q4_scalar' [-Wunused-function]",
     "2 warnings generated."
    ]
   },
   "engine/src/quant_avx2.c": {
    "warnings": [
-    "C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\seam\\patched\\engine\\src\\quant_avx2.c(334,13): warning: unused function 'mm_q8_avx2' [-Wunused-function]",
-    "C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\seam\\patched\\engine\\src\\quant_avx2.c(337,13): warning: unused function 'mm_q4_avx2' [-Wunused-function]",
+    "C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3meaning-rev\\seam\\patched\\engine\\src\\quant_avx2.c(334,13): warning: unused function 'mm_q8_avx2' [-Wunused-function]",
+    "C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3meaning-rev\\seam\\patched\\engine\\src\\quant_avx2.c(337,13): warning: unused function 'mm_q4_avx2' [-Wunused-function]",
     "2 warnings generated."
    ]
   },
   "engine/src/quant_avx512.c": {
    "warnings": [
-    "C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\seam\\patched\\engine\\src\\quant_avx512.c(358,13): warning: unused function 'mm_q8_avx512' [-Wunused-function]",
-    "C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\seam\\patched\\engine\\src\\quant_avx512.c(361,13): warning: unused function 'mm_q4_avx512' [-Wunused-function]",
+    "C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3meaning-rev\\seam\\patched\\engine\\src\\quant_avx512.c(358,13): warning: unused function 'mm_q8_avx512' [-Wunused-function]",
+    "C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3meaning-rev\\seam\\patched\\engine\\src\\quant_avx512.c(361,13): warning: unused function 'mm_q4_avx512' [-Wunused-function]",
     "2 warnings generated."
    ]
   }
@@ -34,20 +34,20 @@
   "engine/src/quant.c": {
    "byte_identical": true,
    "identical_except_coff_timestamp": true,
-   "patched_off_sha256": "f631db7a6fa9da936abceb6b09165f97a7f67a9d8c9e19264c63561ed6a1a49c",
-   "pristine_sha256": "f631db7a6fa9da936abceb6b09165f97a7f67a9d8c9e19264c63561ed6a1a49c"
+   "patched_off_sha256": "b4dbf310e18cde2646c61c77a713f3a6786d9500e7ea193195ea4b9710b1316c",
+   "pristine_sha256": "b4dbf310e18cde2646c61c77a713f3a6786d9500e7ea193195ea4b9710b1316c"
   },
   "engine/src/quant_avx2.c": {
-   "byte_identical": false,
+   "byte_identical": true,
    "identical_except_coff_timestamp": true,
-   "patched_off_sha256": "915bbaaea7408a855877b2c4bb558080879e1bef249f3b0e55aa626e51860916",
-   "pristine_sha256": "ca551c7732fde10d2ed015213d8ec339f31c84868b7bb77000f0eff3613f4acf"
+   "patched_off_sha256": "d1019754c267cc2a7d960ea12e13b8147578c3408d51e58d0603c376765cfedf",
+   "pristine_sha256": "d1019754c267cc2a7d960ea12e13b8147578c3408d51e58d0603c376765cfedf"
   },
   "engine/src/quant_avx512.c": {
    "byte_identical": false,
    "identical_except_coff_timestamp": true,
-   "patched_off_sha256": "98b4dcb09c6392d940eb0920c4302a31af2a3b2db5ab2a6768b78a5b27e8b91e",
-   "pristine_sha256": "0f50e0468fe5a348f6ca4702d2900fb2b4353ae118dc7ae977836416cee2e811"
+   "patched_off_sha256": "b741e6ea7ba60299cd371832e1c4e638a4a02ca51c30aba7d9d51d59ca3ead70",
+   "pristine_sha256": "caf1d9f5eb4da026a486236c6fcddc14b10d4a362bea147ca818a7e1e7ab413b"
   }
  },
  "patch_lines": 99,

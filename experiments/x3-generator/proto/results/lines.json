@@ -101,8 +101,8 @@
   },
   "check.py": {
    "black_unchanged": true,
-   "loc": 1308,
-   "tokens": 13873
+   "loc": 1876,
+   "tokens": 19405
   },
   "emit.py": {
    "black_unchanged": true,
@@ -116,8 +116,8 @@
   },
   "fp32.py": {
    "black_unchanged": true,
-   "loc": 42,
-   "tokens": 367
+   "loc": 54,
+   "tokens": 442
   },
   "interp.py": {
    "black_unchanged": true,
@@ -132,7 +132,7 @@
   "lower.py": {
    "black_unchanged": true,
    "loc": 380,
-   "tokens": 3969
+   "tokens": 3959
   },
   "lp.py": {
    "black_unchanged": true,
@@ -141,8 +141,8 @@
   },
   "printer.py": {
    "black_unchanged": true,
-   "loc": 177,
-   "tokens": 1590
+   "loc": 244,
+   "tokens": 2337
   },
   "recipes.py": {
    "black_unchanged": true,
@@ -151,7 +151,7 @@
   },
   "sched.py": {
    "black_unchanged": true,
-   "loc": 338,
+   "loc": 340,
    "tokens": 3063
   },
   "sem.py": {
@@ -160,9 +160,9 @@
    "tokens": 3938
   }
  },
- "L_loc": 3538,
- "M_loc": 63,
- "M_plus_S_over_H": 0.3729,
+ "L_loc": 4187,
+ "M_loc": 67,
+ "M_plus_S_over_H": 0.3861,
  "S_loc_conservative": 50,
  "S_max_loc": 90,
  "S_over_H": 0.165,
@@ -237,25 +237,25 @@
    }
   },
   "x3gen/core/sched.py": {
-   "368": {
+   "370": {
     "hits": [
      "tch"
     ],
     "text": "def prefetch(self, buf, ahead):"
    },
-   "370": {
+   "372": {
     "hits": [
      "tch"
     ],
     "text": "raise PrimError(\"P11: prefetch of the weight stream only, at a positive distance\")"
    },
-   "371": {
+   "373": {
     "hits": [
      "tch"
     ],
     "text": "pid = self.s.log.add(\"P11.prefetch\", (buf, ahead), [\"P11: inserts _mm_prefetch only\"])"
    },
-   "374": {
+   "376": {
     "hits": [
      "tch"
     ],

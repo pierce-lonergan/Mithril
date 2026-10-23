@@ -65,12 +65,12 @@ def check_isum(kernel, using, opts):
     signed_mode = opts.get("signed", "bias")
     (ulo, uhi), bias = _code_range(F, signed_mode)
     if bias and "A.sum == sum(A.q)" not in kernel.requires:
-        raise PrimError("P5: the bias form needs P2 (A.sum == sum(A.q))")
+        raise PrimError("P5: the bias form needs PRE2 (A.sum == sum(A.q))")
     if signed_mode == "sign_transfer":
         if xlo < -127:
-            raise PrimError("P5: sign transfer needs x in [-127, 127] (P1): sign(-128) overflows")
+            raise PrimError("P5: sign transfer needs x in [-127, 127] (PRE1): sign(-128) overflows")
         facts.append(
-            "P5: |w| * (x * sgn w) = w * x for w in [-128,127], x in [-127,127] (P1); "
+            "P5: |w| * (x * sgn w) = w * x for w in [-128,127], x in [-127,127] (PRE1); "
             "re-proved by exhaustive enumeration in C3"
         )
     if using == "maddubs":
@@ -101,7 +101,7 @@ def check_isum(kernel, using, opts):
         raise PrimError("P5: unknown integer recipe %r" % using)
     if bias:
         facts.append(
-            "P5: bias identity sum(u*x) - %d*sum(x) = sum(w*x), with sum(x) = A.sum by P2" % bias
+            "P5: bias identity sum(u*x) - %d*sum(x) = sum(w*x), with sum(x) = A.sum by PRE2" % bias
         )
     return facts
 

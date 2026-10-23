@@ -320,12 +320,123 @@
    "c_harness": "detected",
    "mismatching_words": 20103,
    "faults": 0
+  },
+  {
+   "id": 42,
+   "what": "x1 offset via size_t wrap and division (C: ap+24)",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 48248,
+   "faults": 0
+  },
+  {
+   "id": 43,
+   "what": "x1 offset via a 0u literal (C: ap+24)",
+   "variant": "avx2/q4",
+   "c_harness": "not printable: literal '0u'"
+  },
+  {
+   "id": 44,
+   "what": "x1 offset via (int) narrowing of 2^32 (C: ap+24)",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 48248,
+   "faults": 0
+  },
+  {
+   "id": 45,
+   "what": "x1 offset via (size_t)G - 6 (C: ap+24 for G <= 5)",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 39909,
+   "faults": 0
+  },
+  {
+   "id": 46,
+   "what": "uint32_t kk = 0 - 1 decides the x1 offset",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 48248,
+   "faults": 0
+  },
+  {
+   "id": 47,
+   "what": "comment text closes itself: acc = acc + acc",
+   "variant": "avx2/q4",
+   "c_harness": "not printable: comment text '*/ acc = _mm256_add_ps(acc, acc); /*'"
+  },
+  {
+   "id": 48,
+   "what": "a declared identifier carries acc = acc * acc",
+   "variant": "avx2/q4",
+   "c_harness": "not printable: identifier 'zz = _mm256_setzero_ps(); acc = _mm256_mul_ps(acc, acc); __m256 zz2'"
+  },
+  {
+   "id": 49,
+   "what": "a declared C type carries acc = acc - acc",
+   "variant": "avx2/q4",
+   "c_harness": "not printable: type 'int64_t zq = 0; acc = _mm256_sub_ps(acc, acc); const int64_t'"
+  },
+  {
+   "id": 50,
+   "what": "a cast type string rewrites the x1 offset",
+   "variant": "avx2/q4",
+   "c_harness": "not printable: cast type 'int64_t)(24) + 0 * (int64_t'"
+  },
+  {
+   "id": 51,
+   "what": "acc update object placed again in for (tt = 18; tt < T)",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 31753,
+   "faults": 0
+  },
+  {
+   "id": 52,
+   "what": "rb = 34*G held in an int16_t array element",
+   "variant": "avx2/q4",
+   "c_harness": "NOT detected",
+   "mismatching_words": 0,
+   "faults": 0
+  },
+  {
+   "id": 53,
+   "what": "comment text closes itself: FMA",
+   "variant": "avx2/q4",
+   "c_harness": "not printable: comment text '*/ acc = _mm256_fmadd_ps(acc, acc, acc); /*'"
+  },
+  {
+   "id": 54,
+   "what": "mul(sub(c, 8), x) nested: printed c - 8 * x",
+   "variant": "scalar/q4",
+   "c_harness": "not printable: a call nested in an argument of i32.mul"
+  },
+  {
+   "id": 55,
+   "what": "x3_f32bits(q0u): a glued placeholder reads q0u",
+   "variant": "scalar/q8",
+   "c_harness": "not printable: argument 0 of f32.bits must be a non-negative literal"
+  },
+  {
+   "id": 56,
+   "what": "const int32_t ad = x3_ldf(ap): result retyped",
+   "variant": "scalar/q8",
+   "c_harness": "not printable: ad declared int32_t holds a ld.f32 result"
+  },
+  {
+   "id": 57,
+   "what": "_mm256_set1_ps(0x7fc00000): int to a float param",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 67962,
+   "faults": 0
   }
  ],
- "detected": 34,
+ "detected": 40,
  "not_detected": [
   13,
   24,
-  28
+  28,
+  52
  ]
 }

@@ -4,13 +4,22 @@ DESIGN.md section 5.1 specifies rne_f32: struct.pack('<f', x) raises OverflowErr
 overflow midpoint and may alter NaN payloads, so both cases are handled explicitly. A product of two
 binary32 values is exact in binary64; a sum is rounded twice (binary64, then binary32), which is
 innocuous because 53 >= 2*24 + 2 [inference, DESIGN 5.1].
+
+NaN results follow the x86 SSE/AVX rules (Intel SDM vol. 1, 4.8.3.5 and table 4-7), not a canonical
+NaN, so that the meaning's own canon at the store is visible to the meaning differential (review
+2026-10-23, meaning lens, finding 4): a NaN operand propagates, quieted, the first operand's taking
+precedence; an invalid operation on non-NaN operands (inf - inf, 0 * inf) gives the default NaN
+0xFFC00000. Compilers may commute the operands of an add or a multiply, so the payload of a NaN
+result is not a property of the C source; only canon makes it one.
 """
 
 import math
 import struct
 
 OVF_MID = 3.4028235677973366e38  # midpoint between FLT_MAX and 2**128; ties to even give inf
-QNAN = 0x7FC00000
+QNAN = 0x7FC00000  # Hearth's canonical NaN (HX_CANON_NAN, quant.c:53-65)
+DEFAULT_NAN = 0xFFC00000  # x86 "QNaN floating-point indefinite": invalid operation, no NaN input
+QUIET = 0x00400000
 
 
 def bits_to_float(b: int) -> float:
@@ -33,16 +42,31 @@ def is_nan(b: int) -> bool:
     return (b & 0x7F800000) == 0x7F800000 and (b & 0x007FFFFF) != 0
 
 
+def _nan_in(a: int, b: int):
+    """x86 NaN propagation: the first NaN operand, quieted; None if neither is a NaN."""
+    if is_nan(a):
+        return (a | QUIET) & 0xFFFFFFFF
+    if is_nan(b):
+        return (b | QUIET) & 0xFFFFFFFF
+    return None
+
+
+def _result(x: float) -> int:
+    return DEFAULT_NAN if x != x else rne_f32(x)
+
+
 def fadd(a: int, b: int) -> int:
-    if is_nan(a) or is_nan(b):
-        return QNAN
-    return rne_f32(bits_to_float(a) + bits_to_float(b))
+    n = _nan_in(a, b)
+    if n is not None:
+        return n
+    return _result(bits_to_float(a) + bits_to_float(b))
 
 
 def fmul(a: int, b: int) -> int:
-    if is_nan(a) or is_nan(b):
-        return QNAN
-    return rne_f32(bits_to_float(a) * bits_to_float(b))
+    n = _nan_in(a, b)
+    if n is not None:
+        return n
+    return _result(bits_to_float(a) * bits_to_float(b))
 
 
 def i2f(i: int) -> int:

@@ -10,8 +10,9 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from x3gen.core import fp32, printer  # noqa: E402
+from x3gen.core import fp32, interp, printer  # noqa: E402
 from x3gen.core.emit import build  # noqa: E402
+from x3gen.core.ir import Store, iter_nodes  # noqa: E402
 from x3gen.hearth import meaning  # noqa: E402
 from x3gen.hearth.schedules import avx2, avx512, scalar  # noqa: E402
 
@@ -42,6 +43,17 @@ class Fp32(unittest.TestCase):
         self.assertTrue(fp32.is_nan(fp32.fmul(0x7F800000, 0)))
         self.assertEqual(fp32.canon(0xFFC00001), fp32.QNAN)
 
+    def test_x86_nan_rules(self):
+        """Review 2026-10-23 (meaning lens), finding 4: x86 NaN results, not one canonical NaN."""
+        one = f2b(1.0)
+        self.assertEqual(fp32.fadd(0x7F800000, 0xFF800000), fp32.DEFAULT_NAN)  # inf - inf
+        self.assertEqual(fp32.fmul(0x7F800000, 0), fp32.DEFAULT_NAN)  # inf * 0
+        self.assertEqual(fp32.fadd(0x7FC00123, one), 0x7FC00123)  # payload propagates
+        self.assertEqual(fp32.fmul(one, 0xFF800001), 0xFFC00001)  # signalling NaN is quieted
+        self.assertEqual(fp32.fadd(0x7FC00001, 0x7FC00002), 0x7FC00001)  # first operand wins
+        for b in (fp32.DEFAULT_NAN, 0xFFC00001, 0x7F800001):
+            self.assertEqual(fp32.canon(b), fp32.QNAN)
+
     def test_signed_zero_sums(self):
         self.assertEqual(fp32.fadd(0, 0x80000000), 0)  # +0 + -0 = +0 (why acc_0 = +0.0 matters)
         self.assertEqual(fp32.fadd(0x80000000, 0x80000000), 0x80000000)
@@ -60,6 +72,41 @@ class Fp32(unittest.TestCase):
         self.assertEqual(fp32.i2f(-(2**24) + 1), f2b(-(2.0**24) + 1))
         with self.assertRaises(ValueError):
             fp32.i2f(2**24)
+
+
+def without_canon(k):
+    k2 = k.clone()
+    for nd in iter_nodes(k2.body):
+        if isinstance(nd, Store) and nd.value.op == "canon":
+            nd.value = nd.value.args[0]
+    return k2
+
+
+class CanonVisible(unittest.TestCase):
+    """The meaning differential can see canon (review 2026-10-23, meaning lens, finding 4): with
+    x86 NaN results in the interpreter, a canon-less meaning gives a non-canonical NaN where
+    Hearth's q_canon stores 0x7fc00000."""
+
+    def run_one(self, k, wd, ad, q=0):
+        F = k.params["W"][1]
+        w = bytearray(F.size)
+        struct.pack_into("<H", w, 0, wd)
+        for i in range(F.q.nbytes):
+            w[F.q.offset + i] = q
+        a = bytearray(72)
+        struct.pack_into("<If", a, 0, ad, 0.0)
+        y = [0x7FC0DEAD]
+        interp.run(k, bytes(w), bytes(a), 64, 1, y, 1, 0, 1)
+        return y[0]
+
+    def test_canonless_meaning_fails_where_hearth_canonicalises(self):
+        for fmt in ("q8", "q4"):
+            k = meaning.MEANINGS[fmt]
+            q = 0x88 if fmt == "q4" else 0  # codes 0: I = 0
+            # I = 0 and an inf weight scale: 0 * inf is invalid; NaN scales propagate their payload
+            for wd, ad in ((0x7C00, f2b(1.0)), (0x3C00, 0xFFC00001), (0x7E01, f2b(2.0))):
+                self.assertEqual(self.run_one(k, wd, ad, q), fp32.QNAN)
+                self.assertNotEqual(self.run_one(without_canon(k), wd, ad, q), fp32.QNAN)
 
 
 class Printer(unittest.TestCase):

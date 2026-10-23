@@ -11,9 +11,12 @@ P8 copy and degenerate case in the chosen shape set is executed, not assumed.
       covers visit order, accumulator sharing, the initial value and canon exactly once at the sink.
   C2  every statement carries the provenance id of a logged primitive application and names a
       known, non-banned isa entry: checked on the whole program text (audit_static), executed or
-      not, and again on every executed statement.
+      not, and again on every executed statement. The provenance test is membership, bound at
+      class level only: FP arithmetic under P12/P14/P15, FP compares, selects and stores under
+      P13, hints under P11. Every string the printer copies into the C is checked too:
+      identifiers, declared and cast types, literals and comment text (no verbatim C).
   C3  each i2f operand is proved equal over Z to sum_i wq(r,g,i) * xq(t,g,i) (bit-vector layer by
-      enumeration, ring layer by polynomial normal form, P2 for the activation sum), with no
+      enumeration, ring layer by polynomial normal form, PRE2 for the activation sum), with no
       saturation or wrap anywhere (interval proofs), and |I| < 2^24.
   C4  stores hit exactly {t*ldy + r : t < T, r0 <= r < r1}, once each; loads stay inside W's rows
       [r0, r1) and A's T*G blocks; nothing is loaded or stored for T = 0 or r0 = r1.
@@ -30,8 +33,14 @@ From the executed shapes to every block count G (n = 64*G, G >= 1), for the same
                G-dependent value used as data is rejected; every input load must be
                row*G*bsW + g*bsW + field (W) or (t*G + g)*bsA + field (A) with the row, token and
                field independent of G and g; store addresses must not depend on G or g.
+               Index arithmetic is evaluated with the C types the printer emits (integer
+               promotions and the usual arithmetic conversions): a value outside its C type's
+               range is a rejection, never a wrap, and for a G-dependent value that must hold for
+               every G up to the largest the buffers allow (Gmax), and every block index g < G.
   scopes()     C scoping: the checker's flat environment means what the printed C means.
-  Coverage     every statement runs, and every branch and ?: takes both arms, on some shape.
+  Coverage     every statement runs, and every branch and ?: takes both arms, on some shape;
+               statements and branch sites are identified by their position in the program, not
+               by object identity, so one object placed twice is two sites.
 Then control flow does not depend on G, each block runs the same operations on the leaves of
 block g, and the check of one shape holds for every G with that shape's (T, r0, r1, ldy).
 
@@ -39,7 +48,11 @@ What it does not do (prototype): T, r0, r1 and ldy stay bounded to the executed 
 token tails are concrete); DESIGN 4.3 asks for symbolic addresses over every runtime shape.
 """
 
+import ast
+import re
+
 from ..isa import TABLE
+from ..isa.scalar import HELPERS
 from . import fp32
 from . import sem as S
 from .ir import Init as MInit
@@ -50,8 +63,114 @@ from .ir import walk as ir_walk
 from .lp import IX, Arr, Call, Comment, Do, For, Idx, If, Let, Set, Var, walk
 
 BANNED_CLASSES = {"fma", "approx", "mxcsr", "double"}
-UNSIGNED = {"size_t", "uint64_t", "uint32_t", "uint16_t", "uint8_t", "unsigned"}
 P15_ID = "P15.commute#"
+
+# ===================================================================== C types of the printed code
+# Integer types as (bits, signed) on x86-64. LP64 (Linux) and LLP64 (Windows) agree on every type
+# listed; `long` is absent because they do not. __mmask8/16 are unsigned char/short.
+CINT = {
+    "int": (32, True),
+    "int8_t": (8, True),
+    "int16_t": (16, True),
+    "int32_t": (32, True),
+    "int64_t": (64, True),
+    "unsigned": (32, False),
+    "uint8_t": (8, False),
+    "uint16_t": (16, False),
+    "uint32_t": (32, False),
+    "uint64_t": (64, False),
+    "size_t": (64, False),
+    "__mmask8": (8, False),
+    "__mmask16": (16, False),
+}
+INT = CINT["int"]
+DATA_TYPES = {"float", "__m128", "__m128i", "__m256", "__m256i", "__m512", "__m512i"}
+SIZE_MAX, INT64_MAX = (1 << 64) - 1, (1 << 63) - 1
+CMP_OPS = {"<", "<=", "==", "!=", ">=", ">"}
+LIT_RE = re.compile(r"\A[0-9]+\Z")
+IDENT_RE = re.compile(r"\A[A-Za-z][A-Za-z0-9_]{0,62}\Z")
+MACRO_RE = re.compile(r"\A[A-Z0-9_]+\Z")
+C_WORDS = set(
+    "auto break case char const continue default do double else enum extern float for goto if "
+    "inline int long register restrict return short signed sizeof static struct typedef "
+    "union unsigned void volatile while bool true false asm typeof alignas alignof noreturn "
+    "static_assert thread_local complex imaginary NULL memcpy memset main".split()
+)
+
+
+_RESERVED = {}
+
+
+def _reserved_names():
+    """Identifiers the printed file already uses at file scope: every name in an isa spelling or
+    return type, and the helper functions."""
+    if len(TABLE) not in _RESERVED:
+        out = {key for key, _ in HELPERS}
+        for e in TABLE.values():  # names only, not the suffix of a literal such as 0.0f
+            code = re.sub(r"/\*.*?\*/", "", e.c)
+            out |= set(re.findall(r"(?<![\w.])[A-Za-z_]\w*", code))
+            out |= set(re.findall(r"(?<![\w.])[A-Za-z_]\w*", e.ret or ""))
+        _RESERVED.clear()
+        _RESERVED[len(TABLE)] = out
+    return _RESERVED[len(TABLE)]
+
+
+def ident_ok(name):
+    """A C identifier the printer may emit: no keyword, type, macro-style, reserved (leading
+    underscore), helper or intrinsic name, so that it can only mean the variable it declares."""
+    return (
+        isinstance(name, str)
+        and IDENT_RE.search(name) is not None
+        and name not in C_WORDS
+        and not name.endswith("_t")
+        and not (MACRO_RE.search(name) and "_" in name)
+        and name not in _reserved_names()
+    )
+
+
+def decl_type(ct):
+    """The C type of a declaration: (bits, signed) for an integer type, 'ptr' for an allowed
+    pointer type, 'd:<type>' for a data type; None if the string is not one the checker models."""
+    if not isinstance(ct, str):
+        return None
+    if ct in PTR_ESZ:
+        return "ptr"
+    t = ct[len("const ") :] if ct.startswith("const ") else ct
+    if t in CINT:
+        return CINT[t]
+    if t in DATA_TYPES:
+        return "d:" + t
+    return None
+
+
+def _promote(t):
+    return INT if t[0] < 32 else t
+
+
+def _common(t1, t2):
+    """The usual arithmetic conversions (C11 6.3.1.8) for the integer types above."""
+    t1, t2 = _promote(t1), _promote(t2)
+    if t1[1] == t2[1]:
+        return (max(t1[0], t2[0]), t1[1])
+    u, s = (t1, t2) if not t1[1] else (t2, t1)
+    return u if u[0] >= s[0] else s
+
+
+def _range(t):
+    b, sg = t
+    return (-(1 << (b - 1)), (1 << (b - 1)) - 1) if sg else (0, (1 << b) - 1)
+
+
+def _lit_type(v):
+    """An integer literal in index arithmetic: only values of type int, printed in decimal or hex
+    alike, so the literal's C type never depends on how it is spelled."""
+    if not -(1 << 31) < v < (1 << 31):
+        raise Reject("C2: integer literal %d outside int in index arithmetic" % v)
+    return INT
+
+
+def _is_int_t(t):
+    return isinstance(t, tuple)
 
 
 class Reject(Exception):
@@ -295,6 +414,15 @@ class Machine:
         self.oracle = Oracle(kernel)
         self.Gc = self.dec.G
         self.gvar = self.gval = None
+        self.tenv = {}
+        # The largest block count the buffers of this shape allow: n = 64*G is an int64_t, and W's
+        # first r1 rows and A's T*G blocks are objects, whose sizes are at most SIZE_MAX bytes.
+        lim = [INT64_MAX // self.dec.blk]
+        if r1 > 0:
+            lim.append(SIZE_MAX // (r1 * self.dec.F.size))
+        if T > 0:
+            lim.append(SIZE_MAX // (T * self.dec.AF.size))
+        self.Gmax = max(1, min(lim))
 
     # ------------------------------------------------------------ block-count forms
     def _form(self, v, a):
@@ -305,6 +433,34 @@ class Machine:
             raise Reject("checker: affine form %r does not describe %d" % (a, v))
         return TInt(v, a) if _tainted(a) else int(v)
 
+    def _span(self, a):
+        """Least and greatest value of c0 + cG*G + cg*g over 1 <= G <= Gmax, 0 <= g < G (a linear
+        form on a triangle: its extremes are at the vertices)."""
+        c0, cG, cg = a
+        pts = [(1, 0), (self.Gmax, 0)] + ([(self.Gmax, self.Gmax - 1)] if cg else [])
+        vals = [c0 + cG * G + cg * g for G, g in pts]
+        return min(vals), max(vals)
+
+    def _fits(self, v, t, what):
+        """v must be representable in the C integer type t, for every G when v depends on G: C
+        would wrap it (unsigned), overflow (signed) or narrow it, and the checker's integers are
+        over Z, so that is a rejection."""
+        lo, hi = _range(t)
+        vlo, vhi = self._span(v.aff) if isinstance(v, TInt) else (v, v)
+        if vlo < lo or vhi > hi:
+            raise Reject(
+                "C4: %s: value %s outside the C type %s%d range [%d, %d]%s"
+                % (
+                    what,
+                    "[%d, %d]" % (vlo, vhi) if vlo != vhi else vlo,
+                    "int" if t[1] else "uint",
+                    t[0],
+                    lo,
+                    hi,
+                    " for some G <= %d" % self.Gmax if isinstance(v, TInt) else "",
+                )
+            )
+
     def _cond(self, site, c):
         if isinstance(c, TInt):
             raise Reject("C1: a branch or loop condition depends on the block count")
@@ -313,8 +469,49 @@ class Machine:
         if self.cov is not None and site is not None:
             self.cov.arm(site, c)
 
+    # ------------------------------------------------------------ static C types
+    def sty(self, e):
+        """The C type of an index expression, from the declarations (C11 6.3.1, 6.5)."""
+        if isinstance(e, bool):
+            raise Reject("bool literal")
+        if isinstance(e, int):
+            return _lit_type(e)
+        if isinstance(e, Var):
+            if e.name not in self.tenv:
+                raise Reject("C4: read of an undeclared variable %s" % e.name)
+            return self.tenv[e.name]
+        if isinstance(e, Idx):
+            if e.arr not in self.tenv:
+                raise Reject("C4: %s is not declared" % e.arr)
+            return self.tenv[e.arr]
+        if isinstance(e, Call):
+            return "d:" + str(TABLE[e.entry].ret)
+        if not isinstance(e, IX):
+            raise Reject("C2: %r in index arithmetic" % (e,))
+        op, x = e.op, e.args
+        if op == "lit":
+            return INT
+        if op == "cast":
+            return decl_type(x[0])
+        if op in CMP_OPS:
+            return INT
+        if op == "?:":
+            t1, t2 = self.sty(x[1]), self.sty(x[2])
+            if _is_int_t(t1) and _is_int_t(t2):
+                return _common(t1, t2)
+            if t1 == t2 == "ptr":
+                return "ptr"
+            raise Reject("C2: ?: arms of types %s and %s" % (t1, t2))
+        t0, t1 = self.sty(x[0]), self.sty(x[1])
+        if t0 == "ptr" and op == "+" and _is_int_t(t1):
+            return "ptr"
+        if not (_is_int_t(t0) and _is_int_t(t1)):
+            raise Reject("C2: '%s' on types %s and %s" % (op, t0, t1))
+        return _promote(t0) if op == "<<" else _common(t0, t1)
+
     # ------------------------------------------------------------ expressions
-    def ev(self, a):
+    def ev(self, a, path=()):
+        """Value of expression a; path is its position in the program (coverage sites)."""
         if isinstance(a, Var):
             if a.name not in self.env:
                 raise Reject("C4: read of an unset variable %s" % a.name)
@@ -326,34 +523,37 @@ class Machine:
         if isinstance(a, str):
             raise Reject("C2: verbatim text in an argument: %r" % a)
         if isinstance(a, Idx):
-            arr, i = self._elem(a)
+            arr, i = self._elem(a, path)
             v = arr[i]
             if v is None:
                 raise Reject("C1: read of an uninitialised accumulator element")
             return v
         if isinstance(a, IX):
-            return self.ix(a)
+            return self.ix(a, path)
         if isinstance(a, Call):
-            return self.call(a)
+            return self.call(a, path)
         raise Reject("cannot evaluate %r" % (a,))
 
-    def _elem(self, a):
+    def _elem(self, a, path=()):
         arr = self.env.get(a.arr)
         if not isinstance(arr, list):
             raise Reject("C4: %s is not an array" % a.arr)
-        i = self.ev(a.index)
+        i = self.ev(a.index, path + ("i",))
         if isinstance(i, TInt):
             raise Reject("C1: an array index depends on the block count")
         if not isinstance(i, int) or not 0 <= i < len(arr):
             raise Reject("C4: index %r outside array %s" % (i, a.arr))
         return arr, i
 
-    def ix(self, a):
+    def ix(self, a, path=()):
         op, x = a.op, a.args
         if op == "lit":
-            return int(x[0].rstrip("uU"))
+            s = x[0]
+            if not (isinstance(s, str) and LIT_RE.search(s)) or int(s) >= 1 << 31:
+                raise Reject("C2: literal %r is not a plain decimal int" % (s,))
+            return int(s)
         if op == "cast":
-            v = self.ev(x[1])
+            v = self.ev(x[1], path + (1,))
             t = x[0]
             if t in PTR_ESZ:
                 if not isinstance(v, Ptr):
@@ -363,20 +563,26 @@ class Machine:
                 raise Reject("C4: pointer cast to an integer")
             if not isinstance(v, int):
                 raise Reject("integer cast of a data value")
-            if t in UNSIGNED and v < 0:
-                raise Reject("C4: negative value %d cast to %s (C would wrap it)" % (v, t))
-            if t == "__mmask8":
-                if isinstance(v, TInt):
-                    raise Reject("C1: a mask depends on the block count")
-                return v & 0xFF
+            if t not in CINT:
+                raise Reject("C2: cast to a type the checker does not model: %r" % (t,))
+            if t.startswith("__mmask") and isinstance(v, TInt):
+                raise Reject("C1: a mask depends on the block count")
+            self._fits(v, CINT[t], "(%s) cast" % t)
             return v
         if op == "?:":
-            c = self.ev(x[0])
-            self._cond(a, c)
-            return self.ev(x[1]) if c else self.ev(x[2])
-        a0, a1 = self.ev(x[0]), self.ev(x[1])
+            c = self.ev(x[0], path + (0,))
+            self._cond(path, c)
+            t = self.sty(a)
+            j = 1 if c else 2
+            v = self.ev(x[j], path + (j,))
+            if _is_int_t(t):
+                if not isinstance(v, int) or isinstance(v, Ptr):
+                    raise Reject("C2: ?: arm is not an integer")
+                self._fits(v, t, "?: result")
+            return v
+        a0, a1 = self.ev(x[0], path + (0,)), self.ev(x[1], path + (1,))
         if isinstance(a0, Ptr):
-            if op == "+" and isinstance(a1, int):
+            if op == "+" and isinstance(a1, int) and _is_int_t(self.sty(x[1])):
                 f0, f1 = a0.aff, _aff(a1)
                 aff = tuple(p + q * a0.esz for p, q in zip(f0, f1))
                 return Ptr(a0.buf, a0.off + a1 * a0.esz, a0.esz, aff)
@@ -385,10 +591,43 @@ class Machine:
             raise Reject("C2: data value in index arithmetic")
         if op not in IXOP:
             raise Reject("IX op %s" % op)
+        t0, t1 = self.sty(x[0]), self.sty(x[1])
+        if not (_is_int_t(t0) and _is_int_t(t1)):
+            raise Reject("C2: '%s' on types %s and %s" % (op, t0, t1))
+        if op == "<<":
+            rt = _promote(t0)
+            if isinstance(a0, TInt) or isinstance(a1, TInt):
+                raise Reject("C1: a shift of a block-count value")
+            if not 0 <= a1 < rt[0] or a0 < 0:
+                raise Reject("C4: shift %d << %d is undefined in C" % (a0, a1))
+            r = a0 << a1
+            self._fits(r, rt, "'<<'")
+            return r
+        ct = _common(t0, t1)
+        if (op in CMP_OPS or op in ("/", "%")) and _promote(t0)[1] != _promote(t1)[1]:
+            raise Reject("C4: '%s' between signed and unsigned operands" % op)
+        self._fits(a0, ct, "left operand of '%s'" % op)
+        self._fits(a1, ct, "right operand of '%s'" % op)
         r = IXOP[op](int(a0), int(a1))
         if not (isinstance(a0, TInt) or isinstance(a1, TInt)):
+            if op not in CMP_OPS:
+                self._fits(r, ct, "'%s'" % op)
             return r
-        return self._form(r, _tform(op, _aff(a0), _aff(a1)))
+        v = self._form(r, _tform(op, _aff(a0), _aff(a1)))
+        self._fits(v, ct, "'%s'" % op)
+        return v
+
+    def _store_int(self, t, v, what):
+        """C conversion of a value to a declared type t on initialisation or assignment."""
+        if _is_int_t(t):
+            if isinstance(v, Ptr) or not isinstance(v, int):
+                raise Reject("C2: %s: a non-integer value in an integer variable" % what)
+            self._fits(v, t, what)
+        elif t == "ptr":
+            if not isinstance(v, Ptr):
+                raise Reject("C2: %s: a non-pointer value in a pointer variable" % what)
+        elif isinstance(v, (int, Ptr)):
+            raise Reject("C2: %s: an integer or pointer value in a %s variable" % (what, t[2:]))
 
     # ------------------------------------------------------------ memory
     def load(self, p, nb):
@@ -456,13 +695,18 @@ class Machine:
             self.where[idx] = (t, r)
 
     # ------------------------------------------------------------ calls
-    def call(self, c):
+    def call(self, c, path=()):
         e = TABLE.get(c.entry)
         if e is None:
             raise Reject("C2: unknown isa entry %s" % c.entry)
         if e.cls in BANNED_CLASSES:
             raise Reject("C2/B2-B7: banned instruction class %s (%s)" % (e.cls, c.entry))
-        args = [self.ev(a) for a in c.args]
+        kinds = arg_kinds(e)
+        if len(kinds) != len(c.args):
+            raise Reject("C2: %s takes %d arguments, not %d" % (c.entry, len(kinds), len(c.args)))
+        for j, (a, k) in enumerate(zip(c.args, kinds)):
+            self._arg_ok(a, k, c.entry, j)
+        args = [self.ev(a, path + (j,)) for j, a in enumerate(c.args)]
         if any(isinstance(v, TInt) for v in args):
             raise Reject("C1: a block-count value is used as data (%s)" % c.entry)
         try:
@@ -470,80 +714,165 @@ class Machine:
         except S.Unknown as u:
             raise Reject("C3/C1 unknown at %s: %s" % (c.entry, u))
 
+    def _arg_ok(self, a, kind, entry, j):
+        """The argument's C type is one C passes to that parameter without a conversion the
+        checker reads differently (ARG_KINDS)."""
+        if type(a) is int:
+            ok = kind in ("int", "intd", "i32", "u64", "imm", "mask") and (
+                a >= 0 or kind not in ("imm", "u64")
+            )
+        else:
+            t = self.sty(a)
+            data_int = isinstance(t, str) and _is_int_t(decl_type(t[2:]) if t[:2] == "d:" else 0)
+            if kind == "v":
+                ok = isinstance(t, str) and t.startswith("d:__m") and "mask" not in t
+            elif kind == "f32":
+                ok = t == "d:float"
+            elif kind == "i32":
+                ok = t in ("d:int32_t", "d:int") or _is_int_t(t)
+            elif kind == "u64":
+                ok = t == "d:uint64_t"
+            elif kind == "int":
+                ok = _is_int_t(t)
+            elif kind == "intd":
+                ok = _is_int_t(t) or (data_int and "mask" not in t)
+            elif kind == "mask":
+                ok = _is_int_t(t) or t in ("d:__mmask8", "d:__mmask16")
+            elif kind == "ptr":
+                ok = t == "ptr"
+            else:
+                ok = False
+        if not ok:
+            raise Reject(
+                "C2: argument %d of %s is a %r where the parameter takes %s (C would convert it)"
+                % (j, entry, a if type(a) is int else self.sty(a), ARG_DOC[kind])
+            )
+
     # ------------------------------------------------------------ statements
-    def run(self, body):
-        for st in body:
+    def _declared(self, ctype, rhs, what):
+        t = decl_type(ctype)
+        if t is None:
+            raise Reject(
+                "C2: %s declared with a type the checker does not model: %r" % (what, ctype)
+            )
+        if isinstance(rhs, Call):
+            ret = TABLE[rhs.entry].ret if rhs.entry in TABLE else None
+            if decl_type(ret) != t:
+                raise Reject("C2: %s of type %s holds a %s result" % (what, ctype, ret))
+            return "d:" + ret if _is_int_t(t) else t
+        return t
+
+    def _assign(self, target, v, path, rhs):
+        """C assignment to a declared variable or array element (typed as declared)."""
+        name = target.arr if isinstance(target, Idx) else target.name
+        t = self.tenv.get(name)
+        if t is None:
+            raise Reject("C4: assignment to an undeclared name %s" % name)
+        if isinstance(rhs, Call):
+            if t != "d:" + str(TABLE[rhs.entry].ret):
+                raise Reject("C2: %s of type %s assigned a %s result" % (name, t, rhs.entry))
+        else:
+            self._store_int(t, v, "assignment to %s" % name)
+        if isinstance(target, Idx):
+            arr, i = self._elem(target, path)
+            arr[i] = v
+        else:
+            self.env[name] = v
+
+    def run(self, body, base=()):
+        for k, st in enumerate(body):
             if isinstance(st, Comment):
                 continue
+            pos = base + (k,)
             prov = getattr(st, "prov", "")
             if prov not in self.log_ids:
                 raise Reject("C2: statement without a logged provenance id: %r" % (prov,))
             self.facts["prov_checked"] += 1
             if self.cov is not None:
-                self.cov.ran.add(id(st))
+                self.cov.ran.add(pos)
             if isinstance(st, Let):
-                self.env[st.name] = self.ev(st.rhs)
+                v = self.ev(st.rhs, pos + ("rhs",))
+                t = self._declared(st.ctype, st.rhs, st.name)
+                if not isinstance(st.rhs, Call):
+                    self._store_int(t, v, "declaration of %s" % st.name)
+                self.tenv[st.name] = t
+                self.env[st.name] = v
             elif isinstance(st, Set):
-                v = self.ev(st.rhs)
-                if isinstance(st.target, Idx):
-                    arr, i = self._elem(st.target)
-                    arr[i] = v
-                else:
-                    self.env[st.target.name] = v
+                v = self.ev(st.rhs, pos + ("rhs",))
+                self._assign(st.target, v, pos + ("tix",), st.rhs)
             elif isinstance(st, Arr):
+                self.tenv[st.name] = self._declared(st.ctype, None, st.name)
                 self.env[st.name] = [None] * st.n
             elif isinstance(st, Do):
-                self.call(st.call)
+                self.call(st.call, pos + ("call",))
             elif isinstance(st, For):
-                if is_block_loop(st):
-                    self._block_loop(st)
-                    continue
-                if st.init is not None:
-                    v = self.ev(st.init)
-                    if isinstance(v, TInt) or not isinstance(v, int):
-                        raise Reject("C1: loop %s starts at a block-count or data value" % st.var)
-                    self.env[st.var] = v
-                guard = 0
-                while True:
-                    c = self.ev(st.cond)
-                    self._cond(None, c)
-                    if not c:
-                        break
-                    self.run(st.body)
-                    step = self.ev(st.step) if not isinstance(st.step, int) else st.step
-                    cur = self.env.get(st.var)
-                    if isinstance(step, TInt) or isinstance(cur, TInt) or not isinstance(step, int):
-                        raise Reject("C1: loop %s steps by a block-count or data value" % st.var)
-                    self.env[st.var] = cur + step
-                    guard += 1
-                    if guard > 1 << 20:
-                        raise Reject("loop does not terminate")
+                self._for(st, pos)
             elif isinstance(st, If):
-                c = self.ev(st.cond)
-                self._cond(st, c)
-                self.run(st.then if c else st.other)
+                c = self.ev(st.cond, pos + ("cond",))
+                self._cond(pos + ("if",), c)
+                self.run(st.then if c else st.other, pos + (("then",) if c else ("other",)))
             else:
                 raise Reject("unknown statement %r" % (st,))
 
-    def _block_loop(self, st):
+    def _for(self, st, pos):
+        if st.declare:
+            t = self._declared(st.ctype, None, st.var)
+            if not _is_int_t(t):
+                raise Reject("C2: loop variable %s of a non-integer type" % st.var)
+            self.tenv[st.var] = t
+        t = self.tenv.get(st.var)
+        if not _is_int_t(t):
+            raise Reject("C1: loop variable %s is not an integer variable" % st.var)
+        if is_block_loop(st):
+            self._block_loop(st, pos, t)
+            return
+        if st.init is not None:
+            v = self.ev(st.init, pos + ("init",))
+            if isinstance(v, TInt) or not isinstance(v, int) or isinstance(v, Ptr):
+                raise Reject("C1: loop %s starts at a block-count or data value" % st.var)
+            self._store_int(t, v, "loop variable %s" % st.var)
+            self.env[st.var] = v
+        guard = 0
+        while True:
+            c = self.ev(st.cond, pos + ("cond",))
+            self._cond(None, c)
+            if not c:
+                break
+            self.run(st.body, pos + ("body",))
+            step = self.ev(st.step, pos + ("step",)) if not isinstance(st.step, int) else st.step
+            cur = self.env.get(st.var)
+            if isinstance(step, TInt) or isinstance(cur, TInt) or not isinstance(step, int):
+                raise Reject("C1: loop %s steps by a block-count or data value" % st.var)
+            ct = _common(t, self.sty(st.step))  # v += step: v = (type of v)(v + step)
+            self._fits(cur + step, ct, "step of %s" % st.var)
+            self._store_int(t, cur + step, "loop variable %s" % st.var)
+            self.env[st.var] = cur + step
+            guard += 1
+            if guard > 1 << 20:
+                raise Reject("loop does not terminate")
+
+    def _block_loop(self, st, pos, t):
         """for (g = 0; g < G; g++): g carries the form (0, 0, 1) and runs 0 .. G-1."""
         if self.gvar is not None:
             raise Reject("C1: block loops nest")
         G = self.env.get("G")
         if not isinstance(G, TInt) or G.aff != (0, 1, 0):
             raise Reject("C1: the block loop is not bounded by the block count n / block")
+        if self.sty(Var("G")) != (64, True):
+            raise Reject("C1: the block count is not an int64_t")
         self.gvar = st.var
         try:
             for gv in range(int(G)):
                 self.gval = gv
-                self.env[st.var] = TInt(gv, (0, 0, 1))
-                self.run(st.body)
+                self.env[st.var] = g = TInt(gv, (0, 0, 1))
+                self._fits(g, t, "block index %s" % st.var)
+                self._fits(TInt(gv + 1, (1, 0, 1)), t, "g++ of %s" % st.var)
+                self.run(st.body, pos + ("body",))
         finally:
             self.gvar = self.gval = None
         self.env.pop(st.var, None)
 
     def execute(self):
-        names = [p[1] for p in self.f.params]
         vals = {
             "W": Ptr("W", 0, 1),
             "act": Ptr("A", 0, 1),
@@ -554,7 +883,13 @@ class Machine:
             "r0": self.r0,
             "r1": self.r1,
         }
-        for nm in names:
+        for ct, nm in self.f.params:
+            t = "ptr" if ct.endswith("*") else decl_type(ct)
+            if t is None:
+                raise Reject("C2: parameter %s of an unmodelled type %r" % (nm, ct))
+            self.tenv[nm] = t
+            if t != "ptr":
+                self._store_int(t, vals[nm], "parameter %s" % nm)
             self.env[nm] = vals[nm]
         self.run(self.f.body)
 
@@ -1250,6 +1585,8 @@ def _target(st):
 
 
 def _target_or_var(st):
+    if isinstance(st, Arr):
+        return st.name
     return st.var if isinstance(st, For) else _target(st)
 
 
@@ -1276,29 +1613,202 @@ def is_block_loop(st):
     )
 
 
+IX_OPS = {"lit", "cast", "?:", "+", "-", "*", "/", "%", "<<", "&"} | CMP_OPS
+COMMENT_RE = re.compile(r"\A[ -~]*\Z")
+# C2's provenance binding, at class level (review 2026-10-23, checker lens, finding 5): the entries
+# that compute on FP values, select or compare them, write memory or prefetch may be created only
+# by the primitive whose licence covers them. Other entries are bound by membership only.
+PROV_BIND = {
+    "fp": lambda p, e: (p == "P12" and e.ieee in ("fadd", "fmul", "i2f"))
+    or (p == "P14" and e.ieee == "h2f")
+    or (p == "P15" and e.ieee in ("fadd", "fmul")),
+    "fpcmp": lambda p, e: p == "P13",
+    "sel": lambda p, e: p == "P13",
+    "store": lambda p, e: p == "P13",
+    "hint": lambda p, e: p == "P11",
+}
+
+
+# Argument kinds of the isa entries, so that each argument is read the way C passes it (the call-side
+# twin of the checker lens' finding 1, found by the reviser: a float parameter given an integer,
+# or an integer parameter given a float, is a numeric conversion in C, while the checker would read
+# the bits). v: a vector value; f32: a float value; i32: an int32 value, an index integer or a
+# literal; u64: a uint64 value or a non-negative literal; int: an index integer or a literal,
+# which C converts modulo 2^w as put() reads it; intd: the same or a scalar integer data value;
+# imm: a non-negative literal; mask: a k-mask value or an index integer; ptr: a pointer.
+ARG_DOC = {
+    "v": "a vector",
+    "f32": "a float",
+    "i32": "a 32-bit integer",
+    "u64": "a uint64_t",
+    "int": "an integer index value",
+    "intd": "an integer",
+    "imm": "a non-negative literal",
+    "mask": "a mask",
+    "ptr": "a pointer",
+}
+SCALAR_KINDS = {
+    "ld.u8": ("ptr",),
+    "ld.s8": ("ptr",),
+    "ld.u16": ("ptr",),
+    "ld.i32": ("ptr",),
+    "ld.f32": ("ptr",),
+    "i32.add": ("i32", "i32"),
+    "i32.sub": ("i32", "i32"),
+    "i32.mul": ("i32", "i32"),
+    "i32.and": ("i32", "i32"),
+    "i32.shr": ("i32", "imm"),
+    "i32.zero": (),
+    "u64.shl": ("u64", "imm"),
+    "u64.or": ("u64", "u64"),
+    "f32.add": ("f32", "f32"),
+    "f32.mul": ("f32", "f32"),
+    "f32.from_i32": ("i32",),
+    "f32.zero": (),
+    "f32.bits": ("imm",),
+    "f32.isnan": ("f32",),
+    "f32.select": ("i32", "f32", "f32"),
+    "f32.store": ("ptr", "f32"),
+    "scalar.h2f_bits": ("u64",),
+}
+_IMM_ARG = {"srli16": 1, "perm2x128": 2, "insert": 2, "shuf_i64x2": 2, "pshufd": 1}
+_MASK_ARG = {"mask_mov": 1, "kstore32": 1}
+
+
+def arg_kinds(e):
+    """The kind of each argument of entry e (ARG_DOC), from its semantics key."""
+    if e.key in SCALAR_KINDS:
+        return SCALAR_KINDS[e.key]
+    n = len(set(re.findall(r"\{(\d+)\}", e.c)))
+    kinds = ["v"] * n
+    s = e.sem[0]
+    if s in ("load", "store", "maskstore32", "kstore32", "hint", "sload") and n:
+        kinds[0] = "ptr"
+    if s in _IMM_ARG and n > _IMM_ARG[s]:
+        kinds[_IMM_ARG[s]] = "imm"
+    if s in _MASK_ARG and n > _MASK_ARG[s]:
+        kinds[_MASK_ARG[s]] = "mask"
+    if s == "bcast":
+        kinds = ["f32" if e.ret in DATA_TYPES and not e.ret.endswith("i") else "intd"] * n
+    if s in ("bcast_const", "setr"):
+        kinds = ["int"] * n
+    if s in ("set64x2", "gpr2vec"):
+        kinds = ["intd"] * n
+    return tuple(kinds)
+
+
+def _placeholder_glued(spelling):
+    """Argument positions whose placeholder touches an identifier character in the isa spelling
+    (e.g. "x3_f32bits({0}u)"): the printed argument would merge with it, so only a non-negative
+    int literal may stand there."""
+    out = set()
+    for m in re.finditer(r"\{(\d+)\}", spelling):
+        before = spelling[m.start() - 1 : m.start()]
+        after = spelling[m.end() : m.end() + 1]
+        if re.search(r"\w", before) or re.search(r"\w", after):
+            out.add(int(m.group(1)))
+    return out
+
+
+def _audit_expr(e, where):
+    """Every string the printer would copy from an expression into the C (B9, no verbatim C)."""
+    if isinstance(e, bool) or not isinstance(e, (int, Var, Idx, IX, Call)):
+        raise Reject("C2: %r is not an expression the printer models (%s)" % (e, where))
+    if isinstance(e, Var):
+        if not ident_ok(e.name):
+            raise Reject("C2: identifier %r (%s)" % (e.name, where))
+    elif isinstance(e, Idx):
+        if not ident_ok(e.arr):
+            raise Reject("C2: identifier %r (%s)" % (e.arr, where))
+        _audit_expr(e.index, where)
+    elif isinstance(e, IX):
+        if e.op not in IX_OPS:
+            raise Reject("C2: index operator %r (%s)" % (e.op, where))
+        if e.op == "lit":
+            if len(e.args) != 1 or not (isinstance(e.args[0], str) and LIT_RE.search(e.args[0])):
+                raise Reject("C2: literal %r is not a plain decimal int (%s)" % (e.args, where))
+            return
+        if e.op == "cast":
+            t = e.args[0] if len(e.args) == 2 else None
+            if not (t in PTR_ESZ or t in CINT):
+                raise Reject("C2: cast type %r (%s)" % (t, where))
+            _audit_expr(e.args[1], where)
+            return
+        if len(e.args) != (3 if e.op == "?:" else 2):
+            raise Reject("C2: '%s' with %d operands (%s)" % (e.op, len(e.args), where))
+        for x in e.args:
+            _audit_expr(x, where)
+    elif isinstance(e, Call):
+        ent = TABLE.get(e.entry)
+        if ent is None:
+            raise Reject("C2: unknown isa entry %s" % e.entry)
+        if ent.cls in BANNED_CLASSES:
+            raise Reject("C2/B2-B7: banned instruction class %s (%s)" % (ent.cls, e.entry))
+        nargs = len(set(re.findall(r"\{(\d+)\}", ent.c)))
+        if len(e.args) != nargs:
+            raise Reject("C2: %s takes %d arguments, not %d" % (e.entry, nargs, len(e.args)))
+        glued = _placeholder_glued(ent.c)
+        for j, y in enumerate(e.args):
+            if isinstance(y, str):
+                raise Reject("C2: verbatim text in an argument of %s" % e.entry)
+            if isinstance(y, Call):  # the spellings put no parentheses around arguments
+                raise Reject("C2: a call nested in an argument of %s (%s)" % (e.entry, where))
+            if j in glued and not (type(y) is int and y >= 0):
+                raise Reject("C2: argument %d of %s must be a non-negative literal" % (j, e.entry))
+            _audit_expr(y, where)
+
+
 def audit_static(func, log_ids):
     """C2 on the program text, executed or not (DESIGN 4.3 C2, 4.4): every statement carries a
-    logged provenance id, and every call, in every arm and every loop body, names a known isa
-    entry outside the banned classes, with no verbatim text argument."""
+    logged provenance id (bound to its primitive at class level, PROV_BIND), and every call, in
+    every arm and every loop body, names a known isa entry outside the banned classes. Every string
+    the printer copies into the C is one the checker models: identifiers, declared and cast types,
+    literals and comment text (B9, no verbatim C; review 2026-10-23, checker lens, finding 2)."""
+    if not (isinstance(func.name, str) and IDENT_RE.search(func.name)):
+        raise Reject("C2: function name %r" % (func.name,))
+    for ct, nm in func.params:
+        if not ident_ok(nm):
+            raise Reject("C2: parameter name %r" % (nm,))
     for st in walk(func.body):
         if isinstance(st, Comment):
+            if not (isinstance(st.text, str) and COMMENT_RE.search(st.text)) or (
+                "/*" in st.text or "*/" in st.text
+            ):
+                raise Reject("C2: comment text %r could end the comment" % (st.text,))
             continue
         if not isinstance(st, (Let, Set, Arr, Do, For, If)):
             raise Reject("C2: unknown statement %r" % (st,))
         prov = getattr(st, "prov", "")
         if prov not in log_ids:
             raise Reject("C2: statement without a logged provenance id: %r" % (prov,))
+        if isinstance(st, (Let, Arr, For)):
+            nm = st.var if isinstance(st, For) else st.name
+            if not ident_ok(nm):
+                raise Reject("C2: declared identifier %r" % (nm,))
+            if decl_type(st.ctype) is None:
+                raise Reject("C2: declared type %r of %s" % (st.ctype, nm))
+        if isinstance(st, Arr) and not (type(st.n) is int and st.n > 0):
+            raise Reject("C2: array %s of size %r" % (st.name, st.n))
+        if isinstance(st, Let) and isinstance(st.rhs, Call) and st.rhs.entry in TABLE:
+            ret = TABLE[st.rhs.entry].ret
+            if decl_type(st.ctype) != decl_type(ret):
+                raise Reject("C2: %s declared %s holds a %s result" % (st.name, st.ctype, ret))
+        if isinstance(st, Set) and not isinstance(st.target, (Var, Idx)):
+            raise Reject("C2: assignment target %r" % (st.target,))
+        if isinstance(st, Set):
+            _audit_expr(st.target, "target")
+        where = "%s %s" % (type(st).__name__, prov)
         for e in _exprs(st):
+            _audit_expr(e, where)
             for x in _sub(e):
-                if not isinstance(x, Call):
-                    continue
-                ent = TABLE.get(x.entry)
-                if ent is None:
-                    raise Reject("C2: unknown isa entry %s" % x.entry)
-                if ent.cls in BANNED_CLASSES:
-                    raise Reject("C2/B2-B7: banned instruction class %s (%s)" % (ent.cls, x.entry))
-                if any(isinstance(y, str) for y in x.args):
-                    raise Reject("C2: verbatim text in an argument of %s" % x.entry)
+                if isinstance(x, Call):
+                    ent = TABLE[x.entry]
+                    bind = PROV_BIND.get(ent.cls)
+                    if bind is not None and not bind(prov.split(".")[0], ent):
+                        raise Reject(
+                            "C2: %s (%s) created under %s, whose licence does not cover it"
+                            % (x.entry, ent.cls, prov)
+                        )
 
 
 def scopes(func):
@@ -1392,6 +1902,8 @@ def structure(func, kernel):
             ct = st.ctype
         elif isinstance(st, For) and st.var in taint:
             ct = st.ctype
+        elif isinstance(st, Arr) and st.name in taint and _is_int_t(decl_type(st.ctype)):
+            ct = st.ctype  # integer array element (review 2026-10-23, checker lens, finding 4)
         else:
             ct = None
         if ct is not None and not _wide(ct):
@@ -1506,39 +2018,85 @@ def _carried(loop, taint):
                 )
 
 
+def positions(body, base=()):
+    """(position, statement) for every statement, with the positions Machine.run uses: the index
+    path through statement lists, For bodies ("body") and If arms ("then", "other")."""
+    for k, st in enumerate(body):
+        pos = base + (k,)
+        yield pos, st
+        if isinstance(st, For):
+            yield from positions(st.body, pos + ("body",))
+        elif isinstance(st, If):
+            yield from positions(st.then, pos + ("then",))
+            yield from positions(st.other, pos + ("other",))
+
+
+def _expr_roots(st, pos):
+    """(path, expression) for the expressions a statement evaluates, as Machine.run names them."""
+    if isinstance(st, Let):
+        return [(pos + ("rhs",), st.rhs)]
+    if isinstance(st, Set):
+        out = [(pos + ("rhs",), st.rhs)]
+        if isinstance(st.target, Idx):
+            out.append((pos + ("tix", "i"), st.target.index))
+        return out
+    if isinstance(st, Do):
+        return [(pos + ("call",), st.call)]
+    if isinstance(st, For):
+        return [(pos + (f,), getattr(st, f)) for f in ("init", "cond", "step")]
+    if isinstance(st, If):
+        return [(pos + ("cond",), st.cond)]
+    return []
+
+
+def _ternaries(e, path):
+    """Paths of the ?: nodes in e, with the sub-expression paths Machine.ev uses."""
+    if isinstance(e, IX):
+        if e.op == "?:":
+            yield path
+        if e.op == "cast":
+            yield from _ternaries(e.args[1], path + (1,))
+        elif e.op != "lit":
+            for j, x in enumerate(e.args):
+                yield from _ternaries(x, path + (j,))
+    elif isinstance(e, Call):
+        for j, x in enumerate(e.args):
+            yield from _ternaries(x, path + (j,))
+    elif isinstance(e, Idx):
+        yield from _ternaries(e.index, path + ("i",))
+
+
 class Coverage:
     """Statements run and branch arms taken over the whole shape set. Code that never runs, or a
-    branch arm never taken, is code the per-shape checks have not seen (C1 generalisation)."""
+    branch arm never taken, is code the per-shape checks have not seen (C1 generalisation). Sites
+    are positions in the program, so a statement object placed at two positions is two sites
+    (review 2026-10-23, checker lens, finding 3)."""
 
     def __init__(self):
         self.ran = set()
         self.arms = {}
 
     def arm(self, site, c):
-        self.arms.setdefault(id(site), set()).add(bool(c))
+        self.arms.setdefault(site, set()).add(bool(c))
 
     def require(self, func):
-        sts = [st for st in walk(func.body) if not isinstance(st, Comment)]
-        for st in sts:
-            if id(st) not in self.ran:
+        sts = [(p, st) for p, st in positions(func.body) if not isinstance(st, Comment)]
+        for p, st in sts:
+            if p not in self.ran:
                 raise Reject(
-                    "C1: a %s statement never runs on the shape set (unchecked code)"
-                    % type(st).__name__
+                    "C1: a %s statement at %r never runs on the shape set (unchecked code)"
+                    % (type(st).__name__, p)
                 )
-        sites = [st for st in sts if isinstance(st, If)]
-        sites += [
-            x
-            for st in sts
-            for e in _exprs(st)
-            for x in _sub(e)
-            if isinstance(x, IX) and x.op == "?:"
-        ]
-        for s in sites:
-            if len(self.arms.get(id(s), ())) < 2:
-                what = s.cond if isinstance(s, If) else s.args[0]
+        sites = [(p + ("if",), st.cond) for p, st in sts if isinstance(st, If)]
+        for p, st in sts:
+            for root, e in _expr_roots(st, p):
+                for q in _ternaries(e, root):
+                    sites.append((q, None))
+        for q, cond in sites:
+            if len(self.arms.get(q, ())) < 2:
                 raise Reject(
-                    "C1: the branch on %s takes one arm only on the shape set (the other arm is "
-                    "unchecked)" % repr(what)[:90]
+                    "C1: the branch at %r takes one arm only on the shape set (the other arm is "
+                    "unchecked)%s" % (q, (": " + repr(cond)[:80]) if cond is not None else "")
                 )
         return {"statements": len(sts), "branch_sites": len(sites)}
 
@@ -1546,14 +2104,142 @@ class Coverage:
 # ===================================================================== C1 / C4 verdict
 
 
+# The meaning's REQUIRES strings that are not conditions on the shape, and how the checker carries
+# each one. A REQUIRES string that is neither one of these, nor PRE1's range (checked against the
+# activation format), nor a shape predicate, is refused: the meaning text and the checked domain
+# cannot drift apart (review 2026-10-23, meaning lens, finding 3).
+NON_SHAPE = {
+    "A.sum == sum(A.q)": "PRE2: applied in C3's normal form (normal_form_I); P5's bias forms",
+    "(mxcsr & 0xFFC0) == 0x1F80": "PRE3: the environment; leaves are IEEE operations under it",
+    "Y disjoint from W and A": "PRE4: loads read only W and A, stores write only Y (C4); P9",
+    "W and A readable, Y writable, over their extents": "PRE4: C4 keeps loads in W rows [r0, r1) "
+    "and A's T*G blocks, and stores in the output set",
+}
+RANGE_RE = re.compile(r"\AA\.q in \[(-?\d+), (-?\d+)\]\Z")
+SHAPE_NAMES = {"n", "T", "r0", "r1", "ldy"}
+_PRED_NODES = (
+    ast.Expression,
+    ast.BoolOp,
+    ast.And,
+    ast.Or,
+    ast.Compare,
+    ast.BinOp,
+    ast.Add,
+    ast.Sub,
+    ast.Mult,
+    ast.Mod,
+    ast.UnaryOp,
+    ast.USub,
+    ast.Constant,
+    ast.Load,
+    ast.Lt,
+    ast.LtE,
+    ast.Gt,
+    ast.GtE,
+    ast.Eq,
+    ast.NotEq,
+)
+_CMPF = {
+    ast.Lt: lambda a, b: a < b,
+    ast.LtE: lambda a, b: a <= b,
+    ast.Gt: lambda a, b: a > b,
+    ast.GtE: lambda a, b: a >= b,
+    ast.Eq: lambda a, b: a == b,
+    ast.NotEq: lambda a, b: a != b,
+}
+_BINF = {
+    ast.Add: lambda a, b: a + b,
+    ast.Sub: lambda a, b: a - b,
+    ast.Mult: lambda a, b: a * b,
+    ast.Mod: lambda a, b: a % b,
+}
+
+
+def _shape_pred(src):
+    """The parsed form of a REQUIRES string that is a condition on n, T, r0, r1, ldy and rows(W)
+    only, built from integer constants, + - * %, comparisons, and, or; else None."""
+    try:
+        tree = ast.parse(src, mode="eval")
+    except SyntaxError:
+        return None
+    for nd in ast.walk(tree):
+        if isinstance(nd, ast.Call):
+            a = nd.args
+            if not (
+                isinstance(nd.func, ast.Name)
+                and nd.func.id == "rows"
+                and len(a) == 1
+                and not nd.keywords
+                and isinstance(a[0], ast.Name)
+                and a[0].id == "W"
+            ):
+                return None
+        elif isinstance(nd, ast.Name):
+            if nd.id not in SHAPE_NAMES | {"rows", "W"}:
+                return None
+        elif not isinstance(nd, _PRED_NODES):
+            return None
+        elif isinstance(nd, ast.Constant) and type(nd.value) is not int:
+            return None
+    return tree
+
+
+def _pred(nd, env):
+    if isinstance(nd, ast.Expression):
+        return _pred(nd.body, env)
+    if isinstance(nd, ast.BoolOp):
+        vals = [_pred(v, env) for v in nd.values]
+        return all(vals) if isinstance(nd.op, ast.And) else any(vals)
+    if isinstance(nd, ast.Compare):
+        left = _pred(nd.left, env)
+        for op, c in zip(nd.ops, nd.comparators):
+            right = _pred(c, env)
+            if not _CMPF[type(op)](left, right):
+                return False
+            left = right
+        return True
+    if isinstance(nd, ast.BinOp):
+        return _BINF[type(nd.op)](_pred(nd.left, env), _pred(nd.right, env))
+    if isinstance(nd, ast.UnaryOp):
+        return -_pred(nd.operand, env)
+    if isinstance(nd, ast.Constant):
+        return nd.value
+    if isinstance(nd, ast.Call):
+        return env["rows(W)"]
+    return env[nd.id]
+
+
+def preconditions(kernel):
+    """The meaning's shape predicates, after checking that every other REQUIRES string is one
+    the checker carries (NON_SHAPE) and that PRE1's range is the activation format's."""
+    preds = []
+    for src in kernel.requires:
+        m = RANGE_RE.search(src)
+        if m:
+            want = kernel.params["A"][1].q.value_bounds()
+            if (int(m.group(1)), int(m.group(2))) != tuple(want):
+                raise ValueError("%r disagrees with the activation format's range %r" % (src, want))
+            continue
+        if src in NON_SHAPE:
+            continue
+        tree = _shape_pred(src)
+        if tree is None:
+            raise ValueError("the checker does not know the precondition %r" % (src,))
+        preds.append((src, tree))
+    return preds
+
+
 def shape_ok(kernel, shape):
-    """The meaning's preconditions on a shape (meaning.REQUIRES): n a multiple of the block,
-    T >= 0, 0 <= r0 <= r1, and an injective output map, T <= 1 or ldy >= r1 - r0. A shape outside
-    them is a harness error, not a verdict on the program."""
+    """The meaning's shape preconditions (PRE5, PRE6), evaluated from meaning.REQUIRES itself, with
+    rows(W) = r1 (the checker's W holds rows [0, r1)). A shape outside them is a harness error,
+    not a verdict on the program."""
     n, T, r0, r1, ldy = shape
-    blk = kernel.params["block"]
-    if n < 0 or n % blk or T < 0 or not 0 <= r0 <= r1 or not (T <= 1 or ldy >= r1 - r0):
-        raise ValueError("shape %r is outside the meaning's preconditions" % (shape,))
+    env = {"n": n, "T": T, "r0": r0, "r1": r1, "ldy": ldy, "rows(W)": r1}
+    for src, tree in preconditions(kernel):
+        if not _pred(tree, env):
+            raise ValueError("shape %r is outside the meaning's precondition %r" % (shape, src))
+    if n % kernel.params["block"]:
+        raise ValueError("shape %r: n is not a multiple of the format's block" % (shape,))
 
 
 def check_shape(kernel, func, shape, log_ids, cov=None):

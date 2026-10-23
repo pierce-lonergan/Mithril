@@ -233,7 +233,7 @@ def _row_loop(n, cx):
             kmask = em.let(
                 "sm",
                 "const __mmask8",
-                ix("cast", "__mmask8", ix("-", ix("<<", ix("lit", "1u"), nr), ix("lit", "1u"))),
+                ix("cast", "__mmask8", ix("-", ix("<<", 1, nr), 1)),
                 prov=lv.prov[-1],
             )
         cx.pending_tile = Tile(L, lv.vec["width"], lv.vec["layout"], store, rows, nr, smask, kmask)

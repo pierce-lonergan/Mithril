@@ -1,6 +1,6 @@
 {
- "generator_sha256": "1ff5cc0a5c143d6ff2fb4a692dd434fbd73848b0115e8a1a06c565bb10a1e1e3",
- "meaning_sha256": "aa7645c5ff18ba02debd2f6a56b31d9581cd49dc4dee5ff52b2e155ce0105f1d",
+ "generator_sha256": "ddfe3fc44da8e0beead46af8dd72a9f68964d68d21b5eb9e96fc598289173016",
+ "meaning_sha256": "62badbd6015b6abdfcffea02895e4f1f2f0d5c33f6a3e24f84ad58dd63bb7dd9",
  "variants": [
   {
    "name": "hx_x3_mm_q8_scalar",
@@ -15,7 +15,7 @@
       "table"
      ],
      "facts": [
-      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under P3"
+      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under PRE3"
      ]
     },
     {
@@ -77,7 +77,7 @@
       "table"
      ],
      "facts": [
-      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under P3"
+      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under PRE3"
      ]
     },
     {
@@ -139,7 +139,7 @@
       "table"
      ],
      "facts": [
-      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under P3"
+      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under PRE3"
      ]
     },
     {
@@ -306,7 +306,7 @@
      ],
      "facts": [
       "E1: |I| <= 64*128*127 = 1040384 < 2^24, so i2f is exact",
-      "P5: |w| * (x * sgn w) = w * x for w in [-128,127], x in [-127,127] (P1); re-proved by exhaustive enumeration in C3",
+      "P5: |w| * (x * sgn w) = w * x for w in [-128,127], x in [-127,127] (PRE1); re-proved by exhaustive enumeration in C3",
       "P5: maddubs pair |.| <= 2*128*127 = 32512 <= 32767 (no saturation)",
       "P5: halves widened to int32 before adding (2*32512 > 32767)"
      ]
@@ -347,7 +347,7 @@
       "table"
      ],
      "facts": [
-      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under P3"
+      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under PRE3"
      ]
     },
     {
@@ -516,7 +516,7 @@
       "E1: |I| <= 64*8*127 = 65024 < 2^24, so i2f is exact",
       "P5: maddubs pair |.| <= 2*15*127 = 3810 <= 32767 (no saturation)",
       "P5: two halves summed in int16: |.| <= 7620 <= 32767",
-      "P5: bias identity sum(u*x) - 8*sum(x) = sum(w*x), with sum(x) = A.sum by P2"
+      "P5: bias identity sum(u*x) - 8*sum(x) = sum(w*x), with sum(x) = A.sum by PRE2"
      ]
     },
     {
@@ -555,7 +555,7 @@
       "table"
      ],
      "facts": [
-      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under P3"
+      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under PRE3"
      ]
     },
     {
@@ -843,7 +843,7 @@
      "facts": [
       "E1: |I| <= 64*128*127 = 1040384 < 2^24, so i2f is exact",
       "P5: dpbusd lane partials |.| <= 129540 per step, total <= 2072640 < 2^31 (no wrap)",
-      "P5: bias identity sum(u*x) - 128*sum(x) = sum(w*x), with sum(x) = A.sum by P2"
+      "P5: bias identity sum(u*x) - 128*sum(x) = sum(w*x), with sum(x) = A.sum by PRE2"
      ]
     },
     {
@@ -865,7 +865,7 @@
      "facts": [
       "E1: |I| <= 64*128*127 = 1040384 < 2^24, so i2f is exact",
       "P5: dpbusd lane partials |.| <= 129540 per step, total <= 2072640 < 2^31 (no wrap)",
-      "P5: bias identity sum(u*x) - 128*sum(x) = sum(w*x), with sum(x) = A.sum by P2"
+      "P5: bias identity sum(u*x) - 128*sum(x) = sum(w*x), with sum(x) = A.sum by PRE2"
      ]
     },
     {
@@ -904,7 +904,7 @@
       "table"
      ],
      "facts": [
-      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under P3"
+      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under PRE3"
      ]
     },
     {
@@ -1192,7 +1192,7 @@
      "facts": [
       "E1: |I| <= 64*8*127 = 65024 < 2^24, so i2f is exact",
       "P5: dpbusd lane partials |.| <= 7620 per step, total <= 121920 < 2^31 (no wrap)",
-      "P5: bias identity sum(u*x) - 8*sum(x) = sum(w*x), with sum(x) = A.sum by P2"
+      "P5: bias identity sum(u*x) - 8*sum(x) = sum(w*x), with sum(x) = A.sum by PRE2"
      ]
     },
     {
@@ -1214,7 +1214,7 @@
      "facts": [
       "E1: |I| <= 64*8*127 = 65024 < 2^24, so i2f is exact",
       "P5: dpbusd lane partials |.| <= 7620 per step, total <= 121920 < 2^31 (no wrap)",
-      "P5: bias identity sum(u*x) - 8*sum(x) = sum(w*x), with sum(x) = A.sum by P2"
+      "P5: bias identity sum(u*x) - 8*sum(x) = sum(w*x), with sum(x) = A.sum by PRE2"
      ]
     },
     {
@@ -1242,9 +1242,9 @@
   }
  ],
  "files": {
-  "x3_q_scalar.c": "71a1086847d3549c9280aa266c7717f079205cec0c930506f83f77effbfb6baf",
-  "x3_q_avx2.c": "b8784256e5cf4c8e82ed7293a123cab3ca0bb478ddd9f36225546a25258f0ba2",
-  "x3_q_avx512.c": "bd3a87d94499cf79af9c779c1f563b562e318a79671062dcb52d96e602428f34",
-  "x3_gen.h": "bd1819c8d6bdf0628ca240a0818d8b0374ab145d03c16a311d3a870fe0cb8d37"
+  "x3_q_scalar.c": "f023b87de7f184fba1a636bd1a019b68dd5001c3c239ff5512ef1c1eab3ca3a9",
+  "x3_q_avx2.c": "6e5af56af12dd853663e12ea1e48936a9b297a99185ebb1fd9c343ac898545c4",
+  "x3_q_avx512.c": "45b3f1fba6d3db0728e9801965e19e9f3c53054a56635bfa2243d77d6a1fe812",
+  "x3_gen.h": "32a2f8fa7ca342cd5d1ff8e3cfc0d62c3ade4f20cd1893d2ec4966b71a75d967"
  }
 }

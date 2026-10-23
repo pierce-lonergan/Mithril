@@ -107,15 +107,8 @@
    "what": "horizontal FP sum across row lanes",
    "variant": "avx2/q4",
    "verdict": "rejected",
-   "stage": "shape",
-   "shape": [
-    64,
-    1,
-    0,
-    2,
-    3
-   ],
-   "reason": "C1: Y[t=0, r=0] is not canon(F_{t,r}(G)) in canonical order",
+   "stage": "C2 static audit",
+   "reason": "C2: _mm256_hadd_ps (fp) created under P12.map_fp#1, whose licence does not cover it",
    "per_shape_execution_alone": "rejected"
   },
   {
@@ -148,8 +141,8 @@
    "what": "prefetch replaced by a load and store",
    "variant": "avx2/q4",
    "verdict": "rejected",
-   "stage": "C1 structure",
-   "reason": "C4: a store inside block loop g",
+   "stage": "C2 static audit",
+   "reason": "C2: _mm256_storeu_si256 (store) created under P12.map_fp#1, whose licence does not cover it",
    "per_shape_execution_alone": "rejected"
   },
   {
@@ -273,7 +266,7 @@
     3
    ],
    "reason": "C3/C1 unknown at _mm256_maddubs_epi16: no polynomial identity for an integer operand",
-   "P5_at_primitive_time": "rejected: P5: sign transfer needs x in [-127, 127] (P1): sign(-128) overflows",
+   "P5_at_primitive_time": "rejected: P5: sign transfer needs x in [-127, 127] (PRE1): sign(-128) overflows",
    "per_shape_execution_alone": "rejected"
   },
   {
@@ -297,8 +290,8 @@
    "what": "canon applied before the final add",
    "variant": "avx2/q4",
    "verdict": "rejected",
-   "stage": "C1 structure",
-   "reason": "C1: acc carries state across blocks other than as an FP accumulation X = add(X, y) (or add(y, X), which C1 then accepts only under P15)",
+   "stage": "C2 static audit",
+   "reason": "C2: _mm256_cmp_ps_unord (fpcmp) created under P12.map_fp#1, whose licence does not cover it",
    "per_shape_execution_alone": "rejected"
   },
   {
@@ -398,7 +391,7 @@
    "variant": "avx2/q4",
    "verdict": "rejected",
    "stage": "C1 coverage",
-   "reason": "C1: a For statement never runs on the shape set (unchecked code)",
+   "reason": "C1: a For statement at (10, 'then', 0) never runs on the shape set (unchecked code)",
    "per_shape_execution_alone": "accepted"
   },
   {
@@ -469,15 +462,8 @@
    "what": "G-dependent constant selects (i2f*dw)*dx when G >= 6",
    "variant": "avx2/q4",
    "verdict": "rejected",
-   "stage": "shape",
-   "shape": [
-    64,
-    1,
-    0,
-    2,
-    3
-   ],
-   "reason": "C1: a block-count value is used as data (_mm256_set1_epi32)",
+   "stage": "C2 static audit",
+   "reason": "C2: _mm256_blendv_ps (sel) created under P12.map_fp#1, whose licence does not cover it",
    "per_shape_execution_alone": "rejected"
   },
   {
@@ -488,16 +474,195 @@
    "stage": "C scoping",
    "reason": "C1: the declaration of cv repeats or shadows a visible name",
    "per_shape_execution_alone": "accepted"
+  },
+  {
+   "id": 42,
+   "what": "x1 offset via size_t wrap and division (C: ap+24)",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C4: '-': value -72 outside the C type uint64 range [0, 18446744073709551615]",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 43,
+   "what": "x1 offset via a 0u literal (C: ap+24)",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2: literal ('0u',) is not a plain decimal int (Let P5.lower_isum#14)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 44,
+   "what": "x1 offset via (int) narrowing of 2^32 (C: ap+24)",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C4: (int) cast: value 4294967296 outside the C type int32 range [-2147483648, 2147483647]",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 45,
+   "what": "x1 offset via (size_t)G - 6 (C: ap+24 for G <= 5)",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C4: '-': value [-5, 144115188075855865] outside the C type uint64 range [0, 18446744073709551615] for some G <= 144115188075855871",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 46,
+   "what": "uint32_t kk = 0 - 1 decides the x1 offset",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C4: declaration of kk: value -1 outside the C type uint32 range [0, 4294967295]",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 47,
+   "what": "comment text closes itself: acc = acc + acc",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2: comment text '*/ acc = _mm256_add_ps(acc, acc); /*' could end the comment",
+   "per_shape_execution_alone": "accepted"
+  },
+  {
+   "id": 48,
+   "what": "a declared identifier carries acc = acc * acc",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2: declared identifier 'zz = _mm256_setzero_ps(); acc = _mm256_mul_ps(acc, acc); __m256 zz2'",
+   "per_shape_execution_alone": "accepted"
+  },
+  {
+   "id": 49,
+   "what": "a declared C type carries acc = acc - acc",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2: declared type 'int64_t zq = 0; acc = _mm256_sub_ps(acc, acc); const int64_t' of zz",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 50,
+   "what": "a cast type string rewrites the x1 offset",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2: cast type 'int64_t)(24) + 0 * (int64_t' (Let P5.lower_isum#14)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 51,
+   "what": "acc update object placed again in for (tt = 18; tt < T)",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 coverage",
+   "reason": "C1: a Set statement at (10, 'body', 11, 'other', 0, 'body', 3, 'body', 55, 'body', 54, 'body', 0) never runs on the shape set (unchecked code)",
+   "per_shape_execution_alone": "accepted"
+  },
+  {
+   "id": 52,
+   "what": "rb = 34*G held in an int16_t array element",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: block-count value rbv held in the narrow type int16_t",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 53,
+   "what": "comment text closes itself: FMA",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2: comment text '*/ acc = _mm256_fmadd_ps(acc, acc, acc); /*' could end the comment",
+   "per_shape_execution_alone": "accepted"
+  },
+  {
+   "id": 54,
+   "what": "mul(sub(c, 8), x) nested: printed c - 8 * x",
+   "variant": "scalar/q4",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2: a call nested in an argument of i32.mul (Let P5.lower_isum#3)",
+   "per_shape_execution_alone": "accepted"
+  },
+  {
+   "id": 55,
+   "what": "x3_f32bits(q0u): a glued placeholder reads q0u",
+   "variant": "scalar/q8",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2: argument 0 of f32.bits must be a non-negative literal",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 56,
+   "what": "const int32_t ad = x3_ldf(ap): result retyped",
+   "variant": "scalar/q8",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2: ad declared int32_t holds a float result",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 57,
+   "what": "_mm256_set1_ps(0x7fc00000): int to a float param",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C2: argument 0 of _mm256_set1_ps is a 2143289344 where the parameter takes a float (C would convert it)",
+   "per_shape_execution_alone": "rejected"
   }
  ],
- "rejected": 41,
- "total": 41,
+ "rejected": 57,
+ "total": 57,
  "rejected_by_stage": {
-  "C1 structure": 16,
-  "C2 static audit": 6,
-  "shape": 17,
-  "C1 coverage": 1,
+  "C1 structure": 15,
+  "C2 static audit": 19,
+  "shape": 20,
+  "C1 coverage": 2,
   "C scoping": 1
  },
- "per_shape_execution_alone_rejects": 37
+ "per_shape_execution_alone_rejects": 48
 }

@@ -5,7 +5,14 @@ added, none removed"): 29-36 are the reviewer's probes, programs that change the
 footprint only on shapes outside the bounded shape set (G >= 6, T >= 18, r1 - r0 >= 64,
 n >= 4096); 37-41 are the reviser's, holes of the same kind found while fixing them (a copy of G,
 an address polynomial in G, loop-carried counters, a G-dependent data constant, and a C scope
-that the checker's flat environment did not model). Same model family as x3gen (logged as such).
+that the checker's flat environment did not model). Items 42-53 are the second 2026-10-23
+review's fresh mutants (checker lens), made by other methods: index arithmetic whose C integer
+semantics differ from the checker's arithmetic over Z (42-46), strings the printer copies
+verbatim (47-50, 53), a statement object placed twice (51) and a block-count value in a narrow
+array (52). Items 54-57 are the reviser's, holes of the same kinds found while fixing them (a
+call nested in an operator-spelled argument, a placeholder glued to a suffix, a call result
+declared with another type, an integer passed to a float parameter). Same model family as x3gen
+(logged as such).
 Each mutant is judged by check.check_func, the same pipeline as the generated variants. The
 accept half here is the six generated variants; the transliterations of Hearth's six hand
 kernels that DESIGN 4.5 also asks for are not written yet.
@@ -24,7 +31,7 @@ sys.path.insert(0, str(ROOT))
 from x3gen.core import check, lower  # noqa: E402
 from x3gen.core import sem as S  # noqa: E402
 from x3gen.core.fmt import Codes, Format  # noqa: E402
-from x3gen.core.lp import IX, Arr, Call, Do, For, Idx, If, Let, Set, Var, ix  # noqa: E402
+from x3gen.core.lp import IX, Arr, Call, Comment, Do, For, Idx, If, Let, Set, Var, ix  # noqa: E402
 from x3gen.core.sched import PrimError  # noqa: E402
 from x3gen.hearth import meaning  # noqa: E402
 from x3gen.hearth.schedules import avx2, avx512, scalar  # noqa: E402
@@ -711,6 +718,186 @@ PLANTED += [
 ]
 
 
+# ------------------------------------------------------------- 42-57 (second review, 2026-10-23)
+# 42-46: index arithmetic that C evaluates in its own integer types (unsigned wrap, narrowing,
+# literal suffixes), while the pre-fix checker computed over Z. Each one makes the x1 activation
+# load read ap + 24 (the llama order) in C while the checker saw ap + 40.
+def SZ(e):
+    return ix("cast", "size_t", e)
+
+
+def _x1_load(f):
+    then, _ = spec_branches(f)
+    lst, i, st = _a_loads(then)[1]
+    assert st.rhs.args[0] == ix("+", Var("ap"), 40), st.rhs.args[0]
+    return lst, i, st
+
+
+def _set_x1_offset(f, off):
+    _, _, st = _x1_load(f)
+    st.rhs = Call(st.rhs.entry, (ix("+", Var("ap"), off),))
+
+
+def m42_unsigned_div(f, s):
+    """Over Z: (0-72)/72*72 + 72 + 40 = 40; C: size_t wraps, ((2^64-72)/72)*72 + 112 = 24."""
+    _set_x1_offset(f, ix("+", ix("+", ix("*", ix("/", ix("-", SZ(0), 72), 72), 72), 72), 40))
+
+
+def m43_lit_suffix(f, s):
+    """Over Z: 40 - 16*((0-16)/2^31) = 40; C: (0u - 16) / 0x80000000 = 1, so 24."""
+    off = ix("-", 40, ix("*", 16, ix("/", ix("-", IX("lit", ("0u",)), 16), 2147483648)))
+    _set_x1_offset(f, off)
+
+
+def m44_int_narrowing(f, s):
+    """Over Z: (int)(1 << 32) == 0 is false, so 40; C (x86-64): (int)2^32 == 0, so 24."""
+    cond = ix("==", ix("cast", "int", ix("<<", ix("cast", "int64_t", 1), 32)), 0)
+    _set_x1_offset(f, ix("-", 40, ix("*", 16, cond)))
+
+
+def m45_tainted_unsigned_sub(f, s):
+    """G-dependent: the affine form is 40 for every G; C wraps (size_t)G - 6 for G <= 5 and reads
+    ap + 24 there."""
+    gm6 = ix("-", SZ(Var("G")), 6)
+    x = ix("*", ix("/", ix("*", gm6, 72), 72), 72)
+    _set_x1_offset(f, ix("+", ix("-", x, ix("*", ix("-", Var("G"), 6), 72)), 40))
+
+
+def m46_unsigned_let(f, s):
+    """const uint32_t kk = 0 - 1: the pre-fix checker held -1, C holds 4294967295."""
+    lst, i, st = _x1_load(f)
+    lst.insert(i, Let("kk", "uint32_t", ix("-", 0, 1), prov=st.prov))
+    cond = ix("==", ix("+", ix("cast", "int64_t", Var("kk")), 1), 0)
+    st.rhs = Call(st.rhs.entry, (ix("+", Var("ap"), ix("+", 24, ix("*", 16, cond))),))
+
+
+# 47-50, 53: strings the printer copies verbatim but the pre-fix checker never read.
+def _after_acc_update(f, make):
+    then, _ = spec_branches(f)
+    ul, ui, u = acc_updates(then)[0]
+    ul.insert(ui + 1, make(u))
+
+
+def m47_comment_inject(f, s):
+    _after_acc_update(f, lambda u: Comment("*/ acc = _mm256_add_ps(acc, acc); /*"))
+
+
+def m48_name_inject(f, s):
+    name = "zz = _mm256_setzero_ps(); acc = _mm256_mul_ps(acc, acc); __m256 zz2"
+    _after_acc_update(f, lambda u: Let(name, "__m256", Call("_mm256_setzero_ps", ()), prov=u.prov))
+
+
+def m49_ctype_inject(f, s):
+    ct = "int64_t zq = 0; acc = _mm256_sub_ps(acc, acc); const int64_t"
+    _after_acc_update(f, lambda u: Let("zz", ct, 0, prov=u.prov))
+
+
+def m50_cast_type_inject(f, s):
+    """The pre-fix checker returned the operand (40); C: ((int64_t)(24) + 0 * (int64_t)40) = 24."""
+    _set_x1_offset(f, ix("cast", "int64_t)(24) + 0 * (int64_t", 40))
+
+
+def m53_comment_fma(f, s):
+    _after_acc_update(f, lambda u: Comment("*/ acc = _mm256_fmadd_ps(acc, acc, acc); /*"))
+
+
+# 51: one statement object at two positions; coverage keyed on id() credited the copy that never
+# runs (T >= 19 only) with the run of the original.
+def m51_aliased_repeat(f, s):
+    _, other = spec_branches(f)
+    ul, ui, u = acc_updates(other)[0]
+    ul.insert(ui + 1, For("tt", "int", 18, ix("<", Var("tt"), Var("T")), 1, [u], prov=u.prov))
+
+
+# 52: a block-count value in an int16_t array element (C wraps rb = 34*G for G > 963).
+def m52_arr_narrow(f, s):
+    lst, i, st = [(l, j, x) for l, j, x in stmts(f.body) if isinstance(x, Let) and x.name == "w"][0]
+    p = st.prov
+    lst[i:i] = [Arr("rbv", "int16_t", 1, prov=p), Set(Idx("rbv", 0), Var("rb"), prov=p)]
+    old = st.rhs
+    st.rhs = ix("+", old.args[0], ix("*", old.args[1].args[0], Idx("rbv", 0)))
+
+
+# 54-56 (reviser): the scalar isa spells some entries as C operators ("{0} - {1}") and one with a
+# glued suffix ("x3_f32bits({0}u)"), and the printer prints a call result's declared type as given.
+def _let_named_anywhere(f, name):
+    return [(l, j, x) for l, j, x in stmts(f.body) if isinstance(x, Let) and x.name == name][0]
+
+
+def m54_nested_operator_call(f, s):
+    """m = c1 * x with c1 = c - 8 becomes m = mul(sub(c, 8), x): the same tree for the checker,
+    printed "c - 8 * x", which C parses as c - (8 * x)."""
+    _, _, c1 = _let_named_anywhere(f, "c1")
+    _, _, m = _let_named_anywhere(f, "m")
+    m.rhs = Call(m.rhs.entry, (c1.rhs, m.rhs.args[1]))
+
+
+def m55_glued_placeholder(f, s):
+    """x3_f32bits(q0u): the checker reads q0 (the canonical NaN), C reads q0u (+inf)."""
+    lst, i, st = [
+        (l, j, x)
+        for l, j, x in stmts(f.body)
+        if isinstance(x, Let) and isinstance(x.rhs, Call) and x.rhs.entry == "f32.bits"
+    ][0]
+    lst[i:i] = [
+        Let("q0", "uint32_t", st.rhs.args[0], prov=st.prov),
+        Let("q0u", "uint32_t", 0x7F800000, prov=st.prov),
+    ]
+    st.rhs = Call("f32.bits", (Var("q0"),))
+
+
+def m56_call_result_retyped(f, s):
+    """const int32_t ad = x3_ldf(ap): C converts the f32 scale to an integer (and back to float in
+    dw * ad); the pre-fix checker read the call's bits."""
+    _, _, ad = _let_named_anywhere(f, "ad")
+    ad.ctype = "int32_t"
+
+
+def m57_float_param_given_int(f, s):
+    """qnan = _mm256_set1_ps(0x7fc00000): C converts the integer to 2143289344.0f, so NaN outputs
+    become 2.1e9; the pre-fix checker read the integer's bits as the canonical NaN (reviser)."""
+    _, _, q = _let_named_anywhere(f, "qnan")
+    q.rhs = Call("_mm256_set1_ps", (0x7FC00000,))
+
+
+PLANTED += [
+    (42, "x1 offset via size_t wrap and division (C: ap+24)", "avx2", "q4", m42_unsigned_div),
+    (43, "x1 offset via a 0u literal (C: ap+24)", "avx2", "q4", m43_lit_suffix),
+    (44, "x1 offset via (int) narrowing of 2^32 (C: ap+24)", "avx2", "q4", m44_int_narrowing),
+    (
+        45,
+        "x1 offset via (size_t)G - 6 (C: ap+24 for G <= 5)",
+        "avx2",
+        "q4",
+        m45_tainted_unsigned_sub,
+    ),
+    (46, "uint32_t kk = 0 - 1 decides the x1 offset", "avx2", "q4", m46_unsigned_let),
+    (47, "comment text closes itself: acc = acc + acc", "avx2", "q4", m47_comment_inject),
+    (48, "a declared identifier carries acc = acc * acc", "avx2", "q4", m48_name_inject),
+    (49, "a declared C type carries acc = acc - acc", "avx2", "q4", m49_ctype_inject),
+    (50, "a cast type string rewrites the x1 offset", "avx2", "q4", m50_cast_type_inject),
+    (
+        51,
+        "acc update object placed again in for (tt = 18; tt < T)",
+        "avx2",
+        "q4",
+        m51_aliased_repeat,
+    ),
+    (52, "rb = 34*G held in an int16_t array element", "avx2", "q4", m52_arr_narrow),
+    (53, "comment text closes itself: FMA", "avx2", "q4", m53_comment_fma),
+    (54, "mul(sub(c, 8), x) nested: printed c - 8 * x", "scalar", "q4", m54_nested_operator_call),
+    (55, "x3_f32bits(q0u): a glued placeholder reads q0u", "scalar", "q8", m55_glued_placeholder),
+    (56, "const int32_t ad = x3_ldf(ap): result retyped", "scalar", "q8", m56_call_result_retyped),
+    (
+        57,
+        "_mm256_set1_ps(0x7fc00000): int to a float param",
+        "avx2",
+        "q4",
+        m57_float_param_given_int,
+    ),
+]
+
+
 def kernel_x_minus128(k):
     AF = k.params["A"][1]
     q = AF.q
@@ -723,6 +910,11 @@ def kernel_x_minus128(k):
     )
     k2 = k.clone()
     k2.params = dict(k2.params, A=(k2.params["A"][0], AF2))
+    # the meaning text states the same widened range, so that the checker judges C3, not the
+    # agreement between PRE1 and the format (which it now checks)
+    k2.requires = tuple(
+        "A.q in [-128, 127]" if r.startswith("A.q in [") else r for r in k2.requires
+    )
     return k2
 
 

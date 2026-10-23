@@ -8,7 +8,7 @@
   "statements": 30,
   "branch_sites": 0,
   "verdict": "accept",
-  "seconds": 3.0,
+  "seconds": 3.7,
   "shape_list": [
    [
     64,
@@ -238,7 +238,7 @@
   "statements": 37,
   "branch_sites": 0,
   "verdict": "accept",
-  "seconds": 3.2,
+  "seconds": 4.0,
   "shape_list": [
    [
     64,
@@ -468,7 +468,7 @@
   "statements": 302,
   "branch_sites": 12,
   "verdict": "accept",
-  "seconds": 10.2,
+  "seconds": 10.0,
   "shape_list": [
    [
     64,
@@ -852,7 +852,7 @@
   "statements": 263,
   "branch_sites": 12,
   "verdict": "accept",
-  "seconds": 10.7,
+  "seconds": 10.4,
   "shape_list": [
    [
     64,
@@ -1236,7 +1236,7 @@
   "statements": 505,
   "branch_sites": 7,
   "verdict": "accept",
-  "seconds": 11.0,
+  "seconds": 10.6,
   "shape_list": [
    [
     64,
@@ -1578,7 +1578,7 @@
   "statements": 433,
   "branch_sites": 7,
   "verdict": "accept",
-  "seconds": 11.4,
+  "seconds": 11.1,
   "shape_list": [
    [
     64,

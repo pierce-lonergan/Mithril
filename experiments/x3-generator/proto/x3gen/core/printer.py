@@ -5,6 +5,14 @@ output with LF line ends; a provenance header; no hand edits. Rule 5: no C full-
 more than one floating-point operation, so a compiler that contracts within an expression
 (clang-cl /fp:precise gives -ffp-contract=on, X0 TOOLCHAINS 4-6) has nothing to fuse. The printer
 re-parses its own output and refuses to return text that breaks rule 5.
+
+Defence in depth for B9 (review 2026-10-23, checker lens, finding 2; the checker's audit_static is
+the check that counts): the printer copies no string it has not checked against a closed form.
+Identifiers are plain C names, declared and cast types come from a fixed list, literals are plain
+decimal digits, comment text cannot close the comment, no call is nested in another call's argument
+(operator spellings such as "{0} - {1}" put no parentheses around arguments), a placeholder glued to
+an identifier character takes only a non-negative literal, and a call result is declared with the
+call's own type.
 """
 
 import re
@@ -14,15 +22,53 @@ from ..isa.scalar import HELPERS
 from .lp import IX, Arr, Call, Comment, Do, For, Idx, If, Let, Set, Var
 
 IND = "    "
+NAME = re.compile(r"\A[A-Za-z][A-Za-z0-9_]{0,62}\Z")
+INT_TYPES = {"int", "int8_t", "int16_t", "int32_t", "int64_t", "unsigned", "uint8_t", "uint16_t"}
+INT_TYPES |= {"uint32_t", "uint64_t", "size_t", "__mmask8", "__mmask16"}
+PTR_TYPES = {"const uint8_t *", "uint8_t *", "float *"}
+DATA_TYPES = {"float", "__m128", "__m128i", "__m256", "__m256i", "__m512", "__m512i"}
 
 
 class PrintError(Exception):
     pass
 
 
+def _name(s):
+    if not (isinstance(s, str) and NAME.search(s)):
+        raise PrintError("identifier %r" % (s,))
+    return s
+
+
+def _base(ct):
+    if not isinstance(ct, str):
+        raise PrintError("type %r" % (ct,))
+    if ct in PTR_TYPES:
+        return ct
+    t = ct[len("const ") :] if ct.startswith("const ") else ct
+    if t not in INT_TYPES | DATA_TYPES:
+        raise PrintError("type %r" % (ct,))
+    return t
+
+
+def _call(a):
+    e = TABLE[a.entry]
+    glued = {
+        int(m.group(1))
+        for m in re.finditer(r"\{(\d+)\}", e.c)
+        if re.search(r"\A\w", e.c[m.end() : m.end() + 1])
+        or re.search(r"\A\w", e.c[m.start() - 1 : m.start()] if m.start() else "")
+    }
+    for j, x in enumerate(a.args):
+        if isinstance(x, Call):
+            raise PrintError("a call nested in an argument of %s" % a.entry)
+        if j in glued and not (type(x) is int and x >= 0):
+            raise PrintError("argument %d of %s must be a non-negative literal" % (j, a.entry))
+    return e.c.format(*[cx(x) for x in a.args])
+
+
 def cx(a) -> str:
     if isinstance(a, Var):
-        return a.name
+        return _name(a.name)
     if isinstance(a, bool):
         raise PrintError("bool literal")
     if isinstance(a, int):
@@ -30,17 +76,20 @@ def cx(a) -> str:
             return "0x%x" % a
         return str(a)
     if isinstance(a, str):
-        return a
+        raise PrintError("verbatim text %r" % (a,))
     if isinstance(a, Idx):
-        return "%s[%s]" % (a.arr, cx(a.index))
+        return "%s[%s]" % (_name(a.arr), cx(a.index))
     if isinstance(a, Call):
-        e = TABLE[a.entry]
-        return e.c.format(*[cx(x) for x in a.args])
+        return _call(a)
     if isinstance(a, IX):
         op, x = a.op, a.args
         if op == "cast":
+            if x[0] not in INT_TYPES | PTR_TYPES:
+                raise PrintError("cast type %r" % (x[0],))
             return "((%s)%s)" % (x[0], cx(x[1]))
         if op == "lit":
+            if not (isinstance(x[0], str) and re.search(r"\A[0-9]+\Z", x[0])):
+                raise PrintError("literal %r" % (x[0],))
             return x[0]
         if op == "?:":
             return "(%s ? %s : %s)" % (cx(x[0]), cx(x[1]), cx(x[2]))
@@ -67,6 +116,8 @@ def _balanced(s):
 
 
 def decl(ctype, name, mut):
+    _base(ctype)
+    _name(name)
     if ctype.endswith("*"):
         return "%s%s" % (ctype, name)
     if mut or ctype.startswith("const "):
@@ -78,18 +129,25 @@ def stmts(body, depth, out):
     pad = IND * depth
     for s in body:
         if isinstance(s, Let):
+            if isinstance(s.rhs, Call) and _base(s.ctype) != TABLE[s.rhs.entry].ret:
+                raise PrintError(
+                    "%s declared %s holds a %s result" % (s.name, s.ctype, s.rhs.entry)
+                )
             out.append("%s%s = %s;" % (pad, decl(s.ctype, s.name, s.mut), strip_parens(cx(s.rhs))))
         elif isinstance(s, Set):
             out.append("%s%s = %s;" % (pad, cx(s.target), strip_parens(cx(s.rhs))))
         elif isinstance(s, Arr):
-            out.append("%s%s %s[%d];" % (pad, s.ctype, s.name, s.n))
+            if type(s.n) is not int or s.n <= 0:
+                raise PrintError("array size %r" % (s.n,))
+            out.append("%s%s %s[%d];" % (pad, _base(s.ctype), _name(s.name), s.n))
         elif isinstance(s, Do):
             out.append("%s%s;" % (pad, cx(s.call)))
         elif isinstance(s, For):
             init = ""
+            _name(s.var)
             if s.init is not None:
                 init = (
-                    ("%s %s = %s" % (s.ctype, s.var, cx(s.init)))
+                    ("%s %s = %s" % (_base(s.ctype), s.var, cx(s.init)))
                     if s.declare
                     else ("%s = %s" % (s.var, cx(s.init)))
                 )
@@ -105,7 +163,10 @@ def stmts(body, depth, out):
                 stmts(s.other, depth + 1, out)
             out.append(pad + "}")
         elif isinstance(s, Comment):
-            out.append("%s/* %s */" % (pad, s.text))
+            t = s.text
+            if not (isinstance(t, str) and re.search(r"\A[ -~]*\Z", t)) or "*/" in t or "/*" in t:
+                raise PrintError("comment text %r" % (t,))
+            out.append("%s/* %s */" % (pad, t))
         else:
             raise PrintError("statement %r" % (s,))
 
@@ -129,7 +190,31 @@ def used_entries(body, acc):
     return acc
 
 
+def _wrapper(prog):
+    """The translation unit's fixed text (emit.py) has closed forms too: comment lines, include
+    lines, an `#if defined(MACRO)` guard, and plain names in the function headers."""
+    for h in prog.header_lines:
+        if not re.search(r"\A/\* [ -~]*? \*/\Z", h) or "*/" in h[:-2]:
+            raise PrintError("header line %r" % (h,))
+    for inc in prog.includes:
+        if not re.search(r'\A(?:"[\w./]+"|<[\w./]+>)\Z', inc):
+            raise PrintError("include %r" % (inc,))
+    for p in prog.prelude:
+        if not re.search(r"\A#include <[\w./]+>\Z", p):
+            raise PrintError("prelude line %r" % (p,))
+    if prog.guard and not re.search(r"\Adefined\(\w+\)\Z", prog.guard):
+        raise PrintError("guard %r" % (prog.guard,))
+    for f in prog.funcs:
+        for x in (f.name, f.meaning, f.isa):
+            _name(x)
+        for t, n in f.params:
+            _name(n)
+            if t not in ("const void *", "float *", "int64_t", "int"):
+                raise PrintError("parameter type %r" % (t,))
+
+
 def print_program(prog) -> str:
+    _wrapper(prog)
     out = []
     out.extend(prog.header_lines)
     for inc in prog.includes:

@@ -274,7 +274,9 @@ class View:
         if tuple(what) != ("W",):
             raise PrimError("P9: only loads of the read-only weight input are hoistable")
         if "Y disjoint from W and A" not in self.s.k.requires:
-            raise PrimError("P9: needs the read-only/no-alias precondition (DESIGN 3.3, P4)")
+            raise PrimError(
+                "P9: needs the read-only/no-alias precondition (DESIGN 3.3 P4, meaning PRE4)"
+            )
         cands = []
         for lp in self._loops(out_of):
             par = self._parent_loop(lp)
@@ -407,6 +409,6 @@ class Schedule(View):
             ("table",),
             [
                 "P12: each meaning FP op maps to the isa entry whose 'ieee' "
-                "field names it, lane-wise, RNE under P3"
+                "field names it, lane-wise, RNE under PRE3"
             ],
         )

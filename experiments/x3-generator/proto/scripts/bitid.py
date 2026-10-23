@@ -10,7 +10,7 @@ generate the six variants; compile and link a CRT-free DLL per flag configuratio
 objects for FMA, approximation and MXCSR instructions; run the corpus with every buffer between
 no-access guard pages, and every M-th case also under seven non-default MXCSR modes, each x3
 kernel against the same-ISA Hearth kernel; run the meaning differential (x3gen's interpreter
-against the kernels); show, on one shape outside the output-map precondition (P6), that the
+against the kernels); show, on one shape outside the output-map precondition (PRE6), that the
 result then depends on the kernel's store order.
 """
 
@@ -32,6 +32,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from x3gen.core import emit, interp  # noqa: E402
+from x3gen.core.ir import Store, iter_nodes  # noqa: E402
 from x3gen.hearth import meaning  # noqa: E402
 from x3gen.hearth.schedules import avx2, avx512, scalar  # noqa: E402
 
@@ -557,9 +558,23 @@ def f16_rand(rng):
     return s | rng.choice([0x7BFF, 0x0400, 0x0001, 0x03FF])
 
 
+def meaning_without_canon(k):
+    """Control for the meaning differential (review 2026-10-23, meaning lens, finding 4): the
+    meaning with canon removed at the store. The differential must tell it apart from Hearth."""
+    k2 = k.clone()
+    for nd in iter_nodes(k2.body):
+        if isinstance(nd, Store) and nd.value.op == "canon":
+            nd.value = nd.value.args[0]
+    return k2
+
+
 def meaning_diff(d, cases, seed):
     rng = random.Random(seed)
     bad = {k: 0 for k in range(NK)}
+    names = [d.x3t_kernel_name(k).decode() for k in range(NK)]
+    href = names.index("hearth_scalar")
+    ctl = {f: meaning_without_canon(meaning.MEANINGS[f]) for f in ("q8", "q4")}
+    ctl_bad = 0
     outputs = 0
     W, A, Y = Guarded(9 * 5 * 66), Guarded(3 * 5 * 72), Guarded(3 * 12 * 4)
     for c in range(cases):
@@ -608,6 +623,10 @@ def meaning_diff(d, cases, seed):
         sent = 0x7FC0DEAD
         want = [sent] * (T * ldy)
         interp.run(k, bytes(wb), bytes(abb), n, T, want, ldy, 0, rows)
+        nocanon = [sent] * (T * ldy)
+        interp.run(
+            ctl["q8" if dt == Q8 else "q4"], bytes(wb), bytes(abb), n, T, nocanon, ldy, 0, rows
+        )
         outputs += T * rows
         for kk in range(NK):
             ctypes.memmove(
@@ -616,11 +635,14 @@ def meaning_diff(d, cases, seed):
             d.x3t_matmul(kk, dt, W.lo, n, A.lo, T, Y.lo, ldy, 0, rows)
             got = list(struct.unpack("<%dI" % (T * ldy), ctypes.string_at(Y.lo, T * ldy * 4)))
             bad[kk] += sum(1 for a, b in zip(got, want) if a != b)
+            if kk == href:
+                ctl_bad += sum(1 for a, b in zip(got, nocanon) if a != b)
     return {
         "cases": cases,
         "outputs": outputs,
         "seed": seed,
-        "mismatches_vs_interpreter": {d.x3t_kernel_name(k).decode(): v for k, v in bad.items()},
+        "mismatches_vs_interpreter": {names[k]: v for k, v in bad.items()},
+        "control_meaning_without_canon_vs_hearth_scalar": ctl_bad,
     }
 
 

@@ -11,47 +11,65 @@ with §1 rule 4, §10 and DR-018. Pre-registration: [docs/m0/prereg/X3-generator
 those terms precise but never loosens them. Where it proposes something ROADMAP leaves undefined, it
 says so and lists the point in §14 (Owner questions).
 
-**Status note, 2026-10-23 (x3gen track, laptop; changes no definition in this document; revised the
-same day after one independent review).** A development prototype of x3gen now exists in
-[proto/](proto/README.md). It contains:
-- the meaning, with one precondition added after the review (P6 below);
+**Status note, 2026-10-23 (x3gen and x3meaning tracks, laptop; changes no definition in this
+document; revised the same day after two independent review rounds).** A development prototype of
+x3gen exists in [proto/](proto/README.md). It contains:
+- the meaning, reviewed under §3.5 (no transcription error; [MEANING-REVIEW.md](MEANING-REVIEW.md)),
+  with its preconditions renamed **PRE1–PRE6** and reworded (PRE3 is now the MXCSR predicate
+  `(mxcsr & 0xFFC0) == 0x1F80`; PRE5 states the whole shape domain; PRE6, `T ≤ 1 or ldy ≥ r1 − r0`,
+  is new). **Not frozen**: §3.3 below still has the old rows until the patch is applied;
 - P1–P15, each with its own precondition check (P7 refuses every application, because lowering has
   no unrolling);
 - lowering and the printer for the six variants;
 - the seam patch;
 - C1–C4 as a symbolic checker over a bounded shape set. Rules on the program text (C2 on every
-  statement, executed or not; taint, affine-address and carried-state rules for C1; C scoping;
-  statement and branch coverage) carry each shape's result to every block count G [inference].
-  T, r0, r1 and ldy stay bounded.
+  statement, executed or not, and on every string the printer copies; taint, affine-address and
+  carried-state rules for C1; C scoping; statement and branch coverage keyed on program positions)
+  and index arithmetic evaluated in the printed C's integer types carry each shape's result to every
+  block count G [inference]. T, r0, r1 and ldy stay bounded.
 
-Development data only, [M] on the laptop:
+Development data only, [M] on the laptop, re-run on the final code:
 - **Bit identity.** The generated kernels match Hearth's scalar, AVX2 and AVX-512 kernels on
   3 × 38,656 cases (n up to 8192, T up to 40, ldy = rows included) with NaN, inf and subnormal
-  scales, and also under seven non-default MXCSR modes.
-- **Checker.** It accepts the six variants and rejects all 41 planted programs: the 28 of §4.5 and
-  13 added after the review (29–41).
+  scales, and also under seven non-default MXCSR modes. The meaning differential: 0 mismatches
+  against all six kernels; a control meaning without canon differs in 640 of 2,162 outputs, so the
+  differential now sees canon.
+- **Checker.** It accepts the six variants and rejects all 57 planted programs: the 28 of §4.5 and
+  29 added after the reviews (29–57). That is evidence about these mutants only. Before round 2 the
+  prototype rejected all 41 it then had, yet round 2's checker reviewer found 12 fresh mutants it
+  accepted, 11 of which change outputs in C; they are items 42–53 now. Every item and the checker
+  come from one model family.
 - **Line counts.** S = 43 schedule lines, or 50 counting 7 specificity-lint false positives
   (`prefetch`), against H = 303 (reproduced exactly), so S/H = 0.165 [D].
 
-Review: one same-family, independent-context review on 2026-10-23, 0 blocker / 2 major / 3 minor
-findings, all accepted and fixed ([proto README, Review log](proto/README.md#review-log)).
+Reviews: round 1, 0 blocker / 2 major / 3 minor; round 2, the meaning (0 / 1 / 5 and a no-change
+result) and the checker (0 / 3 / 4). All accepted and fixed; same family, independent contexts
+([proto README, Review log](proto/README.md#review-log); [MEANING-REVIEW.md](MEANING-REVIEW.md)).
 
-Proposed for this document (not applied: the body is outside the x3gen track's write scope):
-- §3.3, a row **P6**: "T ≤ 1 or ldy ≥ r1 − r0". Source: `hx_quant.h:49-57` leaves it implicit;
-  callers pass ldy = the row count (`model.c:448-452`, `:881`, `:888`) with r1 ≤ rows
-  (`model.c:298-300`). Role: makes the meaning and C4's "written once" well defined. Without it
-  Hearth's own AVX2 and scalar kernels disagree [M].
-- §4.5, items 29–41 of `proto/tests/planted.py`, as "more may be added" allows.
-- §4.3, C2's lint on the whole text, and the coverage, taint, affine-address, carried-state and
-  scoping rules of C1, as the implemented form of (i)–(iv) for G.
+Proposed for this document (not applied: the body is outside these tracks' write scope), as a patch
+the DESIGN owner can apply, [MEANING-REVIEW-design.patch](MEANING-REVIEW-design.patch):
+- §3.3, the PRE1–PRE6 table: PRE3's MXCSR predicate; PRE4 re-sourced as a judgment ("implicit in
+  `hx_quant.h:49-57`; callers pass separate buffers"); PRE5's shape domain; the new PRE6 row,
+  recorded as a domain restriction, not a change to the arithmetic. This must land before the
+  meaning's hash is taken;
+- the precondition renames elsewhere in the body (§3.5, §4.2, §4.3 C3, §4.4 B7, §4.5 item 22,
+  §7 step 6) and in the prereg's threats table;
+- §4.5, items 29–57 of `proto/tests/planted.py`, as "more may be added" allows;
+- §17, the three 2026-10-23 review rows.
+
+Also proposed, not in the patch: §4.3, the implemented forms (C2's lint on the whole text and on
+every printed string; the coverage, taint, affine-address, carried-state, scoping and C-type rules
+of C1). And a stated limit for §4.3 C2: the prototype binds provenance to primitives only at
+instruction-class level (FP arithmetic to P12/P14/P15; FP compares, selects and stores to P13;
+prefetch to P11), so "a lint rejects any node created outside P1–P15" holds only for those classes.
 
 Not done:
 - the T1 export;
-- transliterations of the hand kernels;
+- transliterations of the hand kernels (§4.5; needed before T0);
 - C1–C4 over symbolic addresses in T, r0, r1 and ldy;
 - MSVC and Linux builds;
 - any timing;
-- the meaning review of §3.5, and a review of the revised checker.
+- a review of the second checker revision, and §4.5's review of the planted suite as such.
 
 [proto/README.md](proto/README.md) lists the deviations from this document.
 
