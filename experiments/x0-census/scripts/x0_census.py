@@ -33,8 +33,10 @@ What it computes itself (everything else is copied from the stage outputs, which
     iclasses of the counted set (judge.py's list); c, d1, d2 from x0_loops.py; Amendment X0-A1 (review of
     2026-10-23): variants[].p3c_unscreened and variants[].p3c_frozen_reading from x0_loops.py (P3(c) under the
     reading frozen at 152fa33; equal to p3.c for a loops.json written before X0-A1), metrics.x0_a1 (per
-    configuration, over every variant: unscreened loops and the P3(c) flags of both readings) and one note per
-    unscreened loop with both counts and its bound;
+    configuration, over every variant: unscreened loops, the P3(c) flags of both readings, and the flags of one
+    reading only, p3c_flagged_loops_frozen_reading_only and p3c_flagged_loops_x0a1_only, after the review of X0-A1
+    r2) and one note per unscreened loop with both counts and its bound; judge.validate_schema (below) also checks
+    that the two lists, p3c_unscreened and the loop records agree;
   * metrics: P1 (gap counts per configuration and cause), P2, P3 flags, P4 |U_all| and P5_iclass over the main
     union (A, B-cmake, C, D, and A-ninja variants with union_member) with judge.py's rules, and the secondary
     metrics that need no new tooling (|U_all^S| through xed_tables.tsv's iform extension, |U_all^SIMD|,
@@ -442,8 +444,12 @@ def main():
             continue
         m = a1m[v["config"]]
         m["unscreened_loops"] += len(v.get("p3c_unscreened") or [])
-        m["unscreened_loops_flagged_only_by_the_frozen_reading"] += len(
+        # review of X0-A1 r2: the flags of one reading only, counted both ways (judge.py's schema check requires
+        # every such loop to be listed unscreened)
+        m["p3c_flagged_loops_frozen_reading_only"] += len(
             set(v.get("p3c_frozen_reading") or []) - set((v.get("p3") or {}).get("c") or []))
+        m["p3c_flagged_loops_x0a1_only"] += len(
+            set((v.get("p3") or {}).get("c") or []) - set(v.get("p3c_frozen_reading") or []))
         m["p3c_flagged_loops"] += len((v.get("p3") or {}).get("c") or [])
         m["p3c_flagged_loops_frozen_reading"] += len(v.get("p3c_frozen_reading") or [])
         m["p3c_flagged_variants"] += bool((v.get("p3") or {}).get("c"))

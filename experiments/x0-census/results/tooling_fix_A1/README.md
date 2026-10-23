@@ -1,10 +1,21 @@
 # X0-A1: evidence for the post-data tooling fix of `x0_loops.py`
 
 Written 2026-10-23 by the x0fix track (Claude). Revised the same day ("r2") after the fix's independent review
-(Claude, same family, independent context; two reviewers, 18 findings). This folder holds the evidence for Amendment
-X0-A1 to the record `docs/m0/prereg/X0-census.md` (FROZEN at `152fa33`). Whether and when the amendment was appended is
-shown by the record itself; this folder is not edited when it is appended. No census was re-run and no census verdict
-was computed. Nothing here was committed by the x0fix track.
+(Claude, same family, independent context; two reviewers, 18 findings), and again ("r3", by the x0r2 reviser, Claude)
+after the independent review of r2 (one reviewer, same family, independent context; 7 findings; section 9). This folder
+holds the evidence for Amendment X0-A1 to the record `docs/m0/prereg/X0-census.md` (FROZEN at `152fa33`). Whether and
+when the amendment was appended is shown by the record itself; this folder is not edited when it is appended. No census
+was re-run and no census verdict was computed. Nothing here was committed by the x0fix track or the x0r2 reviser.
+
+**r3 in one paragraph.** `x0_loops.py` is unchanged (`5519a568…`), so every loop output of r2 stands. r3 changes the
+reporting around it: `rederive/compare_x0.py` compares the re-derivation with each reading's P3(c) lists and writes
+`rederivation_frozen_reading`; `judge.py` takes the frozen reading's V3 from that block (never from the amended one when
+the lists differ), keeps the frozen reading's `validity_detail` and notes, and its schema check makes the two P3(c)
+lists, `p3c_unscreened` and the loop records agree; `x0_census.py` renames one counter and adds another;
+`compare_x0.py` is pinned in V4. Two narrower points of the escape rule are stated as exceptions in X0-A1.1 instead of
+being widened after data. The draft amendment text is `AMENDMENT-X0-A1.md` in this folder (outside `SHA256SUMS`,
+because it quotes that file's hash); its data-free part X0-A1.1 is also the separate file
+`experiments/x0-census/X0-A1.1-RULE.md`.
 
 **This folder contains census run 1 outputs** (loop ids, lane counts, bounds, disassembly of run 1's objects) and
 describes `x0_loops.py`. A fresh re-deriver (`rederive/PROCEDURE.md`) must not receive it.
@@ -28,6 +39,10 @@ operational definition and implements it (`x0_loops.py` `5519a568…`, comment b
   - **r2:** a use counts for a loop only when the loop's header is reachable from it in the function's control-flow
     graph (in the loop, before it, or in an enclosing loop). A use that only follows the loop, such as an epilogue
     call, cannot reach a slot while the loop runs.
+  - **r3, stated exceptions (no code change):** RSP itself is the slot model's base, not a stack pointer, so a store
+    of RSP itself (`MOV [m],RSP`, `PUSH RSP`) raises no event; and a slot's address is placed from RSP (or RBP) at the
+    loop header, so a `PUSH`/`POP` inside the loop is not followed. Both keep the frozen reading where they apply
+    (`tests/test_loops_a1.py` `TestReviewR2Residuals`).
 - **Scope (r2).** X0-A1 treats an escaping slot as plain memory **only for the P3(c) quantity**: `acc_lanes_emitted`,
   `partial_results`, `partial_result_cycles`. Every other loop field keeps the frozen reading, so `accumulators`,
   `acc_updates_per_iter`, `u_acc`, `fp_accumulator_ops`, `carried_registers`, `fp_free`, the tags and the X2
@@ -46,6 +61,19 @@ operational definition and implements it (`x0_loops.py` `5519a568…`, comment b
   `p3c_frozen_reading`, `verdict.json` gets `both_ways`: the variants whose two readings differ, every unscreened loop,
   and the whole decision list run a second time with P3(c) under the frozen reading (`outcomes`, `validity`,
   `amber_b`). The top-level `outcomes` use X0-A1. Which reading governs is Pierce's decision.
+- **Verdict level (r3).** V3 is computed for each reading. `rederive/compare_x0.py` runs PROCEDURE.md §4's comparison
+  a second time with each variant's `p3c_frozen_reading` in place of `p3.c` and writes it as
+  `rederivation_frozen_reading` (`comparison.json` `frozen_reading`). `judge.py` evaluates the frozen reading on a copy
+  of the census as the frozen script would have written it (P3(c) lists and lane counts of the frozen reading, the
+  X0-A1 lists removed) with that block as its `rederivation`. Without the block it reuses the amended block only when
+  the two lists are equal in every variant, or when no re-derivation is present; otherwise the frozen reading's V3 is
+  `not_computed` and its outcome `tooling_failure`. `both_ways.frozen_reading` also carries `validity_detail`, `notes`
+  and `v3_basis`. The schema check (`judge.validate_schema`, which `x0_census.py` also runs) requires both X0-A1 lists
+  together, the two P3(c) lists to differ only in unscreened loops, `p3c_unscreened` to equal the loops marked
+  unscreened (each with a frozen count), and each loop with a bound to be in each list exactly when its count for
+  that reading exceeds the bound. `compare_x0.py` is pinned in V4 (`pin_inputs.py` `EXTRA`).
+  A census checkout carries it; a desktop smoke tree must also hold `rederive/compare_x0.py` (`x0_driver.py` records
+  a missing pinned file as null in a smoke run, so V4 fails there, and refuses a census run).
 - **Direction.** The definition over-approximates escape: a stack pointer in any argument register at any call, or
   any unbounded use, makes the whole frame escape. Over-approximating escape removes counted lanes, which is the
   direction favourable to Pass. It is safe only together with the `unscreened` listing and the both-ways verdict.
@@ -71,10 +99,14 @@ EDT) and after the review. None of its changes is favourable to Pass:
 | 12:19:00-12:19:48 | rev1: the pinned script re-run on run 1 from a tree with the pinned class files; byte-identical to run 1's `loops.json` | `8c7ecc9e…` |
 | about 12:30-12:45 | independent review of rev1 (two reviewers, 18 findings) [inference, from the reviewers' scratch-file times] | `7a6393d3…` |
 | 13:04:35-13:50:45 | r2: run 1 reloop, reproduction reloop, runbook steps 86 and 88, comparisons (`joblogs/r2/`) | `5519a568…` |
+| about 15:50-16:00 | independent review of r2 (one reviewer, 7 findings) [inference, from the reviewer's scratch-file times, 12:53-12:59 PDT] | `5519a568…` |
+| 16:18-16:20 | r3: one read-only listing and two read-only copies of the r2 replay's `census.json` files from the desktop; everything else on the laptop (section 4.9) | `5519a568…` (unchanged) |
 
 Nothing read census run 1 before the rev1 script was final. The r2 revision came after run 1 had been read; section 1
 says why none of its changes is favourable to Pass. The rev1 evidence is kept in `superseded_rev1/` with its own
-`SHA256SUMS`.
+`SHA256SUMS`. r3 changes no loop output (`x0_loops.py` unchanged). Its changes add checks and report the frozen
+reading's V3 instead of inheriting it; the two narrower points of the escape rule were stated, not widened. None of
+them is favourable to Pass.
 
 ## 3. Files
 
@@ -92,11 +124,15 @@ says why none of its changes is favourable to Pass. The rev1 evidence is kept in
 | `regression_replay/` | Runbook steps 86 and 88 with the r2 scripts: run ids, `check_regression_run.py` logs, summaries, verdicts (with `both_ways`), and the comparisons with the 2026-10-17 final runs (`s88_*.compare.json`, `s88_*.allfields.json`; summaries and verdicts against `scripts/smoke/results/prefreeze_rerun/` in `s88_vs_20261017_summaries_verdicts.jsondiff.json`) and with the rev1 replay (`s88_*.vs_rev1.compare.json`) |
 | `laptop_precheck/` | `laptop_check_r2.py` and its output (every loop field, pinned against r2, on NON-Hearth decodes kept on the laptop; no compile, no decode); `unit_tests_r2.txt` (the 215 unit tests) |
 | `joblogs/rev1/`, `joblogs/r2/` | Every desktop job log of rev1 (`D:\mithril\jobs\x0fixA1\`) and of r2 (`D:\mithril\jobs\x0fixA1\r2\`), copied |
-| `tools/` | The evidence tools and the desktop job scripts as run. None of them is a census input. r2 added `a1_allfields.py`, `a1_pvalues.py`, `a1_jsondiff.py`, `desktop_jobs/r2_job.ps1`, `r2_post.ps1`, `reloop_job_r2.ps1`, `run1_loopinfo_r2.py`, and changed `a1_otherfields.py` (ignores the new variant list) and `a1_events.py` (`reaches_header`) |
+| `tools/` | The evidence tools and the desktop job scripts as run. None of them is a census input. r2 added `a1_allfields.py`, `a1_pvalues.py`, `a1_jsondiff.py`, `desktop_jobs/r2_job.ps1`, `r2_post.ps1`, `reloop_job_r2.ps1`, `run1_loopinfo_r2.py`, and changed `a1_otherfields.py` (ignores the new variant list) and `a1_events.py` (`reaches_header`). r3 added `a1_r3_bothways.py` and `a1_r3_replay_check.py` |
 | `superseded_rev1/` | The rev1 evidence and its `SHA256SUMS`, as reviewed: **superseded by r2, kept as the record of what was seen**. Its `tools/` holds the rev1 tool versions |
-| `SHA256SUMS` | SHA-256 of every file in this folder except itself |
+| `AMENDMENT-X0-A1.md` | **r3.** The DRAFT text of Amendment X0-A1, for the lead engineer to append to the record. Not in `SHA256SUMS`, because it quotes `SHA256SUMS`'s own hash |
+| `run1/r3/` | **r3.** `tools/a1_r3_bothways.py` on census run 1 (read only, laptop): the schema check of the AFTER census, the comparison of the frozen re-derivation v1 with both readings (`comparison_after_x0a1_both_ways_r3.json`), two `judge.py` previews (`*_NOT_A_VERDICT.json`: without a re-derivation, as r2's preview, and with the v1 re-derivation compared both ways) and `bothways_r3_summary.json` |
+| `regression_replay/r3_replay_check.json` | **r3.** `tools/a1_r3_replay_check.py`: r3's schema check and `judge.py`/`judge_regression.py` on the r2 replay's two `census.json` files, against the r2 verdicts |
+| `laptop_precheck/unit_tests_r3.txt` | **r3.** The 234 unit tests |
+| `SHA256SUMS` | SHA-256 of every file in this folder except itself and `AMENDMENT-X0-A1.md` |
 
-## 4. Results (r2)
+## 4. Results (r2; r3 in point 9)
 
 1. **Unit tests.** 215 pass: 183 earlier, 25 in `tests/test_loops_a1.py` and 7 in `tests/test_a1_census_judge.py`
    [M, laptop, 2026-10-23, `laptop_precheck/unit_tests_r2.txt`]. The guarded test in `test_driver_guard` runs, because
@@ -173,6 +209,9 @@ says why none of its changes is favourable to Pass. The rev1 evidence is kept in
      --after-census` rebuilds it). It gives `tooling_failure` under both readings: V3 fails, and V4 because the scripts
      are not the census run's. `both_ways` lists 10 C variant records: the four `k_avx512` records whose P3(c) differs
      (`[]` against two loops each) and the six scalar records with an unscreened loop.
+   - **r3 correction.** In that r2 preview the frozen reading's V3 was not evaluated: r2's `judge.py` kept the
+     census's `rederivation` block, which compares the re-derivation with the amended lists (finding X0r2-1). There
+     the block was `{present: false}`, so V3 failed under both readings anyway. r3's previews are in point 9.
 7. **Cause of each removed flag** (`run1/p3c_before_after.tsv`, `run1/events/events_C_*.jsonl`).
    - **Cause (a) applies to all 8.**
      - In `mm_q8_avx512`, `lea rax,[rsp+0x140]` at 1:453 and `lea rsi,[rsp+0x140]` at 1:d29 take the address of the
@@ -187,7 +226,41 @@ says why none of its changes is favourable to Pass. The rev1 evidence is kept in
      X0-A1's definition of "non-escaping".
 8. **V3** [D, from `results/rederive/comparison.json` and the tables above]. X0-A1 removes run 1's 4 census-only P3(c)
    mismatches. It does not touch the 25 re-derivation-only mismatches, which the re-deriver attributes to its own v1
-   script. V3 therefore still needs the fresh re-derivation of REPORT §20.
+   script. V3 therefore still needs the fresh re-derivation of REPORT §20. r3 measured this both ways (point 9).
+9. **r3, read only, laptop** (2026-10-23 PDT; Python 3.12.10; the unit-test log is timed 20:20:43Z).
+   - **Unit tests.** 234 pass, none skipped: the 215 of r2, 2 more in `test_loops_a1` (the stated exceptions) and 17
+     more in `test_a1_census_judge` (24 in all: V3 per reading, the schema consistency checks, the assembler's
+     counters and exit status, and `compare_x0.py` both ways) (`laptop_precheck/unit_tests_r3.txt`). The guarded test
+     in `test_driver_guard` runs.
+   - **Pins.** `pin_inputs.py --write` found 6 differences against the r2 pins (`judge.py`, `x0_census.py`,
+     `runbook/pin_inputs.py`, the two X0-A1 test files, and the new pin `rederive/compare_x0.py`), then 0; 101 files
+     pinned. `class/frozen_inputs.json` is `44fcb633…` and records the re-pin in `_provenance.x0_a1_r3`.
+   - **P1 to P5 before/after, re-run.** `tools/a1_pvalues.py` with the r3 scripts, census run 1's `census.json` and the
+     r2 re-run's `loops.json` files (copied to the laptop by r2) gives `run1/p1_p5_before_after.tsv` byte for byte
+     (`76baeb70…`) and the AFTER census `dd9c4acd…` again. It is not rewritten.
+   - **Schema.** r3's `judge.validate_schema` finds 0 violations in the AFTER census (`run1/r3/schema_after_x0a1_r3.json`).
+   - **V3 both ways** (`run1/r3/comparison_after_x0a1_both_ways_r3.json`; the frozen re-derivation v1 of 2026-10-17,
+     `figures.json` `c5cc075f…`). Against the X0-A1 lists: 25 mismatches. Against the frozen-reading lists: 29, the same
+     29 as run 1's own comparison. The 4 that only the frozen reading has are the P3(c) flags of C `k_avx512` Q8 and Q4
+     at 1:0xd98, 1:0xc64, 1:0x2e90 and 1:0x2d5f.
+   - **Previews, NOT verdicts** (`run1/r3/*_NOT_A_VERDICT.json`, `bothways_r3_summary.json`). Without a re-derivation
+     (as r2's preview): `tooling_failure` under both readings (V3 and V4 fail; `v3_basis` "no re-derivation present").
+     With the v1 re-derivation compared both ways: `tooling_failure` under both readings; V3 fails with 25 mismatches
+     under X0-A1 and 29 under the frozen reading (`v3_basis` `rederivation_frozen_reading`); V4 fails because the
+     scripts are not census run 1's. No Amber row is reached in either reading.
+   - **Regression replay, re-judged** (`regression_replay/r3_replay_check.json`; the r2 replay's two `census.json`
+     files copied read-only from the desktop: R1 `smoke-20261023T174221Z`, R2 `smoke-20261023T172426Z`). r3's schema
+     check finds 0 violations in both (R1 12, R2 18 unscreened loop records). `judge.py` and `judge_regression.py` were
+     run as step 88 runs them, on a copy whose `record.scripts_sha256` is r3's pins (otherwise V4 fails only because of
+     the re-pin). Every outcome equals r2's under both readings (R1 `tooling_failure`, both verdicts; R2
+     `tooling_failure`, and `amber_a`, `amber_b`, `amber_c` with the synthetic re-derivation). The only differences are
+     the three new keys of `both_ways.frozen_reading` (`validity_detail`, `notes`, `v3_basis`).
+   - **Not re-run in r3, and why.** `x0_loops.py` is unchanged, so the loop re-runs of census run 1 and of the
+     reproduction, `run1_allfields.json`, the events, the P3(c) tables and the laptop pre-check stand as r2 made them.
+     Runbook steps 86 and 88 were not replayed: C and D need WSL, which the sprint's current rule forbids, and the r3
+     changes are in the census-level and verdict-level scripts, which were re-checked on the replay's own census files
+     instead. `x0_census.py` was not re-run on the replay's run directories (its r3 change renames one
+     `metrics.x0_a1` counter and adds another; the unit tests cover both).
 
 ## 5. Residual
 
@@ -206,14 +279,25 @@ says why none of its changes is favourable to Pass. The rev1 evidence is kept in
 - A pre-existing `(V)MOVSS` stack-reload defect in `lane0_uses` counts a scalar spilled accumulator as 0 lanes, an
   under-count in the unsafe direction (found by rev1 on synthetic streams; its effect on run 1 not measured). X0-A1
   does not change it.
-- r2's own changes are not independently reviewed.
+- **Stated exceptions (r3).** A store of RSP itself raises no escape event, and a slot's address is placed from RSP
+  at the loop header, so a `PUSH`/`POP` inside the loop is not followed. Both are in X0-A1.1 item 1. Where they apply,
+  the X0-A1 reading equals the frozen reading (nothing is removed, so nothing is listed); they were stated rather than
+  widened, because widening escape after the data were seen is the direction favourable to Pass.
+- **One re-derivation checks one reading (r3).** `compare_x0.py` compares the same re-derivation figures with both
+  readings' lists. A re-deriver that implements X0-A1.1 can match only the X0-A1 lists, and one that implements
+  "non-escaping" from the freeze text alone can match only its own reading. So V3 can hold under at most one reading
+  wherever the readings differ, unless PROCEDURE.md is extended (for example, figures for both readings). That is part
+  of the open question on X0-A1.1, for the lead engineer and Pierce.
+- r2's changes were reviewed once (section 9). r3's own changes are not independently reviewed.
 
 ## 6. Re-derivation blinding
 
 A fresh re-deriver under `rederive/PROCEDURE.md` §2 item 1 receives the record as `git show
 152fa33:docs/m0/prereg/X0-census.md`, never the record at HEAD. The amendment's part X0-A1.2, `FREEZE.md`,
 `scripts/README.md`, `scripts/smoke/a1/` and this folder contain census outputs or describe `x0_loops.py`, and none of
-them is given to it. The amendment's part X0-A1.1 states the operative rule without census output. Whether the
+them is given to it. The amendment's part X0-A1.1 states the operative rule without census output, run id or description of the census
+scripts. Since r3 it is also the separate file `experiments/x0-census/X0-A1.1-RULE.md` (SHA-256
+`49e0b344c989440200f63b1a39ca650367c93a34f61272af5ed98b63f800c11f`), which can be handed over on its own. Whether the
 re-deriver receives it is open (provisional, pending the lead engineer and Pierce). Without it, the re-deriver
 implements "non-escaping" from the freeze text alone, and V3 can mismatch on unscreened loops.
 
@@ -252,7 +336,13 @@ implements "non-escaping" from the freeze text alone, and V3 can mismatch on uns
   so step 86 took 11 minutes instead of 25 seconds. The busiest process by I/O was a `python` process this track did
   not start [M, `\Process(*)\IO Data Bytes/sec`; its owner was not determined].
 
-**Common to both.** At most one compiler at a time, XED `-j 2`, at most 4 threads, `CUDA_VISIBLE_DEVICES=-1`, no GPU,
+**r3 (16:18-16:20 EDT = 13:18-13:20 PDT).** One read-only `Get-ChildItem` of `D:\mithril\x0fixA1\r2\runs88\R1reg` and
+`R2mock` over SSH (with `CUDA_VISIBLE_DEVICES=-1`, `TEMP`/`TMP` on D:), and two read-only `scp` copies of their
+`census.json` files (5,969,047 and 4,424,857 bytes) to the laptop. No job, no compiler, no Python on the desktop, no WSL:
+no `wsl`, `wslhost` or `vmmem` process was running at 16:18 EDT [M, `Get-Process`]. Nothing was written to D: or
+deleted. Whether the two SSH sessions left small files in `%LOCALAPPDATA%\Temp` on C: was not checked.
+
+**Common to rev1 and r2.** At most one compiler at a time, XED `-j 2`, at most 4 threads, `CUDA_VISIBLE_DEVICES=-1`, no GPU,
 `TEMP`/`TMP` on D:. No system setting was changed. No Hearth file was compiled and no Hearth object was decoded; census
 run 1's existing decodes and objects were read only. The Hearth working tree, the WSL home and GEMS were not touched.
 Nothing was deleted: `D:\mithril\x0fixA1\` (rev1 and `r2\`) and the job folders remain, for Pierce or the lead engineer
@@ -284,3 +374,22 @@ findings: 1 blocker, 7 major, 10 minor. All 18 accepted, 3 of them in part; none
 | R2-9 | minor | The test's run-1 offset 0x140 came from REPORT.md, not from "the shape" alone | [M] REPORT.md:421 | Fixed: disclosed in the test docstring (re-pinned anyway), this README and the amendment |
 | R2-10 | minor | Status sentences "not appended yet" would go stale and change the cited hashes | [M] | Fixed: FREEZE.md and this README need no edit when the amendment is appended |
 | R2-11 | minor | "compiled with the frozen quant_avx512.c lines" could read as compiling Hearth lines | [M] `a1_set.json` | Fixed: "the frozen compile command line of `quant_avx512.c`" |
+
+## 9. Review of r2 and how r3 handles it
+
+Reviewer: one, Claude, same family, independent context, adversarial brief (2026-10-23; its synthetic streams in the
+reviewer's `adv_r2.py`, not kept here). Scope: r2 as committed in `c069600` (`x0_loops.py`, `x0_census.py`, `judge.py`,
+the tests, this folder, FREEZE.md and the draft amendment). 7 findings: 1 blocker, 2 major, 4 minor. 6 accepted and
+fixed (one of them, X0r2-4, by its alternative fix), 1 accepted as a process item for the lead engineer; none
+rejected. Each was verified by the reviser before it was handled [M, laptop, 2026-10-23: the reviewer's `adv_r2.py`
+re-run on r2, then on r3].
+
+| # | Severity | Finding | Verified | r3 |
+|---|---|---|---|---|
+| X0r2-1 | blocker | `both_ways` evaluated the frozen reading with the amended reading's V3: `rederivation` is `compare_x0.py`'s comparison with `p3.c`, and only `p3.c` was replaced | [M] `adv_r2.py` case 3 on r2: frozen reading `amber_b` with V3 true although its P3(c) list differs from the one the re-derivation was compared with | Fixed: `compare_x0.py` writes `rederivation_frozen_reading`; `judge.py` uses it, reuses the amended block only when the lists are equal in every variant or no re-derivation exists, else V3 `not_computed` and `tooling_failure`; `v3_basis` reported; the test that asserted the inherited V3 corrected; a test where the re-derivation matches only the frozen list; `compare_x0.py` pinned in V4. On run 1: 25 mismatches under X0-A1, 29 under the frozen reading (section 4.9). Refinement of the reviewer's fix: the amended block is reused when the two lists are equal everywhere, because the comparison is then the same (otherwise the step-88 replay's frozen reading would have shown a false `tooling_failure`) |
+| X0r2-2 | major | The schema checked only the types of the X0-A1 lists, so a census could drop a frozen-reading flag silently | [M] `adv_r2.py` cases 4 and 5 on r2: no violation, frozen reading `pass` | Fixed: `judge.validate_schema` (also run by `x0_census.py`): both lists together; the lists differ only in unscreened loops; `p3c_unscreened` equals the loops marked unscreened; every unscreened loop has its frozen count; each loop with a bound is in each list iff its count for that reading exceeds the bound. 9 tests; cases 4 and 5 now give `tooling_failure` (schema) under both readings; 0 violations on the run-1 AFTER census and on both replay censuses |
+| X0r2-3 | major | The amendment text was only in a scratch file; no data-free X0-A1.1 file; X0-A1.1's preamble and items 3 and 4 named the run, the flag direction and script outputs | [M] no amendment file in this folder; `X0-A1.1` cited without a path | Fixed: `AMENDMENT-X0-A1.md` here, outside `SHA256SUMS` (stated in section 3); `experiments/x0-census/X0-A1.1-RULE.md` holds the definition, scope and direction only (no run id, no flag direction, no script field names other than the record's own `acc_lanes_emitted` and `acc_updates_per_iter`); the amendment quotes its SHA-256; former items 3 and 4 moved to X0-A1.2 |
+| X0r2-4 | minor | The code does not match X0-A1.1 for a store of RSP itself, and slot addresses are placed from RSP at the header | [M] `adv_r2.py` case 1 (`mov [rip+x],rsp`, `push rsp`: no escape); r3 built the in-loop `PUSH` case and confirmed it (an access to the slot's real address finds no overlap) | Fixed by the reviewer's alternative: both stated as exceptions in X0-A1.1 item 1 and in section 5; 2 tests pin the behaviour. Not widened in code: more escape after the data were seen is the direction favourable to Pass, and `x0_loops.py` stays `5519a568…`, so r2's loop evidence stands |
+| X0r2-5 | minor | `both_ways.frozen_reading` dropped `validity_detail` and the notes | [M] keys of r2's preview | Fixed: both kept, with `v3_basis` |
+| X0r2-6 | minor | The counter `unscreened_loops_flagged_only_by_the_frozen_reading` was not restricted to unscreened loops; no counter for X0-A1-only flags | code read | Fixed: renamed `p3c_flagged_loops_frozen_reading_only`; `p3c_flagged_loops_x0a1_only` added; test updated. With X0r2-2 a census whose counters differ from the unscreened listing fails the schema |
+| X0r2-7 | minor (process) | The x0fix track started WSL keepalives three times (rev1 twice, r2 once), leaving WSLg traces on C: of 23,592,960, 104,857,600 and 104,857,600 bytes; the current sprint rule forbids starting WSL | [M] section 7 as written by the track | Accepted, for the lead engineer: the three `.etl` files (section 7) go to Pierce as items awaiting his decision on C:. r3 used no WSL; any further X0-A1 desktop work uses Windows configurations only |

@@ -546,3 +546,65 @@ regenerated. Due before the bound of 2026-11-12.
 - No system setting changed; at most 4 threads, one compiler at a time, `CUDA_VISIBLE_DEVICES=-1`, no GPU; the Hearth
   working tree, the WSL home and GEMS not touched; nothing deleted (the D: folders above remain for Pierce or the lead
   engineer to remove).
+
+### X0-A1 r3 (appended 2026-10-23 by the x0r2 reviser, after the independent review of r2)
+
+Everything above this heading is unchanged; the r2 table above records what r2 pinned. Where this subsection and the r2
+table differ, this subsection holds the current values. r3 handles the 7 findings of the review of r2 (Claude, same
+family, independent context; `results/tooling_fix_A1/README.md` §9). **`x0_loops.py` is unchanged**, so every loop
+output of r2 stands. It contains census run 1 outputs (below), so a fresh re-deriver must not receive it.
+
+**What changed in r3.**
+- `rederive/compare_x0.py`: the re-derivation is compared with each reading's P3(c) lists; the frozen reading's
+  comparison is written as `rederivation_frozen_reading`. A census without the X0-A1 lists gives the same outputs as
+  before (run 1's `comparison.json` and `census_with_rederivation.json` are reproduced byte for byte).
+- `scripts/judge.py`: `both_ways` takes the frozen reading's V3 from that block, never from the amended one when the
+  lists differ (otherwise `not_computed`); `both_ways.frozen_reading` keeps `validity_detail`, `notes` and `v3_basis`;
+  the schema check makes the two P3(c) lists, `p3c_unscreened` and the loop records agree.
+- `scripts/x0_census.py`: `metrics.x0_a1` counters `p3c_flagged_loops_frozen_reading_only` (renamed) and
+  `p3c_flagged_loops_x0a1_only` (new); its schema check is `judge.validate_schema`'s.
+- `scripts/runbook/pin_inputs.py`: the V4 map also pins `rederive/compare_x0.py`, which was not in the pin set at the
+  freeze (it was added with census run 1's results in `506c0bd`; SHA-256 then `376c1f75…`). A stricter V4.
+- Tests: 2 in `test_loops_a1.py` pin the two exceptions stated in X0-A1.1 item 1; `test_a1_census_judge.py` has 24
+  (was 7).
+- The amendment's data-free part is the separate file `experiments/x0-census/X0-A1.1-RULE.md`; the draft amendment is
+  `results/tooling_fix_A1/AMENDMENT-X0-A1.md`.
+
+**Hashes after r3** (SHA-256 of the bytes on disk; `pin_inputs.py --write`, then 0 differences, 101 files pinned).
+
+| File | At the freeze (152fa33) | After r3 |
+|---|---|---|
+| `experiments/x0-census/scripts/x0_loops.py` | `8c7ecc9e6a29b4ec8398661ffca9c225a2fccf7f1e1af3f9d24cd04e78df3799` | `5519a568568ba80db3c5f12080820b4d0e049a99099e5de5fd59382021282812` (as r2) |
+| `experiments/x0-census/scripts/x0_census.py` | `37bb743918899a5a752d47184e905423e75a40b073d860976c91fe8aa1992176` | `f62bd2004c856e8cc60a168e766e194b9cb41982e2dcac3b4430cce369a5dae4` |
+| `experiments/x0-census/scripts/judge.py` | `d8c8da25d8f65b76e6910b415a17c716c1863786c68ad4d4da49c15913567cc5` | `9561c46ec1ea60d35059831260bccb381175d01cb2eb2b1591511b705edbe96a` |
+| `experiments/x0-census/scripts/runbook/pin_inputs.py` | `4c87f3bb7b50e2dc94c07d221d9949fc6cd9bf35a40930cd1c424edc7cedd953` | `3b46ebdf3eebb2c7f03dcc2154eccfe5339c4f5819f47709e0bf24dfce1742e5` |
+| `experiments/x0-census/scripts/tests/test_loops_a1.py` | (new in r2) | `20a3ab76e8aae684081f2c63af2eb7ff8d618c558a031099dbac438eb9c66e52` |
+| `experiments/x0-census/scripts/tests/test_a1_census_judge.py` | (new in r2) | `26a2a31d37564008934cc9cacbaf1357452dc65623f97be47a38dfe6c84e691c` |
+| `experiments/x0-census/scripts/smoke/a1/a1_escape.c`, `a1_loop_table.csv`, `a1_set.json` | (new in r2) | unchanged from r2 |
+| `experiments/x0-census/rederive/compare_x0.py` (pinned from r3) | (not present; `376c1f75…` from `506c0bd`) | `2037923344a110049b7c732ae70e1c4bf546d969c86687db7e207d1eeb40d1cb` |
+| `experiments/x0-census/class/frozen_inputs.json` | `5b4d7c08b3837a7094d5bf87d1a6f89c137966e7b9aa3dac3b7d3496d0737219` | `44fcb6332bb593a573fcf9cfeb6c7744486520e48717270b9fbbaf96c25bd600` |
+| `experiments/x0-census/scripts/README.md` (documentation, not pinned) | `5e1995ef37164ff4b221f3d2d14a298475f2f874abbe382acb6704ae8f18ba56` | `4ac5f4768180a6d8afdc6d7ae503df6966a64ef6afd41d5b3deda65fadf40694` |
+| `experiments/x0-census/X0-A1.1-RULE.md` (data-free rule, not pinned) | (new in r3) | `49e0b344c989440200f63b1a39ca650367c93a34f61272af5ed98b63f800c11f` |
+
+`class/frozen_inputs.json` records this re-pin in `_provenance.x0_a1_r3`.
+
+**Checks run in r3** [M, laptop, 2026-10-23; details in `results/tooling_fix_A1/README.md` §4 point 9].
+1. *Unit tests.* 234 pass, none skipped.
+2. *Re-pin.* 6 differences against the r2 pins, then 0.
+3. *Census run 1, read only.* The P1 to P5 table is reproduced byte for byte with the r3 scripts. r3's schema check
+   finds 0 violations in the AFTER census. The frozen re-derivation v1 has 25 V3 mismatches against the X0-A1 lists and
+   29 against the frozen-reading lists (run 1's own 29). Both previews (`results/tooling_fix_A1/run1/r3/`) give
+   `tooling_failure` under both readings (V3; V4 because the scripts are not run 1's). Not verdicts.
+4. *Regression replay, re-judged* on the r2 replay's two `census.json` files (copied read-only from the desktop): 0
+   schema violations; every outcome equals r2's under both readings; the only differences are the three new keys of
+   `both_ways.frozen_reading`.
+
+**Not done in r3.** No loop re-run (`x0_loops.py` unchanged). Runbook steps 86 and 88 were not replayed: C and D need
+WSL, which the sprint's current rule forbids; the r3 changes were re-checked on the replay's census files instead. r3 is
+not independently reviewed. Still due before the bound of 2026-11-12: the census re-run from an amended commit and a
+fresh re-derivation.
+
+**Desktop footprint of r3.** One read-only directory listing and two read-only `scp` copies of
+`D:\mithril\x0fixA1\r2\runs88\{R1reg,R2mock}\census.json` (16:18-16:20 EDT). No job, no WSL (no `wsl`, `wslhost` or
+`vmmem` process at 16:18 EDT), nothing written to D: or deleted. Small files the SSH sessions may have left in
+`%LOCALAPPDATA%\Temp` on C: were not checked.

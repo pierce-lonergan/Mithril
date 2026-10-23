@@ -1,0 +1,213 @@
+{
+ "census_change": "record.scripts_sha256 replaced by r3's class/frozen_inputs.json scripts map (V4 only)",
+ "judge.py": "9561c46ec1ea60d35059831260bccb381175d01cb2eb2b1591511b705edbe96a",
+ "runs": {
+  "R1reg": {
+   "census_sha256": "7ac0e36607c46bc8f9dd25f7840003a4c4b12865594520808153c2ac2370bcf6",
+   "schema_violations": [],
+   "unscreened_loop_records": 12,
+   "variants": 480,
+   "verdicts": {
+    "verdict.json": {
+     "differences": [
+      {
+       "change": "added",
+       "new": "[\"smoke record (record.id X0-census-smoke, NON-Hearth): no freeze commit is required\"]",
+       "path": "both_ways.frozen_reading.notes"
+      },
+      {
+       "change": "added",
+       "new": "\"no re-derivation present: V3 fails under both readings\"",
+       "path": "both_ways.frozen_reading.v3_basis"
+      },
+      {
+       "change": "added",
+       "new": "{\"v1_config_gaps\": [{\"config\": \"A\", \"detail\": \"P3(a) not evaluated for A/quant.c\", \"item\": \"p3a:quant.c\"}, {\"config\": \"A\", \"detail\": \"P3(a) not evaluated for A/quant_avx2.c\", \"item\": \"p3a:quant_avx2.c\"}, {\"config\": \"A\", \"detail\": \"P3(a) not evaluated for A/quant_avx512.c\", \"item\": \"p3a:quant_avx512.",
+       "path": "both_ways.frozen_reading.validity_detail"
+      }
+     ],
+     "n_differences": 3,
+     "r2_outcomes": [
+      "tooling_failure"
+     ],
+     "r3_both_ways_frozen": {
+      "outcomes": [
+       "tooling_failure"
+      ],
+      "v3_basis": "no re-derivation present: V3 fails under both readings",
+      "validity": {
+       "v1": false,
+       "v2": true,
+       "v3": false,
+       "v4": true
+      }
+     },
+     "r3_outcomes": [
+      "tooling_failure"
+     ],
+     "r3_p3c_differs": false,
+     "r3_validity": {
+      "v1": false,
+      "v2": true,
+      "v3": false,
+      "v4": true
+     },
+     "r3_variants_listed": 12
+    },
+    "verdict_regression_profile.json": {
+     "differences": [
+      {
+       "change": "added",
+       "new": "[\"smoke record (record.id X0-census-smoke, NON-Hearth): no freeze commit is required\"]",
+       "path": "both_ways.frozen_reading.notes"
+      },
+      {
+       "change": "added",
+       "new": "\"rederivation: the two readings' P3(c) lists are equal in every variant, so compare_x0.py's comparison is the same for both\"",
+       "path": "both_ways.frozen_reading.v3_basis"
+      },
+      {
+       "change": "added",
+       "new": "{\"v1_config_gaps\": [], \"v1_tooling_gaps\": [{\"build_index\": 1, \"cause\": \"unresolved_indirect\", \"config\": \"A\", \"detail\": \"indirect jump through a register (no definition on a path from the function entry)\", \"slot\": \"matmul[0]\", \"table\": \"rv_table@rv_tricky.c\"}, {\"build_index\": 1, \"cause\": \"unresolved_",
+       "path": "both_ways.frozen_reading.validity_detail"
+      }
+     ],
+     "n_differences": 3,
+     "r2_outcomes": [
+      "tooling_failure"
+     ],
+     "r3_both_ways_frozen": {
+      "outcomes": [
+       "tooling_failure"
+      ],
+      "v3_basis": "rederivation: the two readings' P3(c) lists are equal in every variant, so compare_x0.py's comparison is the same for both",
+      "validity": {
+       "v1": false,
+       "v2": true,
+       "v3": true,
+       "v4": true
+      }
+     },
+     "r3_outcomes": [
+      "tooling_failure"
+     ],
+     "r3_p3c_differs": false,
+     "r3_validity": {
+      "v1": false,
+      "v2": true,
+      "v3": true,
+      "v4": true
+     },
+     "r3_variants_listed": 12
+    }
+   }
+  },
+  "R2mock": {
+   "census_sha256": "555be0b673b41fe3b412b6b2a0ac0deb1858b6421a7e518804c7c63a0741b89b",
+   "schema_violations": [],
+   "unscreened_loop_records": 18,
+   "variants": 264,
+   "verdicts": {
+    "verdict.json": {
+     "differences": [
+      {
+       "change": "added",
+       "new": "[\"smoke record (record.id X0-census-smoke, NON-Hearth): no freeze commit is required\"]",
+       "path": "both_ways.frozen_reading.notes"
+      },
+      {
+       "change": "added",
+       "new": "\"no re-derivation present: V3 fails under both readings\"",
+       "path": "both_ways.frozen_reading.v3_basis"
+      },
+      {
+       "change": "added",
+       "new": "{\"v1_config_gaps\": [], \"v1_tooling_gaps\": [], \"v2_resolved_by_amendment\": [], \"v2_unresolved\": [], \"v3\": [], \"v4\": [], \"v4_commits\": null}",
+       "path": "both_ways.frozen_reading.validity_detail"
+      }
+     ],
+     "n_differences": 3,
+     "r2_outcomes": [
+      "tooling_failure"
+     ],
+     "r3_both_ways_frozen": {
+      "outcomes": [
+       "tooling_failure"
+      ],
+      "v3_basis": "no re-derivation present: V3 fails under both readings",
+      "validity": {
+       "v1": true,
+       "v2": true,
+       "v3": false,
+       "v4": true
+      }
+     },
+     "r3_outcomes": [
+      "tooling_failure"
+     ],
+     "r3_p3c_differs": false,
+     "r3_validity": {
+      "v1": true,
+      "v2": true,
+      "v3": false,
+      "v4": true
+     },
+     "r3_variants_listed": 6
+    },
+    "verdict_synthetic_rederivation.json": {
+     "differences": [
+      {
+       "change": "added",
+       "new": "[\"smoke record (record.id X0-census-smoke, NON-Hearth): no freeze commit is required\"]",
+       "path": "both_ways.frozen_reading.notes"
+      },
+      {
+       "change": "added",
+       "new": "\"rederivation: the two readings' P3(c) lists are equal in every variant, so compare_x0.py's comparison is the same for both\"",
+       "path": "both_ways.frozen_reading.v3_basis"
+      },
+      {
+       "change": "added",
+       "new": "{\"v1_config_gaps\": [], \"v1_tooling_gaps\": [], \"v2_resolved_by_amendment\": [], \"v2_unresolved\": [], \"v3\": [], \"v4\": [], \"v4_commits\": null}",
+       "path": "both_ways.frozen_reading.validity_detail"
+      }
+     ],
+     "n_differences": 3,
+     "r2_outcomes": [
+      "amber_a",
+      "amber_b",
+      "amber_c"
+     ],
+     "r3_both_ways_frozen": {
+      "outcomes": [
+       "amber_a",
+       "amber_b",
+       "amber_c"
+      ],
+      "v3_basis": "rederivation: the two readings' P3(c) lists are equal in every variant, so compare_x0.py's comparison is the same for both",
+      "validity": {
+       "v1": true,
+       "v2": true,
+       "v3": true,
+       "v4": true
+      }
+     },
+     "r3_outcomes": [
+      "amber_a",
+      "amber_b",
+      "amber_c"
+     ],
+     "r3_p3c_differs": false,
+     "r3_validity": {
+      "v1": true,
+      "v2": true,
+      "v3": true,
+      "v4": true
+     },
+     "r3_variants_listed": 6
+    }
+   }
+  }
+ },
+ "tool": "a1_r3_replay_check.py (x0r2 reviser, 2026-10-23)"
+}

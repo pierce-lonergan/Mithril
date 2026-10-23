@@ -1,0 +1,1430 @@
+{
+ "matches": false,
+ "n_mismatches": 25,
+ "mismatches": [
+  {
+   "kind": "p3c",
+   "key": "A|k_avx2:matmul[Q4]@8:0x110",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 24 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "A|k_avx512:matmul[Q4]@8:0x116",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "A|k_avx512:matmul[Q8]@7:0x126",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "B-cmake|hx_kernels_scalar:act_quantize_q8@49:0x11b",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "B-cmake|hx_kernels_scalar:matmul[BF16]@67:0x1b6",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "B-cmake|hx_kernels_scalar:matmul[BF16]@67:0x27c",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "B-cmake|hx_kernels_scalar:matmul[F16]@67:0x1b6",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "B-cmake|hx_kernels_scalar:matmul[F16]@67:0x27c",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "B-cmake|hx_kernels_scalar:matmul[F32]@67:0x1b6",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "B-cmake|hx_kernels_scalar:matmul[F32]@67:0x27c",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "B-cmake|k_avx2:matmul[Q8]@17:0x753",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 8 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "B-cmake|k_avx2:matmul[Q8]@17:0x842",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 8 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "D|hx_kernels_scalar:act_quantize_q8@2:0x2dbc",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "D|hx_kernels_scalar:matmul[BF16]@2:0x43fb",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "D|hx_kernels_scalar:matmul[BF16]@2:0x44c7",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "D|hx_kernels_scalar:matmul[F16]@2:0x43fb",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "D|hx_kernels_scalar:matmul[F16]@2:0x44c7",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "D|hx_kernels_scalar:matmul[F32]@2:0x43fb",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "D|hx_kernels_scalar:matmul[F32]@2:0x44c7",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "D|k_avx2:matmul[Q8]@2:0x350d",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 8 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "D|k_avx2:matmul[Q8]@2:0x35b2",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 8 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "D|k_avx512:matmul[Q4]@2:0x4453",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "D|k_avx512:matmul[Q4]@2:0x44e1",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "D|k_avx512:matmul[Q8]@2:0x2c83",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0"
+  },
+  {
+   "kind": "p3c",
+   "key": "D|k_avx512:matmul[Q8]@2:0x2d11",
+   "census": false,
+   "rederivation": true,
+   "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0"
+  }
+ ],
+ "p3c_rows": [
+  {
+   "variant": "A|k_avx2:matmul[Q4]",
+   "header": "8:0x110",
+   "census_id": "L8_110",
+   "rederive_id": "mm_q4_avx2+0x110",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant_avx2.c:328",
+   "rederive_lanes": 24,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant_avx2.c:328",
+    "quant_avx2.c:328"
+   ]
+  },
+  {
+   "variant": "A|k_avx512:matmul[Q4]",
+   "header": "8:0x116",
+   "census_id": "L8_116",
+   "rederive_id": "mm_q4_avx512+0x116",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant_avx512.c:349",
+   "rederive_lanes": 16,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant_avx512.c:349",
+    "quant_avx512.c:349"
+   ]
+  },
+  {
+   "variant": "A|k_avx512:matmul[Q8]",
+   "header": "7:0x126",
+   "census_id": "L7_126",
+   "rederive_id": "mm_q8_avx512+0x126",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant_avx512.c:349",
+   "rederive_lanes": 16,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant_avx512.c:349",
+    "quant_avx512.c:349"
+   ]
+  },
+  {
+   "variant": "B-cmake|hx_kernels_scalar:act_quantize_q8",
+   "header": "49:0x11b",
+   "census_id": "L49_11b",
+   "rederive_id": "act_q8_scalar+0x11b",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant.c:326",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant.c:326",
+    "quant.c:326"
+   ]
+  },
+  {
+   "variant": "B-cmake|hx_kernels_scalar:matmul[BF16]",
+   "header": "67:0x1b6",
+   "census_id": "L67_1b6",
+   "rederive_id": "mm_float_scalar+0x1b6",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant.c:371",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant.c:371",
+    "quant.c:371"
+   ]
+  },
+  {
+   "variant": "B-cmake|hx_kernels_scalar:matmul[BF16]",
+   "header": "67:0x27c",
+   "census_id": "L67_27c",
+   "rederive_id": "mm_float_scalar+0x27c",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant.c:373",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant.c:373",
+    "quant.c:373"
+   ]
+  },
+  {
+   "variant": "B-cmake|hx_kernels_scalar:matmul[F16]",
+   "header": "67:0x1b6",
+   "census_id": "L67_1b6",
+   "rederive_id": "mm_float_scalar+0x1b6",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant.c:371",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant.c:371",
+    "quant.c:371"
+   ]
+  },
+  {
+   "variant": "B-cmake|hx_kernels_scalar:matmul[F16]",
+   "header": "67:0x27c",
+   "census_id": "L67_27c",
+   "rederive_id": "mm_float_scalar+0x27c",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant.c:373",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant.c:373",
+    "quant.c:373"
+   ]
+  },
+  {
+   "variant": "B-cmake|hx_kernels_scalar:matmul[F32]",
+   "header": "67:0x1b6",
+   "census_id": "L67_1b6",
+   "rederive_id": "mm_float_scalar+0x1b6",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant.c:371",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant.c:371",
+    "quant.c:371"
+   ]
+  },
+  {
+   "variant": "B-cmake|hx_kernels_scalar:matmul[F32]",
+   "header": "67:0x27c",
+   "census_id": "L67_27c",
+   "rederive_id": "mm_float_scalar+0x27c",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant.c:373",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant.c:373",
+    "quant.c:373"
+   ]
+  },
+  {
+   "variant": "B-cmake|k_avx2:matmul[Q8]",
+   "header": "17:0x753",
+   "census_id": "L17_753",
+   "rederive_id": "mm_q8_avx2+0x753",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant_avx2.c:270",
+   "rederive_lanes": 8,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant_avx2.c:270",
+    "quant_avx2.c:270"
+   ]
+  },
+  {
+   "variant": "B-cmake|k_avx2:matmul[Q8]",
+   "header": "17:0x842",
+   "census_id": "L17_842",
+   "rederive_id": "mm_q8_avx2+0x842",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "min",
+   "census_source": "quant_avx2.c:274",
+   "rederive_lanes": 8,
+   "rederive_bound": 0,
+   "rederive_rule": "min",
+   "rederive_source": [
+    "quant_avx2.c:273",
+    "quant_avx2.c:274"
+   ]
+  },
+  {
+   "variant": "D|hx_kernels_scalar:act_quantize_q8",
+   "header": "2:0x2dbc",
+   "census_id": "L2_2dbc",
+   "rederive_id": "act_q8_scalar+0xcc",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "outer",
+   "census_source": "quant.c:326",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "latch",
+   "rederive_source": [
+    null,
+    "quant.c:326"
+   ]
+  },
+  {
+   "variant": "D|hx_kernels_scalar:matmul[BF16]",
+   "header": "2:0x43fb",
+   "census_id": "L2_43fb",
+   "rederive_id": "mm_float_scalar+0x11b",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant.c:371",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant.c:371",
+    "quant.c:371"
+   ]
+  },
+  {
+   "variant": "D|hx_kernels_scalar:matmul[BF16]",
+   "header": "2:0x44c7",
+   "census_id": "L2_44c7",
+   "rederive_id": "mm_float_scalar+0x1e7",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant.c:373",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant.c:373",
+    "quant.c:373"
+   ]
+  },
+  {
+   "variant": "D|hx_kernels_scalar:matmul[F16]",
+   "header": "2:0x43fb",
+   "census_id": "L2_43fb",
+   "rederive_id": "mm_float_scalar+0x11b",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant.c:371",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant.c:371",
+    "quant.c:371"
+   ]
+  },
+  {
+   "variant": "D|hx_kernels_scalar:matmul[F16]",
+   "header": "2:0x44c7",
+   "census_id": "L2_44c7",
+   "rederive_id": "mm_float_scalar+0x1e7",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant.c:373",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant.c:373",
+    "quant.c:373"
+   ]
+  },
+  {
+   "variant": "D|hx_kernels_scalar:matmul[F32]",
+   "header": "2:0x43fb",
+   "census_id": "L2_43fb",
+   "rederive_id": "mm_float_scalar+0x11b",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant.c:371",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant.c:371",
+    "quant.c:371"
+   ]
+  },
+  {
+   "variant": "D|hx_kernels_scalar:matmul[F32]",
+   "header": "2:0x44c7",
+   "census_id": "L2_44c7",
+   "rederive_id": "mm_float_scalar+0x1e7",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant.c:373",
+   "rederive_lanes": 1,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant.c:373",
+    "quant.c:373"
+   ]
+  },
+  {
+   "variant": "D|k_avx2:matmul[Q8]",
+   "header": "2:0x350d",
+   "census_id": "L2_350d",
+   "rederive_id": "mm_q8_avx2+0x6dd",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant_avx2.c:270",
+   "rederive_lanes": 8,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant_avx2.c:270",
+    "quant_avx2.c:270"
+   ]
+  },
+  {
+   "variant": "D|k_avx2:matmul[Q8]",
+   "header": "2:0x35b2",
+   "census_id": "L2_35b2",
+   "rederive_id": "mm_q8_avx2+0x782",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "min",
+   "census_source": "quant_avx2.c:274",
+   "rederive_lanes": 8,
+   "rederive_bound": 0,
+   "rederive_rule": "min",
+   "rederive_source": [
+    "quant_avx2.c:273",
+    "quant_avx2.c:274"
+   ]
+  },
+  {
+   "variant": "D|k_avx512:matmul[Q4]",
+   "header": "2:0x4453",
+   "census_id": "L2_4453",
+   "rederive_id": "mm_q4_avx512+0xd23",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant_avx512.c:349",
+   "rederive_lanes": 16,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant_avx512.c:349",
+    "quant_avx512.c:349"
+   ]
+  },
+  {
+   "variant": "D|k_avx512:matmul[Q4]",
+   "header": "2:0x44e1",
+   "census_id": "L2_44e1",
+   "rederive_id": "mm_q4_avx512+0xdb1",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant_avx512.c:291",
+   "rederive_lanes": 16,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant_avx512.c:291",
+    "quant_avx512.c:291"
+   ]
+  },
+  {
+   "variant": "D|k_avx512:matmul[Q8]",
+   "header": "2:0x2c83",
+   "census_id": "L2_2c83",
+   "rederive_id": "mm_q8_avx512+0xdf3",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant_avx512.c:349",
+   "rederive_lanes": 16,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant_avx512.c:349",
+    "quant_avx512.c:349"
+   ]
+  },
+  {
+   "variant": "D|k_avx512:matmul[Q8]",
+   "header": "2:0x2d11",
+   "census_id": "L2_2d11",
+   "rederive_id": "mm_q8_avx512+0xe81",
+   "census_flagged": false,
+   "rederive_flagged": true,
+   "census_lanes": 0,
+   "census_bound": 0,
+   "census_rule": "same",
+   "census_source": "quant_avx512.c:291",
+   "rederive_lanes": 16,
+   "rederive_bound": 0,
+   "rederive_rule": "same",
+   "rederive_source": [
+    "quant_avx512.c:291",
+    "quant_avx512.c:291"
+   ]
+  }
+ ],
+ "compile_failed_from_builds": [
+  "B-cmake|quant_avx512.c"
+ ],
+ "loop_inventory_differences": [],
+ "variant_differences_descriptive": [],
+ "inputs": {
+  "figures.json": "c5cc075f28f534a67a4801cfe0aaed75c040651e2f3e98454e0ea8c7d9f50830",
+  "rederive_detail.json": "6cb1dfa6fb62d5f6ebd131e37cb9419391532b2e43e4ea6c660c0a4d6dcd8894",
+  "census.json": "dd9c4acdbd44ba13f9ece7518c14f7d1299c56a4ab26e08ea4aa3ce44749cf1a"
+ },
+ "frozen_reading": {
+  "matches": false,
+  "n_mismatches": 29,
+  "mismatches": [
+   {
+    "kind": "p3c",
+    "key": "A|k_avx2:matmul[Q4]@8:0x110",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 24 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "A|k_avx512:matmul[Q4]@8:0x116",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "A|k_avx512:matmul[Q8]@7:0x126",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "B-cmake|hx_kernels_scalar:act_quantize_q8@49:0x11b",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "B-cmake|hx_kernels_scalar:matmul[BF16]@67:0x1b6",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "B-cmake|hx_kernels_scalar:matmul[BF16]@67:0x27c",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "B-cmake|hx_kernels_scalar:matmul[F16]@67:0x1b6",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "B-cmake|hx_kernels_scalar:matmul[F16]@67:0x27c",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "B-cmake|hx_kernels_scalar:matmul[F32]@67:0x1b6",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "B-cmake|hx_kernels_scalar:matmul[F32]@67:0x27c",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "B-cmake|k_avx2:matmul[Q8]@17:0x753",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 8 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "B-cmake|k_avx2:matmul[Q8]@17:0x842",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 8 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "C|k_avx512:matmul[Q4]@1:0x2d5f",
+    "census": true,
+    "rederivation": false,
+    "note": "census lanes 0 bound 0; re-derivation lanes 0 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "C|k_avx512:matmul[Q4]@1:0x2e90",
+    "census": true,
+    "rederivation": false,
+    "note": "census lanes 0 bound 0; re-derivation lanes 0 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "C|k_avx512:matmul[Q8]@1:0xc64",
+    "census": true,
+    "rederivation": false,
+    "note": "census lanes 0 bound 0; re-derivation lanes 0 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "C|k_avx512:matmul[Q8]@1:0xd98",
+    "census": true,
+    "rederivation": false,
+    "note": "census lanes 0 bound 0; re-derivation lanes 0 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "D|hx_kernels_scalar:act_quantize_q8@2:0x2dbc",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "D|hx_kernels_scalar:matmul[BF16]@2:0x43fb",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "D|hx_kernels_scalar:matmul[BF16]@2:0x44c7",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "D|hx_kernels_scalar:matmul[F16]@2:0x43fb",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "D|hx_kernels_scalar:matmul[F16]@2:0x44c7",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "D|hx_kernels_scalar:matmul[F32]@2:0x43fb",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "D|hx_kernels_scalar:matmul[F32]@2:0x44c7",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 1 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "D|k_avx2:matmul[Q8]@2:0x350d",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 8 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "D|k_avx2:matmul[Q8]@2:0x35b2",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 8 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "D|k_avx512:matmul[Q4]@2:0x4453",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "D|k_avx512:matmul[Q4]@2:0x44e1",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "D|k_avx512:matmul[Q8]@2:0x2c83",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0"
+   },
+   {
+    "kind": "p3c",
+    "key": "D|k_avx512:matmul[Q8]@2:0x2d11",
+    "census": false,
+    "rederivation": true,
+    "note": "census lanes 0 bound 0; re-derivation lanes 16 bound 0"
+   }
+  ],
+  "p3c_rows": [
+   {
+    "variant": "A|k_avx2:matmul[Q4]",
+    "header": "8:0x110",
+    "census_id": "L8_110",
+    "rederive_id": "mm_q4_avx2+0x110",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant_avx2.c:328",
+    "rederive_lanes": 24,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant_avx2.c:328",
+     "quant_avx2.c:328"
+    ]
+   },
+   {
+    "variant": "A|k_avx512:matmul[Q4]",
+    "header": "8:0x116",
+    "census_id": "L8_116",
+    "rederive_id": "mm_q4_avx512+0x116",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant_avx512.c:349",
+    "rederive_lanes": 16,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant_avx512.c:349",
+     "quant_avx512.c:349"
+    ]
+   },
+   {
+    "variant": "A|k_avx512:matmul[Q8]",
+    "header": "7:0x126",
+    "census_id": "L7_126",
+    "rederive_id": "mm_q8_avx512+0x126",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant_avx512.c:349",
+    "rederive_lanes": 16,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant_avx512.c:349",
+     "quant_avx512.c:349"
+    ]
+   },
+   {
+    "variant": "B-cmake|hx_kernels_scalar:act_quantize_q8",
+    "header": "49:0x11b",
+    "census_id": "L49_11b",
+    "rederive_id": "act_q8_scalar+0x11b",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant.c:326",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant.c:326",
+     "quant.c:326"
+    ]
+   },
+   {
+    "variant": "B-cmake|hx_kernels_scalar:matmul[BF16]",
+    "header": "67:0x1b6",
+    "census_id": "L67_1b6",
+    "rederive_id": "mm_float_scalar+0x1b6",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant.c:371",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant.c:371",
+     "quant.c:371"
+    ]
+   },
+   {
+    "variant": "B-cmake|hx_kernels_scalar:matmul[BF16]",
+    "header": "67:0x27c",
+    "census_id": "L67_27c",
+    "rederive_id": "mm_float_scalar+0x27c",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant.c:373",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant.c:373",
+     "quant.c:373"
+    ]
+   },
+   {
+    "variant": "B-cmake|hx_kernels_scalar:matmul[F16]",
+    "header": "67:0x1b6",
+    "census_id": "L67_1b6",
+    "rederive_id": "mm_float_scalar+0x1b6",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant.c:371",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant.c:371",
+     "quant.c:371"
+    ]
+   },
+   {
+    "variant": "B-cmake|hx_kernels_scalar:matmul[F16]",
+    "header": "67:0x27c",
+    "census_id": "L67_27c",
+    "rederive_id": "mm_float_scalar+0x27c",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant.c:373",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant.c:373",
+     "quant.c:373"
+    ]
+   },
+   {
+    "variant": "B-cmake|hx_kernels_scalar:matmul[F32]",
+    "header": "67:0x1b6",
+    "census_id": "L67_1b6",
+    "rederive_id": "mm_float_scalar+0x1b6",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant.c:371",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant.c:371",
+     "quant.c:371"
+    ]
+   },
+   {
+    "variant": "B-cmake|hx_kernels_scalar:matmul[F32]",
+    "header": "67:0x27c",
+    "census_id": "L67_27c",
+    "rederive_id": "mm_float_scalar+0x27c",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant.c:373",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant.c:373",
+     "quant.c:373"
+    ]
+   },
+   {
+    "variant": "B-cmake|k_avx2:matmul[Q8]",
+    "header": "17:0x753",
+    "census_id": "L17_753",
+    "rederive_id": "mm_q8_avx2+0x753",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant_avx2.c:270",
+    "rederive_lanes": 8,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant_avx2.c:270",
+     "quant_avx2.c:270"
+    ]
+   },
+   {
+    "variant": "B-cmake|k_avx2:matmul[Q8]",
+    "header": "17:0x842",
+    "census_id": "L17_842",
+    "rederive_id": "mm_q8_avx2+0x842",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "min",
+    "census_source": "quant_avx2.c:274",
+    "rederive_lanes": 8,
+    "rederive_bound": 0,
+    "rederive_rule": "min",
+    "rederive_source": [
+     "quant_avx2.c:273",
+     "quant_avx2.c:274"
+    ]
+   },
+   {
+    "variant": "C|k_avx512:matmul[Q4]",
+    "header": "1:0x2d5f",
+    "census_id": "L1_2d5f",
+    "rederive_id": "mm_q4_avx512+0xc2f",
+    "census_flagged": true,
+    "rederive_flagged": false,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant_avx512.c:352",
+    "rederive_lanes": 0,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant_avx512.c:352",
+     "quant_avx512.c:352"
+    ]
+   },
+   {
+    "variant": "C|k_avx512:matmul[Q4]",
+    "header": "1:0x2e90",
+    "census_id": "L1_2e90",
+    "rederive_id": "mm_q4_avx512+0xd60",
+    "census_flagged": true,
+    "rederive_flagged": false,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant_avx512.c:316",
+    "rederive_lanes": 0,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant_avx512.c:316",
+     "quant_avx512.c:316"
+    ]
+   },
+   {
+    "variant": "C|k_avx512:matmul[Q8]",
+    "header": "1:0xc64",
+    "census_id": "L1_c64",
+    "rederive_id": "mm_q8_avx512+0xa54",
+    "census_flagged": true,
+    "rederive_flagged": false,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant_avx512.c:352",
+    "rederive_lanes": 0,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant_avx512.c:352",
+     "quant_avx512.c:352"
+    ]
+   },
+   {
+    "variant": "C|k_avx512:matmul[Q8]",
+    "header": "1:0xd98",
+    "census_id": "L1_d98",
+    "rederive_id": "mm_q8_avx512+0xb88",
+    "census_flagged": true,
+    "rederive_flagged": false,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant_avx512.c:316",
+    "rederive_lanes": 0,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant_avx512.c:316",
+     "quant_avx512.c:316"
+    ]
+   },
+   {
+    "variant": "D|hx_kernels_scalar:act_quantize_q8",
+    "header": "2:0x2dbc",
+    "census_id": "L2_2dbc",
+    "rederive_id": "act_q8_scalar+0xcc",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "outer",
+    "census_source": "quant.c:326",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "latch",
+    "rederive_source": [
+     null,
+     "quant.c:326"
+    ]
+   },
+   {
+    "variant": "D|hx_kernels_scalar:matmul[BF16]",
+    "header": "2:0x43fb",
+    "census_id": "L2_43fb",
+    "rederive_id": "mm_float_scalar+0x11b",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant.c:371",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant.c:371",
+     "quant.c:371"
+    ]
+   },
+   {
+    "variant": "D|hx_kernels_scalar:matmul[BF16]",
+    "header": "2:0x44c7",
+    "census_id": "L2_44c7",
+    "rederive_id": "mm_float_scalar+0x1e7",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant.c:373",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant.c:373",
+     "quant.c:373"
+    ]
+   },
+   {
+    "variant": "D|hx_kernels_scalar:matmul[F16]",
+    "header": "2:0x43fb",
+    "census_id": "L2_43fb",
+    "rederive_id": "mm_float_scalar+0x11b",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant.c:371",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant.c:371",
+     "quant.c:371"
+    ]
+   },
+   {
+    "variant": "D|hx_kernels_scalar:matmul[F16]",
+    "header": "2:0x44c7",
+    "census_id": "L2_44c7",
+    "rederive_id": "mm_float_scalar+0x1e7",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant.c:373",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant.c:373",
+     "quant.c:373"
+    ]
+   },
+   {
+    "variant": "D|hx_kernels_scalar:matmul[F32]",
+    "header": "2:0x43fb",
+    "census_id": "L2_43fb",
+    "rederive_id": "mm_float_scalar+0x11b",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant.c:371",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant.c:371",
+     "quant.c:371"
+    ]
+   },
+   {
+    "variant": "D|hx_kernels_scalar:matmul[F32]",
+    "header": "2:0x44c7",
+    "census_id": "L2_44c7",
+    "rederive_id": "mm_float_scalar+0x1e7",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant.c:373",
+    "rederive_lanes": 1,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant.c:373",
+     "quant.c:373"
+    ]
+   },
+   {
+    "variant": "D|k_avx2:matmul[Q8]",
+    "header": "2:0x350d",
+    "census_id": "L2_350d",
+    "rederive_id": "mm_q8_avx2+0x6dd",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant_avx2.c:270",
+    "rederive_lanes": 8,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant_avx2.c:270",
+     "quant_avx2.c:270"
+    ]
+   },
+   {
+    "variant": "D|k_avx2:matmul[Q8]",
+    "header": "2:0x35b2",
+    "census_id": "L2_35b2",
+    "rederive_id": "mm_q8_avx2+0x782",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "min",
+    "census_source": "quant_avx2.c:274",
+    "rederive_lanes": 8,
+    "rederive_bound": 0,
+    "rederive_rule": "min",
+    "rederive_source": [
+     "quant_avx2.c:273",
+     "quant_avx2.c:274"
+    ]
+   },
+   {
+    "variant": "D|k_avx512:matmul[Q4]",
+    "header": "2:0x4453",
+    "census_id": "L2_4453",
+    "rederive_id": "mm_q4_avx512+0xd23",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant_avx512.c:349",
+    "rederive_lanes": 16,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant_avx512.c:349",
+     "quant_avx512.c:349"
+    ]
+   },
+   {
+    "variant": "D|k_avx512:matmul[Q4]",
+    "header": "2:0x44e1",
+    "census_id": "L2_44e1",
+    "rederive_id": "mm_q4_avx512+0xdb1",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant_avx512.c:291",
+    "rederive_lanes": 16,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant_avx512.c:291",
+     "quant_avx512.c:291"
+    ]
+   },
+   {
+    "variant": "D|k_avx512:matmul[Q8]",
+    "header": "2:0x2c83",
+    "census_id": "L2_2c83",
+    "rederive_id": "mm_q8_avx512+0xdf3",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant_avx512.c:349",
+    "rederive_lanes": 16,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant_avx512.c:349",
+     "quant_avx512.c:349"
+    ]
+   },
+   {
+    "variant": "D|k_avx512:matmul[Q8]",
+    "header": "2:0x2d11",
+    "census_id": "L2_2d11",
+    "rederive_id": "mm_q8_avx512+0xe81",
+    "census_flagged": false,
+    "rederive_flagged": true,
+    "census_lanes": 0,
+    "census_bound": 0,
+    "census_rule": "same",
+    "census_source": "quant_avx512.c:291",
+    "rederive_lanes": 16,
+    "rederive_bound": 0,
+    "rederive_rule": "same",
+    "rederive_source": [
+     "quant_avx512.c:291",
+     "quant_avx512.c:291"
+    ]
+   }
+  ]
+ }
+}

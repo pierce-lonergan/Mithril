@@ -2,6 +2,14 @@
 """Compare the frozen re-derivation (figures.json + rederive_detail.json) with census.json (PROCEDURE.md section 4)
 and write (1) comparison.json and (2) a copy of census.json with the `rederivation` block filled, for judge.py.
 
+Amendment X0-A1 (post-data, 2026-10-23; record section 10 "Verdicts are then reported under both the original and the
+amended rule"; added after the review of X0-A1 r2, Claude, same family, independent context): when the census carries
+variants[].p3c_frozen_reading, the same comparison is run a second time with each variant's P3(c) list taken from
+p3c_frozen_reading instead of p3.c, and written as `rederivation_frozen_reading` (comparison.json "frozen_reading").
+judge.py's both_ways reads V3 of the frozen reading from that block, never from the amended one.  Only the P3(c)
+comparison depends on the reading; every other item and the figures are the same in both blocks.  A census without
+the X0-A1 lists gives exactly the outputs of the script before this change.
+
 Run after figures.json is frozen; reads census.json only here.  Standard library only (python -I)."""
 import argparse, collections, hashlib, json, re
 
@@ -20,17 +28,19 @@ def hdr_key(h):
     return (int(m.group(1)), int(m.group(2), 16))
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--figures", required=True)
-    ap.add_argument("--detail", required=True)
-    ap.add_argument("--census", required=True)
-    ap.add_argument("--out-comparison", required=True)
-    ap.add_argument("--out-census", required=True)
-    a = ap.parse_args()
-    F = json.load(open(a.figures))
-    D = json.load(open(a.detail))
-    C = json.load(open(a.census))
+A1_KEY = "p3c_frozen_reading"      # Amendment X0-A1: the census's P3(c) list under the reading frozen at 152fa33
+
+
+def census_p3c(v, frozen_reading):
+    """The census-side P3(c) list of a variant record: p3.c, or (frozen_reading) its p3c_frozen_reading when present."""
+    if frozen_reading and isinstance(v.get(A1_KEY), list):
+        return v[A1_KEY]
+    return v["p3"].get("c", [])
+
+
+def compare(F, D, C, frozen_reading=False):
+    """PROCEDURE.md section 4 for one reading of the census's P3(c) lists. Returns (mismatches, loop inventory rows,
+    P3(c) rows, descriptive differences, files failed in both builds)."""
     mism = []
     rows = []
 
@@ -100,7 +110,7 @@ def main():
         c_flag = {}
         c_loops = {}
         for v in vs:
-            ids = set(v["p3"].get("c", []))
+            ids = set(census_p3c(v, frozen_reading))
             for L in v.get("loops", []):
                 hk = hdr_key(L["header"])
                 c_loops[hk] = L
@@ -177,6 +187,24 @@ def main():
                 desc.append({"variant": "%s|b%d|%s" % (cfg, v["build_index"], k), "n_instructions": [ci, ri],
                              "iforms_only_census": sorted(cf - rf), "iforms_only_rederivation": sorted(rf - cf),
                              "closure": [sorted(cc), sorted(rc)], "attribution": [v.get("attribution"), dv.get("attribution")]})
+    return mism, rows, p3c_rows, desc, failed
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--figures", required=True)
+    ap.add_argument("--detail", required=True)
+    ap.add_argument("--census", required=True)
+    ap.add_argument("--out-comparison", required=True)
+    ap.add_argument("--out-census", required=True)
+    a = ap.parse_args()
+    F = json.load(open(a.figures))
+    D = json.load(open(a.detail))
+    C = json.load(open(a.census))
+    mism, rows, p3c_rows, desc, failed = compare(F, D, C)
+    a1 = any(isinstance(v, dict) and A1_KEY in v for v in C["variants"])
+    if a1:
+        mism_f, _, p3c_rows_f, _, _ = compare(F, D, C, frozen_reading=True)
     # ---- rederivation block for judge.py (PROCEDURE.md section 4) ----
     figs = {"u_all": F["u_all"], "p5_iclass": F["p5_iclass"]}
     for key, p in F["p1"].items():
@@ -195,6 +223,11 @@ def main():
              "figures_sha256": sha(a.figures), "procedure": "experiments/x0-census/rederive/PROCEDURE.md"}
     C2 = dict(C)
     C2["rederivation"] = block
+    if a1:
+        block["reading"] = "amended (Amendment X0-A1): the census's p3.c"
+        C2["rederivation_frozen_reading"] = dict(
+            block, matches=not mism_f, mismatches=mism_f,
+            reading="frozen (Amendment X0-A1, both ways): each variant's p3c_frozen_reading in place of p3.c")
     with open(a.out_census, "w", newline="\n") as f:
         json.dump(C2, f, indent=1)
     comp = {"matches": not mism, "n_mismatches": len(mism), "mismatches": mism, "p3c_rows": p3c_rows,
@@ -202,6 +235,9 @@ def main():
             "loop_inventory_differences": rows, "variant_differences_descriptive": desc,
             "inputs": {"figures.json": sha(a.figures), "rederive_detail.json": sha(a.detail),
                        "census.json": sha(a.census)}}
+    if a1:
+        comp["frozen_reading"] = {"matches": not mism_f, "n_mismatches": len(mism_f), "mismatches": mism_f,
+                                  "p3c_rows": p3c_rows_f}
     with open(a.out_comparison, "w", newline="\n") as f:
         json.dump(comp, f, indent=1)
     print("mismatches:", len(mism))
@@ -209,6 +245,8 @@ def main():
         print(" ", m["kind"], m["key"], "census=", json.dumps(m["census"])[:200], "rederive=",
               json.dumps(m["rederivation"])[:200], m["note"])
     print("descriptive variant differences:", len(desc), "loop inventory differences:", len(rows))
+    if a1:
+        print("frozen reading (Amendment X0-A1): mismatches:", len(mism_f))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,108 @@
+{
+ "census_with_both_rederivation_blocks_sha256": "c85525bc2f8f57b0a353628f2914478a3d2dd5aa7ec622fa3bfe07236b98d837",
+ "compare_stdout_tail": [
+  "  p3c D|k_avx512:matmul[Q8]@2:0x2d11 census= false rederive= true census lanes 0 bound 0; re-derivation lanes 16 bound 0",
+  "descriptive variant differences: 0 loop inventory differences: 0",
+  "frozen reading (Amendment X0-A1): mismatches: 29"
+ ],
+ "comparison": {
+  "amended": {
+   "matches": false,
+   "n_mismatches": 25
+  },
+  "amended_only": [],
+  "frozen_only": [
+   "p3c C|k_avx512:matmul[Q4]@1:0x2d5f",
+   "p3c C|k_avx512:matmul[Q4]@1:0x2e90",
+   "p3c C|k_avx512:matmul[Q8]@1:0xc64",
+   "p3c C|k_avx512:matmul[Q8]@1:0xd98"
+  ],
+  "frozen_reading": {
+   "matches": false,
+   "n_mismatches": 29
+  }
+ },
+ "inputs": {
+  "after_census": "dd9c4acdbd44ba13f9ece7518c14f7d1299c56a4ab26e08ea4aa3ce44749cf1a",
+  "compare_x0.py": "2037923344a110049b7c732ae70e1c4bf546d969c86687db7e207d1eeb40d1cb",
+  "figures.json": "c5cc075f28f534a67a4801cfe0aaed75c040651e2f3e98454e0ea8c7d9f50830",
+  "frozen_inputs.json": "44fcb6332bb593a573fcf9cfeb6c7744486520e48717270b9fbbaf96c25bd600",
+  "judge.py": "9561c46ec1ea60d35059831260bccb381175d01cb2eb2b1591511b705edbe96a",
+  "rederive_detail.json": "6cb1dfa6fb62d5f6ebd131e37cb9419391532b2e43e4ea6c660c0a4d6dcd8894"
+ },
+ "not_a_verdict": true,
+ "previews": {
+  "no_rederivation": {
+   "amended": {
+    "amber_b_configs": [],
+    "outcomes": [
+     "tooling_failure"
+    ],
+    "v3_mismatches": 0,
+    "validity": {
+     "v1": true,
+     "v2": true,
+     "v3": false,
+     "v4": false
+    }
+   },
+   "file": "judge_preview_r3_no_rederivation_NOT_A_VERDICT.json",
+   "frozen_reading": {
+    "amber_b_configs": [],
+    "outcomes": [
+     "tooling_failure"
+    ],
+    "v3_basis": "no re-derivation present: V3 fails under both readings",
+    "v3_mismatches": 0,
+    "validity": {
+     "v1": true,
+     "v2": true,
+     "v3": false,
+     "v4": false
+    }
+   },
+   "outcomes_differ": false,
+   "p3c_differs": true,
+   "sha256": "53e4311d4150e44ece01a471c6dad6eb11e84bbfe83d7935f5d8d9e45b35de7c",
+   "stdout": "{\"outcomes\": [\"tooling_failure\"], \"validity\": {\"v1\": true, \"v2\": true, \"v3\": false, \"v4\": false}, \"eval_date\": \"2026-10-23\", \"conservative_resolution\": false}",
+   "variants_listed": 10
+  },
+  "rederivation_v1": {
+   "amended": {
+    "amber_b_configs": [],
+    "outcomes": [
+     "tooling_failure"
+    ],
+    "v3_mismatches": 25,
+    "validity": {
+     "v1": true,
+     "v2": true,
+     "v3": false,
+     "v4": false
+    }
+   },
+   "file": "judge_preview_r3_rederivation_v1_NOT_A_VERDICT.json",
+   "frozen_reading": {
+    "amber_b_configs": [],
+    "outcomes": [
+     "tooling_failure"
+    ],
+    "v3_basis": "rederivation_frozen_reading",
+    "v3_mismatches": 29,
+    "validity": {
+     "v1": true,
+     "v2": true,
+     "v3": false,
+     "v4": false
+    }
+   },
+   "outcomes_differ": false,
+   "p3c_differs": true,
+   "sha256": "1f0bf58c8521f93b7e2daa48595b4f66c0024818976b1ed73f996977ace17273",
+   "stdout": "{\"outcomes\": [\"tooling_failure\"], \"validity\": {\"v1\": true, \"v2\": true, \"v3\": false, \"v4\": false}, \"eval_date\": \"2026-10-23\", \"conservative_resolution\": false}",
+   "variants_listed": 10
+  }
+ },
+ "schema_violations": 0,
+ "tool": "a1_r3_bothways.py (x0r2 reviser, 2026-10-23)"
+}

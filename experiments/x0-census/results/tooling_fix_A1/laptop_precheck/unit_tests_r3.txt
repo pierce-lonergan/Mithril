@@ -1,0 +1,323 @@
+# unit tests, X0-A1 r3 (x0r2 reviser, after the review of X0-A1 r2), laptop DESKTOP-F441IUK, Python 3.12.10, 2026-10-23T20:20:43Z; command: python -I -m unittest discover -s experiments/x0-census/scripts/tests -v; after the r3 re-pin (scripts/runbook/pin_inputs.py: 0 differences; class/frozen_inputs.json 44fcb6332bb593a573fcf9cfeb6c7744486520e48717270b9fbbaf96c25bd600); 234 tests, 0 skipped
+test_assembler_reports_an_inconsistent_loops_json (test_a1_census_judge.TestAssemblerX0A1.test_assembler_reports_an_inconsistent_loops_json)
+Review of X0-A1 r2, finding 2: x0_census.py's schema check (judge.validate_schema) catches a loops.json ... ok
+test_loops_json_before_x0_a1_gives_the_frozen_reading_as_p3c (test_a1_census_judge.TestAssemblerX0A1.test_loops_json_before_x0_a1_gives_the_frozen_reading_as_p3c) ... ok
+test_unscreened_loop_reaches_census_json (test_a1_census_judge.TestAssemblerX0A1.test_unscreened_loop_reaches_census_json) ... ok
+test_census_without_x0_a1_lists_gets_no_frozen_block (test_a1_census_judge.TestCompareX0BothWays.test_census_without_x0_a1_lists_gets_no_frozen_block) ... ok
+test_compare_function_reads_the_requested_list (test_a1_census_judge.TestCompareX0BothWays.test_compare_function_reads_the_requested_list) ... ok
+test_rederiver_following_x0a1_matches_only_the_amended_reading (test_a1_census_judge.TestCompareX0BothWays.test_rederiver_following_x0a1_matches_only_the_amended_reading) ... ok
+test_rederiver_without_x0a1_matches_only_the_frozen_reading (test_a1_census_judge.TestCompareX0BothWays.test_rederiver_without_x0a1_matches_only_the_frozen_reading) ... ok
+test_both_ways_identical_when_the_readings_agree (test_a1_census_judge.TestJudgeBothWays.test_both_ways_identical_when_the_readings_agree) ... ok
+test_both_ways_when_the_frozen_reading_flags_more (test_a1_census_judge.TestJudgeBothWays.test_both_ways_when_the_frozen_reading_flags_more)
+The re-derivation follows X0-A1 (no flag on L1): the amended comparison matches, the frozen one has the ... ok
+test_census_without_x0_a1_fields_has_no_both_ways (test_a1_census_judge.TestJudgeBothWays.test_census_without_x0_a1_fields_has_no_both_ways) ... ok
+test_consistent_lists_pass_the_schema (test_a1_census_judge.TestJudgeBothWays.test_consistent_lists_pass_the_schema) ... ok
+test_frozen_block_matching_gives_amber_b_under_the_frozen_reading (test_a1_census_judge.TestJudgeBothWays.test_frozen_block_matching_gives_amber_b_under_the_frozen_reading) ... ok
+test_frozen_reading_v3_is_not_inherited_from_the_amended_comparison (test_a1_census_judge.TestJudgeBothWays.test_frozen_reading_v3_is_not_inherited_from_the_amended_comparison)
+Review of X0-A1 r2, finding 1: without rederivation_frozen_reading, the amended block is not reused for a ... ok
+test_rederivation_matching_only_the_frozen_list (test_a1_census_judge.TestJudgeBothWays.test_rederivation_matching_only_the_frozen_list)
+Review of X0-A1 r2, finding 1: a re-deriver without X0-A1.1 flags L1 like the frozen reading. V3 fails for ... ok
+test_schema_needs_both_lists (test_a1_census_judge.TestJudgeBothWays.test_schema_needs_both_lists) ... ok
+test_schema_refuses_a_frozen_flag_dropped_without_an_unscreened_loop (test_a1_census_judge.TestJudgeBothWays.test_schema_refuses_a_frozen_flag_dropped_without_an_unscreened_loop)
+The reviewer's case 4: p3.c flags L9 (32 lanes, bound 0), the frozen list is empty, nothing unscreened. ... ok
+test_schema_refuses_a_frozen_list_that_disagrees_with_the_loop_record (test_a1_census_judge.TestJudgeBothWays.test_schema_refuses_a_frozen_list_that_disagrees_with_the_loop_record)
+The reviewer's case 5: L1 is unscreened with frozen count 32 > bound 0, but the frozen list is empty. ... ok
+test_schema_refuses_an_amended_flag_that_disagrees_with_the_loop_record (test_a1_census_judge.TestJudgeBothWays.test_schema_refuses_an_amended_flag_that_disagrees_with_the_loop_record) ... ok
+test_schema_refuses_an_unscreened_list_that_differs_from_the_loop_records (test_a1_census_judge.TestJudgeBothWays.test_schema_refuses_an_unscreened_list_that_differs_from_the_loop_records) ... ok
+test_schema_refuses_an_unscreened_loop_without_its_frozen_count (test_a1_census_judge.TestJudgeBothWays.test_schema_refuses_an_unscreened_loop_without_its_frozen_count) ... ok
+test_schema_types_the_frozen_rederivation_block (test_a1_census_judge.TestJudgeBothWays.test_schema_types_the_frozen_rederivation_block) ... ok
+test_schema_types_the_x0_a1_lists (test_a1_census_judge.TestJudgeBothWays.test_schema_types_the_x0_a1_lists) ... ok
+test_the_input_census_is_not_changed_by_the_second_evaluation (test_a1_census_judge.TestJudgeBothWays.test_the_input_census_is_not_changed_by_the_second_evaluation) ... ok
+test_without_a_rederivation_both_readings_fail_v3_alike (test_a1_census_judge.TestJudgeBothWays.test_without_a_rederivation_both_readings_fail_v3_alike) ... ok
+test_error_of_another_batch_source_is_not_this_files (test_build.TestBatchErrorOwnership.test_error_of_another_batch_source_is_not_this_files)
+  open(blog, "w").write(log)
+  open(os.path.join(d, "core.dir", "Release", "quant.obj"), "w").write("x")
+  text = open(a.log, encoding="utf-8", errors="replace").read()
+  r = json.load(open(os.path.join(d, "rec", "quant.c.b1.json")))
+ok
+test_debug_optimisation_is_a_difference (test_build.TestDesignTimeDelta.test_debug_optimisation_is_a_difference)
+review: /Od, /Ob0 instead of /Ob2 were tolerated by the optimisation-switch rule. ... ok
+test_measured_shape_matches (test_build.TestDesignTimeDelta.test_measured_shape_matches) ... ok
+test_reordered_last_wins_switches_are_a_difference (test_build.TestDesignTimeDelta.test_reordered_last_wins_switches_are_a_difference) ... ok
+test_error_formats (test_build.TestDiagnostics.test_error_formats) ... ok
+test_ice (test_build.TestDiagnostics.test_ice) ... ok
+test_includes (test_build.TestDiagnostics.test_includes) ... ok
+test_extra_flag_is_a_difference (test_build.TestFrozen.test_extra_flag_is_a_difference) ... ok
+test_same_flags_match (test_build.TestFrozen.test_same_flags_match) ... ok
+test_source_swap_for_replay (test_build.TestFrozen.test_source_swap_for_replay) ... ok
+test_twin_flag_removed_before_comparing (test_build.TestFrozen.test_twin_flag_removed_before_comparing) ... ok
+test_blocks_sections_and_batch_rc (test_build.TestMsbuild.test_blocks_sections_and_batch_rc) ... ok
+test_design_time_lines (test_build.TestMsbuild.test_design_time_lines) ... ok
+test_file_missing_from_the_build_log_comes_from_its_single_log (test_build.TestSingleFileFallback.test_file_missing_from_the_build_log_comes_from_its_single_log)
+  open(blog, "w").write(LOG.replace(LOG[LOG.index('Task "CL"\n  C:\\VC\\bin\\HostX64\\x64\\CL.exe /c /ID:\\h\\src /nologo /W3 /O2 /arch'):], ""))
+  open(slog, "w").write(SINGLE)
+  text = open(a.log, encoding="utf-8", errors="replace").read()
+  sb = msbuild_cl_blocks(open(singles[key], encoding="utf-8", errors="replace").read())
+  r2 = json.load(open(os.path.join(out, "quant_avx2.c.b1.json")))
+  r5 = json.load(open(os.path.join(out, "quant_avx512.c.b1.json")))
+ok
+test_assembles_a_schema_conforming_census (test_census.TestAssembler.test_assembles_a_schema_conforming_census) ... ok
+test_attribution_none_is_a_gap_and_the_freeze_commit_comes_from_init (test_census.TestAssembler.test_attribution_none_is_a_gap_and_the_freeze_commit_comes_from_init)
+  r = json.load(open(rj))
+  lr = json.load(open(lj))
+  c = json.load(open(out, encoding="utf-8"))
+ok
+test_census_run_takes_commits_from_init_only (test_census.TestAssembler.test_census_run_takes_commits_from_init_only)
+  r = json.load(open(rj))
+  cj = json.load(open(cp))
+  cj = json.load(open(cp))
+  c = json.load(open(out, encoding="utf-8"))
+ok
+  json.dump({"kind": "census", "source": d, "scripts_sha256": {}}, open(os.path.join(d, "run.json"), "w"))
+  json.dump({}, open(os.path.join(d, "tools.json"), "w"))
+ok
+test_recheck_needs_the_verified_scripts_and_commit (test_driver_guard.TestCensusSteps.test_recheck_needs_the_verified_scripts_and_commit) ... ok
+test_freeze_point_is_the_first_frozen_commit (test_driver_guard.TestFreezeCheckout.test_freeze_point_is_the_first_frozen_commit) ... ok
+test_pycache_is_tolerated (test_driver_guard.TestFreezeCheckout.test_pycache_is_tolerated) ... ok
+test_refusals (test_driver_guard.TestFreezeCheckout.test_refusals) ... ok
+  open(os.path.join(d, "engine", "src", f), "w").write("int x;\n")
+  open(os.path.join(d, "engine", "src", f), "w").write("int x;\n")
+  open(os.path.join(d, "engine", "src", f), "w").write("int x;\n")
+  open(os.path.join(d, "engine", "include", "api.h"), "w").write("int y;\n")
+ok
+test_comments_are_stripped_and_dereferences_kept (test_driver_guard.TestShingles.test_comments_are_stripped_and_dereferences_kept)
+pre-freeze review of 2026-10-17: a trailing comment made an equal line differ; '*' lines were skipped. ... ok
+  sh = json.load(open(os.path.join(root, "class", "hearth_shingles.json")))
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+  self.assertFalse(set(D.shingles(open(p, encoding="utf-8").read(), allowed=allowed)) & known, p)
+ok
+  open(src, "w").write("int other_line_number_one = 1;\nint more_line_number_two = 2;\n")
+  open(os.path.join(d, "helper.c"), "w").write("/* x */\n" + text)    # a neighbour file is scanned too
+  open(os.path.join(d, "u16.h"), "wb").write("int x;".encode("utf-16"))   # not UTF-8: refused
+ok
+test_nontrivial_lines (test_driver_guard.TestShingles.test_nontrivial_lines) ... ok
+  sh = json.load(open(os.path.join(root, "class", "hearth_shingles.json")))
+  bi = json.load(open(os.path.join(root, "class", "B_iform.json")))
+ok
+test_shared_pair_is_found_whatever_the_spacing (test_driver_guard.TestShingles.test_shared_pair_is_found_whatever_the_spacing) ... ok
+test_clang_cl_passthrough (test_flags.TestPatterns.test_clang_cl_passthrough) ... ok
+test_clang_tokens (test_flags.TestPatterns.test_clang_tokens) ... ok
+test_gcc_effective_values (test_flags.TestPatterns.test_gcc_effective_values) ... ok
+test_msvc (test_flags.TestPatterns.test_msvc) ... ok
+test_parse_cc1_windows_escapes (test_flags.TestPatterns.test_parse_cc1_windows_escapes) ... ok
+test_prefreeze_captures (test_flags.TestPatterns.test_prefreeze_captures)
+The captured effective flags: B-cmake contracts (E1), B-proxy, C and D do not; no a2 anywhere. ... ok
+test_proxy_argv_order (test_flags.TestPatterns.test_proxy_argv_order) ... ok
+test_approximation_iclass_flags_p3b (test_judge.TestJudge.test_approximation_iclass_flags_p3b) ... ok
+test_argv_mismatch_is_tooling (test_judge.TestJudge.test_argv_mismatch_is_tooling) ... ok
+test_bcmake_compile_failure_alone_is_pass_with_n2 (test_judge.TestJudge.test_bcmake_compile_failure_alone_is_pass_with_n2) ... ok
+test_bcmake_flag_defect_even_if_file_fails (test_judge.TestJudge.test_bcmake_flag_defect_even_if_file_fails) ... ok
+test_classify_build (test_judge.TestJudge.test_classify_build) ... ok
+test_clean_is_pass (test_judge.TestJudge.test_clean_is_pass) ... ok
+test_compile_failure_without_located_error_is_tooling (test_judge.TestJudge.test_compile_failure_without_located_error_is_tooling) ... ok
+test_error_in_included_header_is_genuine (test_judge.TestJudge.test_error_in_included_header_is_genuine) ... ok
+test_evaluation_date (test_judge.TestJudge.test_evaluation_date) ... ok
+test_genuine_gaps (test_judge.TestJudge.test_genuine_gaps) ... ok
+test_ice (test_judge.TestJudge.test_ice) ... ok
+test_missing_build_record_is_tooling (test_judge.TestJudge.test_missing_build_record_is_tooling) ... ok
+test_missing_iclass_counts_fp_sensitive (test_judge.TestJudge.test_missing_iclass_counts_fp_sensitive) ... ok
+test_missing_variant_is_tooling (test_judge.TestJudge.test_missing_variant_is_tooling) ... ok
+test_multiple_rows (test_judge.TestJudge.test_multiple_rows) ... ok
+test_narrowing (test_judge.TestJudge.test_narrowing) ... ok
+test_ninja_only_counts_when_union_member (test_judge.TestJudge.test_ninja_only_counts_when_union_member) ... ok
+test_p2_and_canaries (test_judge.TestJudge.test_p2_and_canaries) ... ok
+test_p5_exactly_20_is_not_amber (test_judge.TestJudge.test_p5_exactly_20_is_not_amber) ... ok
+test_p5_over_20_is_amber_a (test_judge.TestJudge.test_p5_over_20_is_amber_a) ... ok
+test_release_compile_failure_is_amber_c (test_judge.TestJudge.test_release_compile_failure_is_amber_c) ... ok
+test_slot_absent_with_genuine_gap_is_not_tooling (test_judge.TestJudge.test_slot_absent_with_genuine_gap_is_not_tooling) ... ok
+test_tooling_gap_under_c (test_judge.TestJudge.test_tooling_gap_under_c) ... ok
+test_union_over_2t_is_amber_a (test_judge.TestJudge.test_union_over_2t_is_amber_a) ... ok
+test_unknown_cause_is_tooling (test_judge.TestJudge.test_unknown_cause_is_tooling) ... ok
+test_unpinned_compiler_is_tooling (test_judge.TestJudge.test_unpinned_compiler_is_tooling) ... ok
+test_v2_recomputes_fp_sensitivity (test_judge.TestJudge.test_v2_recomputes_fp_sensitivity) ... ok
+test_v2_resolved_or_non_fp_disagreement_is_valid (test_judge.TestJudge.test_v2_resolved_or_non_fp_disagreement_is_valid) ... ok
+test_v2_unresolved_fp_disagreement (test_judge.TestJudge.test_v2_unresolved_fp_disagreement) ... ok
+test_v3_absent_after_bound_is_final_tooling_failure (test_judge.TestJudge.test_v3_absent_after_bound_is_final_tooling_failure) ... ok
+test_v3_mismatch_after_bound_uses_less_favourable_figure (test_judge.TestJudge.test_v3_mismatch_after_bound_uses_less_favourable_figure) ... ok
+test_v4_mismatch (test_judge.TestJudge.test_v4_mismatch) ... ok
+test_a_ninja_absent (test_judge.TestReview20261016.test_a_ninja_absent) ... ok
+test_a_ninja_missing_comparison (test_judge.TestReview20261016.test_a_ninja_missing_comparison) ... ok
+test_a_ninja_tooling_compile_failure (test_judge.TestReview20261016.test_a_ninja_tooling_compile_failure) ... ok
+test_build_index_none_does_not_crash (test_judge.TestReview20261016.test_build_index_none_does_not_crash) ... ok
+test_coverage_missing (test_judge.TestReview20261016.test_coverage_missing) ... ok
+test_d1_missing (test_judge.TestReview20261016.test_d1_missing) ... ok
+test_d1_not_found_string (test_judge.TestReview20261016.test_d1_not_found_string) ... ok
+test_duplicate_variant (test_judge.TestReview20261016.test_duplicate_variant) ... ok
+test_empty_counted_set (test_judge.TestReview20261016.test_empty_counted_set) ... ok
+test_error_location_not_in_census_file (test_judge.TestReview20261016.test_error_location_not_in_census_file) ... ok
+test_extra_variant (test_judge.TestReview20261016.test_extra_variant) ... ok
+test_fma_iclass_with_p2_counter_zero (test_judge.TestReview20261016.test_fma_iclass_with_p2_counter_zero) ... ok
+test_fp16_bf16_3dnow_approximations (test_judge.TestReview20261016.test_fp16_bf16_3dnow_approximations) ... ok
+test_missing_p3a_for_config (test_judge.TestReview20261016.test_missing_p3a_for_config) ... ok
+test_missing_p3a_for_one_file (test_judge.TestReview20261016.test_missing_p3a_for_one_file) ... ok
+test_narrowing_empty_tags (test_judge.TestReview20261016.test_narrowing_empty_tags) ... ok
+test_narrowing_missing_loops_field (test_judge.TestReview20261016.test_narrowing_missing_loops_field) ... ok
+test_only_build1_variants (test_judge.TestReview20261016.test_only_build1_variants) ... ok
+test_rederivation_flag_and_gap_after_bound (test_judge.TestReview20261016.test_rederivation_flag_and_gap_after_bound) ... ok
+test_slot_unresolved_no_gap (test_judge.TestReview20261016.test_slot_unresolved_no_gap) ... ok
+test_unknown_cause_after_bound_release (test_judge.TestReview20261016.test_unknown_cause_after_bound_release) ... ok
+test_v3_after_bound_without_figures (test_judge.TestReview20261016.test_v3_after_bound_without_figures) ... ok
+test_v3_mismatch_before_bound (test_judge.TestReview20261016.test_v3_mismatch_before_bound) ... ok
+test_v4_scripts_and_xed_tables (test_judge.TestReview20261016.test_v4_scripts_and_xed_tables) ... ok
+test_canary_report_carries_the_e6_label_and_counts_d2_sites (test_judge.TestReviewPreFreeze.test_canary_report_carries_the_e6_label_and_counts_d2_sites) ... ok
+  pins = json.load(open(os.path.join(self.cdir, "frozen_inputs.json")))
+  json.dump(pins, open(os.path.join(self.cdir, "frozen_inputs.json"), "w"))
+  json.dump(self.pins, open(os.path.join(self.cdir, "frozen_inputs.json"), "w"))
+ok
+test_post_freeze_run_is_surfaced (test_judge.TestReviewPreFreeze.test_post_freeze_run_is_surfaced) ... ok
+test_record_id_is_written (test_judge.TestReviewPreFreeze.test_record_id_is_written) ... ok
+test_run_commit_source_pin_and_config_scripts_are_v4 (test_judge.TestReviewPreFreeze.test_run_commit_source_pin_and_config_scripts_are_v4) ... ok
+test_attribution_none_is_tooling (test_judge.TestReviewX0final.test_attribution_none_is_tooling) ... ok
+test_d2_entries_are_typed (test_judge.TestReviewX0final.test_d2_entries_are_typed) ... ok
+test_free_text_resolution_is_unresolved (test_judge.TestReviewX0final.test_free_text_resolution_is_unresolved) ... ok
+test_missing_freeze_commit_fails_v4 (test_judge.TestReviewX0final.test_missing_freeze_commit_fails_v4) ... ok
+test_p3a_with_error_is_not_evaluated (test_judge.TestReviewX0final.test_p3a_with_error_is_not_evaluated) ... ok
+test_run_dated_after_system_clock_is_schema_violation (test_judge.TestReviewX0final.test_run_dated_after_system_clock_is_schema_violation) ... ok
+test_smoke_record_needs_no_freeze_commit_other_ids_fail_v4 (test_judge.TestReviewX0final.test_smoke_record_needs_no_freeze_commit_other_ids_fail_v4) ... ok
+test_success_with_argv_differing_from_frozen_is_tooling (test_judge.TestReviewX0final.test_success_with_argv_differing_from_frozen_is_tooling) ... ok
+test_success_without_compiler_run_or_object_is_tooling (test_judge.TestReviewX0final.test_success_without_compiler_run_or_object_is_tooling) ... ok
+test_unresolved_slot_needs_slot_gap (test_judge.TestReviewX0final.test_unresolved_slot_needs_slot_gap) ... ok
+test_folded_pair_fails (test_loops.TestCanaryD1.test_folded_pair_fails) ... ok
+test_legacy_sse_and_gpr_constant (test_loops.TestCanaryD1.test_legacy_sse_and_gpr_constant) ... ok
+test_pair_through_memory_constants (test_loops.TestCanaryD1.test_pair_through_memory_constants) ... ok
+test_reversed_subtraction_fails (test_loops.TestCanaryD1.test_reversed_subtraction_fails) ... ok
+test_no_loop (test_loops.TestLoops.test_no_loop) ... ok
+test_parse_mem (test_loops.TestLoops.test_parse_mem) ... ok
+test_scalar_accumulator_detected (test_loops.TestLoops.test_scalar_accumulator_detected) ... ok
+test_scalar_pass_through_is_not_a_carried_read (test_loops.TestLoops.test_scalar_pass_through_is_not_a_carried_read)
+xmm2 carries an integer sum; VCVTSI2SS rewrites its lane 0 before the FP ops (the sd_q8 pattern). ... ok
+test_serial_unroll_is_not_splitting (test_loops.TestLoops.test_serial_unroll_is_not_splitting) ... ok
+test_spilled_accumulator_in_stack_slot (test_loops.TestLoops.test_spilled_accumulator_in_stack_slot) ... ok
+test_split_accumulators_are_counted (test_loops.TestLoops.test_split_accumulators_are_counted) ... ok
+test_zmm_accumulator_16_lanes (test_loops.TestLoops.test_zmm_accumulator_16_lanes) ... ok
+test_avx2_two_registers (test_loops.TestTree16.test_avx2_two_registers) ... ok
+test_commutation_allowed (test_loops.TestTree16.test_commutation_allowed) ... ok
+test_hearth_tree_matches (test_loops.TestTree16.test_hearth_tree_matches) ... ok
+test_unknown_instruction_is_unchecked (test_loops.TestTree16.test_unknown_instruction_is_unchecked) ... ok
+test_wrong_pairing_is_mismatch (test_loops.TestTree16.test_wrong_pairing_is_mismatch) ... ok
+test_constant_offset_zeroing_takes_no_address (test_loops_a1.TestEscapingArray.test_constant_offset_zeroing_takes_no_address)
+The same array zeroed by constant-offset stores: no address escapes, the frozen data flow stands (the stores ... ok
+test_rep_stosq_zeroed_array_is_not_register_like (test_loops_a1.TestEscapingArray.test_rep_stosq_zeroed_array_is_not_register_like) ... ok
+test_spilled_tag_is_unchanged (test_loops_a1.TestEscapingArray.test_spilled_tag_is_unchanged) ... ok
+test_the_frozen_reading_is_what_the_census_counted (test_loops_a1.TestEscapingArray.test_the_frozen_reading_is_what_the_census_counted)
+Without the escape rule the chunk loop carries both slots: the false 8 lanes against a bound of 0. ... ok
+test_access_width (test_loops_a1.TestHelpers.test_access_width) ... ok
+test_cold_part_shares_the_frame (test_loops_a1.TestHelpers.test_cold_part_shares_the_frame) ... ok
+test_signed_immediates (test_loops_a1.TestHelpers.test_signed_immediates) ... ok
+ok
+test_an_exact_access_through_a_pointer_to_the_slot_makes_it_escape (test_loops_a1.TestPrologues.test_an_exact_access_through_a_pointer_to_the_slot_makes_it_escape) ... ok
+test_exact_access_elsewhere_in_the_frame_does_not_reach_the_slot (test_loops_a1.TestPrologues.test_exact_access_elsewhere_in_the_frame_does_not_reach_the_slot) ... ok
+test_gcc_drap_realignment_pointer_is_the_callers_frame (test_loops_a1.TestPrologues.test_gcc_drap_realignment_pointer_is_the_callers_frame) ... ok
+test_gs_cookie_xor_is_not_an_escape (test_loops_a1.TestPrologues.test_gs_cookie_xor_is_not_an_escape) ... ok
+test_indexed_access_through_a_stack_pointer_escapes_the_frame (test_loops_a1.TestPrologues.test_indexed_access_through_a_stack_pointer_escapes_the_frame) ... ok
+test_msvc_r11_frame_accesses_leave_other_slots_register_like (test_loops_a1.TestPrologues.test_msvc_r11_frame_accesses_leave_other_slots_register_like) ... ok
+test_multibyte_nop_through_a_stack_pointer_is_not_a_use (test_loops_a1.TestPrologues.test_multibyte_nop_through_a_stack_pointer_is_not_a_use)
+MSVC pads with nop word ptr [rax+rax*1]; when RAX happens to hold a stack address that is no access (seen on ... ok
+test_no_stack_address_no_change (test_loops_a1.TestPrologues.test_no_stack_address_no_change) ... ok
+test_register_accumulators_are_unaffected_by_an_escaping_frame (test_loops_a1.TestPrologues.test_register_accumulators_are_unaffected_by_an_escaping_frame) ... ok
+test_stack_address_passed_to_a_call_escapes_the_frame (test_loops_a1.TestPrologues.test_stack_address_passed_to_a_call_escapes_the_frame) ... ok
+test_stack_pointer_returned_in_rax_is_an_event_that_cannot_reach_the_loop (test_loops_a1.TestPrologues.test_stack_pointer_returned_in_rax_is_an_event_that_cannot_reach_the_loop)
+A return ends the activation, so a returned stack pointer is an unbounded use (FrameInfo records it) that no ... ok
+test_stored_stack_pointer_escapes_the_frame (test_loops_a1.TestPrologues.test_stored_stack_pointer_escapes_the_frame) ... ok
+test_descriptive_fields_keep_the_frozen_reading (test_loops_a1.TestReview20261023.test_descriptive_fields_keep_the_frozen_reading)
+Only acc_lanes_emitted, partial_results and partial_result_cycles take the X0-A1 reading; accumulators, ... ok
+test_epilogue_call_after_the_loop_does_not_reach_it (test_loops_a1.TestReview20261023.test_epilogue_call_after_the_loop_does_not_reach_it)
+The shape of run 1's A/A-ninja k_avx2 Q8 loop: a stack address in an argument register at a call after the ... ok
+test_event_in_an_enclosing_loop_after_the_inner_loop_reaches_it (test_loops_a1.TestReview20261023.test_event_in_an_enclosing_loop_after_the_inner_loop_reaches_it)
+0 prologue | outer header: nop | inner loop (spilled accumulator) | after it, still in the outer loop: a call ... ok
+test_in_iteration_spill_through_an_escaping_slot_is_unscreened (test_loops_a1.TestReview20261023.test_in_iteration_spill_through_an_escaping_slot_is_unscreened)
+vmovaps [rsp+0x40],xmm0; vmulps xmm0,xmm7,xmm7; vmovaps xmm0,[rsp+0x40]; vaddps xmm0,xmm0,xmm5: the slot is ... ok
+test_split_with_one_half_spilled_is_unscreened_at_the_frozen_count (test_loops_a1.TestReview20261023.test_split_with_one_half_spilled_is_unscreened_at_the_frozen_count) ... ok
+test_a_store_of_rsp_itself_is_not_an_escape (test_loops_a1.TestReviewR2Residuals.test_a_store_of_rsp_itself_is_not_an_escape)
+RSP is the slot model's own base, not a stack pointer in X0-A1.1's sense: MOV [m],RSP and PUSH RSP raise ... ok
+test_slot_addresses_are_taken_from_rsp_at_the_loop_header (test_loops_a1.TestReviewR2Residuals.test_slot_addresses_are_taken_from_rsp_at_the_loop_header)
+A PUSH inside the loop moves RSP by 8, which the frozen slot model does not treat as moving its base. The ... ok
+test_a1_scalar_accumulators_carried_in_gprs_through_vmovd (test_loops_prefreeze.TestCarriedThroughAnyInstruction.test_a1_scalar_accumulators_carried_in_gprs_through_vmovd) ... ok
+test_a2_permute_before_the_add (test_loops_prefreeze.TestCarriedThroughAnyInstruction.test_a2_permute_before_the_add) ... ok
+test_a3_ymm_accumulators_spilled_as_two_halves (test_loops_prefreeze.TestCarriedThroughAnyInstruction.test_a3_ymm_accumulators_spilled_as_two_halves) ... ok
+test_a6_compare_on_a_copy_then_blend_the_original (test_loops_prefreeze.TestCarriedThroughAnyInstruction.test_a6_compare_on_a_copy_then_blend_the_original) ... ok
+test_a9_legacy_sse41_select_max_mask_in_xmm0 (test_loops_prefreeze.TestCarriedThroughAnyInstruction.test_a9_legacy_sse41_select_max_mask_in_xmm0) ... ok
+test_a_real_carry_through_a_non_idiom_still_counts (test_loops_prefreeze.TestDependencyBreakingIdioms.test_a_real_carry_through_a_non_idiom_still_counts) ... ok
+test_idiom_recognition (test_loops_prefreeze.TestDependencyBreakingIdioms.test_idiom_recognition) ... ok
+test_integer_sum_zeroed_by_vpxor_and_xor_feeding_a_scalar_mul (test_loops_prefreeze.TestDependencyBreakingIdioms.test_integer_sum_zeroed_by_vpxor_and_xor_feeding_a_scalar_mul) ... ok
+test_xorps_zeroed_max_is_not_carried_by_the_outer_loop (test_loops_prefreeze.TestDependencyBreakingIdioms.test_xorps_zeroed_max_is_not_carried_by_the_outer_loop) ... ok
+test_converted_counter_feeding_the_accumulator (test_loops_prefreeze.TestNoNewFalseCounts.test_converted_counter_feeding_the_accumulator) ... ok
+test_software_pipelined_load (test_loops_prefreeze.TestNoNewFalseCounts.test_software_pipelined_load) ... ok
+test_vector_index_update_is_not_an_accumulator (test_loops_prefreeze.TestNoNewFalseCounts.test_vector_index_update_is_not_an_accumulator) ... ok
+test_a4_swap_on_one_path_is_not_merged (test_loops_prefreeze.TestSelectAndMerge.test_a4_swap_on_one_path_is_not_merged) ... ok
+test_a5_sse2_and_andn_or_select_max (test_loops_prefreeze.TestSelectAndMerge.test_a5_sse2_and_andn_or_select_max) ... ok
+test_argmax_index_select_is_not_an_accumulator (test_loops_prefreeze.TestSelectAndMerge.test_argmax_index_select_is_not_an_accumulator)
+max = maxps(max, x) is one 4-lane accumulator; the index vector selected by the same mask is not. ... ok
+test_halves_spilled_on_each_of_two_paths_are_one_partial_result (test_loops_prefreeze.TestSelectAndMerge.test_halves_spilled_on_each_of_two_paths_are_one_partial_result)
+An accumulator kept as two stack halves and updated on one of two paths: the halves are parts of one value ... ok
+test_scalar_sse2_select_counts_one_lane (test_loops_prefreeze.TestSelectAndMerge.test_scalar_sse2_select_counts_one_lane) ... ok
+test_a7_real_inner_loop_enclosed_by_an_emitted_outer_loop (test_loops_prefreeze.TestSourceLoopRule.test_a7_real_inner_loop_enclosed_by_an_emitted_outer_loop) ... ok
+test_a8_helper_loop_inlined_into_the_caller_loop_is_nested (test_loops_prefreeze.TestSourceLoopRule.test_a8_helper_loop_inlined_into_the_caller_loop_is_nested) ... ok
+test_unrelated_loops_take_the_smaller_bound (test_loops_prefreeze.TestSourceLoopRule.test_unrelated_loops_take_the_smaller_bound) ... ok
+test_call_return_value_is_not_loop_carried (test_loops_x0final.TestBackEdgeAccumulators.test_call_return_value_is_not_loop_carried)
+GCC -fPIC: xmm0 holds the return value of an interposable call before MULSS reads it. ... ok
+test_register_and_its_spill_copy_are_one_partial_result (test_loops_x0final.TestBackEdgeAccumulators.test_register_and_its_spill_copy_are_one_partial_result) ... ok
+test_register_overwritten_before_the_back_edge_is_not_an_accumulator (test_loops_x0final.TestBackEdgeAccumulators.test_register_overwritten_before_the_back_edge_is_not_an_accumulator)
+MSVC reuses the mask register xmm1: MAXSS writes it, a constant load overwrites it before the latch. ... ok
+test_clang_avx2_tree_with_shufpd_and_trailing_canonicalisation (test_loops_x0final.TestD2Sites.test_clang_avx2_tree_with_shufpd_and_trailing_canonicalisation) ... ok
+test_gcc_avx512_copy_of_low_half (test_loops_x0final.TestD2Sites.test_gcc_avx512_copy_of_low_half) ... ok
+test_vpermilpd_swap (test_loops_x0final.TestD2Sites.test_vpermilpd_swap) ... ok
+test_wrong_pairing_still_mismatches_after_trimming (test_loops_x0final.TestD2Sites.test_wrong_pairing_still_mismatches_after_trimming) ... ok
+test_rbp_used_as_a_data_pointer_is_not_a_stack_slot (test_loops_x0final.TestMovingFramePointer.test_rbp_used_as_a_data_pointer_is_not_a_stack_slot)
+GCC -O3: Y[r] = Y[r] * c through [rbp], rbp += 4 each iteration (regression set, rv_coldsw under C). ... ok
+test_integer_induction_is_not_an_accumulator (test_loops_x0final.TestPartialResultsReview.test_integer_induction_is_not_an_accumulator) ... ok
+test_load_through_a_carried_pointer_is_not_a_carried_value (test_loops_x0final.TestPartialResultsReview.test_load_through_a_carried_pointer_is_not_a_carried_value)
+x0final revision, measured on the regression set under C: x[i] * id compared into k0 each iteration. ... ok
+test_sccs (test_loops_x0final.TestPartialResultsReview.test_sccs) ... ok
+test_serial_unroll_is_one_partial_result (test_loops_x0final.TestPartialResultsReview.test_serial_unroll_is_one_partial_result) ... ok
+test_t1_register_rotation_counts_both_partial_results (test_loops_x0final.TestPartialResultsReview.test_t1_register_rotation_counts_both_partial_results) ... ok
+test_t2_compare_select_max_is_an_accumulation (test_loops_x0final.TestPartialResultsReview.test_t2_compare_select_max_is_an_accumulation) ... ok
+test_t2b_masked_move_select_avx512 (test_loops_x0final.TestPartialResultsReview.test_t2b_masked_move_select_avx512) ... ok
+test_t3_two_fma_chains (test_loops_x0final.TestPartialResultsReview.test_t3_two_fma_chains) ... ok
+test_t4_add_then_merge_blend_into_the_accumulator (test_loops_x0final.TestPartialResultsReview.test_t4_add_then_merge_blend_into_the_accumulator) ... ok
+test_t5_accumulator_through_a_permute (test_loops_x0final.TestPartialResultsReview.test_t5_accumulator_through_a_permute) ... ok
+test_t6_copy_on_one_path_does_not_merge_two_accumulators (test_loops_x0final.TestPartialResultsReview.test_t6_copy_on_one_path_does_not_merge_two_accumulators) ... ok
+test_interchanged (test_loops_x0final.TestPeeledInterchanged.test_interchanged) ... ok
+test_no_copy_no_peel (test_loops_x0final.TestPeeledInterchanged.test_no_copy_no_peel) ... ok
+test_peeled_copy_before_the_header (test_loops_x0final.TestPeeledInterchanged.test_peeled_copy_before_the_header) ... ok
+test_header_in_flattened_inner_loop_latch_in_outer (test_loops_x0final.TestStackAttribution.test_header_in_flattened_inner_loop_latch_in_outer) ... ok
+test_inlined_helper_without_loop_falls_back_to_the_call_site (test_loops_x0final.TestStackAttribution.test_inlined_helper_without_loop_falls_back_to_the_call_site) ... ok
+test_inner_loop_not_shown_flattened_takes_the_smaller_bound (test_loops_x0final.TestStackAttribution.test_inner_loop_not_shown_flattened_takes_the_smaller_bound)
+review 2026-10-16/17 (reviewer 2): a real inner loop whose back-edge line lands on the outer loop. ... ok
+test_innermost_containing_loop (test_loops_x0final.TestStackAttribution.test_innermost_containing_loop) ... ok
+test_loop_enclosing_an_emitted_inner_loop_is_the_outer_loop (test_loops_x0final.TestStackAttribution.test_loop_enclosing_an_emitted_inner_loop_is_the_outer_loop)
+x0final revision, measured on the regression set under C: GCC keeps j-loops (header = latch = j line) inside ... ok
+test_llvm_length_advances_the_offset (test_twin.TestCodeView.test_llvm_length_advances_the_offset)
+clang-cl: after ChangeCodeLength the next ChangeCodeOffset counts from the end of the row (measured: ... ok
+test_msvc_closed_rows_leave_the_offset_at_their_start (test_twin.TestCodeView.test_msvc_closed_rows_leave_the_offset_at_their_start)
+MSVC: ChangeCodeLengthAndCodeOffset deltas are measured from the previous row's start (measured: sd_rint ... ok
+test_open_row_closed_by_the_next_row (test_twin.TestCodeView.test_open_row_closed_by_the_next_row) ... ok
+test_parse_codeview_nesting_and_innermost (test_twin.TestCodeView.test_parse_codeview_nesting_and_innermost) ... ok
+test_unterminated_row_is_an_error (test_twin.TestCodeView.test_unterminated_row_is_an_error) ... ok
+test_dwarf_ranges_last_row_at_an_address_wins (test_twin.TestDwarfText.test_dwarf_ranges_last_row_at_an_address_wins) ... ok
+test_dwarfdump_rows_and_inlined (test_twin.TestDwarfText.test_dwarfdump_rows_and_inlined) ... ok
+test_stacks_from_call_sites (test_twin.TestDwarfText.test_stacks_from_call_sites) ... ok
+test_byte_difference_in_one_function (test_twin.TestFunctionIdentity.test_byte_difference_in_one_function) ... ok
+test_relocation_target_difference_in_one_function (test_twin.TestFunctionIdentity.test_relocation_target_difference_in_one_function) ... ok
+test_size_or_offset_change_keeps_the_section_rule (test_twin.TestFunctionIdentity.test_size_or_offset_change_keeps_the_section_rule) ... ok
+test_loops_and_functions (test_twin.TestSourceRegions.test_loops_and_functions) ... ok
+
+----------------------------------------------------------------------
+Ran 234 tests in 5.328s
+
+OK
+[{"file": "quant.c", "rc": 0, "object_exists": true, "argv_matches_frozen": false}]
+[{"file": "quant.c", "rc": 2, "object_exists": false, "argv_matches_frozen": false}, {"file": "quant_avx2.c", "rc": 1, "object_exists": false, "argv_matches_frozen": false}, {"file": "quant_avx512.c", "rc": -1, "object_exists": false, "argv_matches_frozen": false}]

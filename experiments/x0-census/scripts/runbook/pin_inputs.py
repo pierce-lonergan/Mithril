@@ -8,6 +8,8 @@
     __pycache__) and documentation (*.md) -- census scripts, tests, smoke and mock inputs, probes and runbook files
     alike. This is a superset
     of the x0prep map (FREEZE.md D5, D6, D8, D10, D11), so V4 also catches a change to any runbook or regression file;
+    Amendment X0-A1, after the review of X0-A1 r2 (2026-10-23): also rederive/compare_x0.py (EXTRA below), which
+    writes the census's rederivation blocks that V3 reads under both readings;
   * "compilers", "headers" (pre-freeze review of 2026-10-17) and "x86-intel.xml" are kept as they are (Table 2.1
     pins; the XML is not stored in the repository).
 Without --write it only prints the differences from the current frozen_inputs.json (exit 1 if there are any).
@@ -25,6 +27,7 @@ sys.path.insert(0, os.path.dirname(HERE))
 import judge  # noqa: E402
 
 EXCLUDE_DIRS = {os.path.join("scripts", "runbook", "logs"), os.path.join("scripts", "smoke", "results"), "__pycache__"}
+EXTRA = ("rederive/compare_x0.py",)      # pinned files outside scripts/ (review of X0-A1 r2)
 
 
 def sha(p):
@@ -42,6 +45,7 @@ def script_files():
             if f.endswith((".pyc", ".md")):          # documentation is not a census input
                 continue
             out.append(os.path.relpath(os.path.join(d, f), ROOT).replace(os.sep, "/"))
+    out += [rel for rel in EXTRA if os.path.exists(os.path.join(ROOT, *rel.split("/")))]
     return sorted(out)
 
 
@@ -54,7 +58,8 @@ def main():
     new["scripts"] = {rel: sha(os.path.join(ROOT, *rel.split("/"))) for rel in script_files()}
     prov = dict(new.get("_provenance", {}))
     prov["scripts"] = ("SHA-256 of every file under experiments/x0-census/scripts/ except run outputs (runbook/logs/, "
-                       "smoke/results/, __pycache__) and documentation (*.md), by path under experiments/x0-census; "
+                       "smoke/results/, __pycache__) and documentation (*.md), and of rederive/compare_x0.py "
+                       "(Amendment X0-A1), by path under experiments/x0-census; "
                        "recomputed by "
                        "scripts/runbook/pin_inputs.py; judge.py V4 compares the files on disk and census.json "
                        "record.scripts_sha256 with this map")

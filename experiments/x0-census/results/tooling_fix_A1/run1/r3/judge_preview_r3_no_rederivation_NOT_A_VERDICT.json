@@ -1,0 +1,299 @@
+{
+ "amber_a": null,
+ "amber_b": [],
+ "amber_c": [],
+ "both_ways": {
+  "amber_b_configs": [],
+  "amber_b_configs_frozen_reading": [],
+  "frozen_reading": {
+   "amber_b": [],
+   "notes": [],
+   "outcomes": [
+    "tooling_failure"
+   ],
+   "v3_basis": "no re-derivation present: V3 fails under both readings",
+   "validity": {
+    "v1": true,
+    "v2": true,
+    "v3": false,
+    "v4": false
+   },
+   "validity_detail": {
+    "v1_config_gaps": [],
+    "v1_tooling_gaps": [],
+    "v2_resolved_by_amendment": [],
+    "v2_unresolved": [],
+    "v3": [],
+    "v4": [
+     {
+      "detail": "census.json record.scripts_sha256 differs from the pins",
+      "differing": [
+       "rederive/compare_x0.py",
+       "scripts/judge.py",
+       "scripts/runbook/pin_inputs.py",
+       "scripts/smoke/a1/a1_escape.c",
+       "scripts/smoke/a1/a1_loop_table.csv",
+       "scripts/smoke/a1/a1_set.json",
+       "scripts/tests/test_a1_census_judge.py",
+       "scripts/tests/test_loops_a1.py",
+       "scripts/x0_census.py",
+       "scripts/x0_loops.py"
+      ],
+      "input": "scripts"
+     }
+    ],
+    "v4_commits": {
+     "freeze_commit": "152fa33cc24225d78806bc028a1985fffbd3148b",
+     "post_freeze": false,
+     "post_freeze_changes": [],
+     "run_commit": "152fa33cc24225d78806bc028a1985fffbd3148b"
+    }
+   }
+  },
+  "outcomes_differ": false,
+  "p3c_differs": true,
+  "rule": "Amendment X0-A1 (post-data, 2026-10-23): P3(c) with stack slots whose address escapes as plain memory (top-level outcomes) against the reading frozen at 152fa33, every constant-offset stack slot a register-like location (frozen_reading); which governs is the Owner's decision",
+  "variants": [
+   {
+    "build_index": 1,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 8,
+      "loop": "L1_1ac5"
+     }
+    ],
+    "variant": "hx_kernels_scalar:matmul[F32]"
+   },
+   {
+    "build_index": 1,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 8,
+      "loop": "L1_1880"
+     }
+    ],
+    "variant": "hx_kernels_scalar:matmul[F16]"
+   },
+   {
+    "build_index": 1,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 8,
+      "loop": "L1_15c0"
+     }
+    ],
+    "variant": "hx_kernels_scalar:matmul[BF16]"
+   },
+   {
+    "build_index": 1,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [
+     "L1_c64",
+     "L1_d98"
+    ],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 32,
+      "bound_used": 0,
+      "loop": "L1_d98"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 32,
+      "bound_used": 0,
+      "loop": "L1_c64"
+     }
+    ],
+    "variant": "k_avx512:matmul[Q8]"
+   },
+   {
+    "build_index": 1,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [
+     "L1_2d5f",
+     "L1_2e90"
+    ],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 32,
+      "bound_used": 0,
+      "loop": "L1_2e90"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 32,
+      "bound_used": 0,
+      "loop": "L1_2d5f"
+     }
+    ],
+    "variant": "k_avx512:matmul[Q4]"
+   },
+   {
+    "build_index": 2,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 8,
+      "loop": "L1_1ac5"
+     }
+    ],
+    "variant": "hx_kernels_scalar:matmul[F32]"
+   },
+   {
+    "build_index": 2,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 8,
+      "loop": "L1_1880"
+     }
+    ],
+    "variant": "hx_kernels_scalar:matmul[F16]"
+   },
+   {
+    "build_index": 2,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 8,
+      "loop": "L1_15c0"
+     }
+    ],
+    "variant": "hx_kernels_scalar:matmul[BF16]"
+   },
+   {
+    "build_index": 2,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [
+     "L1_c64",
+     "L1_d98"
+    ],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 32,
+      "bound_used": 0,
+      "loop": "L1_d98"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 32,
+      "bound_used": 0,
+      "loop": "L1_c64"
+     }
+    ],
+    "variant": "k_avx512:matmul[Q8]"
+   },
+   {
+    "build_index": 2,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [
+     "L1_2d5f",
+     "L1_2e90"
+    ],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 32,
+      "bound_used": 0,
+      "loop": "L1_2e90"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 32,
+      "bound_used": 0,
+      "loop": "L1_2d5f"
+     }
+    ],
+    "variant": "k_avx512:matmul[Q4]"
+   }
+  ]
+ },
+ "conservative_resolution": false,
+ "eval_date": "2026-10-23",
+ "eval_date_basis": {
+  "latest_census_run_date": "2026-10-17",
+  "system_utc_date": "2026-10-23"
+ },
+ "narrowing": null,
+ "non_gate": [],
+ "notes": [
+  "Amendment X0-A1 (post-data): reported both ways in both_ways; the outcomes above use the amended P3(c); under the frozen reading: tooling_failure"
+ ],
+ "outcomes": [
+  "tooling_failure"
+ ],
+ "record": "X0-census",
+ "tooling_bound": "2026-11-12",
+ "tooling_runs": 1,
+ "validity": {
+  "v1": true,
+  "v2": true,
+  "v3": false,
+  "v4": false
+ },
+ "validity_detail": {
+  "v1_config_gaps": [],
+  "v1_tooling_gaps": [],
+  "v2_resolved_by_amendment": [],
+  "v2_unresolved": [],
+  "v3": [],
+  "v4": [
+   {
+    "detail": "census.json record.scripts_sha256 differs from the pins",
+    "differing": [
+     "rederive/compare_x0.py",
+     "scripts/judge.py",
+     "scripts/runbook/pin_inputs.py",
+     "scripts/smoke/a1/a1_escape.c",
+     "scripts/smoke/a1/a1_loop_table.csv",
+     "scripts/smoke/a1/a1_set.json",
+     "scripts/tests/test_a1_census_judge.py",
+     "scripts/tests/test_loops_a1.py",
+     "scripts/x0_census.py",
+     "scripts/x0_loops.py"
+    ],
+    "input": "scripts"
+   }
+  ],
+  "v4_commits": {
+   "freeze_commit": "152fa33cc24225d78806bc028a1985fffbd3148b",
+   "post_freeze": false,
+   "post_freeze_changes": [],
+   "run_commit": "152fa33cc24225d78806bc028a1985fffbd3148b"
+  }
+ }
+}

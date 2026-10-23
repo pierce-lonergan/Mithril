@@ -10,6 +10,8 @@ derived pointer, and the unchanged descriptive spilled tag. Added after the revi
 independent context): a register accumulator spilled and reloaded through an escaping slot inside one iteration, a
 split with one half so spilled, events that only follow the loop (an epilogue call, a return), an event in an
 enclosing loop, the descriptive fields kept on the frozen reading, and the per-variant frozen-reading P3(c) list.
+Added after the review of X0-A1 r2 (same family, independent context): the two stated exceptions of X0-A1.1 (a store
+of RSP itself is not an escape; slot addresses are taken from RSP at the loop header).
 Run: python -I -m unittest discover -s experiments/x0-census/scripts/tests -v
 """
 import os
@@ -341,6 +343,53 @@ class TestReview20261023(Base):
                     self.assertEqual(new[k], old[k], k)
             self.assertNotEqual(new["acc_lanes_emitted"], old["acc_lanes_emitted"])
             self.assertTrue(old["accumulators"])
+
+
+class TestReviewR2Residuals(Base):
+    """Review of X0-A1 r2 (Claude, same family, independent context), finding 4: two places where FrameInfo is
+    narrower than a literal reading of "a store of the pointer" and of a slot's address. X0-A1.1 states both as
+    exceptions (residual), in the direction that keeps the frozen reading (no slot escapes, nothing is removed). These
+    tests pin the stated behaviour so that the code and the rule text cannot drift apart."""
+
+    POP_RBX = ins("POP", ["REG0/W", "REG1/RW", "MEM0/R"], {"REG0": "RBX", "REG1": "STACKPOP", "MEM0": "ptr [RSP]"})
+
+    def one_loop(self, prologue, body):
+        seq = prologue + body + [imm_op("ADD", "RSP", 0x100, 32), RET]
+        h = len(prologue)
+        return self.loops(seq, {h + len(body) - 1: [h, h + len(body)]})[h]
+
+    def test_a_store_of_rsp_itself_is_not_an_escape(self):
+        """RSP is the slot model's own base, not a stack pointer in X0-A1.1's sense: MOV [m],RSP and PUSH RSP raise
+        no event, so the 4-lane accumulator in [RSP+0x40] keeps its frozen count and is not unscreened."""
+        body = [vload("XMM1", "RSP+0x40"), vop("VADDPS", "XMM1", "XMM1", "XMM5"), vstore("RSP+0x40", "XMM1"),
+                imm_op("ADD", "RSI", 0x10), JNZ]
+        for name, store in (("mov [rip+x],rsp", ins("MOV", ["MEM0/W", "REG0/R"],
+                                                       {"MEM0": "ptr [RIP+0x1000]", "REG0": "RSP"})),
+                            ("push rsp", push("RSP"))):
+            with self.subTest(name):
+                lp = self.one_loop([imm_op("SUB", "RSP", 0x100, 32), store], body)
+                self.assertEqual((lp["acc_lanes_emitted"], lp["escaping_slots"], lp["unscreened"]), (4, [], False))
+        # a copy of RSP stored is an escape (the rule's own case), for contrast
+        lp = self.one_loop([imm_op("SUB", "RSP", 0x100, 32), lea("RAX", "RSP+0x40"),
+                            ins("MOV", ["MEM0/W", "REG0/R"], {"MEM0": "ptr [RIP+0x1000]", "REG0": "RAX"})], body)
+        self.assertEqual((lp["acc_lanes_emitted"], lp["escaping_slots"], lp["unscreened"]), (0, ["STK:RSP:64"], True))
+
+    def test_slot_addresses_are_taken_from_rsp_at_the_loop_header(self):
+        """A PUSH inside the loop moves RSP by 8, which the frozen slot model does not treat as moving its base. The
+        accumulator in [RSP+0x50] after the push is at entry-0xb8, the address RAX points to and loads from in the
+        loop; FrameInfo places the slot at RSP-at-header + 0x50 = entry-0xb0 and finds no overlap, so the frozen
+        count stands (stated residual). Without the push, the same exact access through a pointer to the slot
+        makes it escape."""
+        pro = [imm_op("SUB", "RSP", 0x100, 32), lea("RAX", "RSP+0x48")]
+        load_rax = ins("MOV", ["REG0/W", "MEM0/R"], {"REG0": "EDX", "MEM0": "ptr [RAX]"})
+        body = [push("RBX"), vload("XMM1", "RSP+0x50"), vop("VADDPS", "XMM1", "XMM1", "XMM5"),
+                vstore("RSP+0x50", "XMM1"), load_rax, self.POP_RBX, imm_op("ADD", "RSI", 0x10), JNZ]
+        lp = self.one_loop(pro, body)
+        self.assertEqual((lp["acc_lanes_emitted"], lp["escaping_slots"], lp["unscreened"]), (4, [], False))
+        body = [vload("XMM1", "RSP+0x48"), vop("VADDPS", "XMM1", "XMM1", "XMM5"), vstore("RSP+0x48", "XMM1"),
+                load_rax, imm_op("ADD", "RSI", 0x10), JNZ]
+        lp = self.one_loop(pro, body)
+        self.assertEqual((lp["acc_lanes_emitted"], lp["escaping_slots"], lp["unscreened"]), (0, ["STK:RSP:72"], True))
 
 
 class TestHelpers(unittest.TestCase):
