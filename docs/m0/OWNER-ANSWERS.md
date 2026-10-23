@@ -56,3 +56,24 @@ Earlier instructions, in Pierce's own words in the session brief and follow-up (
   - Sitting 1 is Sunday 2026-10-18, evening.
   - The packet and agenda are due Saturday 2026-10-17, night. They will be in
     [OWNER-QUEUE.md](OWNER-QUEUE.md).
+
+## 2026-10-23, batch 3 (asked about 08:10 PT)
+
+Sitting 1 (Sun 10-18) did not take place; nothing had been signed by 10-23 [M, no tags or owner commits on
+origin/main].
+
+| ID | Question (abridged) | Answer, verbatim | Option text he saw |
+|---|---|---|---|
+| D0-12 / D0-9a (interim) | Sitting 1 didn't happen. How do you want to sign this week? | "Chat now, key on Sunday (Recommended)" | "Reply here, e.g. 'SIGN sitting-1: R1-R6, X0'. I quote your words verbatim into the record (the weaker interim form from HOW-TO-SIGN). On Sun 10-25 you make an SSH signing key and re-sign with signed tags at sitting 2." |
+| C01, C02, C25, D0-7a | Accept the registered defaults for the noise pilot's four open inputs? | "Accept all four defaults (Recommended)" | "C01: the 8-thread cap lifts only inside 23:00–07:00 windows. C02: timing runs read the real Qwen3-30B-A3B Q4 file on the NVMe, read-only, never the USB disk. C25: X3's parity result stays provisional until X4's calibration; X4 calibrates on x3_bench. D0-7a: measurement may run unattended inside windows, with no agents running then." |
+| A20 | X1 runs its Claude attempts through your Max plan. Have you confirmed the plan's terms allow scripted, headless attempts? | "Terms OK; run the smoke run" | "A capped smoke run, using at most about 10 points of one weekly window, measures what an X1 attempt really costs. Your account must be idle while it runs (≤1 h for the first 5 attempts)." |
+
+Consequences:
+- The interim chat signature is recorded verbatim, with its weakness stated in
+  [HOW-TO-SIGN](sittings/2026-10-18/HOW-TO-SIGN.md) (b): an agent writes this log. Pierce's own message in the session
+  transcript is the primary evidence. Every chat-signed item is re-signed with a signed tag at sitting 2
+  (Sun 2026-10-25).
+- The noise-pilot record registers the four defaults and can freeze once its service is pilot-ready. The first
+  pilot night still needs its signature and Pierce's own pre-night settings.
+- The X1 smoke run needs X1-amendment-1 frozen and signed with its pinned fields (model, effort, share s, cap, K).
+  It runs only with the account idle, at a time Pierce agrees.
