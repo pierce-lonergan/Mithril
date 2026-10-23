@@ -1,0 +1,7 @@
+// D-Q4-2 (development item). Write the body; keep the signature.
+use crate::prelude::*;
+
+/// Precondition: y.len() == w.len() * 64.
+pub fn q4_dequant(w: &[BlockQ4], y: &mut [f32]) {
+    todo!("q4_dequant")
+}

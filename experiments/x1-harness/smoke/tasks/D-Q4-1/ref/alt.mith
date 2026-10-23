@@ -1,0 +1,15 @@
+// D-Q4-1 correct-but-non-reference (Mithril): one loop over 64 elements. CANARY: expected PASS.
+kernel fn q4_row_dot(w: &[BlockQ4], a: &[ActQ8]) -> f32
+    requires w.len() == a.len()
+{
+    let mut acc: f32 = 0.0;
+    for g in 0..w.len() {
+        let mut isum: i32 = 0;
+        for j in 0..64 {
+            isum += w[g].q.elem(j) * (a[g].q[j] as i32);
+        }
+        let scale = w[g].d.to_f32() * a[g].d;
+        acc = acc + (isum as f32) * scale;
+    }
+    canon::nan(acc)
+}

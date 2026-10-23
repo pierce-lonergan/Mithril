@@ -5,6 +5,14 @@ reviews, logged in the record's §12). Nothing here is frozen, and no data may b
 it. The pre-registration that will govern collection is
 [docs/m0/prereg/X1-writability.md](../../docs/m0/prereg/X1-writability.md).
 
+*Status note (2026-10-23, track x1smoke).* The runner kit for X1-amendment-1 §6.2's smoke run is in
+[smoke/](smoke/) ([SMOKE.md](smoke/SMOKE.md)): a `x1-subject` agent type, a check wrapper (8 calls,
+45 min), 8 public development items, a scorer, a pre-flight probe, a wave-by-wave workflow and a gate
+that withholds its decision on invalid readings, a weekly reset, unverified pins or audit flags. It
+is built, self-tested, reviewed once (12 findings, all accepted) and revised; no subject attempt has
+run. Development tooling only: none of the held-out isolation of §4.2, §4.6 and §11 (SMOKE.md §3);
+its deviations from the amendment are in SMOKE.md §2. Nothing in this design changed.
+
 ROADMAP anchor: [§3.2](../../docs/ROADMAP.md#32-x1-cold-agent-writability-with-all-arms-weeks-05)
 (authoritative for every gate, amber and kill); DR-002, DR-003, DR-005, DR-013, DR-017;
 [05-agent-protocol](../../docs/architecture/05-agent-protocol.md) §2, §3, §6, §13, §16;

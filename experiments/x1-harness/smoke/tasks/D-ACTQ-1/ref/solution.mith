@@ -1,0 +1,31 @@
+// D-ACTQ-1 reference (Mithril). The per-block work is a helper kernel over a 64-element slice: T2
+// proves the slice bounds from the `requires`, and each out[b] is written once, unconditionally
+// (mithi's NaN-cover rule). One kernel holding all three 64-step loops exhausts T2's budget.
+kernel fn quant_block(v: &[f32]) -> ActQ8
+    requires v.len() == 64
+{
+    let mut amax: f32 = 0.0;
+    for i in 0..v.len() {
+        let a = v[i].abs();
+        if a > amax {
+            amax = a;
+        }
+    }
+    let d = amax / 127.0;
+    let id = if d != 0.0 { 1.0 / d } else { 0.0 };
+    let mut q = [0i8; 64];
+    let mut sum: i32 = 0;
+    for i in 0..64 {
+        q[i] = (v[i] * id).round_ties_even() as i8;
+        sum += q[i] as i32;
+    }
+    ActQ8 { d: canon::nan(d), sum: sum, q: q }
+}
+
+kernel fn act_quantize_q8(x: &[f32], out: &mut [ActQ8])
+    requires x.len() == out.len() * 64
+{
+    for b in 0..out.len() {
+        out[b] = quant_block(&x[b * 64..b * 64 + 64]);
+    }
+}

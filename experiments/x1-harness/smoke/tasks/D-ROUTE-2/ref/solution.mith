@@ -1,0 +1,93 @@
+// D-ROUTE-2 reference (Mithril). Local fixed-size arrays (the requires bound E <= 256 and
+// n_group <= 16), a strict precedence test with the best value kept in a local (DR-012), and
+// explicit bounds guards where T2 cannot relate products of variables to lengths.
+kernel fn group_topk(sel: &[f32], n_group: usize, topk_group: usize, k: usize, ids: &mut [u32])
+    requires n_group >= 1 && n_group <= 16 && sel.len() >= n_group && sel.len() <= 256
+          && sel.len() % n_group == 0 && topk_group >= 1 && topk_group <= n_group
+          && k <= sel.len() && ids.len() == k
+{
+    let e_n = sel.len();
+    let mut eff = [0.0f32; 256];
+    for e in 0..e_n {
+        eff[e] = sel[e];
+    }
+    if n_group > 1 {
+        let gs = e_n / n_group;
+        let mut gsc = [0.0f32; 16];
+        for g in 0..n_group {
+            let base = g * gs;
+            let mut v1: f32 = 0.0;
+            let mut v2: f32 = 0.0;
+            let mut have1 = false;
+            let mut have2 = false;
+            for i in 0..gs {
+                let e = base + i;
+                if e < e_n {
+                    let x = sel[e];
+                    if !have1 {
+                        v1 = x;
+                        have1 = true;
+                    } else if ranks_before(x, v1) {
+                        v2 = v1;
+                        have2 = true;
+                        v1 = x;
+                    } else if !have2 || ranks_before(x, v2) {
+                        v2 = x;
+                        have2 = true;
+                    }
+                }
+            }
+            if g < 16 {
+                gsc[g] = if have2 { v1 + v2 } else { v1 };
+            }
+        }
+        let mut keep = [false; 16];
+        for _r in 0..topk_group {
+            let mut best: usize = 0;
+            let mut best_v: f32 = 0.0;
+            let mut have = false;
+            for g in 0..n_group {
+                if g < 16 && !keep[g] && (!have || ranks_before(gsc[g], best_v)) {
+                    best = g;
+                    best_v = gsc[g];
+                    have = true;
+                }
+            }
+            if have && best < 16 {
+                keep[best] = true;
+            }
+        }
+        for e in 0..e_n {
+            let g = if gs > 0 { e / gs } else { 0 };
+            if g < 16 && !keep[g] {
+                eff[e] = 0.0;
+            }
+        }
+    }
+    let mut taken = [false; 256];
+    for r in 0..ids.len() {
+        let mut best: usize = 0;
+        let mut best_v: f32 = 0.0;
+        let mut have = false;
+        for e in 0..e_n {
+            if !taken[e] && (!have || ranks_before(eff[e], best_v)) {
+                best = e;
+                best_v = eff[e];
+                have = true;
+            }
+        }
+        if have && best < 256 {
+            taken[best] = true;
+        }
+        ids[r] = best as u32;
+    }
+}
+
+// a ranks before b when a comes earlier in the scan (index order): larger value first, a number
+// before NaN; equal values and two NaNs keep the earlier one because callers replace only on a
+// strict precedence
+kernel fn ranks_before(a: f32, b: f32) -> bool {
+    if a.is_nan() { return false; }
+    if b.is_nan() { return true; }
+    a > b
+}

@@ -1,0 +1,6 @@
+// D-EVICT-1 prelude (read-only; supplied with --prelude). Slot views as the store shows them.
+// Hint<T>: Hint::some(x) / Hint::none(); a caller reads it with .get() -> Option<&T>.
+#[derive(Copy, Clone)] struct SlotId(u32);
+#[view] #[derive(Copy, Clone)] struct Tick(pub u64);
+#[view] #[derive(Copy, Clone)]
+struct SlotView { pub id: SlotId, pub pinned: bool, pub refs: u32, pub loading: bool, pub last_use: Tick }

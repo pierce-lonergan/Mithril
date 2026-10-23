@@ -1,0 +1,22 @@
+// D-EVICT-1 reference (Mithril): crates/mithi/tests/corpus/evict.mith plus the `loading` rule.
+policy fn pick_victim(slots: &[SlotView], now: Tick) -> Hint<SlotId> {
+    let mut best: Option<SlotView> = None;
+    for s in slots {
+        if s.pinned || s.refs > 0 || s.loading { continue; }
+        if s.last_use.0 > now.0 { continue; }
+        let age = now.0 - s.last_use.0;
+        match best {
+            None => best = Some(*s),
+            Some(b) => {
+                let b_age = now.0 - b.last_use.0;
+                if age > b_age || (age == b_age && s.id.0 < b.id.0) {
+                    best = Some(*s);
+                }
+            }
+        }
+    }
+    match best {
+        Some(b) => Hint::some(b.id),
+        None => Hint::none(),
+    }
+}

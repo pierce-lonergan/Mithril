@@ -1,0 +1,3 @@
+// D-ACTQ-1 prelude (read-only; supplied with --prelude). Hearth's Q8 activation block.
+// (Development item: no `invariant` is declared on ActQ8; the brief states the sum rule.)
+struct ActQ8 { d: f32, sum: i32, q: [i8; 64] }

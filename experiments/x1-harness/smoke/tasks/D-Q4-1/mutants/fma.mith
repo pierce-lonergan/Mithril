@@ -1,0 +1,15 @@
+// MUTANT fma: the block term is fused into the accumulator (one rounding). CANARY: expected FAIL.
+kernel fn q4_row_dot(w: &[BlockQ4], a: &[ActQ8]) -> f32
+    requires w.len() == a.len()
+{
+    let mut acc: f32 = 0.0;
+    for g in 0..w.len() {
+        let mut isum: i32 = 0;
+        for j in 0..32 {
+            isum += w[g].q.elem(j) * (a[g].q[j] as i32);
+            isum += w[g].q.elem(j + 32) * (a[g].q[j + 32] as i32);
+        }
+        acc = (isum as f32).mul_add(w[g].d.to_f32() * a[g].d, acc);
+    }
+    canon::nan(acc)
+}

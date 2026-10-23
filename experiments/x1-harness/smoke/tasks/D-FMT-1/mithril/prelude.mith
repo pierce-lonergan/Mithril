@@ -1,0 +1,8 @@
+// D-FMT-1 prelude (read-only; supplied with --prelude).
+#[derive(Copy, Clone, PartialEq, Debug)]
+enum TraceError { Truncated, BadMagic, BadVersion, Mismatch, BadId }
+
+struct ModelDims { n_experts: u32, top_k: u32, n_moe_layers: u32 }
+
+#[derive(Debug)]
+struct TraceHeader { n_layers: u32, n_experts: u32, top_k: u32, n_moe_layers: u32, n_tokens: u64 }

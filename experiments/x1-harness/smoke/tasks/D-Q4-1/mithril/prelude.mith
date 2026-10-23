@@ -1,0 +1,7 @@
+// D-Q4-1 prelude (read-only; supplied with --prelude). Hearth's Q4 weight block and Q8 activation.
+// Accessors derived from the format: w.q.elem(i) -> i32 in -8..=7 (i < 64); w.d.to_f32() widens exactly.
+format BlockQ4 {
+    d: f16,                       // block scale (IEEE binary16)
+    q: nibbles<64, offset = 8>,   // byte j: low nibble = element j, high nibble = element j+32; stored element + 8
+}
+struct ActQ8 { d: f32, sum: i32, q: [i8; 64] }

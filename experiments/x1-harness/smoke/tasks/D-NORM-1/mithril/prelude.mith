@@ -1,0 +1,2 @@
+// D-NORM-1 prelude (read-only; supplied with --prelude). Nothing task-specific: the canonical sums
+// are std items (canon::sum16, canon::dot16; see the card).

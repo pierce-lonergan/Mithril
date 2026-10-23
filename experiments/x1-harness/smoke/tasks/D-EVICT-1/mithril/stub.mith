@@ -1,0 +1,4 @@
+// D-EVICT-1 (development item). Write the body; keep the signature.
+policy fn pick_victim(slots: &[SlotView], now: Tick) -> Hint<SlotId> {
+    todo!("pick_victim")
+}

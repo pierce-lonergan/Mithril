@@ -1,0 +1,4 @@
+// D-FMT-1 (development item). Write the body; keep the signature.
+fn parse_trace(buf: &[u8], m: &ModelDims, ids: &mut Vec<u16>) -> Result<TraceHeader, TraceError> uses { alloc(Global) } {
+    todo!("parse_trace")
+}

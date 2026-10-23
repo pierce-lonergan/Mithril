@@ -1,0 +1,18 @@
+// MUTANT strict_from_zero: best age starts at 0 with a strict test (the README sketch), so an age-0
+// slot is never chosen. CANARY: expected FAIL.
+policy fn pick_victim(slots: &[SlotView], now: Tick) -> Hint<SlotId> {
+    let mut best = Hint::none();
+    let mut best_age: u64 = 0;
+    let mut best_id: u32 = 0;
+    for s in slots {
+        if s.pinned || s.refs > 0 || s.loading { continue; }
+        if s.last_use.0 > now.0 { continue; }
+        let age = now.0 - s.last_use.0;
+        if age > best_age || (age == best_age && age > 0 && s.id.0 < best_id) {
+            best_age = age;
+            best_id = s.id.0;
+            best = Hint::some(s.id);
+        }
+    }
+    best
+}

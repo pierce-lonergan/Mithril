@@ -1,0 +1,34 @@
+// D-ROUTE-1 reference (Mithril): selection with a strict precedence test, as in
+// crates/mithi/tests/corpus/route.mith; the best value is kept in a local (an index carried
+// across iterations has no provable bound without a loop invariant, DR-012).
+kernel fn topk(sel: &[f32], k: usize, ids: &mut [u32])
+    requires ids.len() == k && k <= sel.len() && sel.len() <= 256
+{
+    let mut taken = [false; 256];
+    for r in 0..ids.len() {
+        let mut best: usize = 0;
+        let mut best_v: f32 = 0.0;
+        let mut have = false;
+        for i in 0..sel.len() {
+            if taken[i] { continue; }
+            if !have || ranks_before(sel[i], best_v) {
+                best = i;
+                best_v = sel[i];
+                have = true;
+            }
+        }
+        if have && best < 256 {
+            taken[best] = true;
+        }
+        ids[r] = best as u32;
+    }
+}
+
+// a before b when a is earlier in index order: larger value first; a number before NaN; equal
+// values keep index order because the caller scans in index order and replaces only on strict
+// precedence
+kernel fn ranks_before(a: f32, b: f32) -> bool {
+    if a.is_nan() { return false; }
+    if b.is_nan() { return true; }
+    a > b
+}

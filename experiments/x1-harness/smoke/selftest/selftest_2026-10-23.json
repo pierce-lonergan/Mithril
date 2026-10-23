@@ -1,0 +1,2281 @@
+{
+ "agent_file": {
+  "abandon_quoting": true,
+  "arm_neutral": true,
+  "frontmatter_tools": "Write, Bash",
+  "sha256": "sha256:1e0f336633dae03dcb41f72b9bf1c1b4cd9e4d43eb9b9cd2c48bb2d34c1ab520"
+ },
+ "audit_units": {
+  "cases": [
+   {
+    "clean": true,
+    "command": "n.exe\" \"C:/r/harness/x1check.py\" \"C:/r/attempts/x-a01\" check",
+    "ok": true,
+    "want_clean": true
+   },
+   {
+    "clean": true,
+    "command": "C:/r/harness/x1check.py\" \"C:/r/attempts/x-a01\" check --tests",
+    "ok": true,
+    "want_clean": true
+   },
+   {
+    "clean": true,
+    "command": ".exe\" \"C:/r/harness/x1check.py\" \"C:/r/attempts/x-a01\" submit",
+    "ok": true,
+    "want_clean": true
+   },
+   {
+    "clean": true,
+    "command": "exe\" \"C:/r/harness/x1check.py\" \"C:/r/attempts/x-a01\" abandon",
+    "ok": true,
+    "want_clean": true
+   },
+   {
+    "clean": true,
+    "command": "r/attempts/x-a01\" abandon 'cannot fix the tie rule (case 3)'",
+    "ok": true,
+    "want_clean": true
+   },
+   {
+    "clean": true,
+    "command": "py\" \"C:/r/attempts/x-a01\" abandon \"out of ideas, case 2 < 3\"",
+    "ok": true,
+    "want_clean": true
+   },
+   {
+    "clean": true,
+    "command": "rness/x1check.py\" \"C:/r/attempts/x-a01\" abandon cannot solve",
+    "ok": true,
+    "want_clean": true
+   },
+   {
+    "clean": false,
+    "command": "x-a01\" abandon \"$(cat C:/repo/tasks/D-Q4-1/ref/solution.rs)\"",
+    "ok": true,
+    "want_clean": false
+   },
+   {
+    "clean": false,
+    "command": "\"C:/r/attempts/x-a01\" abandon x; cat C:/repo/ref/solution.rs",
+    "ok": true,
+    "want_clean": false
+   },
+   {
+    "clean": false,
+    "command": "/r/harness/x1check.py\" \"C:/r/attempts/x-a01\" abandon x\ncat y",
+    "ok": true,
+    "want_clean": false
+   },
+   {
+    "clean": false,
+    "command": "arness/x1check.py\" \"C:/r/attempts/x-a01\" check --tests\ncat y",
+    "ok": true,
+    "want_clean": false
+   },
+   {
+    "clean": false,
+    "command": "/r/harness/x1check.py\" \"C:/r/attempts/x-a01\" abandon `cat y`",
+    "ok": true,
+    "want_clean": false
+   },
+   {
+    "clean": false,
+    "command": "arness/x1check.py\" \"C:/r/attempts/x-a01\" abandon x > out.txt",
+    "ok": true,
+    "want_clean": false
+   },
+   {
+    "clean": false,
+    "command": "rness/x1check.py\" \"C:/r/attempts/x-a01\" abandon 'x' && cat y",
+    "ok": true,
+    "want_clean": false
+   },
+   {
+    "clean": false,
+    "command": "cat C:/repo/tasks/D-Q4-1/ref/solution.rs",
+    "ok": true,
+    "want_clean": false
+   },
+   {
+    "clean": false,
+    "command": "n.exe\" \"C:/r/harness/x1check.py\" \"C:/r/attempts/x-a01\" check",
+    "ok": true,
+    "want_clean": false
+   },
+   {
+    "clean": false,
+    "command": "Write with a static-gate hit",
+    "ok": true,
+    "want_clean": false
+   },
+   {
+    "clean": false,
+    "command": "transcript call numbers 1,2,1,2",
+    "ok": true,
+    "want_clean": false
+   }
+  ],
+  "ok": true
+ },
+ "cards": {
+  "bytes": {
+   "mithril": 41030,
+   "preamble": 862,
+   "rust": 3975,
+   "tier0": 6639,
+   "tier1": 34390
+  },
+  "mithril_snippets_mithi_check": "accept",
+  "rust_snippets_compile": "ok",
+  "sha256": {
+   "mithril": "sha256:0a12cafbd95c088492636f5e04232f0078858e65d7c445ed099d7e18927435cf",
+   "preamble": "sha256:3ff3daaca54bd0e8c51acf51ce089b1edbf61a8990c4f15a803d531baa082063",
+   "rust": "sha256:43d3f6bc83e35f4044d096c481494cb6da9ea6347e848e78712d8ce8ba7b1344",
+   "tier0": "sha256:4e7dafdbc2ebed95dce8e314f649e975a4debe01f4b82f347df609593f81b081",
+   "tier1": "sha256:dd64586b624b921f4083e69732f76925fff1c37df1ddf89bafa6092f2ce0c6ce"
+  },
+  "tier0_ascii": true,
+  "tier0_bytes": 6639,
+  "tier0_within_8192": true
+ },
+ "e2e": {
+  "aggregate_by_arm": {
+   "mithril": {
+    "accepted": 6,
+    "accepted_and_wrong": 0,
+    "attempts_scored": 7,
+    "cabw": 0.0,
+    "cabw_unconditional": 0.0,
+    "end_reasons": {
+     "no_submit": 1,
+     "submit": 6
+    },
+    "first_compile_rate": 1.0,
+    "mean_checker_calls": 2.0,
+    "not_started": 1,
+    "unsubmitted_oracle_pass": 1,
+    "vp": 6,
+    "vp_at_1": 0.8571428571428571
+   },
+   "rust": {
+    "accepted": 5,
+    "accepted_and_wrong": 3,
+    "attempts_scored": 8,
+    "cabw": 0.6,
+    "cabw_unconditional": 0.375,
+    "end_reasons": {
+     "abandon": 1,
+     "submit": 7
+    },
+    "first_compile_rate": 1.0,
+    "mean_checker_calls": 1.125,
+    "not_started": 0,
+    "unsubmitted_oracle_pass": 0,
+    "vp": 2,
+    "vp_at_1": 0.25
+   }
+  },
+  "attempts": [
+   {
+    "accepted": true,
+    "accepted_and_wrong": false,
+    "arm": "mithril",
+    "attempt": "selftest-a01",
+    "end_reason": "submit",
+    "expected": {
+     "accepted": true,
+     "end_reason": "submit",
+     "vp": true
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-EVICT-1",
+    "vp": true
+   },
+   {
+    "accepted": true,
+    "accepted_and_wrong": false,
+    "arm": "rust",
+    "attempt": "selftest-a02",
+    "end_reason": "submit",
+    "expected": {
+     "accepted": true,
+     "end_reason": "submit",
+     "vp": true
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-NORM-1",
+    "vp": true
+   },
+   {
+    "accepted": false,
+    "accepted_and_wrong": false,
+    "arm": "mithril",
+    "attempt": "selftest-a03",
+    "end_reason": "no_submit",
+    "expected": {
+     "accepted": false,
+     "end_reason": "no_submit",
+     "unsubmitted_oracle_pass": true,
+     "vp": false
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-FMT-1",
+    "vp": false
+   },
+   {
+    "accepted": false,
+    "accepted_and_wrong": false,
+    "arm": "rust",
+    "attempt": "selftest-a04",
+    "end_reason": "abandon",
+    "expected": {
+     "accepted": false,
+     "end_reason": "abandon",
+     "vp": false
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-ACTQ-1",
+    "vp": false
+   },
+   {
+    "accepted": false,
+    "accepted_and_wrong": false,
+    "arm": "mithril",
+    "attempt": "selftest-a05",
+    "end_reason": "not_started",
+    "expected": {
+     "end_reason": "not_started"
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-ACTQ-1",
+    "vp": false
+   },
+   {
+    "accepted": true,
+    "accepted_and_wrong": false,
+    "arm": "rust",
+    "attempt": "selftest-a06",
+    "end_reason": "submit",
+    "expected": {
+     "accepted": true,
+     "end_reason": "submit",
+     "vp": true
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-FMT-1",
+    "vp": true
+   },
+   {
+    "accepted": true,
+    "accepted_and_wrong": false,
+    "arm": "mithril",
+    "attempt": "selftest-a07",
+    "end_reason": "submit",
+    "expected": {
+     "accepted": true,
+     "end_reason": "submit",
+     "vp": true
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-ROUTE-1",
+    "vp": true
+   },
+   {
+    "accepted": false,
+    "accepted_and_wrong": false,
+    "arm": "rust",
+    "attempt": "selftest-a08",
+    "end_reason": "submit",
+    "expected": {
+     "end_reason": "submit",
+     "vp": false
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-Q4-2",
+    "vp": false
+   },
+   {
+    "accepted": true,
+    "accepted_and_wrong": false,
+    "arm": "mithril",
+    "attempt": "selftest-a09",
+    "end_reason": "submit",
+    "expected": {
+     "accepted": true,
+     "end_reason": "submit",
+     "vp": true
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-Q4-1",
+    "vp": true
+   },
+   {
+    "accepted": true,
+    "accepted_and_wrong": true,
+    "arm": "rust",
+    "attempt": "selftest-a10",
+    "end_reason": "submit",
+    "expected": {
+     "end_reason": "submit",
+     "vp": false
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-EVICT-1",
+    "vp": false
+   },
+   {
+    "accepted": true,
+    "accepted_and_wrong": false,
+    "arm": "mithril",
+    "attempt": "selftest-a11",
+    "end_reason": "submit",
+    "expected": {
+     "accepted": true,
+     "end_reason": "submit",
+     "vp": true
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-NORM-1",
+    "vp": true
+   },
+   {
+    "accepted": true,
+    "accepted_and_wrong": true,
+    "arm": "rust",
+    "attempt": "selftest-a12",
+    "end_reason": "submit",
+    "expected": {
+     "end_reason": "submit",
+     "vp": false
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-Q4-1",
+    "vp": false
+   },
+   {
+    "accepted": true,
+    "accepted_and_wrong": false,
+    "arm": "mithril",
+    "attempt": "selftest-a13",
+    "end_reason": "submit",
+    "expected": {
+     "accepted": true,
+     "end_reason": "submit",
+     "vp": true
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-Q4-2",
+    "vp": true
+   },
+   {
+    "accepted": false,
+    "accepted_and_wrong": false,
+    "arm": "rust",
+    "attempt": "selftest-a14",
+    "end_reason": "submit",
+    "expected": {
+     "end_reason": "submit",
+     "vp": false
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-ROUTE-1",
+    "vp": false
+   },
+   {
+    "accepted": true,
+    "accepted_and_wrong": false,
+    "arm": "mithril",
+    "attempt": "selftest-a15",
+    "end_reason": "submit",
+    "expected": {
+     "accepted": true,
+     "end_reason": "submit",
+     "vp": true
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-ROUTE-2",
+    "vp": true
+   },
+   {
+    "accepted": true,
+    "accepted_and_wrong": true,
+    "arm": "rust",
+    "attempt": "selftest-a16",
+    "end_reason": "submit",
+    "expected": {
+     "end_reason": "submit",
+     "vp": false
+    },
+    "integrity_flag": false,
+    "log_chain_ok": true,
+    "ok": true,
+    "task": "D-ROUTE-2",
+    "vp": false
+   }
+  ],
+  "root_path_chars": 166
+ },
+ "e2e_after_submit": "attempt_ended",
+ "e2e_budget": {
+  "call_numbers": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ],
+  "calls_ok": 8,
+  "ninth": "budget_exhausted"
+ },
+ "e2e_first_two_calls": {
+  "ref_call_tests": 4,
+  "stub_call": {
+   "file": "solution.rs (not written yet: the stub was checked)",
+   "holes": 1
+  }
+ },
+ "e2e_hang": {
+  "first_case_error": "timeout after 10 s",
+  "later_cases": [
+   "not run: an earlier case timed out"
+  ],
+  "wall_s": 10.8
+ },
+ "e2e_status_rows": 16,
+ "e2e_tamper_detected": true,
+ "failures": [],
+ "gate": {
+  "max_points_spent": 9.975,
+  "smallest_N_with_RUNNABLE": 25,
+  "undetermined_w_range": [
+   0.062,
+   0.107
+  ],
+  "w_star": "25/288",
+  "w_star_float": 0.08680555555555555,
+  "wrong_decisions": 0,
+  "wrong_examples": []
+ },
+ "gate_e2e": {
+  "clean": {
+   "after_batch_1": "CONTINUE",
+   "caveats": [],
+   "final": "RUNNABLE",
+   "ok": true,
+   "pins": [],
+   "problems": [],
+   "steps": [
+    {
+     "N": 5,
+     "N_if_infra_counted_info": 5,
+     "batch": 1,
+     "decision": "CONTINUE",
+     "delta": 0,
+     "interval_float": [
+      -0.2,
+      0.2
+     ],
+     "interval_points_per_attempt": [
+      "-1/5",
+      "1/5"
+     ],
+     "slack": 1
+    },
+    {
+     "N": 16,
+     "N_if_infra_counted_info": 16,
+     "batch": 2,
+     "decision": "RUNNABLE",
+     "delta": 0,
+     "interval_float": [
+      -0.0625,
+      0.0625
+     ],
+     "interval_points_per_attempt": [
+      "-1/16",
+      "1/16"
+     ],
+     "slack": 1
+    }
+   ]
+  },
+  "flagged_read": {
+   "after_batch_1": "AUDIT_HOLD",
+   "final": "AUDIT_HOLD",
+   "ok": true
+  },
+  "flagged_read_disposed": {
+   "after_batch_1": "CONTINUE",
+   "caveats": [],
+   "final": "RUNNABLE",
+   "ok": true,
+   "pins": [],
+   "problems": [],
+   "steps": [
+    {
+     "N": 4,
+     "N_if_infra_counted_info": 4,
+     "batch": 1,
+     "decision": "CONTINUE",
+     "delta": 0,
+     "interval_float": [
+      -0.25,
+      0.25
+     ],
+     "interval_points_per_attempt": [
+      "-1/4",
+      "1/4"
+     ],
+     "slack": 1
+    },
+    {
+     "N": 15,
+     "N_if_infra_counted_info": 15,
+     "batch": 2,
+     "decision": "RUNNABLE",
+     "delta": 0,
+     "interval_float": [
+      -0.06666666666666667,
+      0.06666666666666667
+     ],
+     "interval_points_per_attempt": [
+      "-1/15",
+      "1/15"
+     ],
+     "slack": 1
+    }
+   ]
+  },
+  "probe_ok": true,
+  "probe_turncap_honoured": true,
+  "reset_crossed": {
+   "after_batch_1": "CONTINUE",
+   "caveats": [],
+   "final": "RESET_CROSSED",
+   "ok": true,
+   "pins": [],
+   "problems": [],
+   "steps": []
+  },
+  "unauthorised_batch": {
+   "after_batch_1": "CONTINUE",
+   "caveats": [],
+   "final": "INCONSISTENT_RECORDS",
+   "ok": true,
+   "pins": [],
+   "problems": [
+    "batch_2_wave_0.workflow.json: gate_sha256 does not name a stored gate result that said CONTINUE after batch 1",
+    "batch_2_wave_1.workflow.json: gate_sha256 does not name a stored gate result that said CONTINUE after batch 1",
+    "batch_2_wave_2.workflow.json: gate_sha256 does not name a stored gate result that said CONTINUE after batch 1"
+   ],
+   "steps": []
+  },
+  "wrong_model": {
+   "after_batch_1": "CONTINUE",
+   "caveats": [],
+   "final": "PINS_UNVERIFIED",
+   "ok": true,
+   "pins": [
+    "tokens check model_is_pinned is false"
+   ],
+   "problems": [],
+   "steps": []
+  }
+ },
+ "gate_fixtures": {
+  "audit_hold": {
+   "got": "AUDIT_HOLD",
+   "ok": true,
+   "want": "AUDIT_HOLD"
+  },
+  "bool_reading": {
+   "got": "INVALID_READINGS",
+   "ok": true,
+   "want": "INVALID_READINGS"
+  },
+  "decrease_in_window": {
+   "got": "INVALID_READINGS",
+   "ok": true,
+   "want": "INVALID_READINGS"
+  },
+  "first_reading_too_early": {
+   "got": "READING_INCOMPLETE",
+   "ok": true,
+   "want": "READING_INCOMPLETE"
+  },
+  "last_two_too_close": {
+   "got": "READING_INCOMPLETE",
+   "ok": true,
+   "want": "READING_INCOMPLETE"
+  },
+  "missing_batch_end": {
+   "got": "INVALID_READINGS",
+   "ok": true,
+   "want": "INVALID_READINGS"
+  },
+  "missing_reset_time": {
+   "got": "INVALID_READINGS",
+   "ok": true,
+   "want": "INVALID_READINGS"
+  },
+  "missing_timestamps": {
+   "got": "INVALID_READINGS",
+   "ok": true,
+   "want": "INVALID_READINGS"
+  },
+  "non_int_reading": {
+   "got": "INVALID_READINGS",
+   "ok": true,
+   "want": "INVALID_READINGS"
+  },
+  "not_runnable_at_5": {
+   "got": "NOT_RUNNABLE",
+   "ok": true,
+   "want": "NOT_RUNNABLE"
+  },
+  "pins_unverified": {
+   "got": "PINS_UNVERIFIED",
+   "ok": true,
+   "want": "PINS_UNVERIFIED"
+  },
+  "r0_after_start": {
+   "got": "INVALID_READINGS",
+   "ok": true,
+   "want": "INVALID_READINGS"
+  },
+  "reading_after_next_batch": {
+   "got": "INVALID_READINGS",
+   "ok": true,
+   "want": "INVALID_READINGS"
+  },
+  "readings_disagree": {
+   "got": "READING_INCOMPLETE",
+   "ok": true,
+   "want": "READING_INCOMPLETE"
+  },
+  "reset_crossed_batch2": {
+   "got": "RESET_CROSSED",
+   "ok": true,
+   "want": "RESET_CROSSED"
+  },
+  "reset_crossed_stage1": {
+   "got": "RESET_CROSSED",
+   "ok": true,
+   "want": "RESET_CROSSED"
+  },
+  "runnable_at_45": {
+   "got": "RUNNABLE",
+   "ok": true,
+   "want": "RUNNABLE"
+  },
+  "step5_continue": {
+   "got": "CONTINUE",
+   "ok": true,
+   "want": "CONTINUE"
+  },
+  "undetermined_at_65": {
+   "got": "UNDETERMINED",
+   "ok": true,
+   "want": "UNDETERMINED"
+  }
+ },
+ "helpers": {
+  "f16_to_f32_all_65536_mismatches": 0,
+  "sum16_dot16_200_vectors_mismatches": 0
+ },
+ "kit": "x1smoke/2",
+ "label": "development items only",
+ "ok": true,
+ "path_length": {
+  "e2e_root_longest_path": 240,
+  "limit": 240,
+  "refused_one_over": true
+ },
+ "prepared": {
+  "agent_copy_matches": true,
+  "batches": [
+   [
+    1,
+    0,
+    5
+   ],
+   [
+    2,
+    5,
+    16
+   ]
+  ],
+  "probe_attempt": "selftest-probe",
+  "replacement_dirs": 16
+ },
+ "repo_dirty_paths": [
+  " M crates/mithi/README.md",
+  " M crates/mithi/src/analysis/grade.rs",
+  " M crates/mithi/src/analysis/mod.rs",
+  " M crates/mithi/src/analysis/own.rs",
+  " M crates/mithi/src/analysis/par.rs",
+  " M crates/mithi/src/analysis/policy.rs",
+  " M crates/mithi/src/analysis/rows.rs",
+  " M crates/mithi/src/analysis/stdfacts.rs",
+  " M crates/mithi/src/analysis/t2.rs",
+  " M crates/mithi/src/captures.rs",
+  " M crates/mithi/src/infer.rs",
+  " M crates/mithi/src/interp.rs",
+  " M crates/mithi/src/parser.rs",
+  " M crates/mithi/src/thir.rs",
+  " M crates/mithi/src/typeck.rs",
+  " M crates/mithi/std/std.mith",
+  " M crates/mithi/tests/ownership.rs",
+  " M crates/mithi/tests/review_grades.rs",
+  " M crates/mithi/tests/review_ownership.rs",
+  " M crates/mithi/tests/review_par.rs",
+  " M crates/mithi/tests/verdicts.rs",
+  "?? .claude/agents/x1-subject.md",
+  "?? crates/mithi/tests/review_2026_10_23.rs",
+  "?? experiments/x1-harness/smoke/"
+ ],
+ "repo_head": "3a66d49f9097b324ef2e4e1915f84d20f94aa910",
+ "run_utc": "2026-10-23T17:44:21Z",
+ "schema": "x1-smoke-selftest/2",
+ "static_gate_units": {
+  "cases": [
+   {
+    "hit": true,
+    "ok": true,
+    "src": "use std as s; fn f(){ s::fs::write(\"a\",\"b\").unwrap(); }",
+    "want_hit": true
+   },
+   {
+    "hit": true,
+    "ok": true,
+    "src": "use std::{io::{self}, fs}; fn f(){ fs::write(\"a\",\"b\").unwrap(); }",
+    "want_hit": true
+   },
+   {
+    "hit": true,
+    "ok": true,
+    "src": "use std::*; fn f(){ fs::write(\"a\",\"b\").unwrap(); }",
+    "want_hit": true
+   },
+   {
+    "hit": true,
+    "ok": true,
+    "src": "use std::{*}; fn f(){}",
+    "want_hit": true
+   },
+   {
+    "hit": true,
+    "ok": true,
+    "src": "macro_rules! p { ($a:ident) => { std::$a::write(\"a\",\"b\").unwrap() } } ",
+    "want_hit": true
+   },
+   {
+    "hit": true,
+    "ok": true,
+    "src": "fn f(){ std::r#fs::write(\"a\",\"b\").unwrap(); }",
+    "want_hit": true
+   },
+   {
+    "hit": true,
+    "ok": true,
+    "src": "use std::{self as t}; fn f(){ t::fs::write(\"a\",\"b\").unwrap(); }",
+    "want_hit": true
+   },
+   {
+    "hit": true,
+    "ok": true,
+    "src": "use ::std as s;",
+    "want_hit": true
+   },
+   {
+    "hit": true,
+    "ok": true,
+    "src": "extern crate alloc; use alloc::vec::Vec;",
+    "want_hit": true
+   },
+   {
+    "hit": true,
+    "ok": true,
+    "src": "fn f(){ let s = r\"C:\\\"; std::fs::remove_file(\"x\"); }",
+    "want_hit": true
+   },
+   {
+    "hit": true,
+    "ok": true,
+    "src": "fn f(){ std /* c */ :: fs::remove_file(\"x\"); }",
+    "want_hit": true
+   },
+   {
+    "hit": false,
+    "ok": true,
+    "src": "fn f(){ let s = r#\"a\"b\"#; let t = 1; }",
+    "want_hit": false
+   },
+   {
+    "hit": false,
+    "ok": true,
+    "src": "fn f(){ let s = \"r\"; let t = 2; }",
+    "want_hit": false
+   },
+   {
+    "hit": false,
+    "ok": true,
+    "src": "use std::cmp::Ordering; use std::{cmp::{max, min}, collections::*};",
+    "want_hit": false
+   },
+   {
+    "hit": false,
+    "ok": true,
+    "src": "fn f(x: u8) -> u32 { x as u32 }",
+    "want_hit": false
+   },
+   {
+    "hit": false,
+    "ok": true,
+    "src": "impl X { fn g(self) -> u32 { self.0 as u32 } }",
+    "want_hit": false
+   }
+  ],
+  "ok": true
+ },
+ "tasks": [
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "reject",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 176,
+   "oracle_failed": [
+    "build"
+   ],
+   "oracle_mismatches": null,
+   "oracle_run_wall_s": null,
+   "primary": "E-KERNEL-OBLIGATION",
+   "task": "D-Q4-1",
+   "visible": "0/5"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "alt",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 176,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.375,
+   "primary": null,
+   "task": "D-Q4-1",
+   "visible": "5/5"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 176,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.343,
+   "primary": null,
+   "task": "D-Q4-1",
+   "visible": "5/5"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:fma",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 176,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 46,
+   "oracle_run_wall_s": 0.375,
+   "primary": null,
+   "task": "D-Q4-1",
+   "visible": "5/5"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:seed_first",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 176,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 2,
+   "oracle_run_wall_s": 0.344,
+   "primary": null,
+   "task": "D-Q4-1",
+   "visible": "5/5"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 176,
+   "oracle_failed": [
+    "case_count",
+    "completeness",
+    "run",
+    "vectors"
+   ],
+   "oracle_mismatches": 176,
+   "oracle_run_wall_s": 0.234,
+   "primary": null,
+   "task": "D-Q4-1",
+   "visible": "0/5"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "alt",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 176,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.282,
+   "primary": null,
+   "task": "D-Q4-1",
+   "visible": "5/5"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 176,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.281,
+   "primary": null,
+   "task": "D-Q4-1",
+   "visible": "5/5"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:no_canon",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 176,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 3,
+   "oracle_run_wall_s": 0.297,
+   "primary": null,
+   "task": "D-Q4-1",
+   "visible": "5/5"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:reassoc",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 176,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 38,
+   "oracle_run_wall_s": 0.297,
+   "primary": null,
+   "task": "D-Q4-1",
+   "visible": "5/5"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "reject",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 130,
+   "oracle_failed": [
+    "build"
+   ],
+   "oracle_mismatches": null,
+   "oracle_run_wall_s": null,
+   "primary": "E-KERNEL-OBLIGATION",
+   "task": "D-Q4-2",
+   "visible": "0/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 130,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.203,
+   "primary": null,
+   "task": "D-Q4-2",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:interleaved",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 130,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 103,
+   "oracle_run_wall_s": 0.156,
+   "primary": null,
+   "task": "D-Q4-2",
+   "visible": "1/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:zero_fix",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 130,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 77,
+   "oracle_run_wall_s": 0.187,
+   "primary": null,
+   "task": "D-Q4-2",
+   "visible": "3/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 130,
+   "oracle_failed": [
+    "case_count",
+    "completeness",
+    "run",
+    "vectors"
+   ],
+   "oracle_mismatches": 130,
+   "oracle_run_wall_s": 0.25,
+   "primary": null,
+   "task": "D-Q4-2",
+   "visible": "0/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "alt",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 130,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.282,
+   "primary": null,
+   "task": "D-Q4-2",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 130,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.265,
+   "primary": null,
+   "task": "D-Q4-2",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:j_plus_16",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 130,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 103,
+   "oracle_run_wall_s": 0.266,
+   "primary": null,
+   "task": "D-Q4-2",
+   "visible": "1/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:no_offset",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 130,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 104,
+   "oracle_run_wall_s": 0.282,
+   "primary": null,
+   "task": "D-Q4-2",
+   "visible": "1/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "reject",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 113,
+   "oracle_failed": [
+    "build"
+   ],
+   "oracle_mismatches": null,
+   "oracle_run_wall_s": null,
+   "primary": "E-KERNEL-OBLIGATION",
+   "task": "D-ACTQ-1",
+   "visible": "0/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 113,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.141,
+   "primary": null,
+   "task": "D-ACTQ-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:div_by_d",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 113,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 3,
+   "oracle_run_wall_s": 0.156,
+   "primary": null,
+   "task": "D-ACTQ-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:recip127",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 113,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 3,
+   "oracle_run_wall_s": 0.141,
+   "primary": null,
+   "task": "D-ACTQ-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 113,
+   "oracle_failed": [
+    "case_count",
+    "completeness",
+    "run",
+    "vectors"
+   ],
+   "oracle_mismatches": 113,
+   "oracle_run_wall_s": 0.25,
+   "primary": null,
+   "task": "D-ACTQ-1",
+   "visible": "0/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "alt",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 113,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.266,
+   "primary": null,
+   "task": "D-ACTQ-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 113,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.25,
+   "primary": null,
+   "task": "D-ACTQ-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:f64_scale",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 113,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 4,
+   "oracle_run_wall_s": 0.282,
+   "primary": null,
+   "task": "D-ACTQ-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:round_away",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 113,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 3,
+   "oracle_run_wall_s": 0.281,
+   "primary": null,
+   "task": "D-ACTQ-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "reject",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 130,
+   "oracle_failed": [
+    "build"
+   ],
+   "oracle_mismatches": null,
+   "oracle_run_wall_s": null,
+   "primary": "E-KERNEL-OBLIGATION",
+   "task": "D-NORM-1",
+   "visible": "0/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "alt",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 130,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.078,
+   "primary": null,
+   "task": "D-NORM-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 130,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.063,
+   "primary": null,
+   "task": "D-NORM-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:reassoc",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 130,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 119,
+   "oracle_run_wall_s": 0.078,
+   "primary": null,
+   "task": "D-NORM-1",
+   "visible": "3/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:recip_n",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 130,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 4,
+   "oracle_run_wall_s": 0.078,
+   "primary": null,
+   "task": "D-NORM-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 130,
+   "oracle_failed": [
+    "case_count",
+    "completeness",
+    "run",
+    "vectors"
+   ],
+   "oracle_mismatches": 130,
+   "oracle_run_wall_s": 0.25,
+   "primary": null,
+   "task": "D-NORM-1",
+   "visible": "0/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "alt",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 130,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.328,
+   "primary": null,
+   "task": "D-NORM-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 130,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.265,
+   "primary": null,
+   "task": "D-NORM-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:fma_lanes",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 130,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 4,
+   "oracle_run_wall_s": 0.266,
+   "primary": null,
+   "task": "D-NORM-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:seq_sum",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 130,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 12,
+   "oracle_run_wall_s": 0.234,
+   "primary": null,
+   "task": "D-NORM-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "reject",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 160,
+   "oracle_failed": [
+    "build"
+   ],
+   "oracle_mismatches": null,
+   "oracle_run_wall_s": null,
+   "primary": "E-KERNEL-OBLIGATION",
+   "task": "D-ROUTE-1",
+   "visible": "0/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 160,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.25,
+   "primary": null,
+   "task": "D-ROUTE-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:nan_first",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 160,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 127,
+   "oracle_run_wall_s": 0.235,
+   "primary": null,
+   "task": "D-ROUTE-1",
+   "visible": "3/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:ties_high",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 160,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 138,
+   "oracle_run_wall_s": 0.25,
+   "primary": null,
+   "task": "D-ROUTE-1",
+   "visible": "1/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 160,
+   "oracle_failed": [
+    "case_count",
+    "completeness",
+    "run",
+    "vectors"
+   ],
+   "oracle_mismatches": 160,
+   "oracle_run_wall_s": 0.235,
+   "primary": null,
+   "task": "D-ROUTE-1",
+   "visible": "0/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "alt",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 160,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.25,
+   "primary": null,
+   "task": "D-ROUTE-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 160,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.25,
+   "primary": null,
+   "task": "D-ROUTE-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:last_max",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 160,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 138,
+   "oracle_run_wall_s": 0.25,
+   "primary": null,
+   "task": "D-ROUTE-1",
+   "visible": "1/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:total_cmp",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 160,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 118,
+   "oracle_run_wall_s": 0.281,
+   "primary": null,
+   "task": "D-ROUTE-1",
+   "visible": "2/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "reject",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 160,
+   "oracle_failed": [
+    "build"
+   ],
+   "oracle_mismatches": null,
+   "oracle_run_wall_s": null,
+   "primary": "E-KERNEL-OBLIGATION",
+   "task": "D-ROUTE-2",
+   "visible": "0/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 160,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.313,
+   "primary": null,
+   "task": "D-ROUTE-2",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:top1",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 160,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 30,
+   "oracle_run_wall_s": 0.312,
+   "primary": null,
+   "task": "D-ROUTE-2",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 160,
+   "oracle_failed": [
+    "case_count",
+    "completeness",
+    "run",
+    "vectors"
+   ],
+   "oracle_mismatches": 160,
+   "oracle_run_wall_s": 0.266,
+   "primary": null,
+   "task": "D-ROUTE-2",
+   "visible": "0/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 160,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.266,
+   "primary": null,
+   "task": "D-ROUTE-2",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:exclude_dropped",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 160,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 59,
+   "oracle_run_wall_s": 0.296,
+   "primary": null,
+   "task": "D-ROUTE-2",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:group_ties_high",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 160,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 41,
+   "oracle_run_wall_s": 0.281,
+   "primary": null,
+   "task": "D-ROUTE-2",
+   "visible": "3/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 209,
+   "oracle_failed": [
+    "case_count",
+    "completeness",
+    "run",
+    "vectors"
+   ],
+   "oracle_mismatches": 209,
+   "oracle_run_wall_s": 0.031,
+   "primary": null,
+   "task": "D-EVICT-1",
+   "visible": "0/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 209,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.046,
+   "primary": null,
+   "task": "D-EVICT-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:strict_from_zero",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 209,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 5,
+   "oracle_run_wall_s": 0.047,
+   "primary": null,
+   "task": "D-EVICT-1",
+   "visible": "3/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:ties_high_id",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 209,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 51,
+   "oracle_run_wall_s": 0.031,
+   "primary": null,
+   "task": "D-EVICT-1",
+   "visible": "3/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 209,
+   "oracle_failed": [
+    "case_count",
+    "completeness",
+    "run",
+    "vectors"
+   ],
+   "oracle_mismatches": 209,
+   "oracle_run_wall_s": 0.25,
+   "primary": null,
+   "task": "D-EVICT-1",
+   "visible": "0/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "alt",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 209,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.25,
+   "primary": null,
+   "task": "D-EVICT-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 209,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.296,
+   "primary": null,
+   "task": "D-EVICT-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:loading_ignored",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 209,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 30,
+   "oracle_run_wall_s": 0.282,
+   "primary": null,
+   "task": "D-EVICT-1",
+   "visible": "4/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:position_ties",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 209,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 22,
+   "oracle_run_wall_s": 0.282,
+   "primary": null,
+   "task": "D-EVICT-1",
+   "visible": "3/4"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 268,
+   "oracle_failed": [
+    "case_count",
+    "completeness",
+    "run",
+    "vectors"
+   ],
+   "oracle_mismatches": 268,
+   "oracle_run_wall_s": 0.032,
+   "primary": null,
+   "task": "D-FMT-1",
+   "visible": "0/5"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 268,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.078,
+   "primary": null,
+   "task": "D-FMT-1",
+   "visible": "5/5"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:le_experts",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 268,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 3,
+   "oracle_run_wall_s": 0.078,
+   "primary": null,
+   "task": "D-FMT-1",
+   "visible": "4/5"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "mithril",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:no_version",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 268,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 29,
+   "oracle_run_wall_s": 0.078,
+   "primary": null,
+   "task": "D-FMT-1",
+   "visible": "5/5"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "fail",
+   "holes": 1,
+   "item": "stub",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 268,
+   "oracle_failed": [
+    "case_count",
+    "completeness",
+    "run",
+    "vectors"
+   ],
+   "oracle_mismatches": 268,
+   "oracle_run_wall_s": 0.219,
+   "primary": null,
+   "task": "D-FMT-1",
+   "visible": "0/5"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "pass",
+   "holes": 0,
+   "item": "solution",
+   "ok": true,
+   "oracle": "pass",
+   "oracle_cases": 268,
+   "oracle_failed": [],
+   "oracle_mismatches": 0,
+   "oracle_run_wall_s": 0.313,
+   "primary": null,
+   "task": "D-FMT-1",
+   "visible": "5/5"
+  },
+  {
+   "acceptance": "pass",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:rec_before_dims",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 268,
+   "oracle_failed": [
+    "case_count",
+    "completeness",
+    "run",
+    "vectors"
+   ],
+   "oracle_mismatches": 260,
+   "oracle_run_wall_s": 0.282,
+   "primary": null,
+   "task": "D-FMT-1",
+   "visible": "5/5"
+  },
+  {
+   "acceptance": "fail",
+   "arm": "rust",
+   "checker": "accept",
+   "expect": "oracle_fail",
+   "holes": 0,
+   "item": "mutant:trailing_ok",
+   "ok": true,
+   "oracle": "fail",
+   "oracle_cases": 268,
+   "oracle_failed": [
+    "vectors"
+   ],
+   "oracle_mismatches": 27,
+   "oracle_run_wall_s": 0.25,
+   "primary": null,
+   "task": "D-FMT-1",
+   "visible": "4/5"
+  }
+ ],
+ "toolchain": {
+  "mithi": "<scratchpad>\\x1smoke-rev\\target\\release\\mithi.exe",
+  "mithi_sha256": "sha256:823f486f597fb64ce71cf06f4bc414477b228bfb19d64a5e326c1f2426c3f3f5",
+  "mithi_std_sha256": "d2ed4214551055f282d176bbeed092bdea254f666e61d11f67bfe9a0585ff667",
+  "python": "~\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "python_version": "3.12.10",
+  "repo_std_sha256": "d2ed4214551055f282d176bbeed092bdea254f666e61d11f67bfe9a0585ff667",
+  "rustc": "~\\.rustup-mithril\\toolchains\\1.99.1-x86_64-pc-windows-gnu\\bin\\rustc.exe",
+  "rustc_sha256": "sha256:51a5e64f2668e874b50d9af0f281cfd7a4ee08558ee44ffa1855756b5a78bc52",
+  "rustc_vV": [
+   "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+   "binary: rustc",
+   "commit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67",
+   "commit-date: 2026-10-13",
+   "host: x86_64-pc-windows-gnu",
+   "release: 1.99.1",
+   "LLVM version: 23.1.1"
+  ],
+  "std_matches_repo": true
+ },
+ "workflow_instance": {
+  "bytes": 134695,
+  "plan_parses": true,
+  "probe_parses": true,
+  "sha256": "sha256:7f4defbf9bf5b2d193047c7d6dddcbc0d38d0145ca3d0da57034754a4c07216e"
+ },
+ "wrapper_units": {
+  "abandon_reason": {
+   "ok": true,
+   "stored": [
+    "(cat x) id rm -rf y"
+   ]
+  },
+  "log_tamper": {
+   "integrity_ok": false,
+   "ok": true,
+   "reply": "log_integrity_failure"
+  },
+  "ok": true,
+  "prelude_tamper": {
+   "logged": true,
+   "ok": true,
+   "tests_passed": 5
+  },
+  "refund": {
+   "first_reply_refunded": true,
+   "next_call": 1,
+   "ok": true
+  },
+  "score": {
+   "a1_end_reason": "budget_wall",
+   "a1_vp": false,
+   "a2_integrity_flag": true,
+   "integrity_flags": [
+    "m-a02"
+   ],
+   "ok": true
+  },
+  "state_reset": {
+   "call_after_reset": 2,
+   "ok": true
+  },
+  "wall_budget": {
+   "after": "attempt_ended",
+   "end_reason": "budget_wall",
+   "first": true,
+   "ok": true,
+   "submit_reply": "wall_budget_exhausted"
+  }
+ }
+}

@@ -1,0 +1,6 @@
+// D-NORM-1 (development item). Write the body; keep the signature.
+kernel fn rmsnorm(y: &mut [f32], x: &[f32], w: &[f32], eps: f32)
+    requires x.len() == y.len() && w.len() == x.len() && x.len() > 0
+{
+    todo!("rmsnorm")
+}

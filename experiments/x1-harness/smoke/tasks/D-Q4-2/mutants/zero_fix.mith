@@ -1,0 +1,19 @@
+// MUTANT zero_fix: element 0 writes +0.0 whatever the scale's sign. CANARY: expected FAIL.
+kernel fn q4_dequant(w: &[BlockQ4], y: &mut [f32])
+    requires y.len() == w.len() * 64
+{
+    for k in 0..y.len() {
+        y[k] = 0.0;
+    }
+    for g in 0..w.len() {
+        let blk = w[g];
+        let d = blk.d.to_f32();
+        for i in 0..64 {
+            let k = g * 64 + i;
+            let e = blk.q.elem(i);
+            if k < y.len() && e != 0 {
+                y[k] = canon::nan((e as f32) * d);
+            }
+        }
+    }
+}

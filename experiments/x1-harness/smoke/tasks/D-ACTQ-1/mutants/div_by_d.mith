@@ -1,0 +1,30 @@
+// MUTANT div_by_d: q = round(x / d) instead of round(x * id). CANARY: expected FAIL.
+kernel fn quant_block(v: &[f32]) -> ActQ8
+    requires v.len() == 64
+{
+    let mut amax: f32 = 0.0;
+    for i in 0..v.len() {
+        let a = v[i].abs();
+        if a > amax {
+            amax = a;
+        }
+    }
+    let d = amax / 127.0;
+    let id: f32 = 0.0;
+    let mut q = [0i8; 64];
+    let mut sum: i32 = 0;
+    for i in 0..64 {
+        let t = if d != 0.0 { v[i] / d } else { id };
+        q[i] = t.round_ties_even() as i8;
+        sum += q[i] as i32;
+    }
+    ActQ8 { d: canon::nan(d), sum: sum, q: q }
+}
+
+kernel fn act_quantize_q8(x: &[f32], out: &mut [ActQ8])
+    requires x.len() == out.len() * 64
+{
+    for b in 0..out.len() {
+        out[b] = quant_block(&x[b * 64..b * 64 + 64]);
+    }
+}

@@ -1,0 +1,20 @@
+// MUTANT interleaved: llama.cpp-style pairing, elements 2k and 2k+1 from byte k (wrong layout).
+// CANARY: expected FAIL.
+kernel fn q4_dequant(w: &[BlockQ4], y: &mut [f32])
+    requires y.len() == w.len() * 64
+{
+    for k in 0..y.len() {
+        y[k] = 0.0;
+    }
+    for g in 0..w.len() {
+        let blk = w[g];
+        let d = blk.d.to_f32();
+        for k in 0..32 {
+            let o = g * 64 + 2 * k;
+            if o + 1 < y.len() {
+                y[o] = canon::nan((blk.q.elem(k) as f32) * d);
+                y[o + 1] = canon::nan((blk.q.elem(k + 32) as f32) * d);
+            }
+        }
+    }
+}

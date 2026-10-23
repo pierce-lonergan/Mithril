@@ -1,0 +1,25 @@
+// D-NORM-1 correct-but-non-reference (Mithril): the 16-lane tree written by hand with
+// constant-trip loops (T2 unrolls them). CANARY: expected PASS.
+kernel fn rmsnorm(y: &mut [f32], x: &[f32], w: &[f32], eps: f32)
+    requires x.len() == y.len() && w.len() == x.len() && x.len() > 0
+{
+    let mut lanes = [0.0f32; 16];
+    for i in 0..x.len() {
+        lanes[i % 16] = lanes[i % 16] + x[i] * x[i];
+    }
+    for j in 0..8 {
+        lanes[j] = lanes[j] + lanes[j + 8];
+    }
+    for j in 0..4 {
+        lanes[j] = lanes[j] + lanes[j + 4];
+    }
+    for j in 0..2 {
+        lanes[j] = lanes[j] + lanes[j + 2];
+    }
+    lanes[0] = lanes[0] + lanes[1];
+    let ms = lanes[0] / (x.len() as f32);
+    let r = 1.0 / (ms + eps).sqrt();
+    for i in 0..y.len() {
+        y[i] = canon::nan((x[i] * r) * w[i]);
+    }
+}

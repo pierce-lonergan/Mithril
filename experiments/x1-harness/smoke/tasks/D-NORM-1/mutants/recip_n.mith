@@ -1,0 +1,11 @@
+// MUTANT recip_n: ms = sum * (1/n) instead of sum / n. CANARY: expected FAIL.
+kernel fn rmsnorm(y: &mut [f32], x: &[f32], w: &[f32], eps: f32)
+    requires x.len() == y.len() && w.len() == x.len() && x.len() > 0
+{
+    let n = x.len();
+    let ms = canon::dot16(x, x) * (1.0 / (n as f32));
+    let r = 1.0 / (ms + eps).sqrt();
+    for i in 0..n {
+        y[i] = canon::nan((x[i] * r) * w[i]);
+    }
+}
