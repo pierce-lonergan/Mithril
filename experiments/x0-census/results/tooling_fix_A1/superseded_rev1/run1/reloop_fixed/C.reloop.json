@@ -1,0 +1,68 @@
+{
+ "run": "/mnt/d/mithril/x0census/run1",
+ "config": "C",
+ "x0_loops": "/mnt/d/mithril/x0fixA1/tree/x0-census/scripts/x0_loops.py",
+ "x0_loops_sha256": "7a6393d3ecb521ca3fe09d64edfdb9e360724fa214d0db0328239bc58f71bfe3",
+ "steps": [
+  {
+   "step": "loops_b1_all",
+   "argv": [
+    "/usr/bin/python3",
+    "-I",
+    "/mnt/d/mithril/x0fixA1/tree/x0-census/scripts/x0_loops.py",
+    "/mnt/d/mithril/x0census/run1/C/b1/all/decode",
+    "--manifest",
+    "/mnt/d/mithril/x0census/run1/C/b1/all/manifest.json",
+    "-o",
+    "/mnt/d/mithril/x0fixA1/run1_reloop/new/C/loops_b1_all/loops.json",
+    "--attribution",
+    "/mnt/d/mithril/x0census/run1/C/b1/all/attr/quant.c.attr.json",
+    "--attribution",
+    "/mnt/d/mithril/x0census/run1/C/b1/all/attr/quant_avx2.c.attr.json",
+    "--attribution",
+    "/mnt/d/mithril/x0census/run1/C/b1/all/attr/quant_avx512.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "/mnt/d/mithril/x0census/run1/C/b1/all/loops.json",
+   "run_loops_sha256": "13dd35ad4601be6c853436829f9d9dfce324afe6a81e378039ee05280a8e2b56",
+   "new_loops_sha256": "c590cdb2f40ded6161560373497f65795a23b2fd93fe31e3871ce815fafc22b0",
+   "identical": false,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  },
+  {
+   "step": "loops_b2_all",
+   "argv": [
+    "/usr/bin/python3",
+    "-I",
+    "/mnt/d/mithril/x0fixA1/tree/x0-census/scripts/x0_loops.py",
+    "/mnt/d/mithril/x0census/run1/C/b2/all/decode",
+    "--manifest",
+    "/mnt/d/mithril/x0census/run1/C/b2/all/manifest.json",
+    "-o",
+    "/mnt/d/mithril/x0fixA1/run1_reloop/new/C/loops_b2_all/loops.json",
+    "--attribution",
+    "/mnt/d/mithril/x0census/run1/C/b2/all/attr/quant.c.attr.json",
+    "--attribution",
+    "/mnt/d/mithril/x0census/run1/C/b2/all/attr/quant_avx2.c.attr.json",
+    "--attribution",
+    "/mnt/d/mithril/x0census/run1/C/b2/all/attr/quant_avx512.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "/mnt/d/mithril/x0census/run1/C/b2/all/loops.json",
+   "run_loops_sha256": "13dd35ad4601be6c853436829f9d9dfce324afe6a81e378039ee05280a8e2b56",
+   "new_loops_sha256": "c590cdb2f40ded6161560373497f65795a23b2fd93fe31e3871ce815fafc22b0",
+   "identical": false,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  }
+ ]
+}

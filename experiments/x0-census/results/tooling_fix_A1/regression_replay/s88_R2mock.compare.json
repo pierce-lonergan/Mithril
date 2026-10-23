@@ -1,0 +1,1083 @@
+{
+ "old": "D:\\mithril\\x0reg\\runs\\R2mock",
+ "new": "D:\\mithril\\x0fixA1\\r2\\runs88\\R2mock",
+ "units_only_old": [],
+ "units_only_new": [],
+ "decode_differs": [],
+ "flags_removed": [],
+ "flags_added": [],
+ "loop_changes": [
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_13f4",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:0",
+    "STK:RSP:16",
+    "STK:RSP:224",
+    "STK:RSP:232",
+    "STK:RSP:24",
+    "STK:RSP:32",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:60",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:84",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_1420",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:0",
+    "STK:RSP:16",
+    "STK:RSP:24",
+    "STK:RSP:32",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:60",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:84",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_1515",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:80",
+    "STK:RSP:84",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_1184",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:0",
+    "STK:RSP:16",
+    "STK:RSP:224",
+    "STK:RSP:232",
+    "STK:RSP:24",
+    "STK:RSP:32",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:60",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:84",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_11b0",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:0",
+    "STK:RSP:16",
+    "STK:RSP:24",
+    "STK:RSP:32",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:60",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:84",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_12a5",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:80",
+    "STK:RSP:84",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_948",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:16"
+      ],
+      [
+       "STK:RSP:32"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:0",
+    "STK:RSP:16",
+    "STK:RSP:20",
+    "STK:RSP:24",
+    "STK:RSP:32",
+    "STK:RSP:8"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_958",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:16"
+      ],
+      [
+       "STK:RSP:32"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:0",
+    "STK:RSP:16",
+    "STK:RSP:20",
+    "STK:RSP:24",
+    "STK:RSP:32"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_a18",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:16"
+      ],
+      [
+       "STK:RSP:32"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:16",
+    "STK:RSP:20",
+    "STK:RSP:24",
+    "STK:RSP:32"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_13f4",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:0",
+    "STK:RSP:16",
+    "STK:RSP:224",
+    "STK:RSP:232",
+    "STK:RSP:24",
+    "STK:RSP:32",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:60",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:84",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_1420",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:0",
+    "STK:RSP:16",
+    "STK:RSP:24",
+    "STK:RSP:32",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:60",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:84",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_1515",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:80",
+    "STK:RSP:84",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_1184",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:0",
+    "STK:RSP:16",
+    "STK:RSP:224",
+    "STK:RSP:232",
+    "STK:RSP:24",
+    "STK:RSP:32",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:60",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:84",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_11b0",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:0",
+    "STK:RSP:16",
+    "STK:RSP:24",
+    "STK:RSP:32",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:60",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:84",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_12a5",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:80",
+    "STK:RSP:84",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_948",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:16"
+      ],
+      [
+       "STK:RSP:32"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:0",
+    "STK:RSP:16",
+    "STK:RSP:20",
+    "STK:RSP:24",
+    "STK:RSP:32",
+    "STK:RSP:8"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_958",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:16"
+      ],
+      [
+       "STK:RSP:32"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:0",
+    "STK:RSP:16",
+    "STK:RSP:20",
+    "STK:RSP:24",
+    "STK:RSP:32"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_a18",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:16"
+      ],
+      [
+       "STK:RSP:32"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:16",
+    "STK:RSP:20",
+    "STK:RSP:24",
+    "STK:RSP:32"
+   ]
+  }
+ ],
+ "unscreened": [
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_13f4",
+   "source_loop": "quant.c:76",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:0 <- unbounded CALL_NEAR via RCX at 1:146f (stack pointer in an argument register at a call)"
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_1420",
+   "source_loop": "quant.c:78",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:0 <- unbounded CALL_NEAR via RCX at 1:146f (stack pointer in an argument register at a call)"
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_1515",
+   "source_loop": "quant.c:66",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:80 <- exact MOVAPS via RBX at 1:1420 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_1184",
+   "source_loop": "quant.c:76",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:0 <- unbounded CALL_NEAR via RCX at 1:11ff (stack pointer in an argument register at a call)"
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_11b0",
+   "source_loop": "quant.c:78",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:0 <- unbounded CALL_NEAR via RCX at 1:11ff (stack pointer in an argument register at a call)"
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_12a5",
+   "source_loop": "quant.c:66",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:80 <- exact MOVAPS via RBX at 1:11b0 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_948",
+   "source_loop": "quant.c:76",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:16"
+    ],
+    [
+     "STK:RSP:32"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:0 <- exact MOVUPS via RSI at 1:9ea (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_958",
+   "source_loop": "quant.c:78",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:16"
+    ],
+    [
+     "STK:RSP:32"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:0 <- exact MOVUPS via RSI at 1:9ea (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_a18",
+   "source_loop": "quant.c:66",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:16"
+    ],
+    [
+     "STK:RSP:32"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:16 <- exact MOVAPS via RCX at 1:958 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_13f4",
+   "source_loop": "quant.c:76",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:0 <- unbounded CALL_NEAR via RCX at 1:146f (stack pointer in an argument register at a call)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_1420",
+   "source_loop": "quant.c:78",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:0 <- unbounded CALL_NEAR via RCX at 1:146f (stack pointer in an argument register at a call)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_1515",
+   "source_loop": "quant.c:66",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:80 <- exact MOVAPS via RBX at 1:1420 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_1184",
+   "source_loop": "quant.c:76",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:0 <- unbounded CALL_NEAR via RCX at 1:11ff (stack pointer in an argument register at a call)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_11b0",
+   "source_loop": "quant.c:78",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:0 <- unbounded CALL_NEAR via RCX at 1:11ff (stack pointer in an argument register at a call)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_12a5",
+   "source_loop": "quant.c:66",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:80 <- exact MOVAPS via RBX at 1:11b0 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_948",
+   "source_loop": "quant.c:76",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:16"
+    ],
+    [
+     "STK:RSP:32"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:0 <- exact MOVUPS via RSI at 1:9ea (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_958",
+   "source_loop": "quant.c:78",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:16"
+    ],
+    [
+     "STK:RSP:32"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:0 <- exact MOVUPS via RSI at 1:9ea (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "all"
+   ],
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_a18",
+   "source_loop": "quant.c:66",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:16"
+    ],
+    [
+     "STK:RSP:32"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:16 <- exact MOVAPS via RCX at 1:958 (access through a stack pointer)"
+  }
+ ],
+ "canary_changes": [],
+ "summary": {
+  "units_compared": 26,
+  "variants": 264,
+  "loops_new": 1170,
+  "decode_files_differ": 0,
+  "flags_removed": 0,
+  "flags_added": 0,
+  "loops_changed": 18,
+  "unscreened_new": 18,
+  "canary_changes": 0
+ }
+}

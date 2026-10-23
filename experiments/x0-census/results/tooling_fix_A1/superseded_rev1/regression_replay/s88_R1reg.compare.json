@@ -1,0 +1,613 @@
+{
+ "old": "D:\\mithril\\x0reg\\runs\\R1reg",
+ "new": "D:\\mithril\\x0fixA1\\runs88\\R1reg",
+ "units_only_old": [],
+ "units_only_new": [],
+ "decode_differs": [],
+ "flags_removed": [],
+ "flags_added": [],
+ "loop_changes": [
+  {
+   "unit": [
+    "C",
+    "b1",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table:matmul[0]",
+   "loop": "L1_bf1",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ],
+    "acc_updates_per_iter": [
+     8,
+     0
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:64"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table:matmul[1]",
+   "loop": "L1_bf1",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ],
+    "acc_updates_per_iter": [
+     8,
+     0
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:64"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table:matmul[2]",
+   "loop": "L1_bf1",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ],
+    "acc_updates_per_iter": [
+     8,
+     0
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:64"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table_global:matmul[0]",
+   "loop": "L1_bf1",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ],
+    "acc_updates_per_iter": [
+     8,
+     0
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:64"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table_global:matmul[1]",
+   "loop": "L1_bf1",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ],
+    "acc_updates_per_iter": [
+     8,
+     0
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:64"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table_global:matmul[3]",
+   "loop": "L1_bf1",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ],
+    "acc_updates_per_iter": [
+     8,
+     0
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:64"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table:matmul[0]",
+   "loop": "L1_bf1",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ],
+    "acc_updates_per_iter": [
+     8,
+     0
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:64"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table:matmul[1]",
+   "loop": "L1_bf1",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ],
+    "acc_updates_per_iter": [
+     8,
+     0
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:64"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table:matmul[2]",
+   "loop": "L1_bf1",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ],
+    "acc_updates_per_iter": [
+     8,
+     0
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:64"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table_global:matmul[0]",
+   "loop": "L1_bf1",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ],
+    "acc_updates_per_iter": [
+     8,
+     0
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:64"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table_global:matmul[1]",
+   "loop": "L1_bf1",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ],
+    "acc_updates_per_iter": [
+     8,
+     0
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:64"
+   ]
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table_global:matmul[3]",
+   "loop": "L1_bf1",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ],
+    "acc_updates_per_iter": [
+     8,
+     0
+    ]
+   },
+   "unscreened": true,
+   "escaping_slots": [
+    "STK:RSP:64"
+   ]
+  }
+ ],
+ "unscreened": [
+  {
+   "unit": [
+    "C",
+    "b1",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table:matmul[0]",
+   "loop": "L1_bf1",
+   "source_loop": "smoke_dispatch.c:75",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:64 <- exact VMOVUPS via RDX at 1:c10 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table:matmul[1]",
+   "loop": "L1_bf1",
+   "source_loop": "smoke_dispatch.c:75",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:64 <- exact VMOVUPS via RDX at 1:c10 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table:matmul[2]",
+   "loop": "L1_bf1",
+   "source_loop": "smoke_dispatch.c:75",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:64 <- exact VMOVUPS via RDX at 1:c10 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table_global:matmul[0]",
+   "loop": "L1_bf1",
+   "source_loop": "smoke_dispatch.c:75",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:64 <- exact VMOVUPS via RDX at 1:c10 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table_global:matmul[1]",
+   "loop": "L1_bf1",
+   "source_loop": "smoke_dispatch.c:75",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:64 <- exact VMOVUPS via RDX at 1:c10 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b1",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table_global:matmul[3]",
+   "loop": "L1_bf1",
+   "source_loop": "smoke_dispatch.c:75",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:64 <- exact VMOVUPS via RDX at 1:c10 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table:matmul[0]",
+   "loop": "L1_bf1",
+   "source_loop": "smoke_dispatch.c:75",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:64 <- exact VMOVUPS via RDX at 1:c10 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table:matmul[1]",
+   "loop": "L1_bf1",
+   "source_loop": "smoke_dispatch.c:75",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:64 <- exact VMOVUPS via RDX at 1:c10 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table:matmul[2]",
+   "loop": "L1_bf1",
+   "source_loop": "smoke_dispatch.c:75",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:64 <- exact VMOVUPS via RDX at 1:c10 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table_global:matmul[0]",
+   "loop": "L1_bf1",
+   "source_loop": "smoke_dispatch.c:75",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:64 <- exact VMOVUPS via RDX at 1:c10 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table_global:matmul[1]",
+   "loop": "L1_bf1",
+   "source_loop": "smoke_dispatch.c:75",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:64 <- exact VMOVUPS via RDX at 1:c10 (access through a stack pointer)"
+  },
+  {
+   "unit": [
+    "C",
+    "b2",
+    "smoke_dispatch.c"
+   ],
+   "variant": "sd_table_global:matmul[3]",
+   "loop": "L1_bf1",
+   "source_loop": "smoke_dispatch.c:75",
+   "escaping_partial_results": [
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8,
+   "acc_lanes_emitted": 0,
+   "first_escape_event": "STK:RSP:64 <- exact VMOVUPS via RDX at 1:c10 (access through a stack pointer)"
+  }
+ ],
+ "canary_changes": [],
+ "summary": {
+  "units_compared": 70,
+  "variants": 480,
+  "loops_new": 1364,
+  "decode_files_differ": 0,
+  "flags_removed": 0,
+  "flags_added": 0,
+  "loops_changed": 12,
+  "unscreened_new": 12,
+  "canary_changes": 0
+ }
+}

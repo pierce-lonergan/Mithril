@@ -1,0 +1,723 @@
+{
+ "mode": "reloop",
+ "files": 10,
+ "variant_field_changes": {
+  "p3.c": 16
+ },
+ "loop_field_changes": {
+  "acc_lanes_emitted|unscreened": 40,
+  "partial_result_cycles|unscreened": 40,
+  "partial_results|unscreened": 40
+ },
+ "checks": {
+  "frozen_reading_differs_from_before_p3c": 0,
+  "screened_count_differs": 0,
+  "screened_partial_results_differ": 0,
+  "unscreened_frozen_count_differs": 0
+ },
+ "per_config_build": {
+  "A-ninja|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 32,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 12
+  },
+  "A-ninja|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 32,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 12
+  },
+  "A|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 32,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 12
+  },
+  "A|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 32,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 12
+  },
+  "B-cmake|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 2,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 1,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 2,
+   "loops": 34,
+   "unscreened_loops_after": 2,
+   "loops_with_escaping_slots_after": 17
+  },
+  "B-cmake|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 2,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 1,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 2,
+   "loops": 34,
+   "unscreened_loops_after": 2,
+   "loops_with_escaping_slots_after": 17
+  },
+  "C|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 6,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 3,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 6,
+   "loops": 20,
+   "unscreened_loops_after": 10,
+   "loops_with_escaping_slots_after": 15
+  },
+  "C|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 6,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 3,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 6,
+   "loops": 20,
+   "unscreened_loops_after": 10,
+   "loops_with_escaping_slots_after": 15
+  },
+  "D|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 8,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 4,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 8,
+   "loops": 26,
+   "unscreened_loops_after": 8,
+   "loops_with_escaping_slots_after": 17
+  },
+  "D|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 8,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 4,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 8,
+   "loops": 26,
+   "unscreened_loops_after": 8,
+   "loops_with_escaping_slots_after": 17
+  }
+ },
+ "examples": {
+  "loop:acc_lanes_emitted|unscreened": [
+   [
+    "B-cmake",
+    "b1",
+    "a1_escape.c",
+    "a1_table:mm[1]",
+    "L6_bc",
+    32,
+    0
+   ],
+   [
+    "B-cmake",
+    "b1",
+    "a1_escape.c",
+    "a1_table:mm[1]",
+    "L6_e9",
+    32,
+    0
+   ],
+   [
+    "B-cmake",
+    "b2",
+    "a1_escape.c",
+    "a1_table:mm[1]",
+    "L6_bc",
+    32,
+    0
+   ],
+   [
+    "B-cmake",
+    "b2",
+    "a1_escape.c",
+    "a1_table:mm[1]",
+    "L6_e9",
+    32,
+    0
+   ],
+   [
+    "C",
+    "b1",
+    "a1_escape.c",
+    "a1_table:mm[0]",
+    "L1_170",
+    32,
+    0
+   ]
+  ],
+  "loop:partial_result_cycles|unscreened": [
+   [
+    "B-cmake",
+    "b1",
+    "a1_escape.c",
+    "a1_table:mm[1]",
+    "L6_bc",
+    [
+     {
+      "members": [
+       "STK:RSP:112"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:128"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:144"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:160"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:176"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:192"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:80"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:96"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ],
+   [
+    "B-cmake",
+    "b1",
+    "a1_escape.c",
+    "a1_table:mm[1]",
+    "L6_e9",
+    [
+     {
+      "members": [
+       "STK:RSP:112"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:128"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:144"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:160"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:176"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:192"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:80"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:96"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ],
+   [
+    "B-cmake",
+    "b2",
+    "a1_escape.c",
+    "a1_table:mm[1]",
+    "L6_bc",
+    [
+     {
+      "members": [
+       "STK:RSP:112"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:128"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:144"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:160"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:176"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:192"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:80"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:96"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ],
+   [
+    "B-cmake",
+    "b2",
+    "a1_escape.c",
+    "a1_table:mm[1]",
+    "L6_e9",
+    [
+     {
+      "members": [
+       "STK:RSP:112"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:128"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:144"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:160"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:176"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:192"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:80"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:96"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "a1_escape.c",
+    "a1_table:mm[0]",
+    "L1_170",
+    [
+     {
+      "members": [
+       "STK:RSP:144"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:160"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:176"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:192"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:208"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:224"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:240"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:256"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ]
+  ],
+  "loop:partial_results|unscreened": [
+   [
+    "B-cmake",
+    "b1",
+    "a1_escape.c",
+    "a1_table:mm[1]",
+    "L6_bc",
+    [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ],
+    []
+   ],
+   [
+    "B-cmake",
+    "b1",
+    "a1_escape.c",
+    "a1_table:mm[1]",
+    "L6_e9",
+    [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ],
+    []
+   ],
+   [
+    "B-cmake",
+    "b2",
+    "a1_escape.c",
+    "a1_table:mm[1]",
+    "L6_bc",
+    [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ],
+    []
+   ],
+   [
+    "B-cmake",
+    "b2",
+    "a1_escape.c",
+    "a1_table:mm[1]",
+    "L6_e9",
+    [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "a1_escape.c",
+    "a1_table:mm[0]",
+    "L1_170",
+    [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ],
+    []
+   ]
+  ]
+ }
+}

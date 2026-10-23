@@ -448,3 +448,101 @@ and the desktop re-run re-pinned it (`x0_loops.py`, `tests/test_loops_prefreeze.
   level for files written after 03:15]: three 0-byte `<GUID>.tmp` files in `%LOCALAPPDATA%\Temp` at 03:54:59 and
   03:55:35, after every job had ended [I: written by the SSH PowerShell sessions of the last two checks or by another
   process of the account; not attributable with certainty]; they were left in place. Nothing else.
+
+## Post-freeze tooling fix X0-A1 (appended 2026-10-23 by the x0fix track; revised the same day after its review)
+
+Everything above this heading is the freeze-time text and is unchanged. This section is appended. It is the long form
+of Amendment X0-A1 to the record. Whether and when that amendment was appended to the record is shown by the record
+itself; this section is not edited when it is. **It contains census run 1 outputs and describes `x0_loops.py`, so a
+fresh re-deriver must not receive it** (`rederive/PROCEDURE.md` §1).
+
+**Statement on Hearth objects (D12 for X0-A1).** X0-A1 compiled no Hearth file and decoded no Hearth object. It
+re-ran `x0_loops.py` read-only on census run 1's existing decodes, manifests, attribution files and objects
+(`D:\mithril\x0census\run1`, post-data), and compiled and decoded only NON-Hearth files: the reproduction
+`scripts/smoke/a1/a1_escape.c` (shingle guard: 0 shared pairs), the mock and the regression set.
+
+**Owner approval.** X0-A1 is post-data and removes P3(c) flags, the direction favourable to Pass. DELEGATED.md's
+limits exclude such a change from the delegation, so it is provisional, pending Pierce. `judge.py` reports the verdict
+both ways (`verdict.json` `both_ways`).
+
+**What changed.** See the amendment (X0-A1.1, the operative rule) and `results/tooling_fix_A1/README.md` §1:
+- `scripts/x0_loops.py`: escaping stack slots (`FrameInfo`) are plain memory for the P3(c) quantity only; every other
+  loop field keeps the frozen reading; a loop whose P3(c) count or partial results differ between the readings is
+  `unscreened` (loop fields `unscreened`, `unscreened_reason`, `escaping_slots`, `escaping_partial_results`,
+  `acc_lanes_if_escaping_slots_were_registers`, `escape_events`; variant fields `p3c_unscreened`,
+  `p3c_frozen_reading`);
+- `scripts/x0_census.py`: carries the two variant lists into `census.json`, adds `metrics.x0_a1` and one note per
+  unscreened loop;
+- `scripts/judge.py`: `both_ways`, the decision list under the frozen reading; schema check of the two lists;
+- new tests and the NON-Hearth reproduction.
+
+**Hashes before and after X0-A1** (SHA-256 of the bytes on disk; `pin_inputs.py --write`, then 0 differences on the
+laptop and in the desktop's r2 tree). The freeze-time tables above keep the freeze values; for these files the value
+after X0-A1 is the one here.
+
+| File | SHA-256 at the freeze (152fa33) | SHA-256 after X0-A1 (r2) |
+|---|---|---|
+| `experiments/x0-census/scripts/x0_loops.py` | `8c7ecc9e6a29b4ec8398661ffca9c225a2fccf7f1e1af3f9d24cd04e78df3799` | `5519a568568ba80db3c5f12080820b4d0e049a99099e5de5fd59382021282812` |
+| `experiments/x0-census/scripts/x0_census.py` | `37bb743918899a5a752d47184e905423e75a40b073d860976c91fe8aa1992176` | `1f8e482b48a42603baca0e5e8cf224d1f4e20c381b2db1ebe70711e46b832859` |
+| `experiments/x0-census/scripts/judge.py` | `d8c8da25d8f65b76e6910b415a17c716c1863786c68ad4d4da49c15913567cc5` | `b3104348eb10bc338f877a38c31382b55cc98ffcc67a8c7f93ab5739f5acf4bf` |
+| `experiments/x0-census/scripts/tests/test_loops_a1.py` | (new) | `a98b09252074e3f21c8a3220612f770c8509ffdbf0ed1ffab30a38c4e6f4aa34` |
+| `experiments/x0-census/scripts/tests/test_a1_census_judge.py` | (new) | `fc03262a553e37a0ffc284f1d9ee1956e9281fdad1ce3977f42a9818f93d26b1` |
+| `experiments/x0-census/scripts/smoke/a1/a1_escape.c` | (new) | `9e2e93add5e590bbf00989f5a631c231202fc349e06d5c7ad345fce3415c24a5` |
+| `experiments/x0-census/scripts/smoke/a1/a1_loop_table.csv` | (new) | `f23a90c652a00077d05b059c1df32672006abbce8d32803a0fef6abfc23632aa` |
+| `experiments/x0-census/scripts/smoke/a1/a1_set.json` | (new) | `e326915d6e15009fc047a3e2350a989451acba3d3a68fb02d877112fd5530bb5` |
+| `experiments/x0-census/class/frozen_inputs.json` | `5b4d7c08b3837a7094d5bf87d1a6f89c137966e7b9aa3dac3b7d3496d0737219` | `d3ba19a9fcc954a83eff094f8cdbd3b0c08f0fc009cd25da0ec4ede76fd142b0` |
+| `experiments/x0-census/scripts/README.md` (documentation, not pinned) | `5e1995ef37164ff4b221f3d2d14a298475f2f874abbe382acb6704ae8f18ba56` | `65382689a0334b10d9b67abcc3b6f8aa5c1b69f906d4442e5d81065818aac386` |
+
+`class/frozen_inputs.json` also gained `_provenance.x0_a1`, which records this re-pin (`pin_inputs.py --write`
+rewrites `_provenance.written` with fixed text, so the note is kept in a key of its own).
+
+**Checks run** [M, 2026-10-23]. Details are in `results/tooling_fix_A1/README.md` §4.
+
+1. *Unit tests.* 215 pass on the laptop: 183 earlier, 25 in `test_loops_a1` and 7 in `test_a1_census_judge`.
+2. *Re-pin.* `pin_inputs.py --write` found 5 differences against the rev1 pins, then 0, on the laptop and in the
+   desktop's r2 tree.
+3. *Laptop pre-check* on NON-Hearth decodes kept on the laptop: 2,395 loops; 30 change, all unscreened, and only in the
+   P3(c) fields.
+4. *NON-Hearth reproduction* `smoke/a1/a1_escape.c` (shingle guard 0 pairs; run `smoke-20261023T160057Z`, the r2
+   script re-run on its decodes): the pinned script flags 16 loops per build (B-cmake 2, C 6, D 8), the r2 script 0,
+   with all 40 loop records `unscreened` at their frozen counts; only the P3(c) fields change.
+5. *Regression replay, runbook steps 86 and 88 with the r2 tree*: R2 `smoke-20261023T172426Z` and R1
+   `smoke-20261023T174221Z`, `pin_inputs.py` at 0 differences.
+   - `check_regression_run.py` finds **0 deviations** (60 decode outputs, 420 variants).
+   - The decodes are byte-identical to the 2026-10-17 final runs. P3(c) flags are unchanged (0 removed, 0 added).
+   - 30 loop records under C are `unscreened` (R1 12, R2 18; the address-taken `L[16]` arrays), none flagged under
+     either reading. Only the three P3(c) fields change on them; every other field is identical.
+   - Summaries and verdicts differ from the 2026-10-17 ones only in run ids, dates, tree paths and the new `both_ways`
+     block and note. Every outcome is unchanged, and `both_ways` gives the same outcomes under the frozen reading.
+6. *Census run 1, read only* (`D:\mithril\x0census\run1`; no compile, no decode, no census).
+   - P1 to P5 before/after (`results/tooling_fix_A1/run1/p1_p5_before_after.tsv`): only P3(c) under C changes, 4 → 0
+     flagged loops and 2 → 0 flagged variants per build. P4 446, P5_iclass 32 and P5_opclass 15 before and after.
+   - The 8 removed flag records are C `k_avx512` Q8 and Q4 at quant_avx512.c:316 and :352, both builds: exactly the 4
+     census-only V3 mismatches of REPORT §10. None is added.
+   - 14 loop records are `unscreened`, all under C: those 8, and C scalar quant.c:362 (6 records, no flag either way).
+     A and A-ninja `k_avx2` Q8 quant_avx2.c:240, unscreened under rev1, is screened under r2: the only event that
+     made its slot escape under rev1 (a call in the epilogue) follows the loop.
+   - Only `acc_lanes_emitted`, `partial_results` and `partial_result_cycles` change, on the 14 unscreened records;
+     every other field is identical.
+   - Cause (a), the address-taken and stored array, applies to every removed flag. Cause (b), the variable-count
+     `rep stosq` inside the loop, is present in every one, but alone it is not a sound kill.
+
+**Not done.** X0-A1 r2 is not independently reviewed (its rev1 was; the review's 18 findings are handled in r2). No
+census re-run from an amended commit; no fresh re-deriver; `REPORT.md`, `census.json` and `verdict.json` are not
+regenerated. Due before the bound of 2026-11-12.
+
+**Desktop footprint of X0-A1 (for Pierce).** Details in `results/tooling_fix_A1/README.md` §7.
+- rev1 (2026-10-23, 11:32-12:27 EDT): new on D: `D:\mithril\x0fixA1\` (225,311,377 bytes at 12:24 EDT) and
+  `D:\mithril\jobs\x0fixA1\`. Two WSL keepalives started by the track left the WSLg traces
+  `RdClientAutoTrace-WppAutoTrace-20261023-153224-185.etl` (23,592,960 bytes) and `…-20261023-153508-687.etl`
+  (104,857,600 bytes; rev1 had reported it as 0 bytes at 12:24 EDT, before it was written out) under
+  `%LOCALAPPDATA%\Temp\DiagOutputDir\RdClientAutoTrace\` on C:.
+- r2 (13:04-13:52 EDT): new on D: `D:\mithril\x0fixA1\r2\` (182,152,437 bytes in 2,824 files) and
+  `D:\mithril\jobs\x0fixA1\r2\` (117,386 bytes in 73 files). One keepalive (pid 24364, 13:04:20-13:50:03 EDT) left
+  `RdClientAutoTrace-WppAutoTrace-20261023-170421-962.etl` (104,857,600 bytes) on C:.
+- A few small files in `%LOCALAPPDATA%\Temp` on C: written in those windows (0-byte `<GUID>.tmp`, `.ses`,
+  `mat-debug-*.log`, `cv_debug.log`, a Visual Studio download set) were not attributed with certainty and were left in
+  place.
+- No system setting changed; at most 4 threads, one compiler at a time, `CUDA_VISIBLE_DEVICES=-1`, no GPU; the Hearth
+  working tree, the WSL home and GEMS not touched; nothing deleted (the D: folders above remain for Pierce or the lead
+  engineer to remove).

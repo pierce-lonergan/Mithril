@@ -1,0 +1,42 @@
+{
+ "outcomes": [
+  "amber_a",
+  "amber_b",
+  "amber_c"
+ ],
+ "validity": {
+  "v1": true,
+  "v2": true,
+  "v3": true,
+  "v4": true
+ },
+ "amber_b": [
+  "A",
+  "B-cmake",
+  "C",
+  "D"
+ ],
+ "amber_c": 32,
+ "non_gate": [
+  [
+   "N1",
+   "B-cmake"
+  ],
+  [
+   "N1",
+   "C"
+  ],
+  [
+   "N2",
+   "B-cmake"
+  ]
+ ],
+ "amber_a": {
+  "u_all": 326,
+  "p5_iclass": 31,
+  "holds": true
+ },
+ "v1_gaps": 0,
+ "v1_config_gaps": 0,
+ "v4": []
+}

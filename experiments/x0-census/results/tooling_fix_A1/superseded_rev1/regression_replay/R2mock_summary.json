@@ -1,0 +1,1417 @@
+{
+ "configs": {
+  "A": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 36
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant.c",
+     "ice": false,
+     "includes": 16,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx2.c",
+     "ice": false,
+     "includes": 26,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx512.c",
+     "ice": false,
+     "includes": 26,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant.c",
+     "ice": false,
+     "includes": 16,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx2.c",
+     "ice": false,
+     "includes": 26,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx512.c",
+     "ice": false,
+     "includes": 26,
+     "rc": 0
+    }
+   ],
+   "d1": {
+    "pass": 2
+   },
+   "d2": {
+    "match": 6,
+    "mismatch": 6
+   },
+   "gaps": {
+    "fp_trust_dep": 16
+   },
+   "loop_attribution": {
+    "exact": 150
+   },
+   "loops_attributed_through_inline_frame": 32,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "quant.c": {
+     "a1": [],
+     "a2": []
+    },
+    "quant_avx2.c": {
+     "a1": [],
+     "a2": []
+    },
+    "quant_avx512.c": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {},
+   "repro_identical": {
+    "quant.c": true,
+    "quant_avx2.c": true,
+    "quant_avx512.c": true
+   },
+   "tags": {
+    "lockstep": 88,
+    "peeled": 4,
+    "rotated": 10,
+    "software-pipelined": 52,
+    "spilled": 12
+   },
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 175,
+   "variants": {
+    "b1": 18,
+    "b2": 18
+   }
+  },
+  "A-ninja": {
+   "ab_compare": {
+    "identical": 36
+   },
+   "ab_compare_files": {
+    "quant.c": true,
+    "quant_avx2.c": true,
+    "quant_avx512.c": true
+   },
+   "attribution": {
+    "exact": 36
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant.c",
+     "ice": false,
+     "includes": 16,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx2.c",
+     "ice": false,
+     "includes": 26,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx512.c",
+     "ice": false,
+     "includes": 26,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant.c",
+     "ice": false,
+     "includes": 16,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx2.c",
+     "ice": false,
+     "includes": 26,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx512.c",
+     "ice": false,
+     "includes": 26,
+     "rc": 0
+    }
+   ],
+   "d1": {
+    "pass": 2
+   },
+   "d2": {
+    "match": 6,
+    "mismatch": 6
+   },
+   "gaps": {
+    "fp_trust_dep": 16
+   },
+   "loop_attribution": {
+    "exact": 150
+   },
+   "loops_attributed_through_inline_frame": 32,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "quant.c": {
+     "a1": [],
+     "a2": []
+    },
+    "quant_avx2.c": {
+     "a1": [],
+     "a2": []
+    },
+    "quant_avx512.c": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {},
+   "repro_identical": {
+    "quant.c": true,
+    "quant_avx2.c": true,
+    "quant_avx512.c": true
+   },
+   "tags": {
+    "lockstep": 88,
+    "peeled": 4,
+    "rotated": 10,
+    "software-pipelined": 52,
+    "spilled": 12
+   },
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 175,
+   "variants": {
+    "b1": 18,
+    "b2": 18
+   }
+  },
+  "B-cmake": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 24
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant.c",
+     "ice": false,
+     "includes": 25,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx2.c",
+     "ice": false,
+     "includes": 146,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [
+      [
+       "quant_avx512.c",
+       91,
+       "always_inline function '_mm512_dpbusd_epi32' requires target feature 'avx512vnni', but would be inlined into function 'm"
+      ]
+     ],
+     "file": "quant_avx512.c",
+     "ice": false,
+     "includes": 146,
+     "rc": 1
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant.c",
+     "ice": false,
+     "includes": 25,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx2.c",
+     "ice": false,
+     "includes": 146,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [
+      [
+       "quant_avx512.c",
+       91,
+       "always_inline function '_mm512_dpbusd_epi32' requires target feature 'avx512vnni', but would be inlined into function 'm"
+      ]
+     ],
+     "file": "quant_avx512.c",
+     "ice": false,
+     "includes": 146,
+     "rc": 1
+    }
+   ],
+   "d1": {
+    "pass": 2
+   },
+   "d2": {
+    "mismatch": 6
+   },
+   "gaps": {
+    "fp_trust_dep": 6
+   },
+   "loop_attribution": {
+    "exact": 196
+   },
+   "loops_attributed_through_inline_frame": 24,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "quant.c": {
+     "a1": [
+      "a1_ffp_contract_on"
+     ],
+     "a2": []
+    },
+    "quant_avx2.c": {
+     "a1": [
+      "a1_ffp_contract_on"
+     ],
+     "a2": []
+    },
+    "quant_avx512.c": {
+     "a1": [
+      "a1_ffp_contract_on"
+     ],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {},
+   "repro_identical": {
+    "quant.c": true,
+    "quant_avx2.c": true,
+    "quant_avx512.c": null
+   },
+   "tags": {
+    "auto-vectorised": 14,
+    "lockstep": 102,
+    "rotated": 24,
+    "software-pipelined": 38,
+    "spilled": 14,
+    "unrolled-u": 32
+   },
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 194,
+   "variants": {
+    "b1": 12,
+    "b2": 12
+   }
+  },
+  "B-proxy": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 36
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": null,
+     "errors": [],
+     "file": "quant.c",
+     "ice": false,
+     "includes": 25,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": null,
+     "errors": [],
+     "file": "quant_avx2.c",
+     "ice": false,
+     "includes": 146,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": null,
+     "errors": [],
+     "file": "quant_avx512.c",
+     "ice": false,
+     "includes": 146,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": null,
+     "errors": [],
+     "file": "quant.c",
+     "ice": false,
+     "includes": 25,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": null,
+     "errors": [],
+     "file": "quant_avx2.c",
+     "ice": false,
+     "includes": 146,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": null,
+     "errors": [],
+     "file": "quant_avx512.c",
+     "ice": false,
+     "includes": 146,
+     "rc": 0
+    }
+   ],
+   "d1": {
+    "pass": 2
+   },
+   "d2": {
+    "match": 6,
+    "mismatch": 6
+   },
+   "gaps": {
+    "fp_trust_dep": 16
+   },
+   "loop_attribution": {
+    "exact": 278
+   },
+   "loops_attributed_through_inline_frame": 30,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "quant.c": {
+     "a1": [],
+     "a2": []
+    },
+    "quant_avx2.c": {
+     "a1": [],
+     "a2": []
+    },
+    "quant_avx512.c": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {},
+   "repro_identical": {
+    "quant.c": true,
+    "quant_avx2.c": true,
+    "quant_avx512.c": true
+   },
+   "tags": {
+    "auto-vectorised": 14,
+    "lockstep": 170,
+    "rotated": 34,
+    "software-pipelined": 42,
+    "spilled": 14,
+    "unrolled-u": 32
+   },
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 231,
+   "variants": {
+    "b1": 18,
+    "b2": 18
+   }
+  },
+  "C": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 36
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant.c",
+     "ice": false,
+     "includes": 36,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx2.c",
+     "ice": false,
+     "includes": 153,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx512.c",
+     "ice": false,
+     "includes": 153,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant.c",
+     "ice": false,
+     "includes": 36,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx2.c",
+     "ice": false,
+     "includes": 153,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx512.c",
+     "ice": false,
+     "includes": 153,
+     "rc": 0
+    }
+   ],
+   "d1": {
+    "pass": 2
+   },
+   "d2": {
+    "match": 6,
+    "mismatch": 6
+   },
+   "gaps": {
+    "fp_trust_dep": 16
+   },
+   "loop_attribution": {
+    "exact": 114
+   },
+   "loops_attributed_through_inline_frame": 36,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "quant.c": {
+     "a1": [],
+     "a2": []
+    },
+    "quant_avx2.c": {
+     "a1": [],
+     "a2": []
+    },
+    "quant_avx512.c": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {},
+   "repro_identical": {
+    "quant.c": true,
+    "quant_avx2.c": true,
+    "quant_avx512.c": true
+   },
+   "tags": {
+    "auto-vectorised": 20,
+    "lockstep": 40,
+    "rotated": 8,
+    "software-pipelined": 54,
+    "spilled": 52,
+    "unrolled-u": 4
+   },
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 209,
+   "variants": {
+    "b1": 18,
+    "b2": 18
+   }
+  },
+  "D": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 36
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant.c",
+     "ice": false,
+     "includes": 42,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx2.c",
+     "ice": false,
+     "includes": 179,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx512.c",
+     "ice": false,
+     "includes": 179,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant.c",
+     "ice": false,
+     "includes": 42,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx2.c",
+     "ice": false,
+     "includes": 179,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "quant_avx512.c",
+     "ice": false,
+     "includes": 179,
+     "rc": 0
+    }
+   ],
+   "d1": {
+    "pass": 2
+   },
+   "d2": {
+    "match": 6,
+    "mismatch": 6
+   },
+   "gaps": {
+    "fp_trust_dep": 16
+   },
+   "loop_attribution": {
+    "exact": 282
+   },
+   "loops_attributed_through_inline_frame": 28,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "quant.c": {
+     "a1": [],
+     "a2": []
+    },
+    "quant_avx2.c": {
+     "a1": [],
+     "a2": []
+    },
+    "quant_avx512.c": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {},
+   "repro_identical": {
+    "quant.c": true,
+    "quant_avx2.c": true,
+    "quant_avx512.c": true
+   },
+   "tags": {
+    "auto-vectorised": 14,
+    "lockstep": 156,
+    "rotated": 34,
+    "software-pipelined": 56,
+    "spilled": 26,
+    "unrolled-u": 36
+   },
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 219,
+   "variants": {
+    "b1": 18,
+    "b2": 18
+   }
+  },
+  "P.A": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 12
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 17,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 17,
+     "rc": 0
+    }
+   ],
+   "d1": {},
+   "d2": {},
+   "gaps": {},
+   "loop_attribution": {},
+   "loops_attributed_through_inline_frame": 0,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "reduce_probe.c": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {
+    "x0_probe_reduce_add_epi32_mem|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32_mem|b2": "not_tracked",
+    "x0_probe_reduce_add_epi32|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32|b2": "not_tracked",
+    "x0_probe_reduce_add_ps_mem|b1": "unchecked",
+    "x0_probe_reduce_add_ps_mem|b2": "unchecked",
+    "x0_probe_reduce_add_ps|b1": "unchecked",
+    "x0_probe_reduce_add_ps|b2": "unchecked",
+    "x0_probe_reduce_max_ps_mem|b1": "not_tracked",
+    "x0_probe_reduce_max_ps_mem|b2": "not_tracked",
+    "x0_probe_reduce_max_ps|b1": "not_tracked",
+    "x0_probe_reduce_max_ps|b2": "not_tracked"
+   },
+   "repro_identical": {
+    "reduce_probe.c": true
+   },
+   "tags": {},
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 18,
+   "variants": {
+    "b1": 6,
+    "b2": 6
+   }
+  },
+  "P.A-ninja": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 12
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 17,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 17,
+     "rc": 0
+    }
+   ],
+   "d1": {},
+   "d2": {},
+   "gaps": {},
+   "loop_attribution": {},
+   "loops_attributed_through_inline_frame": 0,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "reduce_probe.c": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {
+    "x0_probe_reduce_add_epi32_mem|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32_mem|b2": "not_tracked",
+    "x0_probe_reduce_add_epi32|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32|b2": "not_tracked",
+    "x0_probe_reduce_add_ps_mem|b1": "unchecked",
+    "x0_probe_reduce_add_ps_mem|b2": "unchecked",
+    "x0_probe_reduce_add_ps|b1": "unchecked",
+    "x0_probe_reduce_add_ps|b2": "unchecked",
+    "x0_probe_reduce_max_ps_mem|b1": "not_tracked",
+    "x0_probe_reduce_max_ps_mem|b2": "not_tracked",
+    "x0_probe_reduce_max_ps|b1": "not_tracked",
+    "x0_probe_reduce_max_ps|b2": "not_tracked"
+   },
+   "repro_identical": {
+    "reduce_probe.c": true
+   },
+   "tags": {},
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 18,
+   "variants": {
+    "b1": 6,
+    "b2": 6
+   }
+  },
+  "P.B-cmake": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 12
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 137,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 137,
+     "rc": 0
+    }
+   ],
+   "d1": {},
+   "d2": {},
+   "gaps": {},
+   "loop_attribution": {},
+   "loops_attributed_through_inline_frame": 0,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "reduce_probe.c": {
+     "a1": [
+      "a1_ffp_contract_on"
+     ],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {
+    "x0_probe_reduce_add_epi32_mem|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32_mem|b2": "not_tracked",
+    "x0_probe_reduce_add_epi32|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32|b2": "not_tracked",
+    "x0_probe_reduce_add_ps_mem|b1": "unchecked",
+    "x0_probe_reduce_add_ps_mem|b2": "unchecked",
+    "x0_probe_reduce_add_ps|b1": "unchecked",
+    "x0_probe_reduce_add_ps|b2": "unchecked",
+    "x0_probe_reduce_max_ps_mem|b1": "not_tracked",
+    "x0_probe_reduce_max_ps_mem|b2": "not_tracked",
+    "x0_probe_reduce_max_ps|b1": "not_tracked",
+    "x0_probe_reduce_max_ps|b2": "not_tracked"
+   },
+   "repro_identical": {
+    "reduce_probe.c": true
+   },
+   "tags": {},
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 20,
+   "variants": {
+    "b1": 6,
+    "b2": 6
+   }
+  },
+  "P.C": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 12
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 141,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 141,
+     "rc": 0
+    }
+   ],
+   "d1": {},
+   "d2": {},
+   "gaps": {},
+   "loop_attribution": {},
+   "loops_attributed_through_inline_frame": 0,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "reduce_probe.c": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {
+    "x0_probe_reduce_add_epi32_mem|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32_mem|b2": "not_tracked",
+    "x0_probe_reduce_add_epi32|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32|b2": "not_tracked",
+    "x0_probe_reduce_add_ps_mem|b1": "match",
+    "x0_probe_reduce_add_ps_mem|b2": "match",
+    "x0_probe_reduce_add_ps|b1": "match",
+    "x0_probe_reduce_add_ps|b2": "match",
+    "x0_probe_reduce_max_ps_mem|b1": "not_tracked",
+    "x0_probe_reduce_max_ps_mem|b2": "not_tracked",
+    "x0_probe_reduce_max_ps|b1": "not_tracked",
+    "x0_probe_reduce_max_ps|b2": "not_tracked"
+   },
+   "repro_identical": {
+    "reduce_probe.c": true
+   },
+   "tags": {},
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 22,
+   "variants": {
+    "b1": 6,
+    "b2": 6
+   }
+  },
+  "P.D": {
+   "ab_compare": {},
+   "ab_compare_files": {},
+   "attribution": {
+    "exact": 12
+   },
+   "builds": [
+    {
+     "argv_matches_frozen": true,
+     "build_index": 1,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 165,
+     "rc": 0
+    },
+    {
+     "argv_matches_frozen": true,
+     "build_index": 2,
+     "compiler_pin_match": true,
+     "errors": [],
+     "file": "reduce_probe.c",
+     "ice": false,
+     "includes": 165,
+     "rc": 0
+    }
+   ],
+   "d1": {},
+   "d2": {},
+   "gaps": {},
+   "loop_attribution": {},
+   "loops_attributed_through_inline_frame": 0,
+   "nonzero_steps": [],
+   "not_computed_tags": {},
+   "p3a": {
+    "reduce_probe.c": {
+     "a1": [],
+     "a2": []
+    }
+   },
+   "p3b": [],
+   "p3c_flagged": [],
+   "probe": {
+    "x0_probe_reduce_add_epi32_mem|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32_mem|b2": "not_tracked",
+    "x0_probe_reduce_add_epi32|b1": "not_tracked",
+    "x0_probe_reduce_add_epi32|b2": "not_tracked",
+    "x0_probe_reduce_add_ps_mem|b1": "unchecked",
+    "x0_probe_reduce_add_ps_mem|b2": "unchecked",
+    "x0_probe_reduce_add_ps|b1": "match",
+    "x0_probe_reduce_add_ps|b2": "match",
+    "x0_probe_reduce_max_ps_mem|b1": "not_tracked",
+    "x0_probe_reduce_max_ps_mem|b2": "not_tracked",
+    "x0_probe_reduce_max_ps|b1": "not_tracked",
+    "x0_probe_reduce_max_ps|b2": "not_tracked"
+   },
+   "repro_identical": {
+    "reduce_probe.c": true
+   },
+   "tags": {},
+   "twin_builds_rc": [
+    0
+   ],
+   "u_iforms": 23,
+   "variants": {
+    "b1": 6,
+    "b2": 6
+   }
+  }
+ },
+ "crossdecoder": {},
+ "metrics": {
+  "p2": {
+   "A": 0,
+   "B-cmake": 20,
+   "C": 0,
+   "D": 0
+  },
+  "p3": {
+   "A": {
+    "a_flagged_files": [],
+    "b": 0,
+    "c": 0,
+    "d1_not_pass": 0,
+    "d2_match": 6,
+    "d2_mismatch": 6,
+    "d2_unchecked": 0
+   },
+   "B-cmake": {
+    "a_flagged_files": [
+     "quant.c",
+     "quant_avx2.c",
+     "quant_avx512.c"
+    ],
+    "b": 0,
+    "c": 0,
+    "d1_not_pass": 0,
+    "d2_match": 0,
+    "d2_mismatch": 6,
+    "d2_unchecked": 0
+   },
+   "C": {
+    "a_flagged_files": [],
+    "b": 0,
+    "c": 0,
+    "d1_not_pass": 0,
+    "d2_match": 6,
+    "d2_mismatch": 6,
+    "d2_unchecked": 0
+   },
+   "D": {
+    "a_flagged_files": [],
+    "b": 0,
+    "c": 0,
+    "d1_not_pass": 0,
+    "d2_match": 6,
+    "d2_mismatch": 6,
+    "d2_unchecked": 0
+   }
+  },
+  "p4_u_all": 326,
+  "p5_iclass": 31,
+  "secondary": {
+   "fp_environment_iclasses_in_counted_sets": [],
+   "p5_opclass": 14,
+   "proxy_fidelity": {
+    "hx_kernels_scalar:act_quantize_q8|b1": {
+     "jaccard_iforms": 0.9206,
+     "tag_agreement": 1.0
+    },
+    "hx_kernels_scalar:act_quantize_q8|b2": {
+     "jaccard_iforms": 0.9206,
+     "tag_agreement": 1.0
+    },
+    "hx_kernels_scalar:matmul[BF16]|b1": {
+     "jaccard_iforms": 0.9886,
+     "tag_agreement": 1.0
+    },
+    "hx_kernels_scalar:matmul[BF16]|b2": {
+     "jaccard_iforms": 0.9886,
+     "tag_agreement": 1.0
+    },
+    "hx_kernels_scalar:matmul[F16]|b1": {
+     "jaccard_iforms": 0.9886,
+     "tag_agreement": 1.0
+    },
+    "hx_kernels_scalar:matmul[F16]|b2": {
+     "jaccard_iforms": 0.9886,
+     "tag_agreement": 1.0
+    },
+    "hx_kernels_scalar:matmul[F32]|b1": {
+     "jaccard_iforms": 0.9885,
+     "tag_agreement": 1.0
+    },
+    "hx_kernels_scalar:matmul[F32]|b2": {
+     "jaccard_iforms": 0.9885,
+     "tag_agreement": 1.0
+    },
+    "hx_kernels_scalar:matmul[Q4]|b1": {
+     "jaccard_iforms": 0.939,
+     "tag_agreement": 0.9091
+    },
+    "hx_kernels_scalar:matmul[Q4]|b2": {
+     "jaccard_iforms": 0.939,
+     "tag_agreement": 0.9091
+    },
+    "hx_kernels_scalar:matmul[Q8]|b1": {
+     "jaccard_iforms": 0.8919,
+     "tag_agreement": 1.0
+    },
+    "hx_kernels_scalar:matmul[Q8]|b2": {
+     "jaccard_iforms": 0.8919,
+     "tag_agreement": 1.0
+    },
+    "k_avx2:act_quantize_q8|b1": {
+     "jaccard_iforms": 0.9385,
+     "tag_agreement": 1.0
+    },
+    "k_avx2:act_quantize_q8|b2": {
+     "jaccard_iforms": 0.9385,
+     "tag_agreement": 1.0
+    },
+    "k_avx2:matmul[BF16]|b1": {
+     "jaccard_iforms": 0.9412,
+     "tag_agreement": 0.875
+    },
+    "k_avx2:matmul[BF16]|b2": {
+     "jaccard_iforms": 0.9412,
+     "tag_agreement": 0.875
+    },
+    "k_avx2:matmul[F16]|b1": {
+     "jaccard_iforms": 0.9403,
+     "tag_agreement": 0.875
+    },
+    "k_avx2:matmul[F16]|b2": {
+     "jaccard_iforms": 0.9403,
+     "tag_agreement": 0.875
+    },
+    "k_avx2:matmul[F32]|b1": {
+     "jaccard_iforms": 0.9254,
+     "tag_agreement": 0.875
+    },
+    "k_avx2:matmul[F32]|b2": {
+     "jaccard_iforms": 0.9254,
+     "tag_agreement": 0.875
+    },
+    "k_avx2:matmul[Q4]|b1": {
+     "jaccard_iforms": 0.9296,
+     "tag_agreement": 0.9231
+    },
+    "k_avx2:matmul[Q4]|b2": {
+     "jaccard_iforms": 0.9296,
+     "tag_agreement": 0.9231
+    },
+    "k_avx2:matmul[Q8]|b1": {
+     "jaccard_iforms": 0.9296,
+     "tag_agreement": 0.9231
+    },
+    "k_avx2:matmul[Q8]|b2": {
+     "jaccard_iforms": 0.9296,
+     "tag_agreement": 0.9231
+    },
+    "k_avx512:act_quantize_q8|b1": {
+     "jaccard_iforms": 0.6038,
+     "tag_agreement": 1.0
+    },
+    "k_avx512:act_quantize_q8|b2": {
+     "jaccard_iforms": 0.6038,
+     "tag_agreement": 1.0
+    },
+    "k_avx512:matmul[BF16]|b1": {
+     "jaccard_iforms": 0.9437,
+     "tag_agreement": 0.875
+    },
+    "k_avx512:matmul[BF16]|b2": {
+     "jaccard_iforms": 0.9437,
+     "tag_agreement": 0.875
+    },
+    "k_avx512:matmul[F16]|b1": {
+     "jaccard_iforms": 0.942,
+     "tag_agreement": 0.8889
+    },
+    "k_avx512:matmul[F16]|b2": {
+     "jaccard_iforms": 0.942,
+     "tag_agreement": 0.8889
+    },
+    "k_avx512:matmul[F32]|b1": {
+     "jaccard_iforms": 0.942,
+     "tag_agreement": 0.8889
+    },
+    "k_avx512:matmul[F32]|b2": {
+     "jaccard_iforms": 0.942,
+     "tag_agreement": 0.8889
+    },
+    "k_avx512:matmul[Q4]|b1": {
+     "jaccard_iforms": 0.8974,
+     "tag_agreement": 0.6
+    },
+    "k_avx512:matmul[Q4]|b2": {
+     "jaccard_iforms": 0.8974,
+     "tag_agreement": 0.6
+    },
+    "k_avx512:matmul[Q8]|b1": {
+     "jaccard_iforms": 0.8974,
+     "tag_agreement": 0.6
+    },
+    "k_avx512:matmul[Q8]|b2": {
+     "jaccard_iforms": 0.8974,
+     "tag_agreement": 0.6
+    }
+   },
+   "u_all_S": 212,
+   "u_all_simd": 235,
+   "u_all_simd_S": 147,
+   "u_release": 283
+  }
+ },
+ "note": "x0final runbook step 88: NON-Hearth inputs only; X0-census-smoke",
+ "record": {
+  "id": "X0-census-smoke",
+  "mock": true,
+  "profile": "hearth"
+ },
+ "run_id": "smoke-20261023T160256Z",
+ "schema_violations": [],
+ "verdicts": {
+  "verdict.json": {
+   "amber_a": {
+    "holds": null,
+    "p5_iclass": null,
+    "two_t_forms": null,
+    "u_all": null
+   },
+   "amber_b": [],
+   "amber_c": 0,
+   "non_gate": [],
+   "notes": [
+    "smoke record (record.id X0-census-smoke, NON-Hearth): no freeze commit is required"
+   ],
+   "outcomes": [
+    "tooling_failure"
+   ],
+   "v1_config_gaps": 0,
+   "v1_tooling_gaps": 0,
+   "v4": [],
+   "validity": {
+    "v1": true,
+    "v2": true,
+    "v3": false,
+    "v4": true
+   }
+  },
+  "verdict_synthetic_rederivation.json": {
+   "amber_a": {
+    "holds": true,
+    "p5_iclass": 31,
+    "two_t_forms": 204,
+    "u_all": 326
+   },
+   "amber_b": [
+    {
+     "config": "A",
+     "p2": 0,
+     "p3a": []
+    },
+    {
+     "config": "B-cmake",
+     "p2": 20,
+     "p3a": [
+      "quant.c",
+      "quant_avx2.c",
+      "quant_avx512.c"
+     ]
+    },
+    {
+     "config": "C",
+     "p2": 0,
+     "p3a": []
+    },
+    {
+     "config": "D",
+     "p2": 0,
+     "p3a": []
+    }
+   ],
+   "amber_c": 32,
+   "non_gate": [
+    "N1 B-cmake",
+    "N1 C",
+    "N2 B-cmake"
+   ],
+   "notes": [
+    "NON-Hearth smoke run judged by judge_regression.py: {\"profile\": \"judge.py constants (Hearth shape)\"}",
+    "SYNTHETIC REDERIVATION: V3 forced true to exercise the rows; not a census result",
+    "smoke record (record.id X0-census-smoke, NON-Hearth): no freeze commit is required"
+   ],
+   "outcomes": [
+    "amber_a",
+    "amber_b",
+    "amber_c"
+   ],
+   "v1_config_gaps": 0,
+   "v1_tooling_gaps": 0,
+   "v4": [],
+   "validity": {
+    "v1": true,
+    "v2": true,
+    "v3": true,
+    "v4": true
+   }
+  }
+ }
+}

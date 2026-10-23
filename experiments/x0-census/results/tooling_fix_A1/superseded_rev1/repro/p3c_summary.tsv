@@ -1,0 +1,11 @@
+config	build	variants	loops	flagged_loops_before	flagged_loops_after	flagged_variants_before	flagged_variants_after	unscreened_loops_after
+A-ninja	b1	6	32	0	0	0	0	0
+A-ninja	b2	6	32	0	0	0	0	0
+A	b1	6	32	0	0	0	0	0
+A	b2	6	32	0	0	0	0	0
+B-cmake	b1	6	34	2	0	1	0	2
+B-cmake	b2	6	34	2	0	1	0	2
+C	b1	6	20	6	0	3	0	10
+C	b2	6	20	6	0	3	0	10
+D	b1	6	26	8	0	4	0	8
+D	b2	6	26	8	0	4	0	8

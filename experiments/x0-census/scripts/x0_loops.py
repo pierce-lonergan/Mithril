@@ -14,7 +14,11 @@ Definitions (record §4.7), per dispatched variant:
     internal or interposable call target) is a root; dominators are computed from each root
     (Cooper-Harvey-Kennedy). A natural loop is a back edge t->h with h dominating t; loops sharing a header merge.
   * Registers: XMMn/YMMn/ZMMn are one register Vn; GPR sub-registers map to the 64-bit name; flags are ignored.
-    A memory operand [RSP+d] or [RBP+d] with no index register is a stack slot treated as a register. A call
+    A memory operand [RSP+d] or [RBP+d] with no index register is a stack slot treated as a register, unless its
+    address escapes (Amendment X0-A1, a post-data operational definition of record §4.7's "non-escaping": FrameInfo).
+    Under X0-A1 such a slot is plain memory for the P3(c) quantity only (acc_lanes_emitted, partial_results,
+    partial_result_cycles); every other loop field keeps the frozen reading, and a loop whose count or partial results
+    differ between the two readings is listed as `unscreened`, with its frozen count. A call
     defines (clobbers) the caller-saved registers of the object's ABI (SysV for ELF, Win64 for COFF; x0final).
     A dependency-breaking idiom (XOR/SUB r,r; (V)XORPS/PD, (V)PXOR[D/Q], (V)PSUB*, (V)PCMPGT*, (V)PCMPEQ* x,x without
     memory, immediate or mask operands) reads no register (pre-freeze tooling fix of the desktop re-run, 2026-10-17).
@@ -152,8 +156,11 @@ def parse_mem(txt):
     return base, index, disp
 
 
-def operands(ins):
-    """[(kind, name, action)] with kind reg|mem; name is the normalised register or the stack-slot key."""
+def operands(ins, model_escaping=True):
+    """[(kind, name, action)] with kind reg|mem; name is the normalised register or the stack-slot key. A stack slot
+    whose address escapes (ESCAPING; Amendment X0-A1, record §4.7 "constant-offset, non-escaping") is plain memory
+    (name None) unless model_escaping is False (the descriptive spilled tag counts every stack access). ESCAPING is
+    non-empty only while analyse_loop computes the X0-A1 reading of the P3(c) quantity."""
     f, out = ins.get("fields", {}), []
     for op in ins.get("operands", []):
         p = op.split("/")
@@ -166,8 +173,10 @@ def operands(ins):
             base, idx, disp = parse_mem(f.get(nm) or f.get("AGEN") or "")
             nb, ni = norm_reg(base), norm_reg(idx)
             if nm.startswith("MEM"):
-                if nb in ("RSP", "RBP") and not ni and nb not in MOVING_BASES["now"]:
-                    out.append(("mem", "STK:%s:%d" % (nb, disp), act))
+                key = "STK:%s:%d" % (nb, disp)
+                if nb in ("RSP", "RBP") and not ni and nb not in MOVING_BASES["now"] and \
+                        not (model_escaping and key in ESCAPING["now"]):
+                    out.append(("mem", key, act))
                 else:
                     out.append(("mem", None, act))
             for r in (nb, ni):
@@ -373,6 +382,9 @@ def natural_loops(root, succ):
 # through Y[r] looked like a carried 1-lane accumulator (a false P3(c) flag).
 MOVING_BASES = {"now": set()}
 STACK_OPS = ("PUSH", "POP", "CALL", "RET")
+# Stack-slot keys of the current loop whose address escapes (Amendment X0-A1; FrameInfo below): operands() reports them
+# as plain memory, so they are never a location of the accumulator data flow.
+ESCAPING = {"now": frozenset()}
 
 
 def moving_bases(body, insts):
@@ -506,12 +518,465 @@ def sccs(nodes, edges):
     return sorted(out)
 
 
-def analyse_loop(lp, insts, succ, preds):
+# ------------------------------------------------------------------------------------------------ escaping stack slots
+# Amendment X0-A1 (2026-10-23; post-data tooling fix, no threshold or configuration change). Record §4.7 admits as an
+# accumulator location "a register, or a constant-offset, non-escaping stack slot treated as a register (04 §7.2 step
+# 4)". The script frozen at 152fa33 treated EVERY [RSP+d] / [RBP+d] operand without an index as such a slot and never
+# tested "non-escaping", a word the record does not define. FrameInfo is X0-A1's post-data OPERATIONAL DEFINITION of it
+# (address-taken, flow-insensitive within the loop's reach, whole-frame on unbounded uses, call arguments conservative;
+# each choice errs towards escape, which removes counted lanes, the direction favourable to Pass, so every loop whose
+# P3(c) quantity changes is listed `unscreened` with its frozen count). A slot is escaping when its address is taken,
+# i.e. a stack address is materialised in a register (LEA r,[RSP|RBP+...], MOV r,RSP|RBP and pointers derived from
+# them) and that pointer may reach the slot:
+#   * a stack address is an interval of offsets from an anchor: the function's entry RSP, or the result of an AND that
+#     aligns a stack address (AND RSP,-64; MSVC's and rbp,-32), whose own interval from the entry RSP is the aligned
+#     value's widened by 2^k - 1. PUSH/POP, SUB/ADD/LEA/AND/MOV of RSP and LEAVE move RSP; a call leaves it unchanged and
+#     clobbers the caller-saved registers of the ABI;
+#   * a pointer register is followed through MOV copies, LEA, ADD/SUB with an immediate (exact) or a register (offset
+#     unknown) and AND with an immediate (a new anchor); XOR with a stack address (the /GS cookie) gives a non-pointer;
+#     CMP and TEST only read it; at a join the intervals are merged, and a node whose state keeps changing is widened;
+#   * an access [p+d] through a pointer p (not RSP or RBP, which are the slot model's own bases) is an EXACT use: the
+#     slots whose bytes it may overlap escape (operand widths from the instruction's "byte/word/dword/qword/xmmword/
+#     ymmword/zmmword ptr", else XED's width code, else its widest register, else 64);
+#   * any other use of the pointer is UNBOUNDED, because the object's extent is unknown to the census: an indexed access
+#     [p+i*s+d], a string instruction (REP STOS/MOVS ... through RDI/RSI), a store of the pointer (MOV [m],p; PUSH p), a
+#     pointer in an argument register at a call or in RAX at a return, any other instruction reading it. An unbounded use
+#     of a pointer that may point below the entry RSP makes every slot of the function's frame escape; one that points at
+#     or above it (the return address, stack arguments, home space; GCC's realignment pointer lea r10,[rsp+8]) makes the
+#     slots there escape;
+#   * an event counts for a loop only when the loop's header is reachable from it in the function's CFG (an event in the
+#     loop, before it, or in an enclosing loop); an event that only follows the loop (an epilogue call) cannot reach a
+#     slot while the loop runs (review of 2026-10-23: more screening, the unfavourable direction);
+#   * the X0-A1 reading changes only the P3(c) quantity (acc_lanes_emitted, partial_results, partial_result_cycles);
+#     every other loop field keeps the frozen reading. A loop whose count or partial results (escaping slot keys
+#     aside) differ between the two readings is reported "unscreened" with the frozen count
+#     (acc_lanes_if_escaping_slots_were_registers) and the partial results behind the difference, never silently
+#     cleared; this covers a register accumulator spilled and reloaded through an escaping slot inside one
+#     iteration, whose slot is never itself a partial result (review of 2026-10-23). Each variant lists its
+#     unscreened loops (p3c_unscreened) and the loops the frozen reading flags (p3c_frozen_reading), so that the
+#     verdict can be computed both ways (judge.py "both_ways").
+# Not changed (residual, as in the frozen script): a direct indexed access [RSP+i*s+d] takes no address and is not
+# modelled as aliasing a slot; [RBP+d] slots keep the frozen x0final precision when RBP holds no stack address;
+# accumulation through a pointer into a stack array (e.g. vaddps x,x,[rdx-0x10]) is not a location under either reading.
+STRING_RE = re.compile(r"^(REP_|REPE_|REPNE_)?(STOS|MOVS|CMPS|SCAS|LODS)[BWDQ]?$")
+ARG_REGS = {"elf": {"RDI", "RSI", "RDX", "RCX", "R8", "R9"}, "coff": {"RCX", "RDX", "R8", "R9"}}
+NO_ACCESS = ("NOP", "PREFETCH")   # iclasses whose memory operand is not an access (nop word ptr [rax+rax*1])
+FRAME_WIDEN_AFTER = 4          # updates of one node's state before a still-changing interval is widened
+INF = float("inf")
+PTR_WIDTH = {"byte": 1, "word": 2, "dword": 4, "qword": 8, "tbyte": 10, "xmmword": 16, "ymmword": 32, "zmmword": 64}
+XED_WIDTH = {"B": 1, "W": 2, "D": 4, "Q": 8, "DQ": 16, "QQ": 32, "ZD": 64, "SS": 4, "SD": 8, "PS": 16, "PD": 16,
+             "XUD": 16, "SPW": 8}
+
+
+def _family(ins):
+    """The function an instruction belongs to; a GCC cold part (foo.cold) shares its parent's frame."""
+    return re.sub(r"\.cold(\.\d+)?$", "", ins.get("function") or "")
+
+
+def _access_width(ins):
+    """Bytes the explicit memory operand of ins covers: the size keyword of XED's disassembly, else the operand's XED
+    width code, else the widest register operand (zmm 64, ymm 32, xmm 16, GPR 8), else 64 (conservative)."""
+    m = re.search(r"\b(byte|word|dword|qword|tbyte|xmmword|ymmword|zmmword) ptr", ins.get("disasm") or "")
+    if m:
+        return PTR_WIDTH[m.group(1)]
+    for op in ins.get("operands", []):
+        p = op.split("/")
+        if p[0].startswith("MEM") and len(p) > 2 and p[2] in XED_WIDTH and "SUPPRESSED" not in op:
+            return XED_WIDTH[p[2]]
+    f, w = ins.get("fields", {}), 0
+    for op in ins.get("operands", []):
+        r = f.get(op.split("/")[0]) or ""
+        if r.startswith("ZMM"):
+            w = max(w, 64)
+        elif r.startswith("YMM"):
+            w = max(w, 32)
+        elif r.startswith("XMM"):
+            w = max(w, 16)
+        elif norm_reg(r) in GPR64.values():
+            w = max(w, 8)
+    return w or 64
+
+
+def _imm_value(f, nm):
+    """An immediate operand's value; XED gives the encoded bits (IMM0 '0xc0', IMM_WIDTH 8, IMM0SIGNED for and rsp,-64),
+    so a signed immediate is sign-extended from its width."""
+    v = f.get(nm)
+    if v is None:
+        return None
+    x = disp_value(v)
+    w = int(f.get("IMM_WIDTH") or 0)
+    if f.get(nm + "SIGNED") and w and 0 <= x < (1 << w) and x >= (1 << (w - 1)):
+        x -= 1 << w
+    return x
+
+
+class FrameInfo:
+    """Which stack slots of a variant's functions escape (Amendment X0-A1; see the comment above). One instance per
+    variant: info(family) runs a forward data-flow over the function family's instructions and returns its address-use
+    events; escaping(lp, keys) answers for the slot keys of one loop. A stack value is (anchor, lo, hi): offsets lo..hi
+    from the anchor, "E" (the entry RSP) or the node of an aligning AND; None is a stack address of unknown value."""
+
+    def __init__(self, insts, succ):
+        self.insts, self.succ, self.cache, self.anchors = insts, succ, {}, {}
+        self.fams = collections.defaultdict(list)
+        for n, i in insts.items():
+            self.fams[_family(i)].append(n)
+        self.called = {tuple(i["call"]) for i in insts.values() if i.get("call")}
+
+    # -- stack values
+    def to_e(self, v):
+        """The value as an interval of offsets from the entry RSP (None: unknown)."""
+        if v is None:
+            return None
+        a, lo, hi = v
+        if a == "E":
+            return (lo, hi)
+        b = self.anchors.get(a)
+        return (b[0] + lo, b[1] + hi) if b else (-INF, INF)
+
+    @staticmethod
+    def add(v, k):
+        return None if v is None else (v[0], v[1] + k, v[2] + k)
+
+    def hull(self, x, y):
+        if x is None or y is None:
+            return None
+        if x[0] == y[0]:
+            return (x[0], min(x[1], y[1]), max(x[2], y[2]))
+        ex, ey = self.to_e(x), self.to_e(y)
+        return ("E", min(ex[0], ey[0]), max(ex[1], ey[1]))
+
+    def widen(self, old, new):
+        if old is None or new is None:
+            return None
+        if old[0] != new[0]:
+            old, new = ("E",) + self.to_e(old), ("E",) + self.to_e(new)
+        return (new[0], old[1] if new[1] >= old[1] else -INF, old[2] if new[2] <= old[2] else INF)
+
+    def align(self, n, v, imm):
+        """v AND imm: a new anchor at node n when imm is -2^k, else an unknown stack value."""
+        if imm is None or imm >= 0 or (-imm) & (-imm - 1):
+            return None
+        e = self.to_e(v)
+        self.anchors[n] = (e[0] - (-imm - 1), e[1]) if e else (-INF, INF)
+        return (n, 0, 0)
+
+    def overlap(self, s, ws, a, wa):
+        """May [s, s+ws) and [a, a+wa) share a byte (s, a stack values)?"""
+        if s is None or a is None:
+            return True
+        if s[0] != a[0]:
+            s, a = ("E",) + self.to_e(s), ("E",) + self.to_e(a)
+        return s[1] < a[2] + wa and a[1] < s[2] + ws
+
+    # -- one instruction: (rsp, ptrs) -> (rsp, ptrs), with the events it raises
+    def _transfer(self, n, rsp, ptrs, events):
+        ins = self.insts[n]
+        ic, f = ins.get("iclass", ""), ins.get("fields", {})
+        if ic.startswith(NO_ACCESS):
+            return rsp, ptrs                   # a multi-byte NOP or a prefetch names memory but accesses no value
+        ptrs = dict(ptrs)
+        regs_r, regs_w, mems, agen, imm = [], [], [], None, None
+        for op in ins.get("operands", []):
+            p = op.split("/")
+            nm, act = p[0], (p[1] if len(p) > 1 else "")
+            if nm.startswith("REG"):
+                r = norm_reg(f.get(nm))
+                if r and r not in ("STACKPUSH", "STACKPOP"):
+                    if "R" in act or act == "CW":
+                        regs_r.append(r)
+                    if "W" in act:
+                        regs_w.append(r)
+            elif nm.startswith("MEM"):
+                b, i, d = parse_mem(f.get(nm) or "")
+                mems.append((norm_reg(b), norm_reg(i), d, act))
+            elif nm.startswith("AGEN"):
+                b, i, d = parse_mem(f.get(nm) or f.get("AGEN") or "")
+                agen = (norm_reg(b), norm_reg(i), d)
+            elif nm.startswith("IMM") and imm is None:
+                imm = _imm_value(f, nm)
+
+        def iv(r):                     # (True, stack value or None) for a stack pointer, (False, None) otherwise
+            if r == "RSP":
+                return True, rsp
+            if r in ptrs:
+                return True, ptrs[r]
+            return False, None
+
+        def event(kind, via, value, why):
+            events.append({"at": [n[0], n[1]], "kind": kind, "via": via, "value": value,
+                           "width": _access_width(ins), "iclass": ic, "why": why})
+
+        string_op = bool(STRING_RE.match(ic))
+        # memory operands: accesses through a tracked pointer (RSP and RBP are the slot model's own bases)
+        mem_regs = set()
+        for b, i, d, act in mems:
+            mem_regs |= {x for x in (b, i) if x}
+            bp, bv = iv(b) if b not in (None, "RSP", "RBP") else (False, None)
+            ip, iv_ = iv(i) if i else (False, None)
+            if string_op and (bp or (b == "RBP" and b in ptrs)):
+                event("unbounded", b, ptrs.get(b), "string instruction through a stack pointer")
+            elif bp and i:
+                event("unbounded", b, bv, "indexed access through a stack pointer")
+            elif ip:
+                event("unbounded", i, iv_, "stack pointer used as an index")
+            elif bp:
+                event("exact", b, self.add(bv, d), "access through a stack pointer")
+        # the instruction's own effect on RSP and on the tracked pointers
+        dst = regs_w[0] if regs_w else None
+        srcs = [r for r in regs_r if r not in mem_regs or ic == "LEA"]
+        handled = set()
+        new_rsp = rsp
+        if ic.startswith("PUSH"):
+            for r in regs_r:
+                ok, v = iv(r)
+                if ok and r != "RSP":
+                    event("unbounded", r, v, "stack pointer stored by PUSH")
+            new_rsp = self.add(rsp, -8)
+            handled |= set(regs_r) | {"RSP"}
+        elif ic.startswith("POP"):
+            new_rsp = self.add(rsp, 8)
+            handled |= {"RSP"}
+        elif ic == "LEAVE":
+            ok, v = iv("RBP")
+            new_rsp = self.add(v, 8) if ok else None
+            ptrs.pop("RBP", None)
+            handled |= {"RSP", "RBP"}
+        elif ic.startswith("CALL"):
+            for r in sorted(ARG_REGS[ABI["current"]]):
+                if r in ptrs:
+                    event("unbounded", r, ptrs[r], "stack pointer in an argument register at a call")
+            for r in CALL_CLOBBERS[ABI["current"]]:
+                ptrs.pop(r, None)
+            handled |= set(regs_r) | set(regs_w) | {"RSP"}
+        elif ic.startswith("RET"):
+            if "RAX" in ptrs:
+                event("unbounded", "RAX", ptrs["RAX"], "stack pointer returned")
+            handled |= set(regs_r) | set(regs_w) | {"RSP"}
+        elif ic == "LEA" and agen and dst:
+            b, i, d = agen
+            bp, bv = iv(b) if b else (False, None)
+            ip, _ = iv(i) if i else (False, None)
+            if bp or ip:
+                val = self.add(bv, d) if (bp and not i) else None
+                if dst == "RSP":
+                    new_rsp = val
+                else:
+                    ptrs[dst] = val
+            elif dst == "RSP":
+                new_rsp = None
+            else:
+                ptrs.pop(dst, None)
+            handled |= {dst} | {x for x in (b, i) if x}
+        elif ic in ("MOV", "MOVSXD") and dst and len(srcs) == 1 and not mems:
+            ok, v = iv(srcs[0])
+            if dst == "RSP":
+                new_rsp = v if ok else None
+            elif ok:
+                ptrs[dst] = v
+            else:
+                ptrs.pop(dst, None)
+            handled |= {dst, srcs[0]}
+        elif ic in ("ADD", "SUB", "AND") and dst:
+            others = [r for r in srcs if r != dst]
+            dok, dv = iv(dst)
+            sok = any(iv(r)[0] for r in others)
+            simple = imm is not None and not others and not mems
+            if ic == "AND" and dok and simple:
+                val = self.align(n, dv, imm)
+            elif ic in ("ADD", "SUB") and dok and simple:
+                val = self.add(dv, imm if ic == "ADD" else -imm)
+            elif dok and not (ic == "SUB" and sok):
+                val = None                     # a stack address plus an unknown integer (or aligned unknownly)
+            elif ic == "ADD" and sok:
+                val = None
+            else:
+                val = "not a pointer"
+            if dst == "RSP":
+                new_rsp = None if val == "not a pointer" else val
+            elif val == "not a pointer":
+                ptrs.pop(dst, None)
+            else:
+                ptrs[dst] = val
+            handled |= {dst} | set(others)
+        elif ic == "XOR" and dst:
+            ptrs.pop(dst, None)               # x ^ stack address (the MSVC /GS cookie) is not a pointer
+            handled |= set(srcs) | {dst}
+        elif ic in ("CMP", "TEST"):
+            handled |= set(srcs)
+        # any other read of a tracked pointer is an unbounded use; any other write ends the tracking
+        for r in srcs:
+            if r in handled or r == "RSP" or r in mem_regs:
+                continue
+            ok, v = iv(r)
+            if ok:
+                event("unbounded", r, v, "stack pointer read by %s" % ic)
+        if string_op:
+            for r in ("RDI", "RSI"):
+                if r in ptrs:
+                    ptrs[r] = None             # advanced by an unknown count, still a stack pointer
+                    handled.add(r)
+        for r in regs_w:
+            if r in handled:
+                continue
+            if r == "RSP":
+                new_rsp = None
+            else:
+                ptrs.pop(r, None)
+        return new_rsp, ptrs
+
+    def _join(self, states):
+        rsp, ptrs = states[0][0], dict(states[0][1])
+        for r2, p2 in states[1:]:
+            rsp = self.hull(rsp, r2)
+            for k in set(ptrs) | set(p2):
+                if k in ptrs and k in p2:
+                    ptrs[k] = self.hull(ptrs[k], p2[k])
+                elif k in p2:
+                    ptrs[k] = p2[k]            # a stack pointer on some path: kept (may-analysis)
+        return rsp, ptrs
+
+    def info(self, fam):
+        if fam in self.cache:
+            return self.cache[fam]
+        nodes = set(self.fams.get(fam, []))
+        preds = collections.defaultdict(list)
+        for n in sorted(nodes):
+            for s in self.succ.get(n, []):
+                s = tuple(s)
+                if s in nodes:
+                    preds[s].append(n)
+        entries = sorted(n for n in nodes if self.insts[n].get("entry") or n in self.called)
+        if not entries and nodes and not any(i.get("entry") is not None for i in self.insts.values()):
+            entries = [min(nodes)]            # synthetic streams without entry flags: the first instruction
+        init = {n: (("E", 0, 0), {}) for n in entries}
+        for n in nodes:
+            if not preds.get(n) and n not in init:
+                init[n] = (None, {})          # reached by no recorded edge: RSP unknown
+        state_in, state_out, updates = {}, {}, collections.Counter()
+        work = collections.deque(sorted(init))
+        while work:
+            n = work.popleft()
+            ins_states = [state_out[p] for p in preds.get(n, []) if p in state_out]
+            if n in init:
+                ins_states.append(init[n])
+            if not ins_states:
+                continue
+            rsp, ptrs = self._join(ins_states)
+            old = state_in.get(n)
+            if old is not None and updates[n] >= FRAME_WIDEN_AFTER:
+                rsp = self.widen(old[0], rsp) if old[0] != rsp else rsp
+                ptrs = {k: (v if old[1].get(k, "absent") == v else
+                            (self.widen(old[1][k], v) if k in old[1] else None)) for k, v in ptrs.items()}
+            if old == (rsp, ptrs):
+                continue
+            updates[n] += 1
+            state_in[n] = (rsp, ptrs)
+            out = self._transfer(n, rsp, ptrs, [])
+            if state_out.get(n) != out:
+                state_out[n] = out
+                for s in self.succ.get(n, []):
+                    s = tuple(s)
+                    if s in nodes and s not in work:
+                        work.append(s)
+        events = []
+        for n in sorted(state_in):
+            self._transfer(n, state_in[n][0], state_in[n][1], events)
+        res = {"state_in": state_in, "events": events, "preds": preds, "reaching": {}}
+        self.cache[fam] = res
+        return res
+
+    @staticmethod
+    def reaching(fi, hdr):
+        """The family's nodes from which hdr is reachable along recorded edges (hdr included): the loop body, what
+        precedes the loop, and enclosing loops; not what only follows it."""
+        if hdr not in fi["reaching"]:
+            seen, work = {hdr}, [hdr]
+            while work:
+                for p in fi["preds"].get(work.pop(), []):
+                    if p not in seen:
+                        seen.add(p)
+                        work.append(p)
+            fi["reaching"][hdr] = seen
+        return fi["reaching"][hdr]
+
+    def escaping(self, lp, keys):
+        """The subset of the loop's slot keys (STK:RSP:d / STK:RBP:d) whose address escapes, and the events behind it.
+        Only events from which the loop's header is reachable count (review of 2026-10-23)."""
+        hdr = lp["header"]
+        fi = self.info(_family(self.insts[hdr]))
+        if not keys or not fi["events"]:
+            return set(), []
+        reach = self.reaching(fi, tuple(hdr))
+        events = [e for e in fi["events"] if tuple(e["at"]) in reach or tuple(e["at"]) in lp["body"]]
+        if not events:
+            return set(), []
+        rsp, ptrs = fi["state_in"].get(hdr, (None, {}))
+        widths = collections.defaultdict(int)
+        for n in lp["body"]:
+            for k, nm, a in operands(self.insts[n], model_escaping=False):
+                if nm in keys:
+                    widths[nm] = max(widths[nm], _access_width(self.insts[n]))
+        out, why = set(), []
+        for key in sorted(keys):
+            _, base, d = key.split(":")
+            if base == "RBP" and "RBP" not in ptrs:
+                continue                       # RBP holds no stack address here: the frozen [RBP+d] rule stands
+            slot = self.add(rsp if base == "RSP" else ptrs["RBP"], int(d))
+            w = widths.get(key) or 64
+            for e in events:
+                if e["kind"] == "unbounded":
+                    ev, se = self.to_e(e["value"]), self.to_e(slot)
+                    hit = ev is None or ev[0] < 0 or se is None or se[1] + w > 0
+                else:
+                    hit = self.overlap(slot, w, e["value"], e["width"])
+                if hit:
+                    out.add(key)
+                    why.append("%s <- %s %s via %s at %x:%x (%s)" % (key, e["kind"], e["iclass"], e["via"],
+                                                                     e["at"][0], e["at"][1], e["why"]))
+                    break
+        return out, why
+
+
+A1_FIELDS = ("acc_lanes_emitted", "partial_results", "partial_result_cycles")   # the P3(c) quantity under X0-A1
+
+
+def analyse_loop(lp, insts, succ, preds, frame_info=None):
+    """Record §4.7 for one natural loop. Amendment X0-A1: every field is computed on the frozen reading (every
+    constant-offset stack slot a register-like location) except the P3(c) quantity A1_FIELDS, which treats the slots
+    whose address escapes (FrameInfo) as plain memory. A loop whose count or partial results differ between the two
+    readings (escaping slot keys aside) is `unscreened`: part of its accumulation passes through stack memory that P3(c)
+    under X0-A1 does not model, and its frozen count is reported (acc_lanes_if_escaping_slots_were_registers)."""
     MOVING_BASES["now"] = moving_bases(lp["body"], insts)
     try:
-        return _analyse_loop(lp, insts, succ, preds)
+        keys = {nm for n in lp["body"] for k, nm, a in operands(insts[n], model_escaping=False)
+                if k == "mem" and nm and nm.startswith("STK")}
+        esc, why = (frame_info or FrameInfo(insts, succ)).escaping(lp, keys)
+        ESCAPING["now"] = frozenset()
+        info = _analyse_loop(lp, insts, succ, preds)            # the frozen reading: every field
+        info["escaping_slots"] = sorted(esc)
+        info["unscreened"] = False
+        if esc:
+            ESCAPING["now"] = frozenset(esc)
+            a1 = _analyse_loop(lp, insts, succ, preds)          # X0-A1: escaping slots are plain memory
+            frozen_lanes, frozen_pr = info["acc_lanes_emitted"], info["partial_results"]
+            for k in A1_FIELDS:
+                info[k] = a1[k]
+            info["escape_events"] = why[:16]
+            rest = sorted(g for g in ([x for x in g0 if x not in esc] for g0 in frozen_pr) if g)
+            if frozen_lanes != a1["acc_lanes_emitted"] or rest != sorted(a1["partial_results"]):
+                info["unscreened"] = True
+                info["unscreened_reason"] = ("partial result(s) held in, or passing through, stack slots whose address "
+                                             "escapes: not register-like locations under record §4.7 as Amendment "
+                                             "X0-A1 reads it, so P3(c) does not screen them; the frozen reading "
+                                             "counted %d lanes" % frozen_lanes)
+                info["escaping_partial_results"] = [g for g in frozen_pr
+                                                    if any(x in esc for x in g) or g not in a1["partial_results"]]
+                info["acc_lanes_if_escaping_slots_were_registers"] = frozen_lanes
+        return info
     finally:
         MOVING_BASES["now"] = set()
+        ESCAPING["now"] = frozenset()
 
 
 def _analyse_loop(lp, insts, succ, preds):
@@ -760,10 +1225,11 @@ def _analyse_loop(lp, insts, succ, preds):
                                            for n in body)]
     if pipelined:
         tags.append("software-pipelined")
-    vstk = [n for n in body if any(k == "mem" and nm and nm.startswith("STK") for k, nm, a in operands(insts[n]))
+    vstk = [n for n in body if any(k == "mem" and nm and nm.startswith("STK")
+                                   for k, nm, a in operands(insts[n], model_escaping=False))
             and any(r.startswith("V") for r in (ud[n][0] | ud[n][1]))]
-    if any(any(k == "mem" and nm and "W" in a for k, nm, a in operands(insts[n])) for n in vstk) and \
-            any(any(k == "mem" and nm and "R" in a for k, nm, a in operands(insts[n])) for n in vstk):
+    if any(any(k == "mem" and nm and "W" in a for k, nm, a in operands(insts[n], model_escaping=False)) for n in vstk) and \
+            any(any(k == "mem" and nm and "R" in a for k, nm, a in operands(insts[n], model_escaping=False)) for n in vstk):
         tags.append("spilled")
     hdr = lp["header"]
     latch_cond = all(insts[t].get("iclass", "").startswith("J") and insts[t].get("iclass") != "JMP" and
@@ -1489,7 +1955,8 @@ def main():
         status, why, ad = attr.status(v)
         rec = {"config": v["config"], "table": v["table"], "slot": v["slot"], "loop_variant": lvar, "loops": [],
                "attribution": status, "attribution_detail": why,
-               "p3": {"c": [], "d1": None, "d2": []}, "key_is_canary": key in canaries, "sequences": []}
+               "p3": {"c": [], "d1": None, "d2": []}, "key_is_canary": key in canaries, "sequences": [],
+               "p3c_unscreened": [], "p3c_frozen_reading": []}
         if key in canaries:
             rec["p3"]["d1"] = "not_evaluated"      # replaced below; anything but "pass" flags the variant (judge.py)
         if not insts:
@@ -1508,13 +1975,14 @@ def main():
         bound = max([int(r["source_lanes"]) for r in by_var.get(lvar, [])] or [0])
         seen_headers = set()
         lps, pending = [], []
+        frame_info = FrameInfo(insts, succ)      # Amendment X0-A1: escaping stack slots, per function of the closure
         for root in roots:
             loops, preds = natural_loops(root, succ)
             for lp in loops:
                 if lp["header"] in seen_headers:
                     continue
                 seen_headers.add(lp["header"])
-                info = analyse_loop(lp, insts, succ, preds)
+                info = analyse_loop(lp, insts, succ, preds, frame_info)
                 hdr = tuple(info["header"])
                 info["id"] = "L%d_%x" % hdr
                 where = frames = None
@@ -1606,6 +2074,12 @@ def main():
             info["_body"] = lp["body"]
             if info["acc_lanes_emitted"] > limit:
                 rec["p3"]["c"].append(info["id"])
+            if info["unscreened"]:
+                rec["p3c_unscreened"].append(info["id"])
+            # Amendment X0-A1: P3(c) under the reading frozen at 152fa33 (every constant-offset stack slot a
+            # register-like location), so that judge.py can report the verdict both ways (record §10)
+            if info.get("acc_lanes_if_escaping_slots_were_registers", info["acc_lanes_emitted"]) > limit:
+                rec["p3c_frozen_reading"].append(info["id"])
             lps.append(info)
         interchange_tags(lps)
         for lp in lps:
@@ -1657,6 +2131,10 @@ def main():
     print(json.dumps({"variants": len(out), "loops": sum(len(r["loops"]) for r in out),
                       "attribution": collections.Counter(r["attribution"] for r in out),
                       "p3c_flagged": flagged,
+                      "p3c_unscreened": [(r["config"], r["table"], r["slot"], r["p3c_unscreened"]) for r in out
+                                         if r["p3c_unscreened"]],
+                      "p3c_frozen_reading": [(r["config"], r["table"], r["slot"], r["p3c_frozen_reading"]) for r in out
+                                             if r["p3c_frozen_reading"]],
                       "d1": {"%s:%s" % (r["table"], r["slot"]): r["p3"]["d1"] for r in out if r["key_is_canary"]},
                       "d2": collections.Counter(s["result"] for r in out for s in r["p3"]["d2"]),
                       "canary_keys_matching_no_variant": missing_canaries,

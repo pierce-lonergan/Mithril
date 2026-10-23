@@ -30,7 +30,11 @@ What it computes itself (everything else is copied from the stage outputs, which
     symbol and every closure section of the A-ninja variant has an identical partner in A's object (paired by
     section name plus function symbols, as for the twin); `union_member` = (ab_compare == differs);
   * variants[].p3: a1/a2 from the configuration's P3(a) result for the variant's file; b = approximation
-    iclasses of the counted set (judge.py's list); c, d1, d2 from x0_loops.py;
+    iclasses of the counted set (judge.py's list); c, d1, d2 from x0_loops.py; Amendment X0-A1 (review of
+    2026-10-23): variants[].p3c_unscreened and variants[].p3c_frozen_reading from x0_loops.py (P3(c) under the
+    reading frozen at 152fa33; equal to p3.c for a loops.json written before X0-A1), metrics.x0_a1 (per
+    configuration, over every variant: unscreened loops and the P3(c) flags of both readings) and one note per
+    unscreened loop with both counts and its bound;
   * metrics: P1 (gap counts per configuration and cause), P2, P3 flags, P4 |U_all| and P5_iclass over the main
     union (A, B-cmake, C, D, and A-ninja variants with union_member) with judge.py's rules, and the secondary
     metrics that need no new tooling (|U_all^S| through xed_tables.tsv's iform extension, |U_all^SIMD|,
@@ -330,6 +334,11 @@ def main():
                     if lr is not None:
                         out["loops"] = lr.get("loops", [])
                         out["sequences"] = lr.get("sequences", [])
+                        # Amendment X0-A1 (review of 2026-10-23): the unscreened loops and P3(c) under the reading
+                        # frozen at 152fa33, so that judge.py reports the verdict both ways (record §10); a loops.json
+                        # written before X0-A1 has neither, and its p3.c is the frozen reading
+                        out["p3c_unscreened"] = list(lr.get("p3c_unscreened", []))
+                        out["p3c_frozen_reading"] = list(lr.get("p3c_frozen_reading", out["p3"]["c"]))
                         if "probe" in lr:                  # arm P: iclass sequence and lane pairing
                             out["probe"] = lr["probe"]
                         out["attribution"] = lr.get("attribution")
@@ -425,7 +434,22 @@ def main():
             p3[v["config"]]["d2_mismatch"] += any(s.get("result") == "mismatch" for s in q.get("d2") or [])
             p3[v["config"]]["d2_unchecked"] += sum(1 for s in q.get("d2") or [] if s.get("result") == "unchecked")
             p3[v["config"]]["d2_match"] += sum(1 for s in q.get("d2") or [] if s.get("result") == "match")
+    # Amendment X0-A1 (review of 2026-10-23): per configuration, over every variant (not only the union), the loops
+    # whose P3(c) quantity differs between the frozen and the X0-A1 reading, and the P3(c) flags of each reading
+    a1m = collections.defaultdict(collections.Counter)
+    for v in census["variants"]:
+        if "p3c_frozen_reading" not in v:
+            continue
+        m = a1m[v["config"]]
+        m["unscreened_loops"] += len(v.get("p3c_unscreened") or [])
+        m["unscreened_loops_flagged_only_by_the_frozen_reading"] += len(
+            set(v.get("p3c_frozen_reading") or []) - set((v.get("p3") or {}).get("c") or []))
+        m["p3c_flagged_loops"] += len((v.get("p3") or {}).get("c") or [])
+        m["p3c_flagged_loops_frozen_reading"] += len(v.get("p3c_frozen_reading") or [])
+        m["p3c_flagged_variants"] += bool((v.get("p3") or {}).get("c"))
+        m["p3c_flagged_variants_frozen_reading"] += bool(v.get("p3c_frozen_reading"))
     census["metrics"] = {
+        "x0_a1": {c: dict(x) for c, x in sorted(a1m.items())},
         "p1": {c: dict(x) for c, x in sorted(gaps.items())},
         "p2": dict(p2),
         "p3": {c: dict(x, a_flagged_files=sorted(f for f, r in (census["configs"].get(c, {}).get("p3a") or {}).items()
@@ -476,6 +500,18 @@ def main():
                                                           lp.get("id"), (lp.get("header_inline_stack") or ["?"])[0],
                                                           lp.get("bound_header"), (lp.get("latch_inline_stack") or ["?"])[0],
                                                           lp.get("bound_latch"), lp.get("bound_rule"), lp.get("bound_used")))
+    # Amendment X0-A1 (review of 2026-10-23): every unscreened loop, with both readings' counts and its bound
+    for v in census["variants"]:
+        for lp in v.get("loops") or []:
+            if lp.get("unscreened"):
+                fr = lp.get("acc_lanes_if_escaping_slots_were_registers")
+                census["notes"].append(
+                    "loop %s|%s:%s|b%d|%s: unscreened (Amendment X0-A1): %s lanes under X0-A1, %s under the frozen "
+                    "reading, bound used %s%s" % (v["config"], v["table"], v["slot"], v["build_index"], lp.get("id"),
+                                                  lp.get("acc_lanes_emitted"), fr, lp.get("bound_used"),
+                                                  "; a P3(c) flag under the frozen reading only"
+                                                  if lp.get("id") in (v.get("p3c_frozen_reading") or []) and
+                                                  lp.get("id") not in ((v.get("p3") or {}).get("c") or []) else ""))
     bad = schema_check(census)
     census["schema_check"] = {"violations": bad}
     with open(a.out, "w", encoding="utf-8") as f:

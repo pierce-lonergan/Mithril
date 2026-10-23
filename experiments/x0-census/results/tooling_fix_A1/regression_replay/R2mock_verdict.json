@@ -1,0 +1,221 @@
+{
+ "amber_a": null,
+ "amber_b": [],
+ "amber_c": [],
+ "both_ways": {
+  "amber_b_configs": [],
+  "amber_b_configs_frozen_reading": [],
+  "frozen_reading": {
+   "amber_b": [],
+   "outcomes": [
+    "tooling_failure"
+   ],
+   "validity": {
+    "v1": true,
+    "v2": true,
+    "v3": false,
+    "v4": true
+   }
+  },
+  "outcomes_differ": false,
+  "p3c_differs": false,
+  "rule": "Amendment X0-A1 (post-data, 2026-10-23): P3(c) with stack slots whose address escapes as plain memory (top-level outcomes) against the reading frozen at 152fa33, every constant-offset stack slot a register-like location (frozen_reading); which governs is the Owner's decision",
+  "variants": [
+   {
+    "build_index": 1,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_a18"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_958"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_948"
+     }
+    ],
+    "variant": "hx_kernels_scalar:matmul[F32]"
+   },
+   {
+    "build_index": 1,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_12a5"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_11b0"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_1184"
+     }
+    ],
+    "variant": "hx_kernels_scalar:matmul[F16]"
+   },
+   {
+    "build_index": 1,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_1515"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_1420"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_13f4"
+     }
+    ],
+    "variant": "hx_kernels_scalar:matmul[BF16]"
+   },
+   {
+    "build_index": 2,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_a18"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_958"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_948"
+     }
+    ],
+    "variant": "hx_kernels_scalar:matmul[F32]"
+   },
+   {
+    "build_index": 2,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_12a5"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_11b0"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_1184"
+     }
+    ],
+    "variant": "hx_kernels_scalar:matmul[F16]"
+   },
+   {
+    "build_index": 2,
+    "config": "C",
+    "p3c": [],
+    "p3c_frozen_reading": [],
+    "unscreened_loops": [
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_1515"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_1420"
+     },
+     {
+      "acc_lanes_emitted": 0,
+      "acc_lanes_if_escaping_slots_were_registers": 8,
+      "bound_used": 16,
+      "loop": "L1_13f4"
+     }
+    ],
+    "variant": "hx_kernels_scalar:matmul[BF16]"
+   }
+  ]
+ },
+ "conservative_resolution": false,
+ "eval_date": "2026-10-23",
+ "eval_date_basis": {
+  "latest_census_run_date": "2026-10-23",
+  "system_utc_date": "2026-10-23"
+ },
+ "narrowing": null,
+ "non_gate": [],
+ "notes": [
+  "smoke record (record.id X0-census-smoke, NON-Hearth): no freeze commit is required",
+  "Amendment X0-A1 (post-data): reported both ways in both_ways; the outcomes above use the amended P3(c); under the frozen reading: tooling_failure"
+ ],
+ "outcomes": [
+  "tooling_failure"
+ ],
+ "record": "X0-census-smoke",
+ "tooling_bound": "2026-11-12",
+ "tooling_runs": 0,
+ "validity": {
+  "v1": true,
+  "v2": true,
+  "v3": false,
+  "v4": true
+ },
+ "validity_detail": {
+  "v1_config_gaps": [],
+  "v1_tooling_gaps": [],
+  "v2_resolved_by_amendment": [],
+  "v2_unresolved": [],
+  "v3": [],
+  "v4": [],
+  "v4_commits": null
+ }
+}

@@ -1,0 +1,82 @@
+{
+ "run": "/mnt/d/mithril/x0census/run1",
+ "config": "P.D",
+ "x0_loops": "/mnt/d/mithril/x0fixA1/r2/tree/x0-census/scripts/x0_loops.py",
+ "x0_loops_sha256": "5519a568568ba80db3c5f12080820b4d0e049a99099e5de5fd59382021282812",
+ "steps": [
+  {
+   "step": "loops_b1_reduce_probe.c",
+   "argv": [
+    "/usr/bin/python3",
+    "-I",
+    "/mnt/d/mithril/x0fixA1/r2/tree/x0-census/scripts/x0_loops.py",
+    "/mnt/d/mithril/x0census/run1/P.D/b1/reduce_probe.c/decode",
+    "--manifest",
+    "/mnt/d/mithril/x0census/run1/P.D/b1/reduce_probe.c/manifest.json",
+    "-o",
+    "/mnt/d/mithril/x0fixA1/r2/run1_reloop/new/P.D/loops_b1_reduce_probe.c/loops.json",
+    "--canary-variant",
+    "none",
+    "--loop-table",
+    "/mnt/d/mithril/x0census/Mithril/experiments/x0-census/class/loop_table.csv",
+    "--d2-variants",
+    "none",
+    "--d2-helper",
+    "tree16",
+    "--helpers",
+    "tree16",
+    "--probe-pairing",
+    "--attribution",
+    "/mnt/d/mithril/x0census/run1/P.D/b1/reduce_probe.c/attr/reduce_probe.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "/mnt/d/mithril/x0census/run1/P.D/b1/reduce_probe.c/loops.json",
+   "run_loops_sha256": "8bf9621ee0c723c8bc444a4c1af442cc3fa7cce93d11d68b3e33fe10d0b7bb4d",
+   "new_loops_sha256": "d916bd58abe219f6a9547d639ea13b86152e34c83302df6c09f32908b2c28d18",
+   "identical": false,
+   "stdout_tail": [
+    " \"tags\": {},",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  },
+  {
+   "step": "loops_b2_reduce_probe.c",
+   "argv": [
+    "/usr/bin/python3",
+    "-I",
+    "/mnt/d/mithril/x0fixA1/r2/tree/x0-census/scripts/x0_loops.py",
+    "/mnt/d/mithril/x0census/run1/P.D/b2/reduce_probe.c/decode",
+    "--manifest",
+    "/mnt/d/mithril/x0census/run1/P.D/b2/reduce_probe.c/manifest.json",
+    "-o",
+    "/mnt/d/mithril/x0fixA1/r2/run1_reloop/new/P.D/loops_b2_reduce_probe.c/loops.json",
+    "--canary-variant",
+    "none",
+    "--loop-table",
+    "/mnt/d/mithril/x0census/Mithril/experiments/x0-census/class/loop_table.csv",
+    "--d2-variants",
+    "none",
+    "--d2-helper",
+    "tree16",
+    "--helpers",
+    "tree16",
+    "--probe-pairing",
+    "--attribution",
+    "/mnt/d/mithril/x0census/run1/P.D/b2/reduce_probe.c/attr/reduce_probe.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "/mnt/d/mithril/x0census/run1/P.D/b2/reduce_probe.c/loops.json",
+   "run_loops_sha256": "8bf9621ee0c723c8bc444a4c1af442cc3fa7cce93d11d68b3e33fe10d0b7bb4d",
+   "new_loops_sha256": "d916bd58abe219f6a9547d639ea13b86152e34c83302df6c09f32908b2c28d18",
+   "identical": false,
+   "stdout_tail": [
+    " \"tags\": {},",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  }
+ ]
+}

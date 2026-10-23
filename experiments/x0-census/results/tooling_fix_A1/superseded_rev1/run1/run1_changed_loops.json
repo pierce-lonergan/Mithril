@@ -1,0 +1,678 @@
+[
+ {
+  "id": "L7_290",
+  "source_loop": "quant_avx2.c:240",
+  "bound_rule": "outer",
+  "bound_used": 8,
+  "acc_lanes_source": 8,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 8,
+  "tags": [
+   "spilled"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RBP:128"
+   ]
+  ],
+  "config": "A",
+  "build": "b1",
+  "variant": "k_avx2:matmul[Q8]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RBP:128 <- unbounded CALL_NEAR via RDX at 7:b47 (stack pointer in an argument register at a call)"
+  ]
+ },
+ {
+  "id": "L7_290",
+  "source_loop": "quant_avx2.c:240",
+  "bound_rule": "outer",
+  "bound_used": 8,
+  "acc_lanes_source": 8,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 8,
+  "tags": [
+   "spilled"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RBP:128"
+   ]
+  ],
+  "config": "A",
+  "build": "b2",
+  "variant": "k_avx2:matmul[Q8]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RBP:128 <- unbounded CALL_NEAR via RDX at 7:b47 (stack pointer in an argument register at a call)"
+  ]
+ },
+ {
+  "id": "L7_290",
+  "source_loop": "quant_avx2.c:240",
+  "bound_rule": "outer",
+  "bound_used": 8,
+  "acc_lanes_source": 8,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 8,
+  "tags": [
+   "spilled"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RBP:128"
+   ]
+  ],
+  "config": "A-ninja",
+  "build": "b1",
+  "variant": "k_avx2:matmul[Q8]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RBP:128 <- unbounded CALL_NEAR via RDX at 7:b47 (stack pointer in an argument register at a call)"
+  ]
+ },
+ {
+  "id": "L7_290",
+  "source_loop": "quant_avx2.c:240",
+  "bound_rule": "outer",
+  "bound_used": 8,
+  "acc_lanes_source": 8,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 8,
+  "tags": [
+   "spilled"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RBP:128"
+   ]
+  ],
+  "config": "A-ninja",
+  "build": "b2",
+  "variant": "k_avx2:matmul[Q8]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RBP:128 <- unbounded CALL_NEAR via RDX at 7:b47 (stack pointer in an argument register at a call)"
+  ]
+ },
+ {
+  "id": "L1_15c0",
+  "source_loop": "quant.c:362",
+  "bound_rule": "outer",
+  "bound_used": 8,
+  "acc_lanes_source": 8,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 8,
+  "tags": [
+   "spilled",
+   "auto-vectorised"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:16"
+   ],
+   [
+    "STK:RSP:32"
+   ]
+  ],
+  "config": "C",
+  "build": "b1",
+  "variant": "hx_kernels_scalar:matmul[BF16]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RSP:16 <- exact MOVUPS via RCX at 1:1592 (access through a stack pointer)",
+   "STK:RSP:20 <- exact MOVUPS via RCX at 1:1592 (access through a stack pointer)",
+   "STK:RSP:24 <- exact MOVUPS via RCX at 1:1592 (access through a stack pointer)"
+  ]
+ },
+ {
+  "id": "L1_1880",
+  "source_loop": "quant.c:362",
+  "bound_rule": "outer",
+  "bound_used": 8,
+  "acc_lanes_source": 8,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 8,
+  "tags": [
+   "spilled",
+   "auto-vectorised"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:48"
+   ],
+   [
+    "STK:RSP:64"
+   ]
+  ],
+  "config": "C",
+  "build": "b1",
+  "variant": "hx_kernels_scalar:matmul[F16]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RSP:48 <- exact MOVUPS via RSI at 1:1852 (access through a stack pointer)",
+   "STK:RSP:52 <- exact MOVUPS via RSI at 1:1852 (access through a stack pointer)",
+   "STK:RSP:56 <- exact MOVUPS via RSI at 1:1852 (access through a stack pointer)"
+  ]
+ },
+ {
+  "id": "L1_1ac5",
+  "source_loop": "quant.c:362",
+  "bound_rule": "outer",
+  "bound_used": 8,
+  "acc_lanes_source": 8,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 8,
+  "tags": [
+   "spilled",
+   "auto-vectorised"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:16"
+   ],
+   [
+    "STK:RSP:32"
+   ]
+  ],
+  "config": "C",
+  "build": "b1",
+  "variant": "hx_kernels_scalar:matmul[F32]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RSP:16 <- exact MOVUPS via RCX at 1:1a98 (access through a stack pointer)",
+   "STK:RSP:20 <- exact MOVUPS via RCX at 1:1a98 (access through a stack pointer)",
+   "STK:RSP:24 <- exact MOVUPS via RCX at 1:1a98 (access through a stack pointer)"
+  ]
+ },
+ {
+  "id": "L1_2d5f",
+  "source_loop": "quant_avx512.c:352",
+  "bound_rule": "same",
+  "bound_used": 0,
+  "acc_lanes_source": 0,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 32,
+  "tags": [
+   "software-pipelined",
+   "spilled"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:384"
+   ],
+   [
+    "STK:RSP:400"
+   ],
+   [
+    "STK:RSP:416"
+   ],
+   [
+    "STK:RSP:432"
+   ],
+   [
+    "STK:RSP:448"
+   ],
+   [
+    "STK:RSP:464"
+   ],
+   [
+    "STK:RSP:480"
+   ],
+   [
+    "STK:RSP:496"
+   ]
+  ],
+  "config": "C",
+  "build": "b1",
+  "variant": "k_avx512:matmul[Q4]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RBP:16 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+   "STK:RBP:24 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+   "STK:RSP:192 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)"
+  ]
+ },
+ {
+  "id": "L1_2e90",
+  "source_loop": "quant_avx512.c:316",
+  "bound_rule": "same",
+  "bound_used": 0,
+  "acc_lanes_source": 0,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 32,
+  "tags": [
+   "spilled"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:384"
+   ],
+   [
+    "STK:RSP:400"
+   ],
+   [
+    "STK:RSP:416"
+   ],
+   [
+    "STK:RSP:432"
+   ],
+   [
+    "STK:RSP:448"
+   ],
+   [
+    "STK:RSP:464"
+   ],
+   [
+    "STK:RSP:480"
+   ],
+   [
+    "STK:RSP:496"
+   ]
+  ],
+  "config": "C",
+  "build": "b1",
+  "variant": "k_avx512:matmul[Q4]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RBP:16 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+   "STK:RSP:192 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+   "STK:RSP:240 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)"
+  ]
+ },
+ {
+  "id": "L1_c64",
+  "source_loop": "quant_avx512.c:352",
+  "bound_rule": "same",
+  "bound_used": 0,
+  "acc_lanes_source": 0,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 32,
+  "tags": [
+   "software-pipelined",
+   "spilled"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:320"
+   ],
+   [
+    "STK:RSP:336"
+   ],
+   [
+    "STK:RSP:352"
+   ],
+   [
+    "STK:RSP:368"
+   ],
+   [
+    "STK:RSP:384"
+   ],
+   [
+    "STK:RSP:400"
+   ],
+   [
+    "STK:RSP:416"
+   ],
+   [
+    "STK:RSP:432"
+   ]
+  ],
+  "config": "C",
+  "build": "b1",
+  "variant": "k_avx512:matmul[Q8]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RBP:16 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+   "STK:RBP:24 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+   "STK:RSP:104 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)"
+  ]
+ },
+ {
+  "id": "L1_d98",
+  "source_loop": "quant_avx512.c:316",
+  "bound_rule": "same",
+  "bound_used": 0,
+  "acc_lanes_source": 0,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 32,
+  "tags": [
+   "software-pipelined",
+   "spilled"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:320"
+   ],
+   [
+    "STK:RSP:336"
+   ],
+   [
+    "STK:RSP:352"
+   ],
+   [
+    "STK:RSP:368"
+   ],
+   [
+    "STK:RSP:384"
+   ],
+   [
+    "STK:RSP:400"
+   ],
+   [
+    "STK:RSP:416"
+   ],
+   [
+    "STK:RSP:432"
+   ]
+  ],
+  "config": "C",
+  "build": "b1",
+  "variant": "k_avx512:matmul[Q8]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RBP:16 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+   "STK:RSP:128 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+   "STK:RSP:136 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)"
+  ]
+ },
+ {
+  "id": "L1_15c0",
+  "source_loop": "quant.c:362",
+  "bound_rule": "outer",
+  "bound_used": 8,
+  "acc_lanes_source": 8,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 8,
+  "tags": [
+   "spilled",
+   "auto-vectorised"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:16"
+   ],
+   [
+    "STK:RSP:32"
+   ]
+  ],
+  "config": "C",
+  "build": "b2",
+  "variant": "hx_kernels_scalar:matmul[BF16]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RSP:16 <- exact MOVUPS via RCX at 1:1592 (access through a stack pointer)",
+   "STK:RSP:20 <- exact MOVUPS via RCX at 1:1592 (access through a stack pointer)",
+   "STK:RSP:24 <- exact MOVUPS via RCX at 1:1592 (access through a stack pointer)"
+  ]
+ },
+ {
+  "id": "L1_1880",
+  "source_loop": "quant.c:362",
+  "bound_rule": "outer",
+  "bound_used": 8,
+  "acc_lanes_source": 8,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 8,
+  "tags": [
+   "spilled",
+   "auto-vectorised"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:48"
+   ],
+   [
+    "STK:RSP:64"
+   ]
+  ],
+  "config": "C",
+  "build": "b2",
+  "variant": "hx_kernels_scalar:matmul[F16]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RSP:48 <- exact MOVUPS via RSI at 1:1852 (access through a stack pointer)",
+   "STK:RSP:52 <- exact MOVUPS via RSI at 1:1852 (access through a stack pointer)",
+   "STK:RSP:56 <- exact MOVUPS via RSI at 1:1852 (access through a stack pointer)"
+  ]
+ },
+ {
+  "id": "L1_1ac5",
+  "source_loop": "quant.c:362",
+  "bound_rule": "outer",
+  "bound_used": 8,
+  "acc_lanes_source": 8,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 8,
+  "tags": [
+   "spilled",
+   "auto-vectorised"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:16"
+   ],
+   [
+    "STK:RSP:32"
+   ]
+  ],
+  "config": "C",
+  "build": "b2",
+  "variant": "hx_kernels_scalar:matmul[F32]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RSP:16 <- exact MOVUPS via RCX at 1:1a98 (access through a stack pointer)",
+   "STK:RSP:20 <- exact MOVUPS via RCX at 1:1a98 (access through a stack pointer)",
+   "STK:RSP:24 <- exact MOVUPS via RCX at 1:1a98 (access through a stack pointer)"
+  ]
+ },
+ {
+  "id": "L1_2d5f",
+  "source_loop": "quant_avx512.c:352",
+  "bound_rule": "same",
+  "bound_used": 0,
+  "acc_lanes_source": 0,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 32,
+  "tags": [
+   "software-pipelined",
+   "spilled"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:384"
+   ],
+   [
+    "STK:RSP:400"
+   ],
+   [
+    "STK:RSP:416"
+   ],
+   [
+    "STK:RSP:432"
+   ],
+   [
+    "STK:RSP:448"
+   ],
+   [
+    "STK:RSP:464"
+   ],
+   [
+    "STK:RSP:480"
+   ],
+   [
+    "STK:RSP:496"
+   ]
+  ],
+  "config": "C",
+  "build": "b2",
+  "variant": "k_avx512:matmul[Q4]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RBP:16 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+   "STK:RBP:24 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+   "STK:RSP:192 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)"
+  ]
+ },
+ {
+  "id": "L1_2e90",
+  "source_loop": "quant_avx512.c:316",
+  "bound_rule": "same",
+  "bound_used": 0,
+  "acc_lanes_source": 0,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 32,
+  "tags": [
+   "spilled"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:384"
+   ],
+   [
+    "STK:RSP:400"
+   ],
+   [
+    "STK:RSP:416"
+   ],
+   [
+    "STK:RSP:432"
+   ],
+   [
+    "STK:RSP:448"
+   ],
+   [
+    "STK:RSP:464"
+   ],
+   [
+    "STK:RSP:480"
+   ],
+   [
+    "STK:RSP:496"
+   ]
+  ],
+  "config": "C",
+  "build": "b2",
+  "variant": "k_avx512:matmul[Q4]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RBP:16 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+   "STK:RSP:192 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+   "STK:RSP:240 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)"
+  ]
+ },
+ {
+  "id": "L1_c64",
+  "source_loop": "quant_avx512.c:352",
+  "bound_rule": "same",
+  "bound_used": 0,
+  "acc_lanes_source": 0,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 32,
+  "tags": [
+   "software-pipelined",
+   "spilled"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:320"
+   ],
+   [
+    "STK:RSP:336"
+   ],
+   [
+    "STK:RSP:352"
+   ],
+   [
+    "STK:RSP:368"
+   ],
+   [
+    "STK:RSP:384"
+   ],
+   [
+    "STK:RSP:400"
+   ],
+   [
+    "STK:RSP:416"
+   ],
+   [
+    "STK:RSP:432"
+   ]
+  ],
+  "config": "C",
+  "build": "b2",
+  "variant": "k_avx512:matmul[Q8]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RBP:16 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+   "STK:RBP:24 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+   "STK:RSP:104 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)"
+  ]
+ },
+ {
+  "id": "L1_d98",
+  "source_loop": "quant_avx512.c:316",
+  "bound_rule": "same",
+  "bound_used": 0,
+  "acc_lanes_source": 0,
+  "acc_lanes_emitted": 0,
+  "acc_lanes_if_escaping_slots_were_registers": 32,
+  "tags": [
+   "software-pipelined",
+   "spilled"
+  ],
+  "unscreened": true,
+  "escaping_partial_results": [
+   [
+    "STK:RSP:320"
+   ],
+   [
+    "STK:RSP:336"
+   ],
+   [
+    "STK:RSP:352"
+   ],
+   [
+    "STK:RSP:368"
+   ],
+   [
+    "STK:RSP:384"
+   ],
+   [
+    "STK:RSP:400"
+   ],
+   [
+    "STK:RSP:416"
+   ],
+   [
+    "STK:RSP:432"
+   ]
+  ],
+  "config": "C",
+  "build": "b2",
+  "variant": "k_avx512:matmul[Q8]",
+  "flagged_after": false,
+  "escape_events": [
+   "STK:RBP:16 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+   "STK:RSP:128 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+   "STK:RSP:136 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)"
+  ]
+ }
+]

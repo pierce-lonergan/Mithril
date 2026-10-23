@@ -1,0 +1,84 @@
+{
+ "run": "/mnt/d/mithril/x0fixA1/runs/A1final",
+ "config": "D",
+ "x0_loops": "/mnt/d/mithril/x0fixA1/cmp/old/x0_loops.py",
+ "x0_loops_sha256": "8c7ecc9e6a29b4ec8398661ffca9c225a2fccf7f1e1af3f9d24cd04e78df3799",
+ "steps": [
+  {
+   "step": "loops_b1_a1_escape.c",
+   "argv": [
+    "/usr/bin/python3",
+    "-I",
+    "/mnt/d/mithril/x0fixA1/cmp/old/x0_loops.py",
+    "/mnt/d/mithril/x0fixA1/runs/A1final/D/b1/a1_escape.c/decode",
+    "--manifest",
+    "/mnt/d/mithril/x0fixA1/runs/A1final/D/b1/a1_escape.c/manifest.json",
+    "-o",
+    "/mnt/d/mithril/x0fixA1/cmp/A1final_out/old/D/loops_b1_a1_escape.c/loops.json",
+    "--canary-variant",
+    "none",
+    "--loop-table",
+    "/mnt/d/mithril/x0fixA1/tree/x0-census/scripts/smoke/a1/a1_loop_table.csv",
+    "--d2-variants",
+    "none",
+    "--d2-helper",
+    "tree16",
+    "--helpers",
+    "tree16",
+    "--variant-map",
+    "a1_table:mm[0]=a1.rep,a1_table:mm[1]=a1.memset,a1_table:mm[2]=a1.regs,a1_table:mm[3]=a1.wide,a1_table:mm[4]=a1.call,a1_table:peak=a1.peak",
+    "--attribution",
+    "/mnt/d/mithril/x0fixA1/runs/A1final/D/b1/a1_escape.c/attr/a1_escape.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "/mnt/d/mithril/x0fixA1/runs/A1final/D/b1/a1_escape.c/loops.json",
+   "run_loops_sha256": "6425a338dfeb5e58c1ca2fe535e2626f7adb7c8c4a249c1d0b2908483f5ae7b5",
+   "new_loops_sha256": "683c8d6e633563462435253c82d15db935135fa154eeed1702f6e57c9b3175f1",
+   "identical": false,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  },
+  {
+   "step": "loops_b2_a1_escape.c",
+   "argv": [
+    "/usr/bin/python3",
+    "-I",
+    "/mnt/d/mithril/x0fixA1/cmp/old/x0_loops.py",
+    "/mnt/d/mithril/x0fixA1/runs/A1final/D/b2/a1_escape.c/decode",
+    "--manifest",
+    "/mnt/d/mithril/x0fixA1/runs/A1final/D/b2/a1_escape.c/manifest.json",
+    "-o",
+    "/mnt/d/mithril/x0fixA1/cmp/A1final_out/old/D/loops_b2_a1_escape.c/loops.json",
+    "--canary-variant",
+    "none",
+    "--loop-table",
+    "/mnt/d/mithril/x0fixA1/tree/x0-census/scripts/smoke/a1/a1_loop_table.csv",
+    "--d2-variants",
+    "none",
+    "--d2-helper",
+    "tree16",
+    "--helpers",
+    "tree16",
+    "--variant-map",
+    "a1_table:mm[0]=a1.rep,a1_table:mm[1]=a1.memset,a1_table:mm[2]=a1.regs,a1_table:mm[3]=a1.wide,a1_table:mm[4]=a1.call,a1_table:peak=a1.peak",
+    "--attribution",
+    "/mnt/d/mithril/x0fixA1/runs/A1final/D/b2/a1_escape.c/attr/a1_escape.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "/mnt/d/mithril/x0fixA1/runs/A1final/D/b2/a1_escape.c/loops.json",
+   "run_loops_sha256": "6425a338dfeb5e58c1ca2fe535e2626f7adb7c8c4a249c1d0b2908483f5ae7b5",
+   "new_loops_sha256": "683c8d6e633563462435253c82d15db935135fa154eeed1702f6e57c9b3175f1",
+   "identical": false,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  }
+ ]
+}

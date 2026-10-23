@@ -1,0 +1,37 @@
+{
+ "amber_a": null,
+ "amber_b": [],
+ "amber_c": [],
+ "conservative_resolution": false,
+ "eval_date": "2026-10-23",
+ "eval_date_basis": {
+  "latest_census_run_date": "2026-10-23",
+  "system_utc_date": "2026-10-23"
+ },
+ "narrowing": null,
+ "non_gate": [],
+ "notes": [
+  "smoke record (record.id X0-census-smoke, NON-Hearth): no freeze commit is required"
+ ],
+ "outcomes": [
+  "tooling_failure"
+ ],
+ "record": "X0-census-smoke",
+ "tooling_bound": "2026-11-12",
+ "tooling_runs": 0,
+ "validity": {
+  "v1": true,
+  "v2": true,
+  "v3": false,
+  "v4": true
+ },
+ "validity_detail": {
+  "v1_config_gaps": [],
+  "v1_tooling_gaps": [],
+  "v2_resolved_by_amendment": [],
+  "v2_unresolved": [],
+  "v3": [],
+  "v4": [],
+  "v4_commits": null
+ }
+}

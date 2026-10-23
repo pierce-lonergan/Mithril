@@ -1,0 +1,493 @@
+{
+ "mode": "runs",
+ "files": 26,
+ "variant_field_changes": {},
+ "loop_field_changes": {
+  "acc_lanes_emitted|unscreened": 18,
+  "partial_result_cycles|unscreened": 18,
+  "partial_results|unscreened": 18
+ },
+ "checks": {
+  "frozen_reading_differs_from_before_p3c": 0,
+  "screened_count_differs": 0,
+  "screened_partial_results_differ": 0,
+  "unscreened_frozen_count_differs": 0
+ },
+ "per_config_build": {
+  "A-ninja|b1": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 75,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 6
+  },
+  "A-ninja|b2": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 75,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 6
+  },
+  "A|b1": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 75,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 6
+  },
+  "A|b2": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 75,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 6
+  },
+  "B-cmake|b1": {
+   "variants": 12,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 98,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 0
+  },
+  "B-cmake|b2": {
+   "variants": 12,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 98,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 0
+  },
+  "B-proxy|b1": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 139,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 0
+  },
+  "B-proxy|b2": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 139,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 0
+  },
+  "C|b1": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 57,
+   "unscreened_loops_after": 9,
+   "loops_with_escaping_slots_after": 15
+  },
+  "C|b2": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 57,
+   "unscreened_loops_after": 9,
+   "loops_with_escaping_slots_after": 15
+  },
+  "D|b1": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 141,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 0
+  },
+  "D|b2": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 141,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 0
+  },
+  "P.A-ninja|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.A-ninja|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.A|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.A|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.B-cmake|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.B-cmake|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.C|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.C|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.D|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.D|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  }
+ },
+ "examples": {
+  "loop:acc_lanes_emitted|unscreened": [
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[BF16]",
+    "L1_13f4",
+    8,
+    0
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[BF16]",
+    "L1_1420",
+    8,
+    0
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[BF16]",
+    "L1_1515",
+    8,
+    0
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[F16]",
+    "L1_1184",
+    8,
+    0
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[F16]",
+    "L1_11b0",
+    8,
+    0
+   ]
+  ],
+  "loop:partial_result_cycles|unscreened": [
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[BF16]",
+    "L1_13f4",
+    [
+     {
+      "members": [
+       "STK:RSP:80"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:96"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[BF16]",
+    "L1_1420",
+    [
+     {
+      "members": [
+       "STK:RSP:80"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:96"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[BF16]",
+    "L1_1515",
+    [
+     {
+      "members": [
+       "STK:RSP:80"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:96"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[F16]",
+    "L1_1184",
+    [
+     {
+      "members": [
+       "STK:RSP:80"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:96"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[F16]",
+    "L1_11b0",
+    [
+     {
+      "members": [
+       "STK:RSP:80"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:96"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ]
+  ],
+  "loop:partial_results|unscreened": [
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[BF16]",
+    "L1_13f4",
+    [
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[BF16]",
+    "L1_1420",
+    [
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[BF16]",
+    "L1_1515",
+    [
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[F16]",
+    "L1_1184",
+    [
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[F16]",
+    "L1_11b0",
+    [
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ],
+    []
+   ]
+  ]
+ }
+}

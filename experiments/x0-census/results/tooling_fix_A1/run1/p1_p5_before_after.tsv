@@ -1,0 +1,24 @@
+config	build	P1_variants_before	P1_variants_after	P1_slots_resolved_before	P1_slots_resolved_after	P1_builds_rc_nonzero_before	P1_builds_rc_nonzero_after	P1_genuine_gaps_before	P1_genuine_gaps_after	P1_tooling_gaps_before	P1_tooling_gaps_after	P2_fma_before	P2_fma_after	P3a_flagged_files_before	P3a_flagged_files_after	P3b_variants_before	P3b_variants_after	P3c_flagged_loops_before	P3c_flagged_loops_after	P3c_flagged_variants_before	P3c_flagged_variants_after	P3d1_before	P3d1_after	P3d2_match_before	P3d2_match_after	P3d2_mismatch_before	P3d2_mismatch_after	P3d2_unchecked_before	P3d2_unchecked_after	P4_u_all_before	P4_u_all_after	P5_iclass_before	P5_iclass_after	P5_opclass_before	P5_opclass_after	P3c_flagged_loops_frozen_reading_after	P3c_flagged_variants_frozen_reading_after	P3c_unscreened_loops_after	changed
+A	b1	18	18	18	18	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	pass	pass	18	18	0	0	3	3							0	0	0	none
+A	b2	18	18	18	18	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	pass	pass	18	18	0	0	3	3							0	0	0	none
+A-ninja	b1	18	18	18	18	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	pass	pass	18	18	0	0	3	3							0	0	0	none
+A-ninja	b2	18	18	18	18	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	pass	pass	18	18	0	0	3	3							0	0	0	none
+B-cmake	b1	12	12	12	12	1	1	0	0	0	0	0	0	quant.c,quant_avx2.c,quant_avx512.c	quant.c,quant_avx2.c,quant_avx512.c	0	0	0	0	0	0	pass	pass	12	12	0	0	9	9							0	0	0	none
+B-cmake	b2	12	12	12	12	1	1	0	0	0	0	0	0	quant.c,quant_avx2.c,quant_avx512.c	quant.c,quant_avx2.c,quant_avx512.c	0	0	0	0	0	0	pass	pass	12	12	0	0	9	9							0	0	0	none
+B-proxy	b1	18	18	18	18	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	pass	pass	21	21	0	0	12	12							0	0	0	none
+B-proxy	b2	18	18	18	18	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	pass	pass	21	21	0	0	12	12							0	0	0	none
+C	b1	18	18	18	18	0	0	0	0	0	0	0	0	none	none	0	0	4	0	2	0	pass	pass	18	18	0	0	6	6							4	2	7	P3c_flagged_loops,P3c_flagged_variants
+C	b2	18	18	18	18	0	0	0	0	0	0	0	0	none	none	0	0	4	0	2	0	pass	pass	18	18	0	0	6	6							4	2	7	P3c_flagged_loops,P3c_flagged_variants
+D	b1	18	18	18	18	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	pass	pass	23	23	0	0	10	10							0	0	0	none
+D	b2	18	18	18	18	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	pass	pass	23	23	0	0	10	10							0	0	0	none
+P.A	b1	6	6	6	6	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	0	0	0	0	0	0	0	0							0	0	0	none
+P.A	b2	6	6	6	6	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	0	0	0	0	0	0	0	0							0	0	0	none
+P.A-ninja	b1	6	6	6	6	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	0	0	0	0	0	0	0	0							0	0	0	none
+P.A-ninja	b2	6	6	6	6	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	0	0	0	0	0	0	0	0							0	0	0	none
+P.B-cmake	b1	6	6	6	6	0	0	0	0	0	0	0	0	reduce_probe.c	reduce_probe.c	0	0	0	0	0	0	0	0	0	0	0	0	0	0							0	0	0	none
+P.B-cmake	b2	6	6	6	6	0	0	0	0	0	0	0	0	reduce_probe.c	reduce_probe.c	0	0	0	0	0	0	0	0	0	0	0	0	0	0							0	0	0	none
+P.C	b1	6	6	6	6	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	0	0	0	0	0	0	0	0							0	0	0	none
+P.C	b2	6	6	6	6	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	0	0	0	0	0	0	0	0							0	0	0	none
+P.D	b1	6	6	6	6	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	0	0	0	0	0	0	0	0							0	0	0	none
+P.D	b2	6	6	6	6	0	0	0	0	0	0	0	0	none	none	0	0	0	0	0	0	0	0	0	0	0	0	0	0							0	0	0	none
+union	b1+b2																													446	446	32	32	15	15				none

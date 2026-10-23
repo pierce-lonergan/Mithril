@@ -1,0 +1,627 @@
+{
+ "mode": "reloop",
+ "files": 26,
+ "variant_field_changes": {
+  "p3.c": 4
+ },
+ "loop_field_changes": {
+  "acc_lanes_emitted|unscreened": 14,
+  "partial_result_cycles|unscreened": 14,
+  "partial_results|unscreened": 14
+ },
+ "checks": {
+  "frozen_reading_differs_from_before_p3c": 0,
+  "screened_count_differs": 0,
+  "screened_partial_results_differ": 0,
+  "unscreened_frozen_count_differs": 0
+ },
+ "per_config_build": {
+  "A-ninja|b1": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 144,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 15
+  },
+  "A-ninja|b2": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 144,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 15
+  },
+  "A|b1": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 144,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 15
+  },
+  "A|b2": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 144,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 15
+  },
+  "B-cmake|b1": {
+   "variants": 12,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 127,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 14
+  },
+  "B-cmake|b2": {
+   "variants": 12,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 127,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 14
+  },
+  "B-proxy|b1": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 215,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 30
+  },
+  "B-proxy|b2": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 215,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 30
+  },
+  "C|b1": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 4,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 2,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 4,
+   "loops": 104,
+   "unscreened_loops_after": 7,
+   "loops_with_escaping_slots_after": 48
+  },
+  "C|b2": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 4,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 2,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 4,
+   "loops": 104,
+   "unscreened_loops_after": 7,
+   "loops_with_escaping_slots_after": 48
+  },
+  "D|b1": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 197,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 28
+  },
+  "D|b2": {
+   "variants": 18,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 197,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 28
+  },
+  "P.A-ninja|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.A-ninja|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.A|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.A|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.B-cmake|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.B-cmake|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.C|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.C|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.D|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.D|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  }
+ },
+ "examples": {
+  "loop:acc_lanes_emitted|unscreened": [
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[BF16]",
+    "L1_15c0",
+    8,
+    0
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[F16]",
+    "L1_1880",
+    8,
+    0
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[F32]",
+    "L1_1ac5",
+    8,
+    0
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "k_avx512:matmul[Q4]",
+    "L1_2d5f",
+    32,
+    0
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "k_avx512:matmul[Q4]",
+    "L1_2e90",
+    32,
+    0
+   ]
+  ],
+  "loop:partial_result_cycles|unscreened": [
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[BF16]",
+    "L1_15c0",
+    [
+     {
+      "members": [
+       "STK:RSP:16"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:32"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[F16]",
+    "L1_1880",
+    [
+     {
+      "members": [
+       "STK:RSP:48"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:64"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[F32]",
+    "L1_1ac5",
+    [
+     {
+      "members": [
+       "STK:RSP:16"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:32"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "k_avx512:matmul[Q4]",
+    "L1_2d5f",
+    [
+     {
+      "members": [
+       "STK:RSP:384"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:400"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:416"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:432"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:448"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:464"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:480"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:496"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "k_avx512:matmul[Q4]",
+    "L1_2e90",
+    [
+     {
+      "members": [
+       "STK:RSP:384"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:400"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:416"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:432"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:448"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:464"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:480"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     },
+     {
+      "members": [
+       "STK:RSP:496"
+      ],
+      "partial_results": 1,
+      "lanes": 4,
+      "emitted": 4
+     }
+    ],
+    []
+   ]
+  ],
+  "loop:partial_results|unscreened": [
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[BF16]",
+    "L1_15c0",
+    [
+     [
+      "STK:RSP:16"
+     ],
+     [
+      "STK:RSP:32"
+     ]
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[F16]",
+    "L1_1880",
+    [
+     [
+      "STK:RSP:48"
+     ],
+     [
+      "STK:RSP:64"
+     ]
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "hx_kernels_scalar:matmul[F32]",
+    "L1_1ac5",
+    [
+     [
+      "STK:RSP:16"
+     ],
+     [
+      "STK:RSP:32"
+     ]
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "k_avx512:matmul[Q4]",
+    "L1_2d5f",
+    [
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ],
+     [
+      "STK:RSP:448"
+     ],
+     [
+      "STK:RSP:464"
+     ],
+     [
+      "STK:RSP:480"
+     ],
+     [
+      "STK:RSP:496"
+     ]
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "all",
+    "k_avx512:matmul[Q4]",
+    "L1_2e90",
+    [
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ],
+     [
+      "STK:RSP:448"
+     ],
+     [
+      "STK:RSP:464"
+     ],
+     [
+      "STK:RSP:480"
+     ],
+     [
+      "STK:RSP:496"
+     ]
+    ],
+    []
+   ]
+  ]
+ }
+}

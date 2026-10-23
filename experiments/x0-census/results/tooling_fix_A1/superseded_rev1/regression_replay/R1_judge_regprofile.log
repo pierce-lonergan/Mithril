@@ -1,0 +1,18 @@
+{
+ "outcomes": [
+  "tooling_failure"
+ ],
+ "validity": {
+  "v1": false,
+  "v2": true,
+  "v3": true,
+  "v4": true
+ },
+ "amber_b": [],
+ "amber_c": 0,
+ "non_gate": [],
+ "amber_a": null,
+ "v1_gaps": 184,
+ "v1_config_gaps": 0,
+ "v4": []
+}

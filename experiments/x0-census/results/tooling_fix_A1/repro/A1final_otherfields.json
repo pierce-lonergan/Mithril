@@ -1,0 +1,116 @@
+{
+ "differences": [],
+ "files": 10,
+ "p3c": {
+  "A-ninja|b1": {
+   "flagged_loops_after": 0,
+   "flagged_loops_after_frozen_reading": 0,
+   "flagged_loops_before": 0,
+   "flagged_variants_after": 0,
+   "flagged_variants_before": 0,
+   "frozen_reading_differs_from_before": 0,
+   "loops": 32,
+   "unscreened_loops_after": 0,
+   "variants": 6
+  },
+  "A-ninja|b2": {
+   "flagged_loops_after": 0,
+   "flagged_loops_after_frozen_reading": 0,
+   "flagged_loops_before": 0,
+   "flagged_variants_after": 0,
+   "flagged_variants_before": 0,
+   "frozen_reading_differs_from_before": 0,
+   "loops": 32,
+   "unscreened_loops_after": 0,
+   "variants": 6
+  },
+  "A|b1": {
+   "flagged_loops_after": 0,
+   "flagged_loops_after_frozen_reading": 0,
+   "flagged_loops_before": 0,
+   "flagged_variants_after": 0,
+   "flagged_variants_before": 0,
+   "frozen_reading_differs_from_before": 0,
+   "loops": 32,
+   "unscreened_loops_after": 0,
+   "variants": 6
+  },
+  "A|b2": {
+   "flagged_loops_after": 0,
+   "flagged_loops_after_frozen_reading": 0,
+   "flagged_loops_before": 0,
+   "flagged_variants_after": 0,
+   "flagged_variants_before": 0,
+   "frozen_reading_differs_from_before": 0,
+   "loops": 32,
+   "unscreened_loops_after": 0,
+   "variants": 6
+  },
+  "B-cmake|b1": {
+   "flagged_loops_after": 0,
+   "flagged_loops_after_frozen_reading": 2,
+   "flagged_loops_before": 2,
+   "flagged_variants_after": 0,
+   "flagged_variants_before": 1,
+   "frozen_reading_differs_from_before": 0,
+   "loops": 34,
+   "unscreened_loops_after": 2,
+   "variants": 6
+  },
+  "B-cmake|b2": {
+   "flagged_loops_after": 0,
+   "flagged_loops_after_frozen_reading": 2,
+   "flagged_loops_before": 2,
+   "flagged_variants_after": 0,
+   "flagged_variants_before": 1,
+   "frozen_reading_differs_from_before": 0,
+   "loops": 34,
+   "unscreened_loops_after": 2,
+   "variants": 6
+  },
+  "C|b1": {
+   "flagged_loops_after": 0,
+   "flagged_loops_after_frozen_reading": 6,
+   "flagged_loops_before": 6,
+   "flagged_variants_after": 0,
+   "flagged_variants_before": 3,
+   "frozen_reading_differs_from_before": 0,
+   "loops": 20,
+   "unscreened_loops_after": 10,
+   "variants": 6
+  },
+  "C|b2": {
+   "flagged_loops_after": 0,
+   "flagged_loops_after_frozen_reading": 6,
+   "flagged_loops_before": 6,
+   "flagged_variants_after": 0,
+   "flagged_variants_before": 3,
+   "frozen_reading_differs_from_before": 0,
+   "loops": 20,
+   "unscreened_loops_after": 10,
+   "variants": 6
+  },
+  "D|b1": {
+   "flagged_loops_after": 0,
+   "flagged_loops_after_frozen_reading": 8,
+   "flagged_loops_before": 8,
+   "flagged_variants_after": 0,
+   "flagged_variants_before": 4,
+   "frozen_reading_differs_from_before": 0,
+   "loops": 26,
+   "unscreened_loops_after": 8,
+   "variants": 6
+  },
+  "D|b2": {
+   "flagged_loops_after": 0,
+   "flagged_loops_after_frozen_reading": 8,
+   "flagged_loops_before": 8,
+   "flagged_variants_after": 0,
+   "flagged_variants_before": 4,
+   "frozen_reading_differs_from_before": 0,
+   "loops": 26,
+   "unscreened_loops_after": 8,
+   "variants": 6
+  }
+ }
+}

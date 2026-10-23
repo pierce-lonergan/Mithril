@@ -1,0 +1,7466 @@
+{
+ "flags_removed": [
+  {
+   "config": "B-cmake",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L6_bc",
+   "source_loop": "a1_escape.c:88",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:320",
+     "STK:RSP:328",
+     "STK:RSP:344",
+     "STK:RSP:36",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:80",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:320 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:328 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:344 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:36 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:40 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:48 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:56 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:64 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:72 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "B-cmake",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L6_e9",
+   "source_loop": "a1_escape.c:71",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:328",
+     "STK:RSP:36",
+     "STK:RSP:40",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:80",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:328 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:36 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:40 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:64 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:72 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:80 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:96 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "B-cmake",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L6_bc",
+   "source_loop": "a1_escape.c:88",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:320",
+     "STK:RSP:328",
+     "STK:RSP:344",
+     "STK:RSP:36",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:80",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:320 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:328 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:344 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:36 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:40 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:48 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:56 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:64 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:72 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "B-cmake",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L6_e9",
+   "source_loop": "a1_escape.c:71",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:328",
+     "STK:RSP:36",
+     "STK:RSP:40",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:80",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:80"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:328 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:36 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:40 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:64 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:72 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:80 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)",
+    "STK:RSP:96 <- unbounded CALL_NEAR via RCX at 6:108 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L1_170",
+   "source_loop": "a1_escape.c:41",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:104",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:20",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:256",
+     "STK:RSP:32",
+     "STK:RSP:352",
+     "STK:RSP:40",
+     "STK:RSP:44",
+     "STK:RSP:48",
+     "STK:RSP:52",
+     "STK:RSP:56",
+     "STK:RSP:60",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:104 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:128 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:144 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:160 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:176 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:192 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:20 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:208 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:224 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:24 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:240 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:256 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:32 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:352 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:40 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:44 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:18d",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "vmovq rdi, xmm13",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:144": [
+        -200,
+        -200
+       ],
+       "STK:RSP:160": [
+        -184,
+        -184
+       ],
+       "STK:RSP:176": [
+        -168,
+        -168
+       ],
+       "STK:RSP:192": [
+        -152,
+        -152
+       ],
+       "STK:RSP:208": [
+        -136,
+        -136
+       ],
+       "STK:RSP:224": [
+        -120,
+        -120
+       ],
+       "STK:RSP:240": [
+        -104,
+        -104
+       ],
+       "STK:RSP:256": [
+        -88,
+        -88
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L1_f8",
+   "source_loop": "a1_escape.c:63",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:120",
+     "STK:RSP:128",
+     "STK:RSP:132",
+     "STK:RSP:136",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:20",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:256",
+     "STK:RSP:32",
+     "STK:RSP:352",
+     "STK:RSP:40",
+     "STK:RSP:44",
+     "STK:RSP:48",
+     "STK:RSP:52",
+     "STK:RSP:56",
+     "STK:RSP:60",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:104 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:112 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:120 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:128 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:132 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:136 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:144 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:160 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:176 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:192 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:20 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:208 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:224 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:24 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:240 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:256 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:18d",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "vmovq rdi, xmm13",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:144": [
+        -200,
+        -200
+       ],
+       "STK:RSP:160": [
+        -184,
+        -184
+       ],
+       "STK:RSP:176": [
+        -168,
+        -168
+       ],
+       "STK:RSP:192": [
+        -152,
+        -152
+       ],
+       "STK:RSP:208": [
+        -136,
+        -136
+       ],
+       "STK:RSP:224": [
+        -120,
+        -120
+       ],
+       "STK:RSP:240": [
+        -104,
+        -104
+       ],
+       "STK:RSP:256": [
+        -88,
+        -88
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L1_1808",
+   "source_loop": "a1_escape.c:88",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:120",
+     "STK:RSP:128",
+     "STK:RSP:132",
+     "STK:RSP:136",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:20",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:256",
+     "STK:RSP:32",
+     "STK:RSP:352",
+     "STK:RSP:40",
+     "STK:RSP:44",
+     "STK:RSP:48",
+     "STK:RSP:52",
+     "STK:RSP:56",
+     "STK:RSP:60",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:104 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:112 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:120 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:128 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:132 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:136 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:144 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:160 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:176 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:192 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:20 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:208 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:224 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:24 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:240 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:256 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:189d",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "vmovq rdi, xmm13",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:144": [
+        -200,
+        -200
+       ],
+       "STK:RSP:160": [
+        -184,
+        -184
+       ],
+       "STK:RSP:176": [
+        -168,
+        -168
+       ],
+       "STK:RSP:192": [
+        -152,
+        -152
+       ],
+       "STK:RSP:208": [
+        -136,
+        -136
+       ],
+       "STK:RSP:224": [
+        -120,
+        -120
+       ],
+       "STK:RSP:240": [
+        -104,
+        -104
+       ],
+       "STK:RSP:256": [
+        -88,
+        -88
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L1_1880",
+   "source_loop": "a1_escape.c:71",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:104",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:20",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:256",
+     "STK:RSP:32",
+     "STK:RSP:352",
+     "STK:RSP:40",
+     "STK:RSP:44",
+     "STK:RSP:48",
+     "STK:RSP:52",
+     "STK:RSP:56",
+     "STK:RSP:60",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:104 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:128 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:144 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:160 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:176 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:192 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:20 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:208 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:224 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:24 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:240 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:256 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:32 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:352 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:40 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:44 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:189d",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "vmovq rdi, xmm13",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:144": [
+        -200,
+        -200
+       ],
+       "STK:RSP:160": [
+        -184,
+        -184
+       ],
+       "STK:RSP:176": [
+        -168,
+        -168
+       ],
+       "STK:RSP:192": [
+        -152,
+        -152
+       ],
+       "STK:RSP:208": [
+        -136,
+        -136
+       ],
+       "STK:RSP:224": [
+        -120,
+        -120
+       ],
+       "STK:RSP:240": [
+        -104,
+        -104
+       ],
+       "STK:RSP:256": [
+        -88,
+        -88
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L1_ac2",
+   "source_loop": "a1_escape.c:122",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 64,
+    "partial_results": [
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:16",
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:120",
+     "STK:RSP:124",
+     "STK:RSP:128",
+     "STK:RSP:192",
+     "STK:RSP:256",
+     "STK:RSP:320",
+     "STK:RSP:44",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:16 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:104 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:112 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:120 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:124 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:128 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:192 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:256 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:320 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:44 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:48 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:56 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:64 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:72 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:80 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:88 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:b21",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "vmovq rdi, xmm8",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffff8",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:128": [
+        -431,
+        -368
+       ],
+       "STK:RSP:192": [
+        -367,
+        -304
+       ],
+       "STK:RSP:256": [
+        -303,
+        -240
+       ],
+       "STK:RSP:320": [
+        -239,
+        -176
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L1_b00",
+   "source_loop": "a1_escape.c:123",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 64,
+    "partial_results": [
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:16",
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:120",
+     "STK:RSP:124",
+     "STK:RSP:128",
+     "STK:RSP:192",
+     "STK:RSP:256",
+     "STK:RSP:320",
+     "STK:RSP:72",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:16 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:104 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:112 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:120 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:124 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:128 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:192 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:256 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:320 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:72 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:80 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:88 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:96 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:b21",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "vmovq rdi, xmm8",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffff8",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:128": [
+        -431,
+        -368
+       ],
+       "STK:RSP:192": [
+        -367,
+        -304
+       ],
+       "STK:RSP:256": [
+        -303,
+        -240
+       ],
+       "STK:RSP:320": [
+        -239,
+        -176
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L1_170",
+   "source_loop": "a1_escape.c:41",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:104",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:20",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:256",
+     "STK:RSP:32",
+     "STK:RSP:352",
+     "STK:RSP:40",
+     "STK:RSP:44",
+     "STK:RSP:48",
+     "STK:RSP:52",
+     "STK:RSP:56",
+     "STK:RSP:60",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:104 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:128 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:144 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:160 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:176 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:192 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:20 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:208 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:224 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:24 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:240 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:256 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:32 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:352 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:40 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:44 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:18d",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "vmovq rdi, xmm13",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:144": [
+        -200,
+        -200
+       ],
+       "STK:RSP:160": [
+        -184,
+        -184
+       ],
+       "STK:RSP:176": [
+        -168,
+        -168
+       ],
+       "STK:RSP:192": [
+        -152,
+        -152
+       ],
+       "STK:RSP:208": [
+        -136,
+        -136
+       ],
+       "STK:RSP:224": [
+        -120,
+        -120
+       ],
+       "STK:RSP:240": [
+        -104,
+        -104
+       ],
+       "STK:RSP:256": [
+        -88,
+        -88
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L1_f8",
+   "source_loop": "a1_escape.c:63",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:120",
+     "STK:RSP:128",
+     "STK:RSP:132",
+     "STK:RSP:136",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:20",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:256",
+     "STK:RSP:32",
+     "STK:RSP:352",
+     "STK:RSP:40",
+     "STK:RSP:44",
+     "STK:RSP:48",
+     "STK:RSP:52",
+     "STK:RSP:56",
+     "STK:RSP:60",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:104 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:112 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:120 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:128 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:132 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:136 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:144 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:160 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:176 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:192 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:20 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:208 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:224 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:24 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:240 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)",
+    "STK:RSP:256 <- unbounded VMOVQ via RAX at 1:d6 (stack pointer read by VMOVQ)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:18d",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "vmovq rdi, xmm13",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:144": [
+        -200,
+        -200
+       ],
+       "STK:RSP:160": [
+        -184,
+        -184
+       ],
+       "STK:RSP:176": [
+        -168,
+        -168
+       ],
+       "STK:RSP:192": [
+        -152,
+        -152
+       ],
+       "STK:RSP:208": [
+        -136,
+        -136
+       ],
+       "STK:RSP:224": [
+        -120,
+        -120
+       ],
+       "STK:RSP:240": [
+        -104,
+        -104
+       ],
+       "STK:RSP:256": [
+        -88,
+        -88
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L1_1808",
+   "source_loop": "a1_escape.c:88",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:120",
+     "STK:RSP:128",
+     "STK:RSP:132",
+     "STK:RSP:136",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:20",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:256",
+     "STK:RSP:32",
+     "STK:RSP:352",
+     "STK:RSP:40",
+     "STK:RSP:44",
+     "STK:RSP:48",
+     "STK:RSP:52",
+     "STK:RSP:56",
+     "STK:RSP:60",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:104 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:112 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:120 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:128 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:132 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:136 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:144 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:160 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:176 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:192 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:20 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:208 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:224 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:24 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:240 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:256 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:189d",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "vmovq rdi, xmm13",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:144": [
+        -200,
+        -200
+       ],
+       "STK:RSP:160": [
+        -184,
+        -184
+       ],
+       "STK:RSP:176": [
+        -168,
+        -168
+       ],
+       "STK:RSP:192": [
+        -152,
+        -152
+       ],
+       "STK:RSP:208": [
+        -136,
+        -136
+       ],
+       "STK:RSP:224": [
+        -120,
+        -120
+       ],
+       "STK:RSP:240": [
+        -104,
+        -104
+       ],
+       "STK:RSP:256": [
+        -88,
+        -88
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L1_1880",
+   "source_loop": "a1_escape.c:71",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:104",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:20",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:256",
+     "STK:RSP:32",
+     "STK:RSP:352",
+     "STK:RSP:40",
+     "STK:RSP:44",
+     "STK:RSP:48",
+     "STK:RSP:52",
+     "STK:RSP:56",
+     "STK:RSP:60",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ],
+     [
+      "STK:RSP:240"
+     ],
+     [
+      "STK:RSP:256"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:104 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:128 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:144 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:160 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:176 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:192 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:20 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:208 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:224 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:24 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:240 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:256 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:32 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:352 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:40 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)",
+    "STK:RSP:44 <- unbounded VMOVQ via RAX at 1:17e6 (stack pointer read by VMOVQ)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:189d",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "vmovq rdi, xmm13",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:144": [
+        -200,
+        -200
+       ],
+       "STK:RSP:160": [
+        -184,
+        -184
+       ],
+       "STK:RSP:176": [
+        -168,
+        -168
+       ],
+       "STK:RSP:192": [
+        -152,
+        -152
+       ],
+       "STK:RSP:208": [
+        -136,
+        -136
+       ],
+       "STK:RSP:224": [
+        -120,
+        -120
+       ],
+       "STK:RSP:240": [
+        -104,
+        -104
+       ],
+       "STK:RSP:256": [
+        -88,
+        -88
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L1_ac2",
+   "source_loop": "a1_escape.c:122",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 64,
+    "partial_results": [
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:16",
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:120",
+     "STK:RSP:124",
+     "STK:RSP:128",
+     "STK:RSP:192",
+     "STK:RSP:256",
+     "STK:RSP:320",
+     "STK:RSP:44",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:16 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:104 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:112 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:120 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:124 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:128 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:192 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:256 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:320 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:44 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:48 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:56 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:64 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:72 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:80 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:88 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:b21",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "vmovq rdi, xmm8",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffff8",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:128": [
+        -431,
+        -368
+       ],
+       "STK:RSP:192": [
+        -367,
+        -304
+       ],
+       "STK:RSP:256": [
+        -303,
+        -240
+       ],
+       "STK:RSP:320": [
+        -239,
+        -176
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L1_b00",
+   "source_loop": "a1_escape.c:123",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 64,
+    "partial_results": [
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:16",
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:120",
+     "STK:RSP:124",
+     "STK:RSP:128",
+     "STK:RSP:192",
+     "STK:RSP:256",
+     "STK:RSP:320",
+     "STK:RSP:72",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:16 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:104 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:112 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:120 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:124 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:128 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:192 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:256 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:320 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:72 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:80 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:88 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)",
+    "STK:RSP:96 <- unbounded VMOVQ via RAX at 1:a9b (stack pointer read by VMOVQ)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:b21",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "vmovq rdi, xmm8",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffff8",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:128": [
+        -431,
+        -368
+       ],
+       "STK:RSP:192": [
+        -367,
+        -304
+       ],
+       "STK:RSP:256": [
+        -303,
+        -240
+       ],
+       "STK:RSP:320": [
+        -239,
+        -176
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L2_142",
+   "source_loop": "a1_escape.c:46",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:16",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:296",
+     "STK:RSP:304",
+     "STK:RSP:312",
+     "STK:RSP:32",
+     "STK:RSP:320",
+     "STK:RSP:392",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:76",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:104 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:16 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:208 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:224 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:24 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:240 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:248 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:256 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:264 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L2_1e6",
+   "source_loop": "a1_escape.c:46",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:16",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:24",
+     "STK:RSP:312",
+     "STK:RSP:32",
+     "STK:RSP:320",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:76",
+     "STK:RSP:8",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:104 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:16 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:208 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:224 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:24 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:312 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:32 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:320 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:40 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L2_78c",
+   "source_loop": "a1_escape.c:88",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:16",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:232",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:32",
+     "STK:RSP:360",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:16 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:208 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:224 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:232 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:24 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:240 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:248 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:256 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:264 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L2_81f",
+   "source_loop": "a1_escape.c:71",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:16",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:208",
+     "STK:RSP:24",
+     "STK:RSP:32",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:16 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:208 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:24 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:32 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:40 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:48 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:56 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:8 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:80 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L2_f66",
+   "source_loop": "a1_escape.c:128",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 64,
+    "partial_results": [
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:384"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:24",
+     "STK:RSP:0",
+     "STK:RSP:100",
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:120",
+     "STK:RSP:128",
+     "STK:RSP:136",
+     "STK:RSP:144",
+     "STK:RSP:152",
+     "STK:RSP:160",
+     "STK:RSP:168",
+     "STK:RSP:176",
+     "STK:RSP:184",
+     "STK:RSP:192",
+     "STK:RSP:256",
+     "STK:RSP:320",
+     "STK:RSP:384",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:80",
+     "STK:RSP:88"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:384"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:24 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:100 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:104 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:120 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:136 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:152 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:168 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:184 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:256 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L2_fc8",
+   "source_loop": "a1_escape.c:128",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 64,
+    "partial_results": [
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:384"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:100",
+     "STK:RSP:120",
+     "STK:RSP:128",
+     "STK:RSP:136",
+     "STK:RSP:184",
+     "STK:RSP:192",
+     "STK:RSP:256",
+     "STK:RSP:320",
+     "STK:RSP:384",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:80",
+     "STK:RSP:88"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:384"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:100 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:120 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:136 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:184 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:256 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:320 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:384 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:56 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:64 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:72 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:80 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:88 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[4]",
+   "loop": "L2_13d2",
+   "source_loop": "a1_escape.c:147",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 24,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:20",
+     "STK:RSP:208",
+     "STK:RSP:232",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:296",
+     "STK:RSP:304",
+     "STK:RSP:32",
+     "STK:RSP:376",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:20 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:208 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:232 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:24 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:240 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:248 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:256 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:264 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:272 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[4]",
+   "loop": "L2_148a",
+   "source_loop": "a1_escape.c:148",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 24,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:20",
+     "STK:RSP:208",
+     "STK:RSP:24",
+     "STK:RSP:304",
+     "STK:RSP:32",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:20 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:208 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:24 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:304 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:32 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:40 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:48 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:56 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:8 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L2_142",
+   "source_loop": "a1_escape.c:46",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:16",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:296",
+     "STK:RSP:304",
+     "STK:RSP:312",
+     "STK:RSP:32",
+     "STK:RSP:320",
+     "STK:RSP:392",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:76",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:104 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:16 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:208 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:224 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:24 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:240 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:248 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:256 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:264 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L2_1e6",
+   "source_loop": "a1_escape.c:46",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:16",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:24",
+     "STK:RSP:312",
+     "STK:RSP:32",
+     "STK:RSP:320",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:76",
+     "STK:RSP:8",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:224"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:104 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:16 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:208 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:224 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:24 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:312 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:32 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:320 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)",
+    "STK:RSP:40 <- unbounded CALL_NEAR via RDI at 2:245 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L2_78c",
+   "source_loop": "a1_escape.c:88",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:16",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:208",
+     "STK:RSP:224",
+     "STK:RSP:232",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:32",
+     "STK:RSP:360",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:16 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:208 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:224 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:232 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:24 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:240 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:248 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:256 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:264 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L2_81f",
+   "source_loop": "a1_escape.c:71",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:16",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:208",
+     "STK:RSP:24",
+     "STK:RSP:32",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:160"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ],
+     [
+      "STK:RSP:96"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:16 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:208 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:24 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:32 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:40 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:48 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:56 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:8 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)",
+    "STK:RSP:80 <- unbounded CALL_NEAR via RDI at 2:854 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L2_f66",
+   "source_loop": "a1_escape.c:128",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 64,
+    "partial_results": [
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:384"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:24",
+     "STK:RSP:0",
+     "STK:RSP:100",
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:120",
+     "STK:RSP:128",
+     "STK:RSP:136",
+     "STK:RSP:144",
+     "STK:RSP:152",
+     "STK:RSP:160",
+     "STK:RSP:168",
+     "STK:RSP:176",
+     "STK:RSP:184",
+     "STK:RSP:192",
+     "STK:RSP:256",
+     "STK:RSP:320",
+     "STK:RSP:384",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:80",
+     "STK:RSP:88"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:384"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:24 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:100 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:104 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:120 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:136 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:152 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:168 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:184 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:256 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L2_fc8",
+   "source_loop": "a1_escape.c:128",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 64,
+    "partial_results": [
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:384"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:100",
+     "STK:RSP:120",
+     "STK:RSP:128",
+     "STK:RSP:136",
+     "STK:RSP:184",
+     "STK:RSP:192",
+     "STK:RSP:256",
+     "STK:RSP:320",
+     "STK:RSP:384",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:80",
+     "STK:RSP:88"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:256"
+     ],
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:384"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:100 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:120 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:136 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:184 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:256 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:320 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:384 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:56 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:64 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:72 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:80 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)",
+    "STK:RSP:88 <- unbounded CALL_NEAR via RDI at 2:1019 (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[4]",
+   "loop": "L2_13d2",
+   "source_loop": "a1_escape.c:147",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 24,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:20",
+     "STK:RSP:208",
+     "STK:RSP:232",
+     "STK:RSP:24",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:296",
+     "STK:RSP:304",
+     "STK:RSP:32",
+     "STK:RSP:376",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:64",
+     "STK:RSP:72",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:20 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:208 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:232 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:24 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:240 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:248 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:256 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:264 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:272 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[4]",
+   "loop": "L2_148a",
+   "source_loop": "a1_escape.c:148",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 24,
+    "partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RSP:0",
+     "STK:RSP:112",
+     "STK:RSP:128",
+     "STK:RSP:144",
+     "STK:RSP:160",
+     "STK:RSP:176",
+     "STK:RSP:192",
+     "STK:RSP:20",
+     "STK:RSP:208",
+     "STK:RSP:24",
+     "STK:RSP:304",
+     "STK:RSP:32",
+     "STK:RSP:40",
+     "STK:RSP:48",
+     "STK:RSP:56",
+     "STK:RSP:8",
+     "STK:RSP:80",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:112"
+     ],
+     [
+      "STK:RSP:128"
+     ],
+     [
+      "STK:RSP:144"
+     ],
+     [
+      "STK:RSP:176"
+     ],
+     [
+      "STK:RSP:192"
+     ],
+     [
+      "STK:RSP:208"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RSP:0 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:112 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:128 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:144 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:160 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:176 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:192 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:20 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:208 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:24 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:304 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:32 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:40 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:48 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:56 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)",
+    "STK:RSP:8 <- unbounded CALL_NEAR via RDI at 2:143d (stack pointer in an argument register at a call)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": []
+   }
+  }
+ ],
+ "flags_added": [],
+ "loop_changes": [
+  {
+   "config": "B-cmake",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L6_bc",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:320",
+    "STK:RSP:328",
+    "STK:RSP:344",
+    "STK:RSP:36",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:80",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "B-cmake",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L6_e9",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:328",
+    "STK:RSP:36",
+    "STK:RSP:40",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:80",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "B-cmake",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L6_bc",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:320",
+    "STK:RSP:328",
+    "STK:RSP:344",
+    "STK:RSP:36",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:80",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "B-cmake",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L6_e9",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:80"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:328",
+    "STK:RSP:36",
+    "STK:RSP:40",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:80",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:80"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L1_170",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:104",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:20",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:256",
+    "STK:RSP:32",
+    "STK:RSP:352",
+    "STK:RSP:40",
+    "STK:RSP:44",
+    "STK:RSP:48",
+    "STK:RSP:52",
+    "STK:RSP:56",
+    "STK:RSP:60",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L1_1ec",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:240",
+    "STK:RSP:256"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L1_f8",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:120",
+    "STK:RSP:128",
+    "STK:RSP:132",
+    "STK:RSP:136",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:20",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:256",
+    "STK:RSP:32",
+    "STK:RSP:352",
+    "STK:RSP:40",
+    "STK:RSP:44",
+    "STK:RSP:48",
+    "STK:RSP:52",
+    "STK:RSP:56",
+    "STK:RSP:60",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L1_1808",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:120",
+    "STK:RSP:128",
+    "STK:RSP:132",
+    "STK:RSP:136",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:20",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:256",
+    "STK:RSP:32",
+    "STK:RSP:352",
+    "STK:RSP:40",
+    "STK:RSP:44",
+    "STK:RSP:48",
+    "STK:RSP:52",
+    "STK:RSP:56",
+    "STK:RSP:60",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L1_1880",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:104",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:20",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:256",
+    "STK:RSP:32",
+    "STK:RSP:352",
+    "STK:RSP:40",
+    "STK:RSP:44",
+    "STK:RSP:48",
+    "STK:RSP:52",
+    "STK:RSP:56",
+    "STK:RSP:60",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L1_18fc",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:240",
+    "STK:RSP:256"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L1_ac2",
+   "diff": {
+    "acc_lanes_emitted": [
+     64,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:256"
+      ],
+      [
+       "STK:RSP:320"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:16",
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:120",
+    "STK:RSP:124",
+    "STK:RSP:128",
+    "STK:RSP:192",
+    "STK:RSP:256",
+    "STK:RSP:320",
+    "STK:RSP:44",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:256"
+    ],
+    [
+     "STK:RSP:320"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 64
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L1_b00",
+   "diff": {
+    "acc_lanes_emitted": [
+     64,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:256"
+      ],
+      [
+       "STK:RSP:320"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:16",
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:120",
+    "STK:RSP:124",
+    "STK:RSP:128",
+    "STK:RSP:192",
+    "STK:RSP:256",
+    "STK:RSP:320",
+    "STK:RSP:72",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:256"
+    ],
+    [
+     "STK:RSP:320"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 64
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L1_b55",
+   "diff": {
+    "acc_lanes_emitted": [
+     64,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:256"
+      ],
+      [
+       "STK:RSP:320"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:128",
+    "STK:RSP:192",
+    "STK:RSP:256",
+    "STK:RSP:320"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:256"
+    ],
+    [
+     "STK:RSP:320"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 64
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[4]",
+   "loop": "L1_10c9",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ],
+      [
+       "STK:RSP:272"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:240",
+    "STK:RSP:256",
+    "STK:RSP:272"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ],
+    [
+     "STK:RSP:272"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L1_170",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:104",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:20",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:256",
+    "STK:RSP:32",
+    "STK:RSP:352",
+    "STK:RSP:40",
+    "STK:RSP:44",
+    "STK:RSP:48",
+    "STK:RSP:52",
+    "STK:RSP:56",
+    "STK:RSP:60",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L1_1ec",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:240",
+    "STK:RSP:256"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L1_f8",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:120",
+    "STK:RSP:128",
+    "STK:RSP:132",
+    "STK:RSP:136",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:20",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:256",
+    "STK:RSP:32",
+    "STK:RSP:352",
+    "STK:RSP:40",
+    "STK:RSP:44",
+    "STK:RSP:48",
+    "STK:RSP:52",
+    "STK:RSP:56",
+    "STK:RSP:60",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L1_1808",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:120",
+    "STK:RSP:128",
+    "STK:RSP:132",
+    "STK:RSP:136",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:20",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:256",
+    "STK:RSP:32",
+    "STK:RSP:352",
+    "STK:RSP:40",
+    "STK:RSP:44",
+    "STK:RSP:48",
+    "STK:RSP:52",
+    "STK:RSP:56",
+    "STK:RSP:60",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L1_1880",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:104",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:20",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:256",
+    "STK:RSP:32",
+    "STK:RSP:352",
+    "STK:RSP:40",
+    "STK:RSP:44",
+    "STK:RSP:48",
+    "STK:RSP:52",
+    "STK:RSP:56",
+    "STK:RSP:60",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L1_18fc",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:240",
+    "STK:RSP:256"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L1_ac2",
+   "diff": {
+    "acc_lanes_emitted": [
+     64,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:256"
+      ],
+      [
+       "STK:RSP:320"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:16",
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:120",
+    "STK:RSP:124",
+    "STK:RSP:128",
+    "STK:RSP:192",
+    "STK:RSP:256",
+    "STK:RSP:320",
+    "STK:RSP:44",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:256"
+    ],
+    [
+     "STK:RSP:320"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 64
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L1_b00",
+   "diff": {
+    "acc_lanes_emitted": [
+     64,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:256"
+      ],
+      [
+       "STK:RSP:320"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:16",
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:120",
+    "STK:RSP:124",
+    "STK:RSP:128",
+    "STK:RSP:192",
+    "STK:RSP:256",
+    "STK:RSP:320",
+    "STK:RSP:72",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:256"
+    ],
+    [
+     "STK:RSP:320"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 64
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L1_b55",
+   "diff": {
+    "acc_lanes_emitted": [
+     64,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:256"
+      ],
+      [
+       "STK:RSP:320"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:128",
+    "STK:RSP:192",
+    "STK:RSP:256",
+    "STK:RSP:320"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:256"
+    ],
+    [
+     "STK:RSP:320"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 64
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[4]",
+   "loop": "L1_10c9",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ],
+      [
+       "STK:RSP:240"
+      ],
+      [
+       "STK:RSP:256"
+      ],
+      [
+       "STK:RSP:272"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:240",
+    "STK:RSP:256",
+    "STK:RSP:272"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ],
+    [
+     "STK:RSP:240"
+    ],
+    [
+     "STK:RSP:256"
+    ],
+    [
+     "STK:RSP:272"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L2_142",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:16",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:296",
+    "STK:RSP:304",
+    "STK:RSP:312",
+    "STK:RSP:32",
+    "STK:RSP:320",
+    "STK:RSP:392",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:76",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L2_1e6",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:16",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:24",
+    "STK:RSP:312",
+    "STK:RSP:32",
+    "STK:RSP:320",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:76",
+    "STK:RSP:8",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L2_78c",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:16",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:232",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:32",
+    "STK:RSP:360",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L2_81f",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:16",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:24",
+    "STK:RSP:32",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L2_f66",
+   "diff": {
+    "acc_lanes_emitted": [
+     64,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:256"
+      ],
+      [
+       "STK:RSP:320"
+      ],
+      [
+       "STK:RSP:384"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:24",
+    "STK:RSP:0",
+    "STK:RSP:100",
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:120",
+    "STK:RSP:128",
+    "STK:RSP:136",
+    "STK:RSP:144",
+    "STK:RSP:152",
+    "STK:RSP:160",
+    "STK:RSP:168",
+    "STK:RSP:176",
+    "STK:RSP:184",
+    "STK:RSP:192",
+    "STK:RSP:256",
+    "STK:RSP:320",
+    "STK:RSP:384",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:80",
+    "STK:RSP:88"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:256"
+    ],
+    [
+     "STK:RSP:320"
+    ],
+    [
+     "STK:RSP:384"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 64
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L2_fc8",
+   "diff": {
+    "acc_lanes_emitted": [
+     64,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:256"
+      ],
+      [
+       "STK:RSP:320"
+      ],
+      [
+       "STK:RSP:384"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:100",
+    "STK:RSP:120",
+    "STK:RSP:128",
+    "STK:RSP:136",
+    "STK:RSP:184",
+    "STK:RSP:192",
+    "STK:RSP:256",
+    "STK:RSP:320",
+    "STK:RSP:384",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:80",
+    "STK:RSP:88"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:256"
+    ],
+    [
+     "STK:RSP:320"
+    ],
+    [
+     "STK:RSP:384"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 64
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[4]",
+   "loop": "L2_13d2",
+   "diff": {
+    "acc_lanes_emitted": [
+     24,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:20",
+    "STK:RSP:208",
+    "STK:RSP:232",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:296",
+    "STK:RSP:304",
+    "STK:RSP:32",
+    "STK:RSP:376",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 24
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[4]",
+   "loop": "L2_148a",
+   "diff": {
+    "acc_lanes_emitted": [
+     24,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:20",
+    "STK:RSP:208",
+    "STK:RSP:24",
+    "STK:RSP:304",
+    "STK:RSP:32",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 24
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L2_142",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:16",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:296",
+    "STK:RSP:304",
+    "STK:RSP:312",
+    "STK:RSP:32",
+    "STK:RSP:320",
+    "STK:RSP:392",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:76",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[0]",
+   "loop": "L2_1e6",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:224"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:16",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:24",
+    "STK:RSP:312",
+    "STK:RSP:32",
+    "STK:RSP:320",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:76",
+    "STK:RSP:8",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:224"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L2_78c",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:16",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:224",
+    "STK:RSP:232",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:32",
+    "STK:RSP:360",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[1]",
+   "loop": "L2_81f",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:160"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ],
+      [
+       "STK:RSP:96"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:16",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:208",
+    "STK:RSP:24",
+    "STK:RSP:32",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:160"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ],
+    [
+     "STK:RSP:96"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L2_f66",
+   "diff": {
+    "acc_lanes_emitted": [
+     64,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:256"
+      ],
+      [
+       "STK:RSP:320"
+      ],
+      [
+       "STK:RSP:384"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:24",
+    "STK:RSP:0",
+    "STK:RSP:100",
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:120",
+    "STK:RSP:128",
+    "STK:RSP:136",
+    "STK:RSP:144",
+    "STK:RSP:152",
+    "STK:RSP:160",
+    "STK:RSP:168",
+    "STK:RSP:176",
+    "STK:RSP:184",
+    "STK:RSP:192",
+    "STK:RSP:256",
+    "STK:RSP:320",
+    "STK:RSP:384",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:80",
+    "STK:RSP:88"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:256"
+    ],
+    [
+     "STK:RSP:320"
+    ],
+    [
+     "STK:RSP:384"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 64
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[3]",
+   "loop": "L2_fc8",
+   "diff": {
+    "acc_lanes_emitted": [
+     64,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:256"
+      ],
+      [
+       "STK:RSP:320"
+      ],
+      [
+       "STK:RSP:384"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:100",
+    "STK:RSP:120",
+    "STK:RSP:128",
+    "STK:RSP:136",
+    "STK:RSP:184",
+    "STK:RSP:192",
+    "STK:RSP:256",
+    "STK:RSP:320",
+    "STK:RSP:384",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:80",
+    "STK:RSP:88"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:256"
+    ],
+    [
+     "STK:RSP:320"
+    ],
+    [
+     "STK:RSP:384"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 64
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[4]",
+   "loop": "L2_13d2",
+   "diff": {
+    "acc_lanes_emitted": [
+     24,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:20",
+    "STK:RSP:208",
+    "STK:RSP:232",
+    "STK:RSP:24",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:296",
+    "STK:RSP:304",
+    "STK:RSP:32",
+    "STK:RSP:376",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:64",
+    "STK:RSP:72",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 24
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "variant": "a1_table:mm[4]",
+   "loop": "L2_148a",
+   "diff": {
+    "acc_lanes_emitted": [
+     24,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:112"
+      ],
+      [
+       "STK:RSP:128"
+      ],
+      [
+       "STK:RSP:144"
+      ],
+      [
+       "STK:RSP:176"
+      ],
+      [
+       "STK:RSP:192"
+      ],
+      [
+       "STK:RSP:208"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:0",
+    "STK:RSP:112",
+    "STK:RSP:128",
+    "STK:RSP:144",
+    "STK:RSP:160",
+    "STK:RSP:176",
+    "STK:RSP:192",
+    "STK:RSP:20",
+    "STK:RSP:208",
+    "STK:RSP:24",
+    "STK:RSP:304",
+    "STK:RSP:32",
+    "STK:RSP:40",
+    "STK:RSP:48",
+    "STK:RSP:56",
+    "STK:RSP:8",
+    "STK:RSP:80",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:112"
+    ],
+    [
+     "STK:RSP:128"
+    ],
+    [
+     "STK:RSP:144"
+    ],
+    [
+     "STK:RSP:176"
+    ],
+    [
+     "STK:RSP:192"
+    ],
+    [
+     "STK:RSP:208"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 24
+  }
+ ],
+ "units": [
+  {
+   "config": "A",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "step": "loops_b1_a1_escape.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "1c7e41009ddcab95314dc3c27c7d0649fb4941f1f0e931ad5c3d4679d0ea7512",
+   "new_loops_sha256": "ee9b6112498909879be145f0f9819b0e8fdefc6edb42a1ae9e4b83748a6df818"
+  },
+  {
+   "config": "A",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "step": "loops_b2_a1_escape.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "1c7e41009ddcab95314dc3c27c7d0649fb4941f1f0e931ad5c3d4679d0ea7512",
+   "new_loops_sha256": "ee9b6112498909879be145f0f9819b0e8fdefc6edb42a1ae9e4b83748a6df818"
+  },
+  {
+   "config": "A-ninja",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "step": "loops_b1_a1_escape.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "8bb8371a42b579bf9fc9ca774c10152eb9782748df025d7ed769b16374dc2f9e",
+   "new_loops_sha256": "ca4be19fecdbc07b1e4fe7714754ce1cb365e82cf9b242917ed22b5cdf901946"
+  },
+  {
+   "config": "A-ninja",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "step": "loops_b2_a1_escape.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "8bb8371a42b579bf9fc9ca774c10152eb9782748df025d7ed769b16374dc2f9e",
+   "new_loops_sha256": "ca4be19fecdbc07b1e4fe7714754ce1cb365e82cf9b242917ed22b5cdf901946"
+  },
+  {
+   "config": "B-cmake",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "step": "loops_b1_a1_escape.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "63683a3c300e17caed8b89d0bbb5478943b90a9842672c8a6f70e834c76fd737",
+   "new_loops_sha256": "bbfce38b9c23ad1e69c1404227fa0a53984149422a8f63cadaca60db155fcc15"
+  },
+  {
+   "config": "B-cmake",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "step": "loops_b2_a1_escape.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "63683a3c300e17caed8b89d0bbb5478943b90a9842672c8a6f70e834c76fd737",
+   "new_loops_sha256": "bbfce38b9c23ad1e69c1404227fa0a53984149422a8f63cadaca60db155fcc15"
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "step": "loops_b1_a1_escape.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "2ede7282d5ed6465c939ec6aa33e88931f83c0de801d79ea9f3db5b92d195aac",
+   "new_loops_sha256": "a3255073f55c878edd2dfdffddb530a52447728bdc498802cada1a20f0ac64a7"
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "step": "loops_b2_a1_escape.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "2ede7282d5ed6465c939ec6aa33e88931f83c0de801d79ea9f3db5b92d195aac",
+   "new_loops_sha256": "a3255073f55c878edd2dfdffddb530a52447728bdc498802cada1a20f0ac64a7"
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "a1_escape.c",
+   "step": "loops_b1_a1_escape.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "6425a338dfeb5e58c1ca2fe535e2626f7adb7c8c4a249c1d0b2908483f5ae7b5",
+   "new_loops_sha256": "b23dcd1c644938da6878f4fccca19e1e96476e92220cb0c28ed986cdb2427bc5"
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "a1_escape.c",
+   "step": "loops_b2_a1_escape.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "6425a338dfeb5e58c1ca2fe535e2626f7adb7c8c4a249c1d0b2908483f5ae7b5",
+   "new_loops_sha256": "b23dcd1c644938da6878f4fccca19e1e96476e92220cb0c28ed986cdb2427bc5"
+  }
+ ],
+ "summary": {
+  "variants": 60,
+  "loops": 288,
+  "unscreened_after": 40,
+  "loops_with_escaping_slots_after": 146,
+  "loops_changed": 40,
+  "flags_removed": 32,
+  "flags_added": 0,
+  "units": 10,
+  "units_rc_differs": 0
+ }
+}

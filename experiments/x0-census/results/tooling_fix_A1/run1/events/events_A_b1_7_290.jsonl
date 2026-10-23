@@ -1,0 +1,42 @@
+{"variant": "A:k_avx2:matmul[Q8]", "function": "mm_q8_avx2", "instructions": 600, "events": 33, "rsp_at": [-1144, -1144]}
+{"event": "exact", "at": "7:3", "disasm": "mov qword ptr [rax+0x8], rbx", "via": "RAX", "value_from_entry_rsp": [8, 8], "width": 8, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:7", "disasm": "mov qword ptr [rax+0x10], rsi", "via": "RAX", "value_from_entry_rsp": [16, 16], "width": 8, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:b", "disasm": "mov qword ptr [rax+0x20], rdi", "via": "RAX", "value_from_entry_rsp": [32, 32], "width": 8, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:1f", "disasm": "vmovaps xmmword ptr [rax-0x38], xmm6", "via": "RAX", "value_from_entry_rsp": [-56, -56], "width": 16, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:24", "disasm": "vmovaps xmmword ptr [rax-0x48], xmm7", "via": "RAX", "value_from_entry_rsp": [-72, -72], "width": 16, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:29", "disasm": "vmovaps xmmword ptr [rax-0x58], xmm8", "via": "RAX", "value_from_entry_rsp": [-88, -88], "width": 16, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:2e", "disasm": "vmovaps xmmword ptr [rax-0x68], xmm9", "via": "RAX", "value_from_entry_rsp": [-104, -104], "width": 16, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:33", "disasm": "vmovaps xmmword ptr [rax-0x78], xmm10", "via": "RAX", "value_from_entry_rsp": [-120, -120], "width": 16, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:38", "disasm": "vmovaps xmmword ptr [rax-0x88], xmm11", "via": "RAX", "value_from_entry_rsp": [-136, -136], "width": 16, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:40", "disasm": "vmovaps xmmword ptr [rax-0x98], xmm12", "via": "RAX", "value_from_entry_rsp": [-152, -152], "width": 16, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:48", "disasm": "vmovaps xmmword ptr [rax-0xa8], xmm13", "via": "RAX", "value_from_entry_rsp": [-168, -168], "width": 16, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:50", "disasm": "vmovaps xmmword ptr [rax-0xb8], xmm14", "via": "RAX", "value_from_entry_rsp": [-184, -184], "width": 16, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:58", "disasm": "vmovaps xmmword ptr [rax-0xc8], xmm15", "via": "RAX", "value_from_entry_rsp": [-200, -200], "width": 16, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:1fc", "disasm": "mov qword ptr [r8-0x8], rcx", "via": "R8", "value_from_entry_rsp": [-567, Infinity], "width": 8, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:5f0", "disasm": "vmovups ymmword ptr [rax], ymm0", "via": "RAX", "value_from_entry_rsp": [-503, Infinity], "width": 32, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:9ae", "disasm": "vaddps ymm3, ymm2, ymmword ptr [rdx]", "via": "RDX", "value_from_entry_rsp": [-503, Infinity], "width": 32, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:9b5", "disasm": "vmovups ymmword ptr [rdx], ymm3", "via": "RDX", "value_from_entry_rsp": [-503, Infinity], "width": 32, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:a50", "disasm": "vmovups ymm1, ymmword ptr [rax]", "via": "RAX", "value_from_entry_rsp": [-503, Infinity], "width": 32, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "exact", "at": "7:a81", "disasm": "vmovups ymm1, ymmword ptr [rdx]", "via": "RDX", "value_from_entry_rsp": [-503, Infinity], "width": 32, "why": "access through a stack pointer", "reaches_header": true}
+{"event": "unbounded", "at": "7:b47", "disasm": "call 0xb4c", "via": "RDX", "value_from_entry_rsp": null, "width": 64, "why": "stack pointer in an argument register at a call", "reaches_header": false}
+{"event": "exact", "at": "7:b54", "disasm": "mov rbx, qword ptr [r11+0x30]", "via": "R11", "value_from_entry_rsp": [8, 8], "width": 8, "why": "access through a stack pointer", "reaches_header": false}
+{"event": "exact", "at": "7:b58", "disasm": "mov rsi, qword ptr [r11+0x38]", "via": "R11", "value_from_entry_rsp": [16, 16], "width": 8, "why": "access through a stack pointer", "reaches_header": false}
+{"event": "exact", "at": "7:b5c", "disasm": "mov rdi, qword ptr [r11+0x48]", "via": "R11", "value_from_entry_rsp": [32, 32], "width": 8, "why": "access through a stack pointer", "reaches_header": false}
+{"event": "exact", "at": "7:b60", "disasm": "vmovaps xmm6, xmmword ptr [r11-0x10]", "via": "R11", "value_from_entry_rsp": [-56, -56], "width": 16, "why": "access through a stack pointer", "reaches_header": false}
+{"event": "exact", "at": "7:b66", "disasm": "vmovaps xmm7, xmmword ptr [r11-0x20]", "via": "R11", "value_from_entry_rsp": [-72, -72], "width": 16, "why": "access through a stack pointer", "reaches_header": false}
+{"event": "exact", "at": "7:b6c", "disasm": "vmovaps xmm8, xmmword ptr [r11-0x30]", "via": "R11", "value_from_entry_rsp": [-88, -88], "width": 16, "why": "access through a stack pointer", "reaches_header": false}
+{"event": "exact", "at": "7:b72", "disasm": "vmovaps xmm9, xmmword ptr [r11-0x40]", "via": "R11", "value_from_entry_rsp": [-104, -104], "width": 16, "why": "access through a stack pointer", "reaches_header": false}
+{"event": "exact", "at": "7:b78", "disasm": "vmovaps xmm10, xmmword ptr [r11-0x50]", "via": "R11", "value_from_entry_rsp": [-120, -120], "width": 16, "why": "access through a stack pointer", "reaches_header": false}
+{"event": "exact", "at": "7:b7e", "disasm": "vmovaps xmm11, xmmword ptr [r11-0x60]", "via": "R11", "value_from_entry_rsp": [-136, -136], "width": 16, "why": "access through a stack pointer", "reaches_header": false}
+{"event": "exact", "at": "7:b84", "disasm": "vmovaps xmm12, xmmword ptr [r11-0x70]", "via": "R11", "value_from_entry_rsp": [-152, -152], "width": 16, "why": "access through a stack pointer", "reaches_header": false}
+{"event": "exact", "at": "7:b8a", "disasm": "vmovaps xmm13, xmmword ptr [r11-0x80]", "via": "R11", "value_from_entry_rsp": [-168, -168], "width": 16, "why": "access through a stack pointer", "reaches_header": false}
+{"event": "exact", "at": "7:b90", "disasm": "vmovaps xmm14, xmmword ptr [r11-0x90]", "via": "R11", "value_from_entry_rsp": [-184, -184], "width": 16, "why": "access through a stack pointer", "reaches_header": false}
+{"event": "exact", "at": "7:b99", "disasm": "vmovaps xmm15, xmmword ptr [r11-0xa0]", "via": "R11", "value_from_entry_rsp": [-200, -200], "width": 16, "why": "access through a stack pointer", "reaches_header": false}
+{"materialises": "7:0", "disasm": "mov rax, rsp", "rsp_from_entry_rsp": [0, 0]}
+{"materialises": "7:60", "disasm": "lea rbp, ptr [rsp+0x20]", "rsp_from_entry_rsp": [-1144, -1144]}
+{"materialises": "7:1cd", "disasm": "lea r8, ptr [rbp+0x240]", "rsp_from_entry_rsp": [-1144, -1144]}
+{"materialises": "7:5de", "disasm": "lea rax, ptr [rbp+0x280]", "rsp_from_entry_rsp": [-1144, -1144]}
+{"materialises": "7:7b7", "disasm": "lea rdx, ptr [rbp+0x280]", "rsp_from_entry_rsp": [-1144, -1144]}
+{"materialises": "7:a3d", "disasm": "lea rax, ptr [rbp+0x280]", "rsp_from_entry_rsp": [-1144, -1144]}
+{"materialises": "7:a7a", "disasm": "lea rdx, ptr [rbp+0x280]", "rsp_from_entry_rsp": [-1144, -1144]}
+{"materialises": "7:b4c", "disasm": "lea r11, ptr [rsp+0x450]", "rsp_from_entry_rsp": [-1144, -1144]}

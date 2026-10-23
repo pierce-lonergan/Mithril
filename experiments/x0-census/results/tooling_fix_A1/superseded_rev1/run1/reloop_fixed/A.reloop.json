@@ -1,0 +1,68 @@
+{
+ "run": "D:\\mithril\\x0census\\run1",
+ "config": "A",
+ "x0_loops": "D:\\mithril\\x0fixA1\\tree\\x0-census\\scripts\\x0_loops.py",
+ "x0_loops_sha256": "7a6393d3ecb521ca3fe09d64edfdb9e360724fa214d0db0328239bc58f71bfe3",
+ "steps": [
+  {
+   "step": "loops_b1_all",
+   "argv": [
+    "C:\\Python313\\python.exe",
+    "-I",
+    "D:\\mithril\\x0fixA1\\tree\\x0-census\\scripts\\x0_loops.py",
+    "D:\\mithril\\x0census\\run1\\A\\b1\\all\\decode",
+    "--manifest",
+    "D:\\mithril\\x0census\\run1\\A\\b1\\all\\manifest.json",
+    "-o",
+    "D:\\mithril\\x0fixA1\\run1_reloop\\new\\A\\loops_b1_all\\loops.json",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\A\\b1\\all\\attr\\quant.c.attr.json",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\A\\b1\\all\\attr\\quant_avx2.c.attr.json",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\A\\b1\\all\\attr\\quant_avx512.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "D:\\mithril\\x0census\\run1\\A\\b1\\all\\loops.json",
+   "run_loops_sha256": "d5d70439562cbeaa03e41a7e8ac4261c40c6c051819ad0759d39981ad81c3f60",
+   "new_loops_sha256": "17eee3692f70dcc63c1a835808845a612f0fa818f12e357a0e7d3c81b83cc29f",
+   "identical": false,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  },
+  {
+   "step": "loops_b2_all",
+   "argv": [
+    "C:\\Python313\\python.exe",
+    "-I",
+    "D:\\mithril\\x0fixA1\\tree\\x0-census\\scripts\\x0_loops.py",
+    "D:\\mithril\\x0census\\run1\\A\\b2\\all\\decode",
+    "--manifest",
+    "D:\\mithril\\x0census\\run1\\A\\b2\\all\\manifest.json",
+    "-o",
+    "D:\\mithril\\x0fixA1\\run1_reloop\\new\\A\\loops_b2_all\\loops.json",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\A\\b2\\all\\attr\\quant.c.attr.json",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\A\\b2\\all\\attr\\quant_avx2.c.attr.json",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\A\\b2\\all\\attr\\quant_avx512.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "D:\\mithril\\x0census\\run1\\A\\b2\\all\\loops.json",
+   "run_loops_sha256": "d5d70439562cbeaa03e41a7e8ac4261c40c6c051819ad0759d39981ad81c3f60",
+   "new_loops_sha256": "17eee3692f70dcc63c1a835808845a612f0fa818f12e357a0e7d3c81b83cc29f",
+   "identical": false,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  }
+ ]
+}

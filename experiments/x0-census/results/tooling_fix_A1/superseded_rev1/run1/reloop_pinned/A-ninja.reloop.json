@@ -1,0 +1,68 @@
+{
+ "run": "D:\\mithril\\x0census\\run1",
+ "config": "A-ninja",
+ "x0_loops": "D:\\mithril\\x0fixA1\\tree_pinned\\x0-census\\scripts\\x0_loops.py",
+ "x0_loops_sha256": "8c7ecc9e6a29b4ec8398661ffca9c225a2fccf7f1e1af3f9d24cd04e78df3799",
+ "steps": [
+  {
+   "step": "loops_b1_all",
+   "argv": [
+    "C:\\Python313\\python.exe",
+    "-I",
+    "D:\\mithril\\x0fixA1\\tree_pinned\\x0-census\\scripts\\x0_loops.py",
+    "D:\\mithril\\x0census\\run1\\A-ninja\\b1\\all\\decode",
+    "--manifest",
+    "D:\\mithril\\x0census\\run1\\A-ninja\\b1\\all\\manifest.json",
+    "-o",
+    "D:\\mithril\\x0fixA1\\run1_reloop\\old\\A-ninja\\loops_b1_all\\loops.json",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\A-ninja\\b1\\all\\attr\\quant.c.attr.json",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\A-ninja\\b1\\all\\attr\\quant_avx2.c.attr.json",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\A-ninja\\b1\\all\\attr\\quant_avx512.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "D:\\mithril\\x0census\\run1\\A-ninja\\b1\\all\\loops.json",
+   "run_loops_sha256": "0b4a2e9c98cfa91299f8f3b808ca412295f0f49d9b6e2fc016e261e852fb67b9",
+   "new_loops_sha256": "0b4a2e9c98cfa91299f8f3b808ca412295f0f49d9b6e2fc016e261e852fb67b9",
+   "identical": true,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  },
+  {
+   "step": "loops_b2_all",
+   "argv": [
+    "C:\\Python313\\python.exe",
+    "-I",
+    "D:\\mithril\\x0fixA1\\tree_pinned\\x0-census\\scripts\\x0_loops.py",
+    "D:\\mithril\\x0census\\run1\\A-ninja\\b2\\all\\decode",
+    "--manifest",
+    "D:\\mithril\\x0census\\run1\\A-ninja\\b2\\all\\manifest.json",
+    "-o",
+    "D:\\mithril\\x0fixA1\\run1_reloop\\old\\A-ninja\\loops_b2_all\\loops.json",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\A-ninja\\b2\\all\\attr\\quant.c.attr.json",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\A-ninja\\b2\\all\\attr\\quant_avx2.c.attr.json",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\A-ninja\\b2\\all\\attr\\quant_avx512.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "D:\\mithril\\x0census\\run1\\A-ninja\\b2\\all\\loops.json",
+   "run_loops_sha256": "0b4a2e9c98cfa91299f8f3b808ca412295f0f49d9b6e2fc016e261e852fb67b9",
+   "new_loops_sha256": "0b4a2e9c98cfa91299f8f3b808ca412295f0f49d9b6e2fc016e261e852fb67b9",
+   "identical": true,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  }
+ ]
+}

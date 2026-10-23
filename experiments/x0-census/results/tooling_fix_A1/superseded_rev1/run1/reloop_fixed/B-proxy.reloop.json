@@ -1,0 +1,176 @@
+{
+ "run": "D:\\mithril\\x0census\\run1",
+ "config": "B-proxy",
+ "x0_loops": "D:\\mithril\\x0fixA1\\tree\\x0-census\\scripts\\x0_loops.py",
+ "x0_loops_sha256": "7a6393d3ecb521ca3fe09d64edfdb9e360724fa214d0db0328239bc58f71bfe3",
+ "steps": [
+  {
+   "step": "loops_b1_quant.c",
+   "argv": [
+    "C:\\Python313\\python.exe",
+    "-I",
+    "D:\\mithril\\x0fixA1\\tree\\x0-census\\scripts\\x0_loops.py",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b1\\quant.c\\decode",
+    "--manifest",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b1\\quant.c\\manifest.json",
+    "-o",
+    "D:\\mithril\\x0fixA1\\run1_reloop\\new\\B-proxy\\loops_b1_quant.c\\loops.json",
+    "--canary-variant",
+    "hx_kernels_scalar:act_quantize_q8",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b1\\quant.c\\attr\\quant.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "D:\\mithril\\x0census\\run1\\B-proxy\\b1\\quant.c\\loops.json",
+   "run_loops_sha256": "1864ea4174917cbca4eaffe0b06ce5990be39172165138f07e5d4fb006a25a2f",
+   "new_loops_sha256": "e05b832fe921cdff2416d65c52094086a761a47f3d5cb7448a6d58000d42570c",
+   "identical": false,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  },
+  {
+   "step": "loops_b1_quant_avx2.c",
+   "argv": [
+    "C:\\Python313\\python.exe",
+    "-I",
+    "D:\\mithril\\x0fixA1\\tree\\x0-census\\scripts\\x0_loops.py",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b1\\quant_avx2.c\\decode",
+    "--manifest",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b1\\quant_avx2.c\\manifest.json",
+    "-o",
+    "D:\\mithril\\x0fixA1\\run1_reloop\\new\\B-proxy\\loops_b1_quant_avx2.c\\loops.json",
+    "--canary-variant",
+    "none",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b1\\quant_avx2.c\\attr\\quant_avx2.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "D:\\mithril\\x0census\\run1\\B-proxy\\b1\\quant_avx2.c\\loops.json",
+   "run_loops_sha256": "cca66d433a1edeef37f6318b5a8479a56161fd69e8716c123c936ee916f6cf0b",
+   "new_loops_sha256": "d1915b3061d4f0052f6dc906d66c91649a74906eea4ecff41adec27573461bd6",
+   "identical": false,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  },
+  {
+   "step": "loops_b1_quant_avx512.c",
+   "argv": [
+    "C:\\Python313\\python.exe",
+    "-I",
+    "D:\\mithril\\x0fixA1\\tree\\x0-census\\scripts\\x0_loops.py",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b1\\quant_avx512.c\\decode",
+    "--manifest",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b1\\quant_avx512.c\\manifest.json",
+    "-o",
+    "D:\\mithril\\x0fixA1\\run1_reloop\\new\\B-proxy\\loops_b1_quant_avx512.c\\loops.json",
+    "--canary-variant",
+    "none",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b1\\quant_avx512.c\\attr\\quant_avx512.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "D:\\mithril\\x0census\\run1\\B-proxy\\b1\\quant_avx512.c\\loops.json",
+   "run_loops_sha256": "900c4d40c7ffc7b401cccefaf90fdc2d8fe596d8696469b18727e2b83a9db99b",
+   "new_loops_sha256": "4d8392b1c16d72a3735a0e3936e014a6cc527970224e3958a0156666a247435c",
+   "identical": false,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  },
+  {
+   "step": "loops_b2_quant.c",
+   "argv": [
+    "C:\\Python313\\python.exe",
+    "-I",
+    "D:\\mithril\\x0fixA1\\tree\\x0-census\\scripts\\x0_loops.py",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b2\\quant.c\\decode",
+    "--manifest",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b2\\quant.c\\manifest.json",
+    "-o",
+    "D:\\mithril\\x0fixA1\\run1_reloop\\new\\B-proxy\\loops_b2_quant.c\\loops.json",
+    "--canary-variant",
+    "hx_kernels_scalar:act_quantize_q8",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b2\\quant.c\\attr\\quant.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "D:\\mithril\\x0census\\run1\\B-proxy\\b2\\quant.c\\loops.json",
+   "run_loops_sha256": "1864ea4174917cbca4eaffe0b06ce5990be39172165138f07e5d4fb006a25a2f",
+   "new_loops_sha256": "e05b832fe921cdff2416d65c52094086a761a47f3d5cb7448a6d58000d42570c",
+   "identical": false,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  },
+  {
+   "step": "loops_b2_quant_avx2.c",
+   "argv": [
+    "C:\\Python313\\python.exe",
+    "-I",
+    "D:\\mithril\\x0fixA1\\tree\\x0-census\\scripts\\x0_loops.py",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b2\\quant_avx2.c\\decode",
+    "--manifest",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b2\\quant_avx2.c\\manifest.json",
+    "-o",
+    "D:\\mithril\\x0fixA1\\run1_reloop\\new\\B-proxy\\loops_b2_quant_avx2.c\\loops.json",
+    "--canary-variant",
+    "none",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b2\\quant_avx2.c\\attr\\quant_avx2.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "D:\\mithril\\x0census\\run1\\B-proxy\\b2\\quant_avx2.c\\loops.json",
+   "run_loops_sha256": "cca66d433a1edeef37f6318b5a8479a56161fd69e8716c123c936ee916f6cf0b",
+   "new_loops_sha256": "d1915b3061d4f0052f6dc906d66c91649a74906eea4ecff41adec27573461bd6",
+   "identical": false,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  },
+  {
+   "step": "loops_b2_quant_avx512.c",
+   "argv": [
+    "C:\\Python313\\python.exe",
+    "-I",
+    "D:\\mithril\\x0fixA1\\tree\\x0-census\\scripts\\x0_loops.py",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b2\\quant_avx512.c\\decode",
+    "--manifest",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b2\\quant_avx512.c\\manifest.json",
+    "-o",
+    "D:\\mithril\\x0fixA1\\run1_reloop\\new\\B-proxy\\loops_b2_quant_avx512.c\\loops.json",
+    "--canary-variant",
+    "none",
+    "--attribution",
+    "D:\\mithril\\x0census\\run1\\B-proxy\\b2\\quant_avx512.c\\attr\\quant_avx512.c.attr.json"
+   ],
+   "recorded_rc": 0,
+   "rc": 0,
+   "run_loops_json": "D:\\mithril\\x0census\\run1\\B-proxy\\b2\\quant_avx512.c\\loops.json",
+   "run_loops_sha256": "900c4d40c7ffc7b401cccefaf90fdc2d8fe596d8696469b18727e2b83a9db99b",
+   "new_loops_sha256": "4d8392b1c16d72a3735a0e3936e014a6cc527970224e3958a0156666a247435c",
+   "identical": false,
+   "stdout_tail": [
+    " },",
+    " \"not_computed\": {}",
+    "}"
+   ]
+  }
+ ]
+}

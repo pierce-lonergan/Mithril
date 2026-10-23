@@ -98,8 +98,17 @@ Decision list, in this order (every state of census.json maps to exactly one ver
     if its id is in proved_loop_ids; a loop with no tags is uncovered) is uncovered; a compiled variant under A or
     D without a loop analysis contributes an uncovered entry; if X2's verdict has no proved_loop_shapes field the
     narrowing holds with every loop listed. Narrowing holds iff at least one loop is uncovered.
+ 5. Both ways (Amendment X0-A1, post-data, 2026-10-23; record §10: "Verdicts are then reported under both the original
+    and the amended rule"). When the census carries variants[].p3c_frozen_reading (x0_loops.py after X0-A1: P3(c)
+    under the reading frozen at 152fa33, every constant-offset stack slot a register-like location), verdict.json
+    "both_ways" lists every variant whose frozen-reading P3(c) differs from p3.c, every unscreened loop with both
+    counts and its bound, and the whole decision list above evaluated a second time with p3.c replaced by
+    p3c_frozen_reading (outcomes, validity, amber_b). The top-level outcomes are those of the amended rule; which
+    rule governs is the Owner's decision (the amendment is post-data and in the direction favourable to Pass), and
+    neither is acted on before it.
 """
 import argparse
+import copy
 import csv
 import datetime
 import hashlib
@@ -221,6 +230,9 @@ def validate_schema(census):
             bad.append("variants[%d].coverage.gaps is not a list of objects" % i)
         if isinstance(v.get("loops"), list) and not _is_list_of_dicts(v["loops"]):
             bad.append("variants[%d].loops[] entries must be objects" % i)
+        for k in ("p3c_frozen_reading", "p3c_unscreened"):     # Amendment X0-A1
+            if k in v and not (isinstance(v[k], list) and all(isinstance(x, str) for x in v[k])):
+                bad.append("variants[%d].%s is not a list of loop ids" % (i, k))
         q = v.get("p3")
         if isinstance(q, dict):                   # x0final revision: the P3 lists judge.py reads are typed
             if "c" in q and not isinstance(q["c"], list):
@@ -297,8 +309,62 @@ def _vid(v):
     return "%s:%s" % (v.get("table"), v.get("slot"))
 
 
+A1_KEY = "p3c_frozen_reading"
+A1_RULE = ("Amendment X0-A1 (post-data, 2026-10-23): P3(c) with stack slots whose address escapes as plain memory "
+           "(top-level outcomes) against the reading frozen at 152fa33, every constant-offset stack slot a "
+           "register-like location (frozen_reading); which governs is the Owner's decision")
+
+
+def _frozen_reading_census(census):
+    """A copy of census.json whose P3(c) lists are the frozen reading's (variants[].p3c_frozen_reading), or None when
+    the census carries no such list (written before X0-A1)."""
+    vs = census.get("variants") if isinstance(census, dict) else None
+    if not isinstance(vs, list) or not any(isinstance(v, dict) and A1_KEY in v for v in vs):
+        return None
+    alt = copy.deepcopy(census)
+    for v in alt["variants"]:
+        if isinstance(v, dict) and isinstance(v.get(A1_KEY), list) and isinstance(v.get("p3"), dict):
+            v["p3"]["c"] = list(v[A1_KEY])
+    return alt
+
+
 def judge(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_accepted=False, root=None,
           date_basis=None):
+    """The decision list (module docstring, items S to 4) under the census's own P3(c) lists, and (item 5, Amendment
+    X0-A1) the same decision list under the frozen reading when the census carries it."""
+    alt = _frozen_reading_census(census)
+    rows = []
+    if alt is not None:
+        for v in census["variants"]:
+            if not isinstance(v, dict):
+                continue
+            c = sorted((v.get("p3") or {}).get("c") or []) if isinstance(v.get("p3"), dict) else []
+            f = sorted(v[A1_KEY]) if isinstance(v.get(A1_KEY), list) else c
+            uns = [{"loop": lp.get("id"), "acc_lanes_emitted": lp.get("acc_lanes_emitted"),
+                    "acc_lanes_if_escaping_slots_were_registers": lp.get("acc_lanes_if_escaping_slots_were_registers"),
+                    "bound_used": lp.get("bound_used")}
+                   for lp in v.get("loops") or [] if isinstance(lp, dict) and lp.get("unscreened")]
+            if c != f or uns:
+                rows.append({"config": v.get("config"), "variant": _vid(v), "build_index": v.get("build_index"),
+                             "p3c": c, "p3c_frozen_reading": f, "unscreened_loops": uns})
+    verdict = _judge_one(census, class_dir, eval_date, x2, judged_utc, t_forms_owner_accepted, root, date_basis)
+    if alt is not None:
+        fr = _judge_one(alt, class_dir, eval_date, x2, judged_utc, t_forms_owner_accepted, root, date_basis)
+        verdict["both_ways"] = {
+            "rule": A1_RULE,
+            "p3c_differs": any(r["p3c"] != r["p3c_frozen_reading"] for r in rows),
+            "variants": rows,
+            "frozen_reading": {"outcomes": fr["outcomes"], "validity": fr["validity"], "amber_b": fr["amber_b"]},
+            "outcomes_differ": fr["outcomes"] != verdict["outcomes"],
+            "amber_b_configs": sorted({x["config"] for x in verdict["amber_b"]}),
+            "amber_b_configs_frozen_reading": sorted({x["config"] for x in fr["amber_b"]})}
+        verdict["notes"].append("Amendment X0-A1 (post-data): reported both ways in both_ways; the outcomes above use "
+                                "the amended P3(c); under the frozen reading: %s" % ", ".join(fr["outcomes"]))
+    return verdict
+
+
+def _judge_one(census, class_dir, eval_date, x2=None, judged_utc=None, t_forms_owner_accepted=False, root=None,
+               date_basis=None):
     root = root or os.path.dirname(os.path.abspath(class_dir))
     fpc = load_fp_class(os.path.join(class_dir, "fp_class.csv"))
     b_iform = _load_json(os.path.join(class_dir, "B_iform.json"))

@@ -1,0 +1,416 @@
+{
+ "mode": "runs",
+ "files": 70,
+ "variant_field_changes": {},
+ "loop_field_changes": {
+  "acc_lanes_emitted|unscreened": 12,
+  "partial_result_cycles|unscreened": 12,
+  "partial_results|unscreened": 12
+ },
+ "checks": {
+  "frozen_reading_differs_from_before_p3c": 0,
+  "screened_count_differs": 0,
+  "screened_partial_results_differ": 0,
+  "unscreened_frozen_count_differs": 0
+ },
+ "per_config_build": {
+  "A-ninja|b1": {
+   "variants": 42,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 147,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 28
+  },
+  "A-ninja|b2": {
+   "variants": 42,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 147,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 28
+  },
+  "A|b1": {
+   "variants": 42,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 147,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 28
+  },
+  "A|b2": {
+   "variants": 42,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 147,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 28
+  },
+  "B-cmake|b1": {
+   "variants": 42,
+   "p3c_flagged_loops_before": 18,
+   "p3c_flagged_loops_after": 18,
+   "p3c_flagged_variants_before": 6,
+   "p3c_flagged_variants_after": 6,
+   "p3c_flagged_loops_after_frozen_reading": 18,
+   "loops": 126,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 8
+  },
+  "B-cmake|b2": {
+   "variants": 42,
+   "p3c_flagged_loops_before": 18,
+   "p3c_flagged_loops_after": 18,
+   "p3c_flagged_variants_before": 6,
+   "p3c_flagged_variants_after": 6,
+   "p3c_flagged_loops_after_frozen_reading": 18,
+   "loops": 126,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 8
+  },
+  "C|b1": {
+   "variants": 42,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 120,
+   "unscreened_loops_after": 6,
+   "loops_with_escaping_slots_after": 44
+  },
+  "C|b2": {
+   "variants": 42,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0,
+   "loops": 120,
+   "unscreened_loops_after": 6,
+   "loops_with_escaping_slots_after": 44
+  },
+  "D|b1": {
+   "variants": 42,
+   "p3c_flagged_loops_before": 18,
+   "p3c_flagged_loops_after": 18,
+   "p3c_flagged_variants_before": 6,
+   "p3c_flagged_variants_after": 6,
+   "p3c_flagged_loops_after_frozen_reading": 18,
+   "loops": 142,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 4
+  },
+  "D|b2": {
+   "variants": 42,
+   "p3c_flagged_loops_before": 18,
+   "p3c_flagged_loops_after": 18,
+   "p3c_flagged_variants_before": 6,
+   "p3c_flagged_variants_after": 6,
+   "p3c_flagged_loops_after_frozen_reading": 18,
+   "loops": 142,
+   "unscreened_loops_after": 0,
+   "loops_with_escaping_slots_after": 4
+  },
+  "P.A-ninja|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.A-ninja|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.A|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.A|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.B-cmake|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.B-cmake|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.C|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.C|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.D|b1": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  },
+  "P.D|b2": {
+   "variants": 6,
+   "p3c_flagged_loops_before": 0,
+   "p3c_flagged_loops_after": 0,
+   "p3c_flagged_variants_before": 0,
+   "p3c_flagged_variants_after": 0,
+   "p3c_flagged_loops_after_frozen_reading": 0
+  }
+ },
+ "examples": {
+  "loop:acc_lanes_emitted|unscreened": [
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table:matmul[0]",
+    "L1_bf1",
+    8,
+    0
+   ],
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table:matmul[1]",
+    "L1_bf1",
+    8,
+    0
+   ],
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table:matmul[2]",
+    "L1_bf1",
+    8,
+    0
+   ],
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table_global:matmul[0]",
+    "L1_bf1",
+    8,
+    0
+   ],
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table_global:matmul[1]",
+    "L1_bf1",
+    8,
+    0
+   ]
+  ],
+  "loop:partial_result_cycles|unscreened": [
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table:matmul[0]",
+    "L1_bf1",
+    [
+     {
+      "members": [
+       "STK:RSP:64"
+      ],
+      "partial_results": 1,
+      "lanes": 8,
+      "emitted": 8
+     }
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table:matmul[1]",
+    "L1_bf1",
+    [
+     {
+      "members": [
+       "STK:RSP:64"
+      ],
+      "partial_results": 1,
+      "lanes": 8,
+      "emitted": 8
+     }
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table:matmul[2]",
+    "L1_bf1",
+    [
+     {
+      "members": [
+       "STK:RSP:64"
+      ],
+      "partial_results": 1,
+      "lanes": 8,
+      "emitted": 8
+     }
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table_global:matmul[0]",
+    "L1_bf1",
+    [
+     {
+      "members": [
+       "STK:RSP:64"
+      ],
+      "partial_results": 1,
+      "lanes": 8,
+      "emitted": 8
+     }
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table_global:matmul[1]",
+    "L1_bf1",
+    [
+     {
+      "members": [
+       "STK:RSP:64"
+      ],
+      "partial_results": 1,
+      "lanes": 8,
+      "emitted": 8
+     }
+    ],
+    []
+   ]
+  ],
+  "loop:partial_results|unscreened": [
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table:matmul[0]",
+    "L1_bf1",
+    [
+     [
+      "STK:RSP:64"
+     ]
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table:matmul[1]",
+    "L1_bf1",
+    [
+     [
+      "STK:RSP:64"
+     ]
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table:matmul[2]",
+    "L1_bf1",
+    [
+     [
+      "STK:RSP:64"
+     ]
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table_global:matmul[0]",
+    "L1_bf1",
+    [
+     [
+      "STK:RSP:64"
+     ]
+    ],
+    []
+   ],
+   [
+    "C",
+    "b1",
+    "smoke_dispatch.c",
+    "sd_table_global:matmul[1]",
+    "L1_bf1",
+    [
+     [
+      "STK:RSP:64"
+     ]
+    ],
+    []
+   ]
+  ]
+ }
+}

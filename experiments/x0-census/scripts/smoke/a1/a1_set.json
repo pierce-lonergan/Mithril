@@ -1,0 +1,21 @@
+{
+ "note": "X0-A1 (2026-10-23, x0fix track): the NON-Hearth reproduction a1_escape.c of the shape behind census run 1's four configuration-C P3(c) flags (a stack array of vector accumulators with a run-time live count, zeroed per chunk, whose address is taken), as a census-file set for x0_driver.py replay mode. Compiled with the frozen command line of quant_avx512.c (A and A-ninja: the A-ninja capture, as in regression_set.json; B-cmake; C; D). Loop bounds: a1_loop_table.csv. Not part of the step-88 regression set.",
+ "frozen_db": {
+  "A": "flags/prefreeze/A-ninja.compile_commands.json",
+  "A-ninja": "flags/prefreeze/A-ninja.compile_commands.json",
+  "B-cmake": "flags/prefreeze/B-cmake.compile_commands.json",
+  "C": "flags/C-gcc.compile_commands.json",
+  "D": "flags/D-clang.compile_commands.json"
+ },
+ "files": [
+  {
+   "id": "a1_escape.c",
+   "source": "scripts/smoke/a1/a1_escape.c",
+   "as": "quant_avx512.c",
+   "struct": "a1_kernels",
+   "expect_variants": 6,
+   "loop_table": "scripts/smoke/a1/a1_loop_table.csv",
+   "variant_map": "a1_table:mm[0]=a1.rep,a1_table:mm[1]=a1.memset,a1_table:mm[2]=a1.regs,a1_table:mm[3]=a1.wide,a1_table:mm[4]=a1.call,a1_table:peak=a1.peak"
+  }
+ ]
+}

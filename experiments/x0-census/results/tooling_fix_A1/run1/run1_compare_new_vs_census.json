@@ -1,0 +1,2778 @@
+{
+ "flags_removed": [
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q4]",
+   "loop": "L1_2d5f",
+   "source_loop": "quant_avx512.c:352",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ],
+     [
+      "STK:RSP:448"
+     ],
+     [
+      "STK:RSP:464"
+     ],
+     [
+      "STK:RSP:480"
+     ],
+     [
+      "STK:RSP:496"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:16",
+     "STK:RBP:24",
+     "STK:RSP:192",
+     "STK:RSP:200",
+     "STK:RSP:208",
+     "STK:RSP:216",
+     "STK:RSP:224",
+     "STK:RSP:232",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:296",
+     "STK:RSP:304",
+     "STK:RSP:312",
+     "STK:RSP:320",
+     "STK:RSP:328",
+     "STK:RSP:336",
+     "STK:RSP:344",
+     "STK:RSP:352",
+     "STK:RSP:360",
+     "STK:RSP:368",
+     "STK:RSP:376",
+     "STK:RSP:384",
+     "STK:RSP:400",
+     "STK:RSP:416",
+     "STK:RSP:432",
+     "STK:RSP:448",
+     "STK:RSP:464",
+     "STK:RSP:480",
+     "STK:RSP:496"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ],
+     [
+      "STK:RSP:448"
+     ],
+     [
+      "STK:RSP:464"
+     ],
+     [
+      "STK:RSP:480"
+     ],
+     [
+      "STK:RSP:496"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:16 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RBP:24 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:192 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:200 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:208 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:216 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:224 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:232 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:240 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:248 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:256 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:264 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:272 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:280 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:288 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:296 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:2ebc",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "mov rdi, qword ptr [rsp+0x150]",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:384": [
+        -687,
+        -624
+       ],
+       "STK:RSP:400": [
+        -671,
+        -608
+       ],
+       "STK:RSP:416": [
+        -655,
+        -592
+       ],
+       "STK:RSP:432": [
+        -639,
+        -576
+       ],
+       "STK:RSP:448": [
+        -623,
+        -560
+       ],
+       "STK:RSP:464": [
+        -607,
+        -544
+       ],
+       "STK:RSP:480": [
+        -591,
+        -528
+       ],
+       "STK:RSP:496": [
+        -575,
+        -512
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q4]",
+   "loop": "L1_2e90",
+   "source_loop": "quant_avx512.c:316",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ],
+     [
+      "STK:RSP:448"
+     ],
+     [
+      "STK:RSP:464"
+     ],
+     [
+      "STK:RSP:480"
+     ],
+     [
+      "STK:RSP:496"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:16",
+     "STK:RSP:192",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:296",
+     "STK:RSP:304",
+     "STK:RSP:312",
+     "STK:RSP:320",
+     "STK:RSP:328",
+     "STK:RSP:336",
+     "STK:RSP:344",
+     "STK:RSP:352",
+     "STK:RSP:360",
+     "STK:RSP:368",
+     "STK:RSP:376",
+     "STK:RSP:384",
+     "STK:RSP:400",
+     "STK:RSP:416",
+     "STK:RSP:432",
+     "STK:RSP:448",
+     "STK:RSP:464",
+     "STK:RSP:480",
+     "STK:RSP:496"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ],
+     [
+      "STK:RSP:448"
+     ],
+     [
+      "STK:RSP:464"
+     ],
+     [
+      "STK:RSP:480"
+     ],
+     [
+      "STK:RSP:496"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:16 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:192 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:240 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:248 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:256 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:264 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:272 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:280 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:288 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:296 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:304 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:312 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:320 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:328 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:336 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:344 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:2ebc",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "mov rdi, qword ptr [rsp+0x150]",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:384": [
+        -687,
+        -624
+       ],
+       "STK:RSP:400": [
+        -671,
+        -608
+       ],
+       "STK:RSP:416": [
+        -655,
+        -592
+       ],
+       "STK:RSP:432": [
+        -639,
+        -576
+       ],
+       "STK:RSP:448": [
+        -623,
+        -560
+       ],
+       "STK:RSP:464": [
+        -607,
+        -544
+       ],
+       "STK:RSP:480": [
+        -591,
+        -528
+       ],
+       "STK:RSP:496": [
+        -575,
+        -512
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q8]",
+   "loop": "L1_c64",
+   "source_loop": "quant_avx512.c:352",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:336"
+     ],
+     [
+      "STK:RSP:352"
+     ],
+     [
+      "STK:RSP:368"
+     ],
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:16",
+     "STK:RBP:24",
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:124",
+     "STK:RSP:128",
+     "STK:RSP:136",
+     "STK:RSP:144",
+     "STK:RSP:152",
+     "STK:RSP:160",
+     "STK:RSP:168",
+     "STK:RSP:176",
+     "STK:RSP:184",
+     "STK:RSP:192",
+     "STK:RSP:200",
+     "STK:RSP:208",
+     "STK:RSP:216",
+     "STK:RSP:224",
+     "STK:RSP:232",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:296",
+     "STK:RSP:304",
+     "STK:RSP:312",
+     "STK:RSP:320",
+     "STK:RSP:336",
+     "STK:RSP:352",
+     "STK:RSP:368",
+     "STK:RSP:384",
+     "STK:RSP:400",
+     "STK:RSP:416",
+     "STK:RSP:432",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:336"
+     ],
+     [
+      "STK:RSP:352"
+     ],
+     [
+      "STK:RSP:368"
+     ],
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:16 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RBP:24 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:104 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:112 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:124 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:128 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:136 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:144 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:152 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:160 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:168 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:176 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:184 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:192 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:200 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:208 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:dc2",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "mov rdi, qword ptr [rsp+0x118]",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:320": [
+        -687,
+        -624
+       ],
+       "STK:RSP:336": [
+        -671,
+        -608
+       ],
+       "STK:RSP:352": [
+        -655,
+        -592
+       ],
+       "STK:RSP:368": [
+        -639,
+        -576
+       ],
+       "STK:RSP:384": [
+        -623,
+        -560
+       ],
+       "STK:RSP:400": [
+        -607,
+        -544
+       ],
+       "STK:RSP:416": [
+        -591,
+        -528
+       ],
+       "STK:RSP:432": [
+        -575,
+        -512
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q8]",
+   "loop": "L1_d98",
+   "source_loop": "quant_avx512.c:316",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:336"
+     ],
+     [
+      "STK:RSP:352"
+     ],
+     [
+      "STK:RSP:368"
+     ],
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:16",
+     "STK:RSP:128",
+     "STK:RSP:136",
+     "STK:RSP:144",
+     "STK:RSP:152",
+     "STK:RSP:160",
+     "STK:RSP:168",
+     "STK:RSP:176",
+     "STK:RSP:184",
+     "STK:RSP:192",
+     "STK:RSP:200",
+     "STK:RSP:208",
+     "STK:RSP:216",
+     "STK:RSP:224",
+     "STK:RSP:232",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:296",
+     "STK:RSP:304",
+     "STK:RSP:312",
+     "STK:RSP:320",
+     "STK:RSP:336",
+     "STK:RSP:352",
+     "STK:RSP:368",
+     "STK:RSP:384",
+     "STK:RSP:400",
+     "STK:RSP:416",
+     "STK:RSP:432"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:336"
+     ],
+     [
+      "STK:RSP:352"
+     ],
+     [
+      "STK:RSP:368"
+     ],
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:16 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:128 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:136 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:144 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:152 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:160 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:168 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:176 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:184 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:192 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:200 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:208 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:216 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:224 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:232 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:240 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:dc2",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "mov rdi, qword ptr [rsp+0x118]",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:320": [
+        -687,
+        -624
+       ],
+       "STK:RSP:336": [
+        -671,
+        -608
+       ],
+       "STK:RSP:352": [
+        -655,
+        -592
+       ],
+       "STK:RSP:368": [
+        -639,
+        -576
+       ],
+       "STK:RSP:384": [
+        -623,
+        -560
+       ],
+       "STK:RSP:400": [
+        -607,
+        -544
+       ],
+       "STK:RSP:416": [
+        -591,
+        -528
+       ],
+       "STK:RSP:432": [
+        -575,
+        -512
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q4]",
+   "loop": "L1_2d5f",
+   "source_loop": "quant_avx512.c:352",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ],
+     [
+      "STK:RSP:448"
+     ],
+     [
+      "STK:RSP:464"
+     ],
+     [
+      "STK:RSP:480"
+     ],
+     [
+      "STK:RSP:496"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:16",
+     "STK:RBP:24",
+     "STK:RSP:192",
+     "STK:RSP:200",
+     "STK:RSP:208",
+     "STK:RSP:216",
+     "STK:RSP:224",
+     "STK:RSP:232",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:296",
+     "STK:RSP:304",
+     "STK:RSP:312",
+     "STK:RSP:320",
+     "STK:RSP:328",
+     "STK:RSP:336",
+     "STK:RSP:344",
+     "STK:RSP:352",
+     "STK:RSP:360",
+     "STK:RSP:368",
+     "STK:RSP:376",
+     "STK:RSP:384",
+     "STK:RSP:400",
+     "STK:RSP:416",
+     "STK:RSP:432",
+     "STK:RSP:448",
+     "STK:RSP:464",
+     "STK:RSP:480",
+     "STK:RSP:496"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ],
+     [
+      "STK:RSP:448"
+     ],
+     [
+      "STK:RSP:464"
+     ],
+     [
+      "STK:RSP:480"
+     ],
+     [
+      "STK:RSP:496"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:16 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RBP:24 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:192 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:200 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:208 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:216 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:224 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:232 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:240 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:248 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:256 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:264 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:272 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:280 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:288 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:296 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:2ebc",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "mov rdi, qword ptr [rsp+0x150]",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:384": [
+        -687,
+        -624
+       ],
+       "STK:RSP:400": [
+        -671,
+        -608
+       ],
+       "STK:RSP:416": [
+        -655,
+        -592
+       ],
+       "STK:RSP:432": [
+        -639,
+        -576
+       ],
+       "STK:RSP:448": [
+        -623,
+        -560
+       ],
+       "STK:RSP:464": [
+        -607,
+        -544
+       ],
+       "STK:RSP:480": [
+        -591,
+        -528
+       ],
+       "STK:RSP:496": [
+        -575,
+        -512
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q4]",
+   "loop": "L1_2e90",
+   "source_loop": "quant_avx512.c:316",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ],
+     [
+      "STK:RSP:448"
+     ],
+     [
+      "STK:RSP:464"
+     ],
+     [
+      "STK:RSP:480"
+     ],
+     [
+      "STK:RSP:496"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:16",
+     "STK:RSP:192",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:296",
+     "STK:RSP:304",
+     "STK:RSP:312",
+     "STK:RSP:320",
+     "STK:RSP:328",
+     "STK:RSP:336",
+     "STK:RSP:344",
+     "STK:RSP:352",
+     "STK:RSP:360",
+     "STK:RSP:368",
+     "STK:RSP:376",
+     "STK:RSP:384",
+     "STK:RSP:400",
+     "STK:RSP:416",
+     "STK:RSP:432",
+     "STK:RSP:448",
+     "STK:RSP:464",
+     "STK:RSP:480",
+     "STK:RSP:496"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ],
+     [
+      "STK:RSP:448"
+     ],
+     [
+      "STK:RSP:464"
+     ],
+     [
+      "STK:RSP:480"
+     ],
+     [
+      "STK:RSP:496"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:16 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:192 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:240 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:248 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:256 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:264 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:272 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:280 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:288 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:296 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:304 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:312 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:320 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:328 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:336 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)",
+    "STK:RSP:344 <- unbounded MOV via RAX at 1:253d (stack pointer read by MOV)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:2ebc",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "mov rdi, qword ptr [rsp+0x150]",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:384": [
+        -687,
+        -624
+       ],
+       "STK:RSP:400": [
+        -671,
+        -608
+       ],
+       "STK:RSP:416": [
+        -655,
+        -592
+       ],
+       "STK:RSP:432": [
+        -639,
+        -576
+       ],
+       "STK:RSP:448": [
+        -623,
+        -560
+       ],
+       "STK:RSP:464": [
+        -607,
+        -544
+       ],
+       "STK:RSP:480": [
+        -591,
+        -528
+       ],
+       "STK:RSP:496": [
+        -575,
+        -512
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q8]",
+   "loop": "L1_c64",
+   "source_loop": "quant_avx512.c:352",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:336"
+     ],
+     [
+      "STK:RSP:352"
+     ],
+     [
+      "STK:RSP:368"
+     ],
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:16",
+     "STK:RBP:24",
+     "STK:RSP:104",
+     "STK:RSP:112",
+     "STK:RSP:124",
+     "STK:RSP:128",
+     "STK:RSP:136",
+     "STK:RSP:144",
+     "STK:RSP:152",
+     "STK:RSP:160",
+     "STK:RSP:168",
+     "STK:RSP:176",
+     "STK:RSP:184",
+     "STK:RSP:192",
+     "STK:RSP:200",
+     "STK:RSP:208",
+     "STK:RSP:216",
+     "STK:RSP:224",
+     "STK:RSP:232",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:296",
+     "STK:RSP:304",
+     "STK:RSP:312",
+     "STK:RSP:320",
+     "STK:RSP:336",
+     "STK:RSP:352",
+     "STK:RSP:368",
+     "STK:RSP:384",
+     "STK:RSP:400",
+     "STK:RSP:416",
+     "STK:RSP:432",
+     "STK:RSP:88",
+     "STK:RSP:96"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:336"
+     ],
+     [
+      "STK:RSP:352"
+     ],
+     [
+      "STK:RSP:368"
+     ],
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:16 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RBP:24 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:104 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:112 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:124 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:128 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:136 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:144 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:152 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:160 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:168 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:176 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:184 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:192 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:200 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:208 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:dc2",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "mov rdi, qword ptr [rsp+0x118]",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:320": [
+        -687,
+        -624
+       ],
+       "STK:RSP:336": [
+        -671,
+        -608
+       ],
+       "STK:RSP:352": [
+        -655,
+        -592
+       ],
+       "STK:RSP:368": [
+        -639,
+        -576
+       ],
+       "STK:RSP:384": [
+        -623,
+        -560
+       ],
+       "STK:RSP:400": [
+        -607,
+        -544
+       ],
+       "STK:RSP:416": [
+        -591,
+        -528
+       ],
+       "STK:RSP:432": [
+        -575,
+        -512
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q8]",
+   "loop": "L1_d98",
+   "source_loop": "quant_avx512.c:316",
+   "bound_used": 0,
+   "before": {
+    "acc_lanes_emitted": 32,
+    "partial_results": [
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:336"
+     ],
+     [
+      "STK:RSP:352"
+     ],
+     [
+      "STK:RSP:368"
+     ],
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ]
+    ]
+   },
+   "after": {
+    "acc_lanes_emitted": 0,
+    "partial_results": [],
+    "unscreened": true,
+    "escaping_slots": [
+     "STK:RBP:16",
+     "STK:RSP:128",
+     "STK:RSP:136",
+     "STK:RSP:144",
+     "STK:RSP:152",
+     "STK:RSP:160",
+     "STK:RSP:168",
+     "STK:RSP:176",
+     "STK:RSP:184",
+     "STK:RSP:192",
+     "STK:RSP:200",
+     "STK:RSP:208",
+     "STK:RSP:216",
+     "STK:RSP:224",
+     "STK:RSP:232",
+     "STK:RSP:240",
+     "STK:RSP:248",
+     "STK:RSP:256",
+     "STK:RSP:264",
+     "STK:RSP:272",
+     "STK:RSP:280",
+     "STK:RSP:288",
+     "STK:RSP:296",
+     "STK:RSP:304",
+     "STK:RSP:312",
+     "STK:RSP:320",
+     "STK:RSP:336",
+     "STK:RSP:352",
+     "STK:RSP:368",
+     "STK:RSP:384",
+     "STK:RSP:400",
+     "STK:RSP:416",
+     "STK:RSP:432"
+    ],
+    "escaping_partial_results": [
+     [
+      "STK:RSP:320"
+     ],
+     [
+      "STK:RSP:336"
+     ],
+     [
+      "STK:RSP:352"
+     ],
+     [
+      "STK:RSP:368"
+     ],
+     [
+      "STK:RSP:384"
+     ],
+     [
+      "STK:RSP:400"
+     ],
+     [
+      "STK:RSP:416"
+     ],
+     [
+      "STK:RSP:432"
+     ]
+    ]
+   },
+   "cause_a_escape_events": [
+    "STK:RBP:16 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:128 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:136 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:144 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:152 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:160 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:168 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:176 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:184 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:192 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:200 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:208 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:216 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:224 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:232 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)",
+    "STK:RSP:240 <- unbounded MOV via RAX at 1:45b (stack pointer read by MOV)"
+   ],
+   "cause_a": true,
+   "cause_b": {
+    "string_stores_in_loop_body": [
+     {
+      "at": "1:dc2",
+      "disasm": "rep stosq qword ptr [rdi]",
+      "rdi_from_entry_rsp": null,
+      "rdi_is_stack_pointer": false,
+      "rdi_set_by": "mov rdi, qword ptr [rsp+0x118]",
+      "rdi_set_by_joins_crossed": 0,
+      "count_set_by": "and ecx, 0x1ffffffe",
+      "count_set_by_joins_crossed": 0,
+      "count_is_immediate": false,
+      "counted_slots_at_or_above_rdi": [],
+      "counted_slots_from_entry_rsp": {
+       "STK:RSP:320": [
+        -687,
+        -624
+       ],
+       "STK:RSP:336": [
+        -671,
+        -608
+       ],
+       "STK:RSP:352": [
+        -655,
+        -592
+       ],
+       "STK:RSP:368": [
+        -639,
+        -576
+       ],
+       "STK:RSP:384": [
+        -623,
+        -560
+       ],
+       "STK:RSP:400": [
+        -607,
+        -544
+       ],
+       "STK:RSP:416": [
+        -591,
+        -528
+       ],
+       "STK:RSP:432": [
+        -575,
+        -512
+       ]
+      }
+     }
+    ]
+   }
+  }
+ ],
+ "flags_added": [],
+ "loop_changes": [
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "all",
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_15c0",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:16"
+      ],
+      [
+       "STK:RSP:32"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:16",
+    "STK:RSP:20",
+    "STK:RSP:24",
+    "STK:RSP:32"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:16"
+    ],
+    [
+     "STK:RSP:32"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "all",
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_1880",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:48"
+      ],
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:48",
+    "STK:RSP:52",
+    "STK:RSP:56",
+    "STK:RSP:64"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:48"
+    ],
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "all",
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_1ac5",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:16"
+      ],
+      [
+       "STK:RSP:32"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:16",
+    "STK:RSP:20",
+    "STK:RSP:24",
+    "STK:RSP:32"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:16"
+    ],
+    [
+     "STK:RSP:32"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q4]",
+   "loop": "L1_2d5f",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:384"
+      ],
+      [
+       "STK:RSP:400"
+      ],
+      [
+       "STK:RSP:416"
+      ],
+      [
+       "STK:RSP:432"
+      ],
+      [
+       "STK:RSP:448"
+      ],
+      [
+       "STK:RSP:464"
+      ],
+      [
+       "STK:RSP:480"
+      ],
+      [
+       "STK:RSP:496"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:16",
+    "STK:RBP:24",
+    "STK:RSP:192",
+    "STK:RSP:200",
+    "STK:RSP:208",
+    "STK:RSP:216",
+    "STK:RSP:224",
+    "STK:RSP:232",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:296",
+    "STK:RSP:304",
+    "STK:RSP:312",
+    "STK:RSP:320",
+    "STK:RSP:328",
+    "STK:RSP:336",
+    "STK:RSP:344",
+    "STK:RSP:352",
+    "STK:RSP:360",
+    "STK:RSP:368",
+    "STK:RSP:376",
+    "STK:RSP:384",
+    "STK:RSP:400",
+    "STK:RSP:416",
+    "STK:RSP:432",
+    "STK:RSP:448",
+    "STK:RSP:464",
+    "STK:RSP:480",
+    "STK:RSP:496"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:384"
+    ],
+    [
+     "STK:RSP:400"
+    ],
+    [
+     "STK:RSP:416"
+    ],
+    [
+     "STK:RSP:432"
+    ],
+    [
+     "STK:RSP:448"
+    ],
+    [
+     "STK:RSP:464"
+    ],
+    [
+     "STK:RSP:480"
+    ],
+    [
+     "STK:RSP:496"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q4]",
+   "loop": "L1_2e90",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:384"
+      ],
+      [
+       "STK:RSP:400"
+      ],
+      [
+       "STK:RSP:416"
+      ],
+      [
+       "STK:RSP:432"
+      ],
+      [
+       "STK:RSP:448"
+      ],
+      [
+       "STK:RSP:464"
+      ],
+      [
+       "STK:RSP:480"
+      ],
+      [
+       "STK:RSP:496"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:16",
+    "STK:RSP:192",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:296",
+    "STK:RSP:304",
+    "STK:RSP:312",
+    "STK:RSP:320",
+    "STK:RSP:328",
+    "STK:RSP:336",
+    "STK:RSP:344",
+    "STK:RSP:352",
+    "STK:RSP:360",
+    "STK:RSP:368",
+    "STK:RSP:376",
+    "STK:RSP:384",
+    "STK:RSP:400",
+    "STK:RSP:416",
+    "STK:RSP:432",
+    "STK:RSP:448",
+    "STK:RSP:464",
+    "STK:RSP:480",
+    "STK:RSP:496"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:384"
+    ],
+    [
+     "STK:RSP:400"
+    ],
+    [
+     "STK:RSP:416"
+    ],
+    [
+     "STK:RSP:432"
+    ],
+    [
+     "STK:RSP:448"
+    ],
+    [
+     "STK:RSP:464"
+    ],
+    [
+     "STK:RSP:480"
+    ],
+    [
+     "STK:RSP:496"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q8]",
+   "loop": "L1_c64",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:320"
+      ],
+      [
+       "STK:RSP:336"
+      ],
+      [
+       "STK:RSP:352"
+      ],
+      [
+       "STK:RSP:368"
+      ],
+      [
+       "STK:RSP:384"
+      ],
+      [
+       "STK:RSP:400"
+      ],
+      [
+       "STK:RSP:416"
+      ],
+      [
+       "STK:RSP:432"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:16",
+    "STK:RBP:24",
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:124",
+    "STK:RSP:128",
+    "STK:RSP:136",
+    "STK:RSP:144",
+    "STK:RSP:152",
+    "STK:RSP:160",
+    "STK:RSP:168",
+    "STK:RSP:176",
+    "STK:RSP:184",
+    "STK:RSP:192",
+    "STK:RSP:200",
+    "STK:RSP:208",
+    "STK:RSP:216",
+    "STK:RSP:224",
+    "STK:RSP:232",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:296",
+    "STK:RSP:304",
+    "STK:RSP:312",
+    "STK:RSP:320",
+    "STK:RSP:336",
+    "STK:RSP:352",
+    "STK:RSP:368",
+    "STK:RSP:384",
+    "STK:RSP:400",
+    "STK:RSP:416",
+    "STK:RSP:432",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:320"
+    ],
+    [
+     "STK:RSP:336"
+    ],
+    [
+     "STK:RSP:352"
+    ],
+    [
+     "STK:RSP:368"
+    ],
+    [
+     "STK:RSP:384"
+    ],
+    [
+     "STK:RSP:400"
+    ],
+    [
+     "STK:RSP:416"
+    ],
+    [
+     "STK:RSP:432"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q8]",
+   "loop": "L1_d98",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:320"
+      ],
+      [
+       "STK:RSP:336"
+      ],
+      [
+       "STK:RSP:352"
+      ],
+      [
+       "STK:RSP:368"
+      ],
+      [
+       "STK:RSP:384"
+      ],
+      [
+       "STK:RSP:400"
+      ],
+      [
+       "STK:RSP:416"
+      ],
+      [
+       "STK:RSP:432"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:16",
+    "STK:RSP:128",
+    "STK:RSP:136",
+    "STK:RSP:144",
+    "STK:RSP:152",
+    "STK:RSP:160",
+    "STK:RSP:168",
+    "STK:RSP:176",
+    "STK:RSP:184",
+    "STK:RSP:192",
+    "STK:RSP:200",
+    "STK:RSP:208",
+    "STK:RSP:216",
+    "STK:RSP:224",
+    "STK:RSP:232",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:296",
+    "STK:RSP:304",
+    "STK:RSP:312",
+    "STK:RSP:320",
+    "STK:RSP:336",
+    "STK:RSP:352",
+    "STK:RSP:368",
+    "STK:RSP:384",
+    "STK:RSP:400",
+    "STK:RSP:416",
+    "STK:RSP:432"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:320"
+    ],
+    [
+     "STK:RSP:336"
+    ],
+    [
+     "STK:RSP:352"
+    ],
+    [
+     "STK:RSP:368"
+    ],
+    [
+     "STK:RSP:384"
+    ],
+    [
+     "STK:RSP:400"
+    ],
+    [
+     "STK:RSP:416"
+    ],
+    [
+     "STK:RSP:432"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "all",
+   "variant": "hx_kernels_scalar:matmul[BF16]",
+   "loop": "L1_15c0",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:16"
+      ],
+      [
+       "STK:RSP:32"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:16",
+    "STK:RSP:20",
+    "STK:RSP:24",
+    "STK:RSP:32"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:16"
+    ],
+    [
+     "STK:RSP:32"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "all",
+   "variant": "hx_kernels_scalar:matmul[F16]",
+   "loop": "L1_1880",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:48"
+      ],
+      [
+       "STK:RSP:64"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:48",
+    "STK:RSP:52",
+    "STK:RSP:56",
+    "STK:RSP:64"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:48"
+    ],
+    [
+     "STK:RSP:64"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "all",
+   "variant": "hx_kernels_scalar:matmul[F32]",
+   "loop": "L1_1ac5",
+   "diff": {
+    "acc_lanes_emitted": [
+     8,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:16"
+      ],
+      [
+       "STK:RSP:32"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RSP:16",
+    "STK:RSP:20",
+    "STK:RSP:24",
+    "STK:RSP:32"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:16"
+    ],
+    [
+     "STK:RSP:32"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 8
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q4]",
+   "loop": "L1_2d5f",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:384"
+      ],
+      [
+       "STK:RSP:400"
+      ],
+      [
+       "STK:RSP:416"
+      ],
+      [
+       "STK:RSP:432"
+      ],
+      [
+       "STK:RSP:448"
+      ],
+      [
+       "STK:RSP:464"
+      ],
+      [
+       "STK:RSP:480"
+      ],
+      [
+       "STK:RSP:496"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:16",
+    "STK:RBP:24",
+    "STK:RSP:192",
+    "STK:RSP:200",
+    "STK:RSP:208",
+    "STK:RSP:216",
+    "STK:RSP:224",
+    "STK:RSP:232",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:296",
+    "STK:RSP:304",
+    "STK:RSP:312",
+    "STK:RSP:320",
+    "STK:RSP:328",
+    "STK:RSP:336",
+    "STK:RSP:344",
+    "STK:RSP:352",
+    "STK:RSP:360",
+    "STK:RSP:368",
+    "STK:RSP:376",
+    "STK:RSP:384",
+    "STK:RSP:400",
+    "STK:RSP:416",
+    "STK:RSP:432",
+    "STK:RSP:448",
+    "STK:RSP:464",
+    "STK:RSP:480",
+    "STK:RSP:496"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:384"
+    ],
+    [
+     "STK:RSP:400"
+    ],
+    [
+     "STK:RSP:416"
+    ],
+    [
+     "STK:RSP:432"
+    ],
+    [
+     "STK:RSP:448"
+    ],
+    [
+     "STK:RSP:464"
+    ],
+    [
+     "STK:RSP:480"
+    ],
+    [
+     "STK:RSP:496"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q4]",
+   "loop": "L1_2e90",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:384"
+      ],
+      [
+       "STK:RSP:400"
+      ],
+      [
+       "STK:RSP:416"
+      ],
+      [
+       "STK:RSP:432"
+      ],
+      [
+       "STK:RSP:448"
+      ],
+      [
+       "STK:RSP:464"
+      ],
+      [
+       "STK:RSP:480"
+      ],
+      [
+       "STK:RSP:496"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:16",
+    "STK:RSP:192",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:296",
+    "STK:RSP:304",
+    "STK:RSP:312",
+    "STK:RSP:320",
+    "STK:RSP:328",
+    "STK:RSP:336",
+    "STK:RSP:344",
+    "STK:RSP:352",
+    "STK:RSP:360",
+    "STK:RSP:368",
+    "STK:RSP:376",
+    "STK:RSP:384",
+    "STK:RSP:400",
+    "STK:RSP:416",
+    "STK:RSP:432",
+    "STK:RSP:448",
+    "STK:RSP:464",
+    "STK:RSP:480",
+    "STK:RSP:496"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:384"
+    ],
+    [
+     "STK:RSP:400"
+    ],
+    [
+     "STK:RSP:416"
+    ],
+    [
+     "STK:RSP:432"
+    ],
+    [
+     "STK:RSP:448"
+    ],
+    [
+     "STK:RSP:464"
+    ],
+    [
+     "STK:RSP:480"
+    ],
+    [
+     "STK:RSP:496"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q8]",
+   "loop": "L1_c64",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:320"
+      ],
+      [
+       "STK:RSP:336"
+      ],
+      [
+       "STK:RSP:352"
+      ],
+      [
+       "STK:RSP:368"
+      ],
+      [
+       "STK:RSP:384"
+      ],
+      [
+       "STK:RSP:400"
+      ],
+      [
+       "STK:RSP:416"
+      ],
+      [
+       "STK:RSP:432"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:16",
+    "STK:RBP:24",
+    "STK:RSP:104",
+    "STK:RSP:112",
+    "STK:RSP:124",
+    "STK:RSP:128",
+    "STK:RSP:136",
+    "STK:RSP:144",
+    "STK:RSP:152",
+    "STK:RSP:160",
+    "STK:RSP:168",
+    "STK:RSP:176",
+    "STK:RSP:184",
+    "STK:RSP:192",
+    "STK:RSP:200",
+    "STK:RSP:208",
+    "STK:RSP:216",
+    "STK:RSP:224",
+    "STK:RSP:232",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:296",
+    "STK:RSP:304",
+    "STK:RSP:312",
+    "STK:RSP:320",
+    "STK:RSP:336",
+    "STK:RSP:352",
+    "STK:RSP:368",
+    "STK:RSP:384",
+    "STK:RSP:400",
+    "STK:RSP:416",
+    "STK:RSP:432",
+    "STK:RSP:88",
+    "STK:RSP:96"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:320"
+    ],
+    [
+     "STK:RSP:336"
+    ],
+    [
+     "STK:RSP:352"
+    ],
+    [
+     "STK:RSP:368"
+    ],
+    [
+     "STK:RSP:384"
+    ],
+    [
+     "STK:RSP:400"
+    ],
+    [
+     "STK:RSP:416"
+    ],
+    [
+     "STK:RSP:432"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "all",
+   "variant": "k_avx512:matmul[Q8]",
+   "loop": "L1_d98",
+   "diff": {
+    "acc_lanes_emitted": [
+     32,
+     0
+    ],
+    "partial_results": [
+     [
+      [
+       "STK:RSP:320"
+      ],
+      [
+       "STK:RSP:336"
+      ],
+      [
+       "STK:RSP:352"
+      ],
+      [
+       "STK:RSP:368"
+      ],
+      [
+       "STK:RSP:384"
+      ],
+      [
+       "STK:RSP:400"
+      ],
+      [
+       "STK:RSP:416"
+      ],
+      [
+       "STK:RSP:432"
+      ]
+     ],
+     []
+    ]
+   },
+   "unscreened_after": true,
+   "escaping_slots_after": [
+    "STK:RBP:16",
+    "STK:RSP:128",
+    "STK:RSP:136",
+    "STK:RSP:144",
+    "STK:RSP:152",
+    "STK:RSP:160",
+    "STK:RSP:168",
+    "STK:RSP:176",
+    "STK:RSP:184",
+    "STK:RSP:192",
+    "STK:RSP:200",
+    "STK:RSP:208",
+    "STK:RSP:216",
+    "STK:RSP:224",
+    "STK:RSP:232",
+    "STK:RSP:240",
+    "STK:RSP:248",
+    "STK:RSP:256",
+    "STK:RSP:264",
+    "STK:RSP:272",
+    "STK:RSP:280",
+    "STK:RSP:288",
+    "STK:RSP:296",
+    "STK:RSP:304",
+    "STK:RSP:312",
+    "STK:RSP:320",
+    "STK:RSP:336",
+    "STK:RSP:352",
+    "STK:RSP:368",
+    "STK:RSP:384",
+    "STK:RSP:400",
+    "STK:RSP:416",
+    "STK:RSP:432"
+   ],
+   "escaping_partial_results": [
+    [
+     "STK:RSP:320"
+    ],
+    [
+     "STK:RSP:336"
+    ],
+    [
+     "STK:RSP:352"
+    ],
+    [
+     "STK:RSP:368"
+    ],
+    [
+     "STK:RSP:384"
+    ],
+    [
+     "STK:RSP:400"
+    ],
+    [
+     "STK:RSP:416"
+    ],
+    [
+     "STK:RSP:432"
+    ]
+   ],
+   "acc_lanes_if_escaping_slots_were_registers": 32
+  }
+ ],
+ "units": [
+  {
+   "config": "A",
+   "build": "b1",
+   "unit": "all",
+   "step": "loops_b1_all",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 18,
+   "run_loops_sha256": "d5d70439562cbeaa03e41a7e8ac4261c40c6c051819ad0759d39981ad81c3f60",
+   "new_loops_sha256": "783426ad2dd379941911996f77fe4d4e8c49fd1640e2c8d0029eae8f0dc6838e"
+  },
+  {
+   "config": "A",
+   "build": "b2",
+   "unit": "all",
+   "step": "loops_b2_all",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 18,
+   "run_loops_sha256": "d5d70439562cbeaa03e41a7e8ac4261c40c6c051819ad0759d39981ad81c3f60",
+   "new_loops_sha256": "783426ad2dd379941911996f77fe4d4e8c49fd1640e2c8d0029eae8f0dc6838e"
+  },
+  {
+   "config": "A-ninja",
+   "build": "b1",
+   "unit": "all",
+   "step": "loops_b1_all",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 18,
+   "run_loops_sha256": "0b4a2e9c98cfa91299f8f3b808ca412295f0f49d9b6e2fc016e261e852fb67b9",
+   "new_loops_sha256": "41459c28c1d233d2683dfc01fbedacbfa6da0c0c2e7e22861571168a8fff4e20"
+  },
+  {
+   "config": "A-ninja",
+   "build": "b2",
+   "unit": "all",
+   "step": "loops_b2_all",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 18,
+   "run_loops_sha256": "0b4a2e9c98cfa91299f8f3b808ca412295f0f49d9b6e2fc016e261e852fb67b9",
+   "new_loops_sha256": "41459c28c1d233d2683dfc01fbedacbfa6da0c0c2e7e22861571168a8fff4e20"
+  },
+  {
+   "config": "B-cmake",
+   "build": "b1",
+   "unit": "all",
+   "step": "loops_b1_all",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 12,
+   "run_loops_sha256": "65e13a8a4dd6784b36da6d8bb1653092a707fbad5260153fc08bdb61dc879bf4",
+   "new_loops_sha256": "c5c5a69c4c9cd093e67ccc3e164605c875da930504cd7dbf111d94d7985ab1ac"
+  },
+  {
+   "config": "B-cmake",
+   "build": "b2",
+   "unit": "all",
+   "step": "loops_b2_all",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 12,
+   "run_loops_sha256": "65e13a8a4dd6784b36da6d8bb1653092a707fbad5260153fc08bdb61dc879bf4",
+   "new_loops_sha256": "c5c5a69c4c9cd093e67ccc3e164605c875da930504cd7dbf111d94d7985ab1ac"
+  },
+  {
+   "config": "B-proxy",
+   "build": "b1",
+   "unit": "quant.c",
+   "step": "loops_b1_quant.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "1864ea4174917cbca4eaffe0b06ce5990be39172165138f07e5d4fb006a25a2f",
+   "new_loops_sha256": "ab3a1ad5357302e6870b461e750bb861aef7b0b936b1e5b9fe3bba8832718f5d"
+  },
+  {
+   "config": "B-proxy",
+   "build": "b1",
+   "unit": "quant_avx2.c",
+   "step": "loops_b1_quant_avx2.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "cca66d433a1edeef37f6318b5a8479a56161fd69e8716c123c936ee916f6cf0b",
+   "new_loops_sha256": "179da666e53f70e2c62dce4a1e4509761c14ffe6a09ef2322c8b47a133cecf7f"
+  },
+  {
+   "config": "B-proxy",
+   "build": "b1",
+   "unit": "quant_avx512.c",
+   "step": "loops_b1_quant_avx512.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "900c4d40c7ffc7b401cccefaf90fdc2d8fe596d8696469b18727e2b83a9db99b",
+   "new_loops_sha256": "9c76bcb390fa1bd459dad7cd6f1d6a12d38dd88a8276dc4ce1e19c5e271ce165"
+  },
+  {
+   "config": "B-proxy",
+   "build": "b2",
+   "unit": "quant.c",
+   "step": "loops_b2_quant.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "1864ea4174917cbca4eaffe0b06ce5990be39172165138f07e5d4fb006a25a2f",
+   "new_loops_sha256": "ab3a1ad5357302e6870b461e750bb861aef7b0b936b1e5b9fe3bba8832718f5d"
+  },
+  {
+   "config": "B-proxy",
+   "build": "b2",
+   "unit": "quant_avx2.c",
+   "step": "loops_b2_quant_avx2.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "cca66d433a1edeef37f6318b5a8479a56161fd69e8716c123c936ee916f6cf0b",
+   "new_loops_sha256": "179da666e53f70e2c62dce4a1e4509761c14ffe6a09ef2322c8b47a133cecf7f"
+  },
+  {
+   "config": "B-proxy",
+   "build": "b2",
+   "unit": "quant_avx512.c",
+   "step": "loops_b2_quant_avx512.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "900c4d40c7ffc7b401cccefaf90fdc2d8fe596d8696469b18727e2b83a9db99b",
+   "new_loops_sha256": "9c76bcb390fa1bd459dad7cd6f1d6a12d38dd88a8276dc4ce1e19c5e271ce165"
+  },
+  {
+   "config": "P.A",
+   "build": "b1",
+   "unit": "reduce_probe.c",
+   "step": "loops_b1_reduce_probe.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "276bfb931e4453cab5088727c8c17356237994602636e559bb2bb81a1dfe6378",
+   "new_loops_sha256": "34354f36ca3e6960c5e5d1fc5c1c7b6bd8e798fbca478b1366e102e2cc6e084a"
+  },
+  {
+   "config": "P.A",
+   "build": "b2",
+   "unit": "reduce_probe.c",
+   "step": "loops_b2_reduce_probe.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "276bfb931e4453cab5088727c8c17356237994602636e559bb2bb81a1dfe6378",
+   "new_loops_sha256": "34354f36ca3e6960c5e5d1fc5c1c7b6bd8e798fbca478b1366e102e2cc6e084a"
+  },
+  {
+   "config": "P.A-ninja",
+   "build": "b1",
+   "unit": "reduce_probe.c",
+   "step": "loops_b1_reduce_probe.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "0dd8dd7b774f814accc47e64b221c19e969259ad7a5a3c6da0adc226ffcd0016",
+   "new_loops_sha256": "48193b051c6b3b6b66eb38230cfe35326ec8d768bb4cd838fd5c6d587b62c722"
+  },
+  {
+   "config": "P.A-ninja",
+   "build": "b2",
+   "unit": "reduce_probe.c",
+   "step": "loops_b2_reduce_probe.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "0dd8dd7b774f814accc47e64b221c19e969259ad7a5a3c6da0adc226ffcd0016",
+   "new_loops_sha256": "48193b051c6b3b6b66eb38230cfe35326ec8d768bb4cd838fd5c6d587b62c722"
+  },
+  {
+   "config": "P.B-cmake",
+   "build": "b1",
+   "unit": "reduce_probe.c",
+   "step": "loops_b1_reduce_probe.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "6f260a09d044977455ab0115af83253e43e05e3058b8ed7bf2732a9f1581b772",
+   "new_loops_sha256": "44e21ada9ed395a11120075d48f8e56cb4c7ce55fde1aa4083227cd3794dccf3"
+  },
+  {
+   "config": "P.B-cmake",
+   "build": "b2",
+   "unit": "reduce_probe.c",
+   "step": "loops_b2_reduce_probe.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "6f260a09d044977455ab0115af83253e43e05e3058b8ed7bf2732a9f1581b772",
+   "new_loops_sha256": "44e21ada9ed395a11120075d48f8e56cb4c7ce55fde1aa4083227cd3794dccf3"
+  },
+  {
+   "config": "C",
+   "build": "b1",
+   "unit": "all",
+   "step": "loops_b1_all",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 18,
+   "run_loops_sha256": "13dd35ad4601be6c853436829f9d9dfce324afe6a81e378039ee05280a8e2b56",
+   "new_loops_sha256": "9b571d566f42e07c55c18e38b7609fdf00e1219652d9efb4a2fb66623fccf95e"
+  },
+  {
+   "config": "C",
+   "build": "b2",
+   "unit": "all",
+   "step": "loops_b2_all",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 18,
+   "run_loops_sha256": "13dd35ad4601be6c853436829f9d9dfce324afe6a81e378039ee05280a8e2b56",
+   "new_loops_sha256": "9b571d566f42e07c55c18e38b7609fdf00e1219652d9efb4a2fb66623fccf95e"
+  },
+  {
+   "config": "D",
+   "build": "b1",
+   "unit": "all",
+   "step": "loops_b1_all",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 18,
+   "run_loops_sha256": "d349499f8e7be2aeb5b9350b9e96b164c4444234053bd27cc11ff62c53431e3d",
+   "new_loops_sha256": "5c159ff98c4007d9f3f496bfd4398250d7d7fadede8401a0cf6ed1adef7c66d2"
+  },
+  {
+   "config": "D",
+   "build": "b2",
+   "unit": "all",
+   "step": "loops_b2_all",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 18,
+   "run_loops_sha256": "d349499f8e7be2aeb5b9350b9e96b164c4444234053bd27cc11ff62c53431e3d",
+   "new_loops_sha256": "5c159ff98c4007d9f3f496bfd4398250d7d7fadede8401a0cf6ed1adef7c66d2"
+  },
+  {
+   "config": "P.C",
+   "build": "b1",
+   "unit": "reduce_probe.c",
+   "step": "loops_b1_reduce_probe.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "e8fd42beb9fcc0581babd87f5311a37b2fee58517c20c4ff5d5a787fdc1a8e53",
+   "new_loops_sha256": "a8c2f5e9d02c2e1d363723152e6084c37c6679c26936b88acead7f25cce3e314"
+  },
+  {
+   "config": "P.C",
+   "build": "b2",
+   "unit": "reduce_probe.c",
+   "step": "loops_b2_reduce_probe.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "e8fd42beb9fcc0581babd87f5311a37b2fee58517c20c4ff5d5a787fdc1a8e53",
+   "new_loops_sha256": "a8c2f5e9d02c2e1d363723152e6084c37c6679c26936b88acead7f25cce3e314"
+  },
+  {
+   "config": "P.D",
+   "build": "b1",
+   "unit": "reduce_probe.c",
+   "step": "loops_b1_reduce_probe.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "8bf9621ee0c723c8bc444a4c1af442cc3fa7cce93d11d68b3e33fe10d0b7bb4d",
+   "new_loops_sha256": "d916bd58abe219f6a9547d639ea13b86152e34c83302df6c09f32908b2c28d18"
+  },
+  {
+   "config": "P.D",
+   "build": "b2",
+   "unit": "reduce_probe.c",
+   "step": "loops_b2_reduce_probe.c",
+   "rc": 0,
+   "recorded_rc": 0,
+   "variants": 6,
+   "run_loops_sha256": "8bf9621ee0c723c8bc444a4c1af442cc3fa7cce93d11d68b3e33fe10d0b7bb4d",
+   "new_loops_sha256": "d916bd58abe219f6a9547d639ea13b86152e34c83302df6c09f32908b2c28d18"
+  }
+ ],
+ "summary": {
+  "variants": 264,
+  "loops": 1862,
+  "unscreened_after": 14,
+  "loops_with_escaping_slots_after": 300,
+  "loops_changed": 14,
+  "flags_removed": 8,
+  "flags_added": 0,
+  "units": 26,
+  "units_rc_differs": 0
+ }
+}

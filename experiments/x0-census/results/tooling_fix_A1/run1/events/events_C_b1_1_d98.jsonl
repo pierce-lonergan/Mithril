@@ -1,0 +1,7 @@
+{"variant": "C:k_avx512:matmul[Q8]", "function": "mm_q8_avx512", "instructions": 1395, "events": 2, "rsp_at": [-1007, -944]}
+{"event": "unbounded", "at": "1:45b", "disasm": "mov qword ptr [rsp+0x120], rax", "via": "RAX", "value_from_entry_rsp": [-687, -624], "width": 8, "why": "stack pointer read by MOV", "reaches_header": true}
+{"event": "unbounded", "at": "1:d37", "disasm": "mov qword ptr [rsp+0x118], rsi", "via": "RSI", "value_from_entry_rsp": [-687, -624], "width": 8, "why": "stack pointer read by MOV", "reaches_header": true}
+{"materialises": "1:21a", "disasm": "mov rbp, rsp", "rsp_from_entry_rsp": [-8, -8]}
+{"materialises": "1:453", "disasm": "lea rax, ptr [rsp+0x140]", "rsp_from_entry_rsp": [-1007, -944]}
+{"materialises": "1:d29", "disasm": "lea rsi, ptr [rsp+0x140]", "rsp_from_entry_rsp": [-1007, -944]}
+{"materialises": "1:1b36", "disasm": "lea rsp, ptr [rbp-0x28]", "rsp_from_entry_rsp": [-1007, -944]}
