@@ -9,7 +9,7 @@
 //! - every negative item with gate_item true (N-01 to N-06): the commented-out example inside its
 //!   parent snippet, uncommented (N-05: the parent with `store.release(lease);` deleted).
 //!
-//! The supplementary negative items (every negative item with gate_item false: N-07 to N-69 at
+//! The supplementary negative items (every negative item with gate_item false: N-07 to N-153 at
 //! this commit) are prose in verdicts.json, not snippets; they are checked in
 //! `supplementary_items` from constructions written here, each annotated with what was completed
 //! (a wrapper function, a `use`, a fixture), against the verdict verdicts.json records. They are
@@ -319,6 +319,56 @@ const SUPP: &[Supp] = &[
     Supp { id: "N-107", module: "", fixture: None, text: "fn g(v: &[u32]) -> Option<u32> { let x = v.first()?; Some(*x + 1) }\n" },
     Supp { id: "N-108", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn s(a: f64, b: f64) -> bool { 1.0 / a.max(b) < 0.0 }\n" },
     Supp { id: "N-109", module: "store", fixture: None, text: "enum E { A(Lease), B(Lease) }\nfn f(store: &Store, e: E) uses { io, spawn } { match e { E::A(l) => store.release(l), _ => {} } }\n" },
+    // round-3 sync (2026-10-23): the items the note added for mithi's findings 7 to 15 (note
+    // section 0.8, F-114 to F-122) and N-128, found in the sync; constructions copied from
+    // verdicts.json's text, with N-74's M2 written out for N-126 and N-127
+    Supp { id: "N-110", module: "", fixture: None, text: "fn w(o: &mut u32, k: u32) { *o = k; }\n#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|v| *v); let mut y = 0u32; let mut z = 0u32; let r = if h > 1 { &mut y } else { &mut z }; w(r, 4); y }\n" },
+    Supp { id: "N-111", module: "", fixture: None, text: "fn w(o: &mut u32, k: u32) { *o = k; }\n#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|v| *v); let mut a = [0u32; 2]; w(&mut a[(h % 2) as usize], 4); a[0] }\n" },
+    Supp { id: "N-112", module: "", fixture: None, text: "fn put(o: &mut Vec<&u32>, d: &u32) uses { alloc(Global) } { let mut c = |x: &u32| o.push(x); c(d); }\nfn g() -> u32 uses { alloc(Global) } { let mut v: Vec<&u32> = Vec::new(); { let z = 5u32; put(&mut v, &z); } *v[0] }\n" },
+    Supp { id: "N-113", module: "", fixture: None, text: "fn put(o: &mut Vec<&u32>, d: &u32) uses { alloc(Global) } { let mut c = |x| o.push(x); c(d); }\nfn g() -> u32 uses { alloc(Global) } { let mut v: Vec<&u32> = Vec::new(); { let z = 5u32; put(&mut v, &z); } *v[0] }\n" },
+    Supp { id: "N-114", module: "", fixture: None, text: "fn put(o: &mut Vec<&u32>, v: &[u32]) { v.iter().for_each(|x| o.push(x)); }\n" },
+    Supp { id: "N-115", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn stamp(c: &Clock) -> u64 uses { time, nondet } { c.now_ns() }\n" },
+    Supp { id: "N-116", module: "", fixture: None, text: "fn f(v: &[u32]) -> &u32 { let l = [1u32, 2]; &l[0] }\n" },
+    Supp { id: "N-117", module: "", fixture: None, text: "policy fn p(slots: &[SlotView], m: &Mutex<u32>) -> Hint<u32> { Hint::some(m.with_lock(|v| *v)) }\n" },
+    Supp { id: "N-118", module: "", fixture: None, text: "policy fn p(slots: &[SlotView], now: Tick) -> Hint<usize> { let mut b = 0usize; for i in 0..slots.len() { if slots[i].refs == 0 { b = i; } } Hint::some(b) }\n" },
+    Supp { id: "N-119", module: "", fixture: None, text: "fn ap<F: Fn() -> u32>(f: F) -> u32 { f() }\npolicy fn p(slots: &[SlotView], now: Tick) -> Hint<u32> { let k = slots.len() as u32; Hint::some(ap(move || k)) }\n" },
+    Supp { id: "N-120", module: "", fixture: None, text: "policy fn p(slots: &[SlotView], now: Tick) -> Hint<usize> { let n = slots.len(); let mut b = 0usize; for i in 0..n { b = i; } Hint::some(b) }\n" },
+    Supp { id: "N-121", module: "", fixture: None, text: "fn one() -> u32 { 1 }\npolicy fn p(slots: &[SlotView], now: Tick) -> Hint<fn() -> u32> { Hint::some(one) }\n" },
+    Supp { id: "N-122", module: "", fixture: None, text: "kernel fn k(i: usize, y: &mut [u32]) requires y.len() >= 1 { let j = if i < y.len() { i } else { 0 }; y[j] = 1; }\n" },
+    Supp { id: "N-123", module: "store", fixture: None, text: "fn f(store: &Store, id: ExpertId) -> Result<(), IoError> uses { io, spawn } { let l = store.lease(id)?; let c = move || store.release(l); c(); Ok(()) }\n" },
+    Supp { id: "N-124", module: "", fixture: None, text: "fn f() -> u32 { let a = 1u32; let v = [2u32, 3]; let mut out = &a; v.iter().for_each(|x: &u32| out = x); *out }\n" },
+    Supp { id: "N-125", module: "", fixture: None, text: "fn f() -> u32 { let a = 1u32; let v = [2u32, 3]; let mut out = &a; let c = |x: &u32| out = x; v.iter().for_each(c); *out }\n" },
+    Supp { id: "N-126", module: "", fixture: None, text: "struct M2 { rows: usize, blocks_per_row: usize, blocks: Vec<f32>, scale: f32 }\ninvariant M2 { self.blocks.len() == self.rows * self.blocks_per_row }\nimpl std::ops::IndexMut<usize> for M2 { type Output = [f32]; fn index_mut(&mut self, t: usize) -> &mut [f32] requires t < self.rows ensures footprint(result) == self.blocks[t * self.blocks_per_row .. (t + 1) * self.blocks_per_row] { &mut self.blocks[t * self.blocks_per_row .. (t + 1) * self.blocks_per_row] } }\n#[grade(exact, cross_device)] fn mm(x: &[f32], y: &mut M2) requires x.len() == y.blocks_per_row { for t in 0..y.rows { for r in 0..y.blocks_per_row { y[t][r] = canon::nan(x[r]); } } }\n" },
+    Supp { id: "N-127", module: "", fixture: None, text: "struct M2 { rows: usize, blocks_per_row: usize, blocks: Vec<f32>, scale: f32 }\ninvariant M2 { self.blocks.len() == self.rows * self.blocks_per_row }\nimpl std::ops::IndexMut<usize> for M2 { type Output = [f32]; fn index_mut(&mut self, t: usize) -> &mut [f32] requires t < self.rows ensures footprint(result) == self.blocks[t * self.blocks_per_row .. (t + 1) * self.blocks_per_row] { &mut self.blocks[t * self.blocks_per_row .. (t + 1) * self.blocks_per_row] } }\n#[grade(exact, cross_device)] fn mm(x: &[f32], y: &mut M2) requires x.len() == y.blocks_per_row { y.scale = canon::nan(y.scale); for t in 0..y.rows { for r in 0..y.blocks_per_row { y[t][r] = canon::nan(x[r]); } } }\n" },
+    Supp { id: "N-128", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn g(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|v| *v); let mut s = 0u32; let mut c1 = move |x: u32| -> u32 { let o = s; s = x; o }; let mut c2 = c1; { let r = if h > 1 { &mut c1 } else { &mut c2 }; r(9); } c1(0) }
+" },
+    // the review of the round-3 sync (2026-10-23): N-129 to N-153 (note section 0.9, F-123 to
+    // F-134); constructions copied from verdicts.json's text, one line per item
+    Supp { id: "N-129", module: "", fixture: None, text: "fn put(o: &mut Option<&u32>, d: &u32) { let mut c = move |x| { *o = Some(x); }; c(d); }\n" },
+    Supp { id: "N-130", module: "", fixture: None, text: "fn put(o: &mut Option<&u32>, d: &u32) { let mut c = move |x| { *o = Some(x); }; c(d); }\nfn g() -> u32 { let mut o: Option<&u32> = None; { let z = 5u32; put(&mut o, &z); } *o.unwrap() }\n" },
+    Supp { id: "N-131", module: "", fixture: None, text: "fn put(o: &mut Vec<&u32>, d: &u32) uses { alloc(Global) } { let mut c = move |x| o.push(x); c(d); }\n" },
+    Supp { id: "N-132", module: "", fixture: None, text: "fn g() -> u32 { let mut o: Option<&u32> = None; { let z = 5u32; let r = &mut o; let mut c = move |x| { *r = Some(x); }; c(&z); } *o.unwrap() }\n" },
+    Supp { id: "N-133", module: "store", fixture: None, text: "fn f(store: &Store, id: ExpertId) -> Result<(), IoError> uses { io, spawn } { let l = store.lease(id)?; let c = move || store.release(l); c(); c(); Ok(()) }\n" },
+    Supp { id: "N-134", module: "", fixture: None, text: "fn f(v: &[u32]) -> &u32 { let mut a = 1u32; let r = &a; a = 2; let l = [*r, 2]; &l[0] }\n" },
+    Supp { id: "N-135", module: "store", fixture: None, text: "fn f(store: &Store, id: ExpertId) -> Result<u32, IoError> uses { io, spawn } { let a = 0u32; let mut r = &a; { let l = store.lease(id)?; let z = 1u32; r = &z; } Ok(*r) }\n" },
+    Supp { id: "N-136", module: "store", fixture: None, text: "fn f(store: &Store, id: ExpertId) -> Result<(), IoError> uses { io, spawn } { let l = store.lease(id)?; let mut a = 1u32; let r = &a; a = 2; let _u = *r; Ok(()) }\n" },
+    Supp { id: "N-137", module: "", fixture: None, text: "struct S { x: u32, y: u32 }\nfn g() -> u32 { let mut s = S { x: 1, y: 2 }; let mut c = || s.x += 1; let r = &s.y; c(); *r + s.x }\n" },
+    Supp { id: "N-138", module: "", fixture: None, text: "fn hc(c: &Clock) -> u64 uses { time } { c.now_ns() }\nkernel fn k(c: &Clock) -> u64 uses { time } { hc(c) }\n" },
+    Supp { id: "N-139", module: "", fixture: None, text: "fn g() -> usize uses { alloc(Global) } { let v: Vec<u32> = Vec::new(); let r = &v; let w = v; r.len() + w.len() }\n" },
+    Supp { id: "N-140", module: "", fixture: None, text: "fn g(v: &Vec<u32>) -> Vec<u32> { *v }\n" },
+    Supp { id: "N-141", module: "", fixture: None, text: "#[derive(Copy, Clone)] linear struct L { a: u32 }\nfn g() { println!(\"x\"); }\n" },
+    Supp { id: "N-142", module: "", fixture: None, text: "#[derive(Copy, Clone)] struct W { f: fn() -> u32 }\nfn one() -> u32 { 1 }\npolicy fn p(slots: &[SlotView], now: Tick) -> Hint<W> { Hint::some(W { f: one }) }\n" },
+    Supp { id: "N-143", module: "", fixture: None, text: "kernel fn k(i: usize, y: &mut [u32]) requires i < y.len() { let j = if i == 0 { 0 } else { i - 1 }; y[j] = 1; }\n" },
+    Supp { id: "N-144", module: "", fixture: None, text: "kernel fn k(i: usize, y: &mut [u32]) requires i < y.len() { match i { 0 => {}, _ => { y[i - 1] = 1; } } }\n" },
+    Supp { id: "N-145", module: "", fixture: None, text: "kernel fn k(i: usize, y: &mut [u32]) requires i < y.len() { match i { 0 => {}, n => { y[n - 1] = 1; } } }\n" },
+    Supp { id: "N-146", module: "", fixture: None, text: "fn f() -> u32 { let a = 1u32; let v = [2u32, 3]; let mut out = &a; v.iter().for_each((|x: &u32| out = x)); *out }\n" },
+    Supp { id: "N-147", module: "", fixture: None, text: "fn f() -> u32 { let a = 1u32; let v = [2u32, 3]; let mut out = &a; v.iter().for_each({ |x: &u32| out = x }); *out }\n" },
+    Supp { id: "N-148", module: "", fixture: None, text: "fn g() -> u32 uses { alloc(Global) } { let mut v: Vec<u32> = Vec::new(); v.push(3); v[v.len() - 1] = 5; v[0] }\n" },
+    Supp { id: "N-149", module: "", fixture: None, text: "fn g() -> u32 uses { alloc(Global) } { let mut v: Vec<u32> = Vec::new(); v.push(3); v[v.len() - 1] += 5; v[0] }\n" },
+    Supp { id: "N-150", module: "", fixture: None, text: "fn g() -> u32 { let mut a = [1u32, 2]; a[a.len() - 1] = 5; a[1] }\n" },
+    Supp { id: "N-151", module: "", fixture: None, text: "fn w(o: &mut u32, k: u32) { *o = k; }\n#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|v| *v); let mut y = 0u32; let r = if h > 1 { &mut y } else { &mut y }; w(r, 4); y }\n" },
+    Supp { id: "N-152", module: "", fixture: None, text: "fn z(o: &mut [u32; 2]) { for i in 0..2 { o[i] = 4; } }\n#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|v| *v); let mut y = [h, h]; let r = &mut y; z(r); y[0] }\n" },
+    Supp { id: "N-153", module: "", fixture: None, text: "fn z(o: &mut [u32; 2]) { for i in 0..2 { o[i] = 4; } }\n#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|v| *v); let mut y = [0u32; 2]; let mut w2 = [0u32; 2]; let r = if h > 1 { &mut y } else { &mut w2 }; z(r); y[0] }\n" },
 ];
 
 /// Supplementary items that are not constructed, and why.
@@ -326,11 +376,9 @@ const NOT_CONSTRUCTED: &[(&str, &str)] = &[("N-38", "a hint port's stack budget 
 
 /// Constructions that disagree with the note, with the diagnosis of which side is wrong ("mithi
 /// wrong" or "note wrong"); reported, not failing. An entry is consulted only on a disagreement.
-/// N-43: the verdicts.json of commit `5e16fbb` expects E-BORROW-OUTLIVE; the note's third round
-/// (F-107, uncommitted on 2026-10-23) changes it to E-LOCAL-MUT-STORE, which is what mithi gives
-/// and what rustc 1.99.1 reports (E0521 on the annotated `|d: &u32|` store [M]). Against the third
-/// round's verdicts.json it agrees; this entry keeps the test right whichever lands first.
-const DIAGNOSED: &[(&str, &str)] = &[("N-43", "note wrong at 5e16fbb: F-107 (third round) makes it E-LOCAL-MUT-STORE, as rustc E0521 [M]")];
+/// Empty since the round-3 sync (2026-10-23): the one entry, N-43, covered the verdicts.json of
+/// `5e16fbb` before the third round's F-107 landed (commit `048e9f6`); it no longer applies.
+const DIAGNOSED: &[(&str, &str)] = &[];
 
 #[test]
 fn supplementary_items() {

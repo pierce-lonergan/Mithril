@@ -1,6 +1,8 @@
 //! ⊢_to (note section 5.13): (t1) E-TO-ROW, (t2) E-TO-RESULT, (t3) E-TO-PARAM, (t5) E-TO-LOOP and
 //! E-TO-RECURSION, (t6) E-TO-AUTHORITY, (t7) E-TO-CALL. (t8) allows may_trap; (t9) needs a port's
-//! stack budget and is outside X1 (E-TO-STACK belongs to ⊢_store, M4).
+//! stack budget and is outside X1 (E-TO-STACK belongs to ⊢_store, M4). (t5) and (t6) follow the
+//! note's F-118 (round-3 sync, 2026-10-23): ranges bounded by constants or by the length of a
+//! core-provided slice parameter, and "escaping" as outliving the port call.
 
 use super::*;
 use crate::diag::Diag;
@@ -65,6 +67,16 @@ fn check_to(c: &Checked, fid: FnId, is_entry: bool, memo: &mut HashMap<FnId, Vec
                 diags.push(Diag::new("E-TO-PARAM", p.span, format!("policy parameter of type `{}`: parameters are core-provided #[view] types (Copy, payload-free) or slices of them (t3)", c.program.ty_name(&p.ty))).in_def(&path));
             }
         }
+        // (t6), the extent reading (note F-118): a closure or function value in the policy's
+        // result would outlive the port call; at X1 there is no port state, so the result is the
+        // only way out of the call
+        // The scan goes through the fields of user structs and enums too, with their type
+        // arguments substituted: review of the round-3 sync (2026-10-23, finding 8, probe E5),
+        // `struct W { f: fn() -> u32 }` returned as `Hint<W>` was accepted while the Option and
+        // tuple forms were rejected
+        if holds_fn_value(c, &f.ret, 0) {
+            diags.push(Diag::new("E-TO-AUTHORITY", f.ret_ast.as_ref().map(|t| t.span).unwrap_or(f.sig_span), "a closure or function value in a policy's result escapes the port call (t6)").in_def(&path));
+        }
     }
     let Some(b) = c.bodies.get(&fid) else {
         stack.pop();
@@ -74,24 +86,32 @@ fn check_to(c: &Checked, fid: FnId, is_entry: bool, memo: &mut HashMap<FnId, Vec
         return out;
     };
     let params: HashSet<LocalId> = b.params.iter().copied().collect();
+    // parameters of core-provided slice type (`&[V]`, V a #[view]): `s.len()` bounds a range (t5)
+    let view_slices: HashSet<LocalId> = b
+        .params
+        .iter()
+        .copied()
+        .filter(|l| matches!(&b.locals[*l as usize].ty, Ty::Ref(false, inner) if matches!(&**inner, Ty::Slice(e) if is_view(c, e))))
+        .collect();
     walk_deep(c, &b.expr, &mut |e| match &e.kind {
         TK::For { iter, range, .. } => {
-            let const_range = match range {
-                Some((lo, hi, _)) => matches!(lo.kind, TK::Lit(_)) && matches!(hi.kind, TK::Lit(_)),
+            // (t5) as pinned by note F-118: each bound of a range is an integer literal, a `const`
+            // item, or `s.len()` for a parameter s of core-provided slice type
+            let bounded_range = match range {
+                Some((lo, hi, _)) => range_bound(c, lo, &view_slices) && range_bound(c, hi, &view_slices),
                 None => false,
             };
             let over_param = iterates_param(iter, &params);
-            if !const_range && !over_param {
-                diags.push(Diag::new("E-TO-LOOP", e.span, "a policy loops only over core-provided slices or constant ranges (t5)").in_def(&path));
+            if !bounded_range && !over_param {
+                diags.push(Diag::new("E-TO-LOOP", e.span, "a policy loops only over core-provided slices, or over ranges whose bounds are constants or the length of a core-provided slice parameter (t5)").in_def(&path));
             }
         }
-        TK::While(..) | TK::Loop(..) => diags.push(Diag::new("E-TO-LOOP", e.span, "`while`/`loop` in a policy: loops only over core-provided slices or constant ranges (t5)").in_def(&path)),
+        TK::While(..) | TK::Loop(..) => diags.push(Diag::new("E-TO-LOOP", e.span, "`while`/`loop` in a policy: loops only over core-provided slices, or over ranges whose bounds are constants or the length of a core-provided slice parameter (t5)").in_def(&path)),
         TK::Det { .. } => diags.push(Diag::new("E-TO-AUTHORITY", e.span, "a `deterministic` block in a policy (t6)").in_def(&path)),
-        TK::Closure(cid) => {
-            if c.closures[*cid as usize].is_move {
-                diags.push(Diag::new("E-TO-AUTHORITY", e.span, "an escaping (move) closure in a policy (t6)").in_def(&path));
-            }
-        }
+        // (t6) "no escaping closure" means no closure value outlives the port call (note F-118):
+        // closures of either kind may be created and called inside the policy; the entry's
+        // result type is checked above. Before 2026-10-23 (round-3 sync) every `move` closure
+        // was E-TO-AUTHORITY here (review 2026-10-23, finding 17, probe po11)
         _ => {}
     });
     for l in &b.locals {
@@ -132,6 +152,29 @@ fn check_to(c: &Checked, fid: FnId, is_entry: bool, memo: &mut HashMap<FnId, Vec
     out
 }
 
+/// A range bound (t5) allows: an integer literal, a `const` item (possibly cast), or `s.len()` for
+/// a parameter s of core-provided slice type. Static fuel is then a polynomial in view lengths
+/// (note section 5.13).
+fn range_bound(c: &Checked, e: &TExpr, view_slices: &HashSet<LocalId>) -> bool {
+    match &e.kind {
+        TK::Lit(_) | TK::Const(_) => true,
+        TK::Cast(b) => range_bound(c, b, view_slices),
+        TK::Call { f, args, .. } => {
+            let fd = &c.program.fns[*f as usize];
+            fd.role == FileRole::Std && fd.name == "len" && args.len() == 1 && roots_in(&args[0], view_slices)
+        }
+        _ => false,
+    }
+}
+
+fn roots_in(e: &TExpr, set: &HashSet<LocalId>) -> bool {
+    match &e.kind {
+        TK::Local(l) => set.contains(l),
+        TK::Unsize(b) | TK::Borrow(_, b) | TK::Deref(b) => roots_in(b, set),
+        _ => false,
+    }
+}
+
 fn iterates_param(e: &TExpr, params: &HashSet<LocalId>) -> bool {
     match &e.kind {
         TK::Local(l) => params.contains(l),
@@ -161,4 +204,42 @@ pub fn run(c: &mut Checked) {
         }
     }
     c.diags.extend(diags);
+}
+
+/// Does a value of type t contain a closure or a function value, through tuples, arrays,
+/// references, std generics and the fields of user ADTs (with substitution)? (t6)
+fn holds_fn_value(c: &Checked, t: &Ty, depth: u32) -> bool {
+    let mut seen: Vec<(crate::types::AdtId, Vec<Ty>)> = vec![];
+    holds_fn_value_in(c, t, depth, &mut seen)
+}
+
+fn holds_fn_value_in(c: &Checked, t: &Ty, depth: u32, seen: &mut Vec<(crate::types::AdtId, Vec<Ty>)>) -> bool {
+    if depth > 16 {
+        return false;
+    }
+    let mut found = false;
+    let mut adts: Vec<(crate::types::AdtId, Vec<Ty>)> = vec![];
+    t.walk(&mut |x| match x {
+        Ty::Closure(_) | Ty::Opaque(_) | Ty::FnPtr(..) => found = true,
+        Ty::Adt(a, xs) => adts.push((*a, xs.clone())),
+        _ => {}
+    });
+    if found {
+        return true;
+    }
+    for key in adts {
+        if seen.contains(&key) {
+            continue;
+        }
+        seen.push(key.clone());
+        let ad = &c.program.adts[key.0 as usize];
+        for v in &ad.variants {
+            for fl in &v.fields {
+                if holds_fn_value_in(c, &fl.ty.subst(&key.1), depth + 1, seen) {
+                    return true;
+                }
+            }
+        }
+    }
+    false
 }

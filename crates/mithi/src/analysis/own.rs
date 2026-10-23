@@ -139,7 +139,12 @@ struct Own<'a> {
 
 impl<'a> Own<'a> {
     fn err(&mut self, code: &str, sp: Span, msg: String) {
-        if self.reported.insert((code.to_string(), sp)) {
+        // one report per code and anchor; the end-of-scope codes share one anchor (the closing
+        // brace) for every local of the scope, so their key also holds the message, which names
+        // the local (review of the round-3 sync, 2026-10-23: anchoring E-LINEAR-DROP at the brace
+        // had merged two dropped values into one report)
+        let key = if matches!(code, "E-LINEAR-DROP" | "E-BORROW-OUTLIVE") { format!("{code} {msg}") } else { code.to_string() };
+        if self.reported.insert((key, sp)) {
             let path = fn_path(self.c, self.fid);
             self.diags.push(Diag::new(code, sp, msg).in_def(&path));
         }
@@ -465,7 +470,10 @@ impl<'a> Own<'a> {
             }
             TK::Index(b, i) => {
                 let saved = std::mem::replace(&mut self.base_depth, 0);
+                let np = self.pending.len();
+                self.reserve_overloaded_base(b, u);
                 self.eval(i, Use::Value);
+                self.pending.truncate(np);
                 self.base_depth = saved;
                 if u == Use::Value && !self.is_copy(&e.ty) {
                     self.move_behind(e);
@@ -479,12 +487,15 @@ impl<'a> Own<'a> {
             }
             TK::SliceRange { base, lo, hi, .. } => {
                 let saved = std::mem::replace(&mut self.base_depth, 0);
+                let np = self.pending.len();
+                self.reserve_overloaded_base(base, u);
                 if let Some(x) = lo {
                     self.eval(x, Use::Value);
                 }
                 if let Some(x) = hi {
                     self.eval(x, Use::Value);
                 }
+                self.pending.truncate(np);
                 self.base_depth = saved;
                 if self.base_depth == 0 {
                     self.check_partial(e, e.span);
@@ -651,13 +662,23 @@ impl<'a> Own<'a> {
                             out.extend(self.eval(&le, Use::Value));
                         }
                         CaptureMode::Ref | CaptureMode::Mut => {
-                            let m = cap.mode == CaptureMode::Mut;
-                            if let Some((h, _)) = self.conflicting(cap.local, "", e.span.lo, !m, None) {
-                                let (a, b) = (self.name(cap.local), self.holder(h));
-                                self.err("E-BORROW-CONFLICT", e.span, format!("a closure borrows `{a}` while `{b}` holds a conflicting loan"));
+                            // one loan per captured place (Rust 2021 disjoint captures, note
+                            // §2.4; review of the round-3 sync, 2026-10-23, finding 4): `|| s.x
+                            // += 1` borrows s.x mutably and leaves s.y free. Before, a closure
+                            // borrowed the whole local
+                            let places: Vec<(String, bool)> = if cap.paths.is_empty() {
+                                vec![(String::new(), cap.mode == CaptureMode::Mut)]
+                            } else {
+                                cap.paths.iter().map(|(p, pm)| (p.clone(), *pm != CaptureMode::Ref)).collect()
+                            };
+                            for (path, m) in places {
+                                if let Some((h, _)) = self.conflicting(cap.local, &path, e.span.lo, !m, None) {
+                                    let (a, b) = (self.name(cap.local), self.holder(h));
+                                    self.err("E-BORROW-CONFLICT", e.span, format!("a closure borrows `{a}{}` while `{b}` holds a conflicting loan", if path.is_empty() { String::new() } else { format!(" (the place {path})") }));
+                                }
+                                let id = self.new_loan(Some(cap.local), None, path, m, e.span);
+                                out.insert(id);
                             }
-                            let id = self.new_loan(Some(cap.local), None, String::new(), m, e.span);
-                            out.insert(id);
                             // loans the captured value itself carries
                             out.extend(self.loans_carried(cap.local));
                         }
@@ -839,7 +860,8 @@ impl<'a> Own<'a> {
                     Some(v) => self.eval(v, Use::Value),
                     None => BTreeSet::new(),
                 };
-                self.returned_loans.push((ls, e.span));
+                // E-REF-ESCAPE's anchor is the returned expression (§5.16)
+                self.returned_loans.push((ls, v.as_ref().map(|v| v.span).unwrap_or(e.span)));
                 self.check_exit_linear(None, e.span);
                 self.st.dead = true;
                 BTreeSet::new()
@@ -969,6 +991,24 @@ impl<'a> Own<'a> {
             }
             Origin::Behind => self.move_behind(s),
             Origin::Temp => {}
+        }
+    }
+
+    /// Overloaded indexing in a mutable place context (note §3.2, review of the round-3 sync,
+    /// finding 11): `v[i]` on a `Vec` or another non-array, non-slice type is
+    /// `*IndexMut::index_mut(&mut v, i)`, so the base is borrowed mutably before the index is
+    /// evaluated, and this loan is not a two-phase reservation (§5.4, F-105 lists the three that
+    /// are). A read of an overlapping place in the index is then E-BORROW-CONFLICT, as rustc's
+    /// E0502 for `v[v.len() - 1] = 5` [M: rustc 1.99.1, 2026-10-23, probes R12b, R12d]. Built-in
+    /// indexing of arrays and slices evaluates the index first (`a[a.len() - 1] = 5` compiles).
+    /// The loan is held as pending while the index is evaluated; the caller truncates `pending`.
+    fn reserve_overloaded_base(&mut self, b: &TExpr, u: Use) {
+        if u != Use::Write || !matches!(b.ty.strip_refs(), Ty::Adt(..)) {
+            return;
+        }
+        if let Some(r) = place_root_any(b) {
+            let id = self.new_loan(Some(r), None, path_text(b), true, b.span);
+            self.pending.push(([id].into_iter().collect(), false));
         }
     }
 
@@ -1402,7 +1442,7 @@ impl<'a> Own<'a> {
                 if local_ret {
                     let res = self.closure_results.get(&cid).cloned().unwrap_or_default();
                     if res.iter().any(|x| self.loans[*x as usize].target.is_some()) {
-                        let sp = self.c.closures[cid as usize].span;
+                        let sp = result_span(&self.c.closures[cid as usize].body);
                         self.err("E-REF-ESCAPE", sp, "the closure returns a borrow of a captured value, but the parameter's bound ties its result to the closure's own argument (F-40; rustc rejects the higher-ranked signature too)".into());
                     }
                 }
@@ -1491,8 +1531,42 @@ impl<'a> Own<'a> {
                 self.st.loans_of.entry(h).or_default().extend(add_s);
             }
         }
-        let caps: Vec<(LocalId, Ty)> = cd.captures.iter().filter(|cp| cp.mode == CaptureMode::Mut).map(|cp| (cp.local, cp.ty.clone())).collect();
-        for (q, qt) in caps {
+        // output places (§5.7, F-92): the by-mut captured places, and the places a by-move
+        // capture's mutable loans reach. A by-move captured `&mut` (or a by-move value that
+        // carries a mutable loan, `Option<&mut T>`) is a path to such places, so the transfer
+        // goes through it with `store_into`, exactly as for a by-mut captured reference: into a
+        // parameter's referent it is E-LOCAL-MUT-STORE (F-115), into a local's referent the
+        // loans join that local. Before the 2026-10-23 review of the round-3 sync (finding 1,
+        // probes B2, B2c, B2d) only by-mut captures received the transfer, so
+        // `fn put(o: &mut Option<&u32>, d: &u32) { let mut c = move |x| { *o = Some(x); }; c(d); }`
+        // was accepted and its caller dangled (rustc: "lifetime may not live long enough" [M])
+        let mut caps: Vec<(LocalId, Ty, bool)> = cd.captures.iter().filter(|cp| cp.mode == CaptureMode::Mut).map(|cp| (cp.local, cp.ty.clone(), false)).collect();
+        for cp in &cd.captures {
+            if cp.mode != CaptureMode::Move || !is_local(self.c, &cp.ty) {
+                continue;
+            }
+            let via_mut = match &cp.ty {
+                Ty::Ref(true, inner) => is_local(self.c, inner),
+                Ty::Ref(false, _) => false,
+                _ => self.loans_carried(cp.local).iter().any(|x| {
+                    let ln = &self.loans[*x as usize];
+                    ln.mutable || (ln.target.is_none() && ln.param == Some(cp.local))
+                }),
+            };
+            if via_mut {
+                caps.push((cp.local, cp.ty.clone(), true));
+            }
+        }
+        for (q, qt, by_move) in caps {
+            if by_move {
+                let add_q: BTreeSet<u32> = add.iter().copied().filter(|x| self.loans[*x as usize].target != Some(q) && !self.hr_loans.contains(x)).collect();
+                if !add_q.is_empty() {
+                    let dl = self.loans_carried(q);
+                    let what = format!("*{}", self.name(q));
+                    self.store_into(Some(q), true, &dl, &add_q, sp, &what);
+                }
+                continue;
+            }
             if !self.capture_can_store(cid, q, &qt) {
                 continue;
             }
@@ -1609,13 +1683,17 @@ impl<'a> Own<'a> {
 
     fn end_scope(&mut self, scope: &[LocalId], sp: Span, result_loans: &BTreeSet<u32>) {
         let in_scope: BTreeSet<LocalId> = scope.iter().copied().collect();
+        // both codes are anchored where the scope ends (its closing brace), the point at which
+        // the value is dropped or the loan outlives its target (note section 5.16, F-117). The
+        // review of the round-3 sync (2026-10-23, finding 3: D2, D9) found E-LINEAR-DROP still
+        // anchored at the binding, which put it before a later E-BORROW-CONFLICT
+        let end = end_of(sp);
         for &l in scope {
             let ty = self.body.locals[l as usize].ty.clone();
             let ms = *self.st.ms.get(&l).unwrap_or(&MS::Init);
             if self.lin(&ty) && (ms == MS::Init || ms == MS::Maybe) {
                 let nm = self.name(l);
-                let lsp = self.body.locals[l as usize].span;
-                self.err("E-LINEAR-DROP", lsp, format!("the Linear value `{nm}` is not consumed on every normal path (moved into a call, returned or destructured)"));
+                self.err("E-LINEAR-DROP", end, format!("the Linear value `{nm}` is not consumed on every normal path (moved into a call, returned or destructured): it is dropped here, at the end of its scope"));
             }
         }
         // E-BORROW-OUTLIVE: a live value outside the scope still carries a loan on one of its
@@ -1644,7 +1722,6 @@ impl<'a> Own<'a> {
         // anchored where the scope ends (its closing brace), the point at which the loan
         // outlives its target; the review of 2026-10-23 found that anchoring at the block's start
         // put this consequence before its cause in the §5.16 order (N-79, ow05)
-        let end = Span { file: sp.file, lo: sp.hi.saturating_sub(1).max(sp.lo), hi: sp.hi };
         for (l, holder) in hits {
             let (a, b) = (self.name(l), self.name(holder));
             self.err("E-BORROW-OUTLIVE", end, format!("`{a}` goes out of scope while `{b}` still borrows it"));
@@ -1742,7 +1819,7 @@ impl<'a> Own<'a> {
         }
     }
 
-    fn join(&mut self, s1: St, s2: St, sp: Span) {
+    fn join(&mut self, s1: St, s2: St, _sp: Span) {
         if s1.dead {
             self.st = s2;
             return;
@@ -1757,13 +1834,10 @@ impl<'a> Own<'a> {
             let a = *s1.ms.get(&k).unwrap_or(&MS::Init);
             let b = *s2.ms.get(&k).unwrap_or(&MS::Init);
             let j = join_ms(a, b);
-            if a != b && j == MS::Maybe {
-                let ty = self.body.locals[k as usize].ty.clone();
-                if self.lin(&ty) && (a == MS::Moved || b == MS::Moved) {
-                    let nm = self.name(k);
-                    self.err("E-LINEAR-DROP", sp, format!("the Linear value `{nm}` is consumed on one path and not on the other"));
-                }
-            }
+            // a Linear value consumed on one path only is not reported here: the Maybe state
+            // reaches the end of its scope, a jump that leaves it, or a later use (E-MOVE-USED),
+            // which is where §5.16 anchors the failure (F-117; review of the round-3 sync,
+            // finding 3). Before, E-LINEAR-DROP was also reported at the join
             st.ms.insert(k, j);
         }
         for (k, v) in s2.loans_of {
@@ -2001,7 +2075,7 @@ impl<'a> Own<'a> {
         // signature is judged by its bound's elision instead (F-40, at the call)
         let annotated_hr = self.c.closures[cid as usize].hr_annot.iter().any(|h| *h);
         if annotated_hr && ls.iter().any(|x| my_hr.contains(x)) {
-            let sp = self.c.closures[cid as usize].span;
+            let sp = result_span(&self.c.closures[cid as usize].body);
             self.err("E-REF-ESCAPE", sp, "the closure returns a borrow received through a parameter whose annotated reference type makes it higher-ranked: the result may outlive it (§5.7, F-107; rustc rejects it too)".into());
         }
         // result discipline (§5.7, F-40): a result borrowing a by-mut captured place or the
@@ -2009,11 +2083,26 @@ impl<'a> Own<'a> {
         let cd = &self.c.closures[cid as usize];
         let owned: Vec<LocalId> = cd.captures.iter().filter(|c| c.mode != CaptureMode::Ref).map(|c| c.local).collect();
         if let Some(l) = owned.iter().find(|l| ls.iter().any(|x| self.loans[*x as usize].target == Some(**l) && !self.loans[*x as usize].path.starts_with('*'))) {
-            let (nm, sp) = (self.name(*l), cd.span);
+            let (nm, sp) = (self.name(*l), result_span(&cd.body));
             self.err("E-REF-ESCAPE", sp, format!("the closure's result borrows `{nm}`, which it captures by mut or by move: the reference would escape the closure body (§5.7, F-40)"));
         }
         self.closure_results.insert(cid, ls.clone());
         ls
+    }
+}
+
+/// The last character of a span: a block's closing brace (§5.16's anchor for the end of a scope).
+fn end_of(sp: Span) -> Span {
+    Span { file: sp.file, lo: sp.hi.saturating_sub(1).max(sp.lo), hi: sp.hi }
+}
+
+/// The result expression of a body or a closure body: the block's tail expression as written
+/// (§5.16: E-REF-ESCAPE is anchored at the returned expression, or a closure's result
+/// expression). A body that is not a block, or a block without a tail, is its own result.
+fn result_span(e: &TExpr) -> Span {
+    match &e.kind {
+        TK::Block(_, Some(t)) => t.span,
+        _ => e.span,
     }
 }
 
@@ -2311,7 +2400,10 @@ pub fn run(c: &mut Checked) {
         }
         let ls = o.eval(&body.expr, Use::Value);
         if !o.st.dead {
-            o.returned_loans.push((ls, body.expr.span));
+            // the returned expression is the body's tail (§5.16 anchors E-REF-ESCAPE there; the
+            // review of the round-3 sync, finding 3, D1: it was the body's opening brace, which
+            // put E-REF-ESCAPE before every other class-4 failure in the body)
+            o.returned_loans.push((ls, result_span(&body.expr)));
             let scope = o.scopes.pop().unwrap_or_default();
             // by-value Linear parameters must be consumed
             for &l in &scope {
@@ -2319,8 +2411,9 @@ pub fn run(c: &mut Checked) {
                 let ms = *o.st.ms.get(&l).unwrap_or(&MS::Init);
                 if is_linear(c, &ty) && (ms == MS::Init || ms == MS::Maybe) {
                     let nm = o.name(l);
-                    let sp = body.locals[l as usize].span;
-                    o.err("E-LINEAR-DROP", sp, format!("the Linear parameter `{nm}` is not consumed"));
+                    // dropped at the end of its scope, the body's closing brace (§5.16)
+                    let sp = end_of(body.expr.span);
+                    o.err("E-LINEAR-DROP", sp, format!("the Linear parameter `{nm}` is not consumed: it is dropped here, at the end of the body"));
                 }
             }
         }

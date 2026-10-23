@@ -1161,12 +1161,43 @@ impl<'a> Ev<'a> {
                 self.join(s1, s2, &v1, &v2, &e.ty)
             }
             TK::Match(s, arms) => {
-                let _ = self.eval(s);
+                let sv = self.eval(s);
+                // a match arm's path facts (note §5.10 Path facts, review of the round-3 sync,
+                // finding 9, F2c, F2d): its pattern's test, and the negation of every earlier
+                // unguarded arm's test, for integer literal and range patterns (T-Match is T-If
+                // over arms). A binding arm binds the scrutinee's value. Before, arms added no
+                // facts, so `match i { 0 => {}, _ => { y[i - 1] = 1; } }` failed i - 1's check
+                let sint = match &sv {
+                    Sym::Int(p) if s.ty.is_int() => Some(p.clone()),
+                    _ => None,
+                };
+                let srange = ty_range(&s.ty);
                 let s0 = self.st.clone();
                 let mut outs: Vec<(State, Sym)> = vec![];
+                let mut prior: Vec<Fact> = vec![];
                 for a in arms {
                     self.st = s0.clone();
-                    self.bind_pat(&a.pat, Sym::Opaque);
+                    if let Some(x) = &sint {
+                        for f in prior.clone() {
+                            self.add_fact(f);
+                        }
+                        for f in pat_test(&a.pat, x).unwrap_or_default() {
+                            self.add_fact(f);
+                        }
+                        if a.guard.is_none() {
+                            match pat_neg(&a.pat, x, srange) {
+                                Some(fs) => prior.extend(fs),
+                                // an irrefutable arm: the arms after it are unreachable, and
+                                // facts true on no path cannot be stated here; add none
+                                None => {}
+                            }
+                        }
+                    }
+                    let bound = match (&a.pat.kind, &sint) {
+                        (PK::Bind { by_ref: None, sub: None, .. }, Some(x)) => Sym::Int(x.clone()),
+                        _ => Sym::Opaque,
+                    };
+                    self.bind_pat(&a.pat, bound);
                     if let Some(g) = &a.guard {
                         let c = self.eval_cond(g);
                         self.add_cond(&c, true);
@@ -1909,6 +1940,45 @@ impl<'a> Ev<'a> {
         let mut out = vec![];
         if jobs.is_empty() || s1.dead || s2.dead {
             return out;
+        }
+        // Shifted value bounds (review of the round-3 sync, 2026-10-23, finding 9, F2b): when
+        // one path's value is L + c, with L its linear non-constant part, the merged value phi
+        // satisfies L + k_lo <= phi <= L + k_hi, where k_hi is the larger of c and the upper
+        // bound of (other value - L) in the other path's state (k_lo likewise). So
+        // `let j = if i == 0 { 0 } else { i - 1 }` keeps j <= i (the else path gives c = -1,
+        // the then path 0 - i <= 0 under i == 0). Interval bounds only: at most two per side and
+        // job, and only for a value with a constant shift.
+        for (x, y, at) in jobs {
+            for (sa, va, sb, vb) in [(&s1, x, &s2, y), (&s2, y, &s1, x)] {
+                let va = self.canon_in(sa, va);
+                if va.degree() != 1 || va.t.len() > 4 {
+                    continue;
+                }
+                let c = va.t.get(&Mono(vec![])).copied().unwrap_or(0);
+                // only a shifted value: an unshifted one (a single atom) is the existing
+                // candidates' case below, and adding its bound at every join made 1,600 joins
+                // four times slower (laptop, 2026-10-23)
+                if c == 0 {
+                    continue;
+                }
+                let Some(l) = va.sub(&Poly::c(c)) else { continue };
+                let Some(d) = vb.sub(&l) else { continue };
+                let (dlo, dhi) = self.poly_iv_in(sb, &d);
+                let big = i128::MAX / 16;
+                let phi = Poly::atom(*at);
+                if dhi < big {
+                    // phi <= L + k_hi
+                    if let Some(f) = l.add(&Poly::c(c.max(dhi))).and_then(|z| z.sub(&phi)) {
+                        out.push(Fact::Ge(f));
+                    }
+                }
+                if dlo > -big {
+                    // phi >= L + k_lo
+                    if let Some(f) = l.add(&Poly::c(c.min(dlo))).and_then(|z| phi.sub(&z)) {
+                        out.push(Fact::Ge(f));
+                    }
+                }
+            }
         }
         // the candidates of each side: facts of that path that relate its value (one atom) to
         // other atoms, found through the path's per-atom index
@@ -3177,4 +3247,44 @@ pub fn may_trap_of(fid: FnId) -> bool {
 
 pub fn loop_vars_written(_c: &Checked) -> BTreeMap<u32, u32> {
     BTreeMap::new()
+}
+
+/// The facts an integer pattern's match states about the scrutinee value x (a match arm's path
+/// facts, note §5.10): a literal gives x = v, an inclusive range a ..= b gives a <= x <= b, `name @
+/// p` gives p's facts; a wildcard or a plain binding states nothing. None: not expressible as a
+/// conjunction (an or-pattern of ranges).
+fn pat_test(p: &TPat, x: &Poly) -> Option<Vec<Fact>> {
+    match &p.kind {
+        PK::Lit(LitVal::Int(v)) => Some(vec![Fact::Eq(x.sub(&Poly::c(*v))?)]),
+        PK::Range(lo, hi) => Some(vec![Fact::Ge(x.sub(&Poly::c(*lo))?), Fact::Ge(Poly::c(*hi).sub(x)?)]),
+        PK::Bind { sub: Some(q), .. } => pat_test(q, x),
+        PK::Wild | PK::Bind { sub: None, .. } => Some(vec![]),
+        PK::Or(qs) if qs.len() == 1 => pat_test(&qs[0], x),
+        _ => None,
+    }
+}
+
+/// The facts that hold when an integer pattern does not match x (for the arms after an unguarded
+/// arm): x != v for a literal; for a range, the one side that remains when the range reaches the
+/// type's bound; x != v for each literal of an or-pattern. None: not expressible as a conjunction,
+/// or the pattern always matches.
+fn pat_neg(p: &TPat, x: &Poly, (tmin, tmax): (i128, i128)) -> Option<Vec<Fact>> {
+    match &p.kind {
+        PK::Lit(LitVal::Int(v)) => Some(vec![Fact::Ne(x.sub(&Poly::c(*v))?)]),
+        PK::Range(lo, hi) if *lo <= tmin && *hi >= tmax => None,
+        PK::Range(lo, hi) if *lo <= tmin => Some(vec![Fact::Ge(x.sub(&Poly::c(hi.checked_add(1)?))?)]),
+        PK::Range(lo, hi) if *hi >= tmax => Some(vec![Fact::Ge(Poly::c(lo.checked_sub(1)?).sub(x)?)]),
+        PK::Bind { sub: Some(q), .. } => pat_neg(q, x, (tmin, tmax)),
+        PK::Or(qs) => {
+            let mut out = vec![];
+            for q in qs {
+                match &q.kind {
+                    PK::Lit(LitVal::Int(v)) => out.push(Fact::Ne(x.sub(&Poly::c(*v))?)),
+                    _ => return None,
+                }
+            }
+            Some(out)
+        }
+        _ => None,
+    }
 }

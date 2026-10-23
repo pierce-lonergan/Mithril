@@ -11,6 +11,9 @@
 // Revised 2026-10-16 after review (same family, independent context): labelled blocks (note §12),
 // `matches!` with a pattern and guard, `2.` floats, one level of nested block comments, and
 // `\u{..}` escapes limited to Unicode scalar values.
+// Revised 2026-10-23 (core-calculus round-3 sync): `uses { unsafe }` parses (`effect` admits the
+// keyword `unsafe`, which NAME excludes), so that the checker can name J3's rejection,
+// E-GRANT-UNSAFE (note §5.2), as mithi's parser already does.
 
 start      : _s ((item | ";") _s)*
 loose      : _s (stmt _s)*
@@ -30,6 +33,7 @@ fn_rest    : NAME (_s generics)? _s params (_s "->" _s type)? (_s fn_clause)* _s
 ?fn_clause : effects | contract | where_clause
 effects    : "uses" _s "{" _s (effect (_s "," _s effect)* (_s ",")? _s)? "}"
 effect     : NAME (_s "(" _s NAME _s ")")?
+           | "unsafe"
 contract   : ("requires" | "ensures") _WS expr
 where_clause: "where" _WS wpred (_s "," _s wpred)* (_s ",")?
 wpred      : type _s ":" _s bounds

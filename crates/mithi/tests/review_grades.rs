@@ -96,7 +96,9 @@ policy fn p(slots: &[SlotView], now: Tick) -> Hint<SlotId> { let _d = depth(3); 
 #[grade(exact, cross_device)] fn use_hint(slots: &[SlotView], now: Tick) -> u32 { match p(slots, now).get() { Some(i) => i.0, None => 0 } }"####),
     ("pol/p13", "accept", "--canonical-prelude", r####"policy fn p(slots: &[SlotView], now: Tick) -> Hint<SlotId> { let age = now.0 - slots[0].last_use.0; if age > 3 { Hint::some(slots[0].id) } else { Hint::none() } }
 fn call() -> u32 { let s = [SlotView { id: SlotId(1), idx: 0, pinned: false, refs: 0, last_use: Tick(9) }]; match p(&s, Tick(2)).get() { Some(i) => i.0, None => 7 } }"####),
-    ("pol/p14", "E-TO-AUTHORITY", "--canonical-prelude", r####"policy fn p(slots: &[SlotView], now: Tick) -> Hint<SlotId> { let f = move || now.0; Hint::none() }"####),
+    // pol/p14: E-TO-AUTHORITY until 2026-10-23; the note's F-118 (round-3 sync) reads (t6)'s "escaping"
+    // as outliving the port call, and this `move` closure never leaves the policy
+    ("pol/p14", "accept", "--canonical-prelude", r####"policy fn p(slots: &[SlotView], now: Tick) -> Hint<SlotId> { let f = move || now.0; Hint::none() }"####),
     ("pol/p15", "E-TO-LOOP", "--canonical-prelude", r####"policy fn p(slots: &[SlotView], now: Tick) -> Hint<SlotId> { let n = slots.len(); for i in 0..n { } Hint::none() }"####),
     ("pol/p16", "E-TO-LOOP", "--canonical-prelude", r####"policy fn p(slots: &[SlotView], now: Tick) -> Hint<SlotId> { loop { if slots.len() > 0 { break; } } Hint::none() }"####),
     ("c14:w01", "E-ROW-UNDECLARED", "", r####"pub fn f(c: &Clock) -> u64 uses { } { c.now_ns() }"####),

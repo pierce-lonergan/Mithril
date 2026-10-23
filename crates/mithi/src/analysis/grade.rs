@@ -115,13 +115,20 @@ enum Target {
 struct Prov {
     ts: BTreeSet<Target>,
     addr: G,
+    /// every target is a whole place: the reference was made by `&mut x` of a whole local, is a
+    /// `&mut` parameter, or is a reborrow of one of these, on every path (§5.4's must-alias rule
+    /// with T-Call's whole-cell strong case, F-78, F-89). False whenever a temporary, a field, an
+    /// element or an unknown place may be the target. Review of the round-3 sync (2026-10-23,
+    /// finding 12): without it, mithi made no strong update through a local reference
+    whole: bool,
 }
 
 impl Prov {
     fn one(t: Target, addr: G) -> Prov {
-        Prov { ts: [t].into_iter().collect(), addr }
+        Prov { ts: [t].into_iter().collect(), addr, whole: false }
     }
     fn union(&mut self, o: &Prov) {
+        self.whole = self.whole && o.whole && !o.ts.is_empty();
         self.ts.extend(o.ts.iter().copied());
         self.addr = self.addr.j(o.addr);
     }
@@ -463,7 +470,7 @@ impl<'a> Ga<'a> {
 
     fn local_prov(&self, l: LocalId) -> Option<Prov> {
         if self.st.mutref.contains_key(&l) {
-            return Some(Prov::one(Target::MutRef(l), G::default()));
+            return Some(Prov { whole: true, ..Prov::one(Target::MutRef(l), G::default()) });
         }
         self.st.refs.get(&l).cloned()
     }
@@ -571,8 +578,8 @@ impl<'a> Ga<'a> {
                     });
                 }
                 match place_tg.clone() {
-                    Some((Tg::Set(ts), a)) => Some(Prov { ts, addr: a }),
-                    Some((Tg::Temp, a)) => Some(Prov { ts: BTreeSet::new(), addr: a }),
+                    Some((Tg::Set(ts), a)) => Some(Prov { ts, addr: a, whole: false }),
+                    Some((Tg::Temp, a)) => Some(Prov { ts: BTreeSet::new(), addr: a, whole: false }),
                     _ => None,
                 }
             } else {
@@ -635,6 +642,21 @@ impl<'a> Ga<'a> {
                     out.extend(self.closures_in(a));
                 }
             }
+            // a closure, or a reference to one, chosen by `if`, `match` or a block's value
+            // (round-3 sync, 2026-10-23: `let r = if h { &mut c1 } else { &mut c2 }; r()` had
+            // no closure, so the call took the generic path and wrote no state)
+            TK::If(_, a, b) => {
+                out.extend(self.closures_in(a));
+                if let Some(b) = b {
+                    out.extend(self.closures_in(b));
+                }
+            }
+            TK::Match(_, arms) => {
+                for a in arms {
+                    out.extend(self.closures_in(&a.body));
+                }
+            }
+            TK::Block(_, Some(tail)) => out.extend(self.closures_in(tail)),
             _ => {}
         }
         out
@@ -669,10 +691,14 @@ impl<'a> Ga<'a> {
     /// closure value when it is called through one: by-move captures are part of that value, so
     /// they read and write its grade.
     fn closure_summary(&mut self, cid: ClosureId) -> CloSum {
-        self.closure_summary_at(cid, None)
+        self.closure_summary_at(cid, &[], G::default())
     }
 
-    fn closure_summary_at(&mut self, cid: ClosureId, holder: Option<LocalId>) -> CloSum {
+    /// `holders`: the places that may hold the closure value called (the local itself, or what a
+    /// reference to it may point to), and `haddr` the address grade of that choice. Round-3 sync
+    /// (2026-10-23, note F-114): a call through a reference `r` chosen under h wrote the state
+    /// into r itself, so the closures r borrows kept their old state grade.
+    fn closure_summary_at(&mut self, cid: ClosureId, holders: &[Target], haddr: G) -> CloSum {
         let cd = &self.c.closures[cid as usize];
         // analyse the body with symbolic parameters, captures at their current grades
         let saved_st = self.st.clone();
@@ -687,8 +713,8 @@ impl<'a> Ga<'a> {
         self.rho = G::default();
         self.pc = vec![G::default()];
         let moved: Vec<LocalId> = cd.captures.iter().filter(|c| c.mode == CaptureMode::Move).map(|c| c.local).collect();
-        if let Some(h) = holder {
-            let gh = self.read_local(h);
+        if !holders.is_empty() {
+            let gh = holders.iter().fold(haddr, |acc, t| acc.j(self.target_grade(*t)));
             for m in &moved {
                 let cur = self.read_local(*m);
                 self.st.env.insert(*m, cur.j(gh));
@@ -765,10 +791,14 @@ impl<'a> Ga<'a> {
                 }
             } else if cd.captures.iter().any(|c| c.local == l) {
                 let g = fin(self, l, self.read_local(l));
-                match holder {
-                    // a by-move capture is state of the closure value (F-60)
-                    Some(h) if moved.contains(&l) => writes.push((Target::Local(h), g)),
-                    _ => writes.push((Target::Local(l), g)),
+                if moved.contains(&l) && !holders.is_empty() {
+                    // a by-move capture is state of the closure value (F-60), written where the
+                    // value may be held, with the address grade of that choice (F-114)
+                    for h in holders {
+                        writes.push((*h, g.j(haddr)));
+                    }
+                } else {
+                    writes.push((Target::Local(l), g));
                 }
             }
         }
@@ -951,6 +981,19 @@ impl<'a> Ga<'a> {
         }
     }
 
+    /// Is the borrowed place p a whole place: a local, the referent of a `&mut` parameter, or
+    /// the referent of a local reference whose every target is a whole place?
+    fn whole_place(&self, p: &TExpr) -> bool {
+        match &p.kind {
+            TK::Local(_) => true,
+            TK::Deref(b) => match &b.kind {
+                TK::Local(r) => self.st.mutref.contains_key(r) || self.st.refs.get(r).map(|x| x.whole && !x.ts.is_empty()).unwrap_or(false),
+                _ => false,
+            },
+            _ => false,
+        }
+    }
+
     /// Does the argument lend a whole place, the one its write target names?
     fn lends_whole(&self, a: &TExpr) -> bool {
         match &a.kind {
@@ -1018,8 +1061,8 @@ impl<'a> Ga<'a> {
                         x.addr = x.addr.j(a);
                         x
                     }),
-                    Tg::Temp => Some(Prov { ts: BTreeSet::new(), addr: a }),
-                    Tg::Set(ts) => Some(Prov { ts, addr: a }),
+                    Tg::Temp => Some(Prov { ts: BTreeSet::new(), addr: a, whole: false }),
+                    Tg::Set(ts) => Some(Prov { ts, addr: a, whole: self.whole_place(p) }),
                     Tg::Unknown => None,
                 };
                 self.prov.insert(key(e), pv);
@@ -1184,12 +1227,24 @@ impl<'a> Ga<'a> {
                     let v = all.j(gf).j(addr).j(self.pc());
                     self.write_tg(&tg, v, false);
                 }
-                let holder = match &f.kind {
-                    TK::Local(l) => Some(*l),
-                    _ => None,
+                // where the closure value called is held: the local itself, or, for a call
+                // through a reference (`r()`, `(*r)()`), the places the reference may point to
+                let (holders, haddr): (Vec<Target>, G) = {
+                    let mut root = &**f;
+                    while let TK::Deref(b) = &root.kind {
+                        root = b;
+                    }
+                    match &root.kind {
+                        TK::Local(l) if matches!(self.body.locals[*l as usize].ty, Ty::Ref(..)) => match self.st.refs.get(l) {
+                            Some(p) if !p.ts.is_empty() => (p.ts.iter().copied().collect(), p.addr),
+                            _ => (vec![], G::default()),
+                        },
+                        TK::Local(l) => (vec![Target::Local(*l)], G::default()),
+                        _ => (vec![], G::default()),
+                    }
                 };
                 for c in cs {
-                    let s = self.closure_summary_at(c, holder);
+                    let s = self.closure_summary_at(c, &holders, haddr);
                     r = r.j(apply(s.ret, &gs, self.clo_base));
                     // T-CallClo (F-69): the closure's θ_mut on its `&mut` parameters, applied to
                     // the places the arguments borrow
@@ -1289,7 +1344,7 @@ impl<'a> Ga<'a> {
                 // a reference chosen by the condition: both branches' places, with the
                 // condition's grade as the address grade (F-84; review 2026-10-23, h10, h18)
                 if e.ty.mentions_ref() {
-                    let mut acc = Some(Prov { ts: BTreeSet::new(), addr: gc.ctl() });
+                    let mut acc = Some(Prov { ts: BTreeSet::new(), addr: gc.ctl(), whole: true });
                     for (br, dead) in [(Some(t.as_ref()), s1.dead), (el.as_deref(), s2.dead)] {
                         let Some(br) = br else { continue };
                         if dead || matches!(br.ty, Ty::Never) {
@@ -1312,7 +1367,7 @@ impl<'a> Ga<'a> {
                 let s0 = self.st.clone();
                 let mut acc: Option<St> = None;
                 let mut g = gs.ctl();
-                let mut pacc: Option<Prov> = Some(Prov { ts: BTreeSet::new(), addr: gs.ctl() });
+                let mut pacc: Option<Prov> = Some(Prov { ts: BTreeSet::new(), addr: gs.ctl(), whole: true });
                 for a in arms {
                     self.st = s0.clone();
                     self.bind(&a.pat, gs);
@@ -1822,13 +1877,22 @@ impl<'a> Ga<'a> {
                         // the address grade of the argument joins the update (what chose the
                         // place the callee writes; T-Assign's γ_addr, missing from T-Call as
                         // written: review 2026-10-23, h9: `w(r, 4)` with r chosen by `if h`)
-                        let v = apply(*mg, &gs, 0).j(addr).j(pc);
                         // F-78: an argument that lends a whole place (`&mut x`, `&mut *y` of a
-                        // `&mut` parameter) is one place, so the callee's final referent grade
-                        // (stated over its initial grade) replaces it: a strong update
-                        // the strong case needs one whole place with no references inside (F-91)
+                        // `&mut` parameter, or a local reference whose every target is that one
+                        // whole place, F-96's resolution) is one place, so the callee's final
+                        // referent grade (stated over its initial grade) replaces it: a strong
+                        // update. The strong case needs one whole place with no references inside
+                        // (F-91), and it does not join the address grade: no choice among places
+                        // is made, and the call's pc covers whether it runs (note T-Call, F-114).
+                        // Review of the round-3 sync (2026-10-23, finding 12): mithi made no
+                        // strong update through a local reference and joined the address grade,
+                        // so `let r = &mut y; zero(r); y` kept y's old grade where the note
+                        // replaces it (probes X28, X30)
                         let flat = matches!(ptys.get(*pi), Some(Ty::Ref(true, inner)) if !inner.mentions_ref());
-                        let strong = flat && self.lends_whole(a);
+                        let one = matches!(&tg, Tg::Set(ts) if ts.len() == 1);
+                        let via_whole_ref = self.prov_of(a).map(|p| p.whole && p.ts.len() == 1).unwrap_or(false);
+                        let strong = flat && one && (self.lends_whole(a) || via_whole_ref);
+                        let v = apply(*mg, &gs, 0).j(if strong { G::default() } else { addr }).j(pc);
                         self.write_tg(&tg, v, strong);
                     }
                 }

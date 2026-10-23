@@ -1,6 +1,6 @@
 {
  "schema": "mithril.m0.core-calculus.verdicts/v0-draft",
- "status": "DRAFT, with docs/m0/core-calculus.md; revised 2026-10-16 after the first same-family review and again after the second same-family review, and on 2026-10-23 after the third same-family review (note sections 0.6, 0.7 and 17)",
+ "status": "DRAFT, with docs/m0/core-calculus.md; revised 2026-10-16 after the first same-family review and again after the second same-family review, and on 2026-10-23 after the third same-family review (note sections 0.6, 0.7 and 17); synchronised with mithi on 2026-10-23 (note section 0.8: F-114 to F-122, items N-110 to N-128); revised on 2026-10-23 after the same-family review of that sync (note section 0.9: F-123 to F-134, items N-129 to N-153)",
  "calculus": "MCore v0.1 (docs/m0/core-calculus.md)",
  "prelude": "derivations.md#p-the-canonical-prelude",
  "pinned": {
@@ -2544,17 +2544,521 @@
    "scope": "x1",
    "gate_item": false,
    "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-110",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 7, from its blind review of 2026-10-23 (same family, independent context); probe h9; added in the round-3 sync",
+   "text": "fn w(o: &mut u32, k: u32) { *o = k; } #[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|v| *v); let mut y = 0u32; let mut z = 0u32; let r = if h > 1 { &mut y } else { &mut z }; w(r, 4); y }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-114: T-Call's weak update joins the argument's address grade; r's targets {y, z} were chosen under h, so y is 4 or 0 depending on h; corrected by F-134 (review of the sync): w's *o = k is a weak update (OP-25), so theta_mut,o mentions alpha_o, and alpha_o := gamma(&mut *r), which includes gamma_h, rejects the item even without the address grade [M: a mithi build without it]; F-114's own case is N-153",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-111",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 7, from its blind review of 2026-10-23 (same family, independent context); probe h11; added in the round-3 sync",
+   "text": "fn w(o: &mut u32, k: u32) { *o = k; } #[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|v| *v); let mut a = [0u32; 2]; w(&mut a[(h % 2) as usize], 4); a[0] }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-114: the index grade of the argument's place joins the weak update of a; the index grade is also part of the argument grade gamma(&mut a[i]) that alpha_o takes, so the item is rejected without the address grade too (F-134) [M]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-112",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 8, from its blind review of 2026-10-23 (same family, independent context); probe g1; added in the round-3 sync",
+   "text": "fn put(o: &mut Vec<&u32>, d: &u32) uses { alloc(Global) } { let mut c = |x: &u32| o.push(x); c(d); } fn g() -> u32 uses { alloc(Global) } { let mut v: Vec<&u32> = Vec::new(); { let z = 5u32; put(&mut v, &z); } *v[0] }",
+   "verdict": "reject",
+   "code": "E-LOCAL-MUT-STORE",
+   "note": "F-107 and F-115: x is higher-ranked by its annotation (no expected signature), so the closure's store is rejected inside its body; rustc 1.99.1 [M, 2026-10-23, round-3 sync probe s06 (put alone): E0521]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-113",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 8, from its blind review of 2026-10-23 (same family, independent context); probe g1, unannotated twin; added in the round-3 sync",
+   "text": "fn put(o: &mut Vec<&u32>, d: &u32) uses { alloc(Global) } { let mut c = |x| o.push(x); c(d); } fn g() -> u32 uses { alloc(Global) } { let mut v: Vec<&u32> = Vec::new(); { let z = 5u32; put(&mut v, &z); } *v[0] }",
+   "verdict": "reject",
+   "code": "E-LOCAL-MUT-STORE",
+   "note": "F-115: the closure may store x's loan (x is unannotated), and the call c(d) transfers d's symbolic loan into o's referent, at o's inner reference position; before F-115 only assignments and storing std calls were checked, so put passed and g dangled; rustc 1.99.1 [M, 2026-10-23, round-3 sync probe s05 (put alone): lifetime may not live long enough]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-114",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 8, from its blind review of 2026-10-23 (same family, independent context); probe s07; added in the round-3 sync",
+   "text": "fn put(o: &mut Vec<&u32>, v: &[u32]) { v.iter().for_each(|x| o.push(x)); }",
+   "verdict": "reject",
+   "code": "E-LOCAL-MUT-STORE",
+   "note": "F-115: the std call's loan transfer (lambda_q, with x's symbol replaced by the loans of v's items) stores v's symbolic loan into o's referent; rustc 1.99.1 [M, 2026-10-23, round-3 sync probe s07: lifetime may not live long enough]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-115",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 9, from its blind review of 2026-10-23 (same family, independent context); probe clock read in exact non-kernel code; added in the round-3 sync",
+   "text": "#[grade(exact, cross_device)] fn stamp(c: &Clock) -> u64 uses { time, nondet } { c.now_ns() }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-116: cls(FF-CLOCK) is Dc only in kernels, in kcall helpers reached from them and in timing_only code; here it is C, and the time label's nondet taint fails the cross_device sink, as in N-13",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-116",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 10, from its blind review of 2026-10-23 (same family, independent context); probe ow05; added in the round-3 sync",
+   "text": "fn f(v: &[u32]) -> &u32 { let l = [1u32, 2]; &l[0] }",
+   "verdict": "reject",
+   "code": "E-REF-ESCAPE",
+   "also": [
+    "E-BORROW-OUTLIVE"
+   ],
+   "note": "F-117: E-REF-ESCAPE is anchored at the returned expression and E-BORROW-OUTLIVE at the end of the dying scope, so within class 4 the escape comes first; rustc 1.99.1 [M, 2026-10-23, round-3 sync probe s08: E0515]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-117",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 10, from its blind review of 2026-10-23 (same family, independent context); probe po09; added in the round-3 sync",
+   "text": "policy fn p(slots: &[SlotView], m: &Mutex<u32>) -> Hint<u32> { Hint::some(m.with_lock(|v| *v)) }",
+   "verdict": "reject",
+   "code": "E-TO-ROW",
+   "also": [
+    "E-TO-AUTHORITY",
+    "E-TO-PARAM",
+    "E-TO-CALL"
+   ],
+   "note": "F-117: four codes of class 7; (t1) is anchored at the item header, first by source position; E-TO-AUTHORITY and E-TO-PARAM share the parameter's anchor and are ordered by spelling",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-118",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 11, from its blind review of 2026-10-23 (same family, independent context); probe po04; added in the round-3 sync",
+   "text": "policy fn p(slots: &[SlotView], now: Tick) -> Hint<usize> { let mut b = 0usize; for i in 0..slots.len() { if slots[i].refs == 0 { b = i; } } Hint::some(b) }",
+   "verdict": "accept",
+   "note": "F-118: (t5) admits a range bounded by the length of a core-provided slice parameter; its fuel is that of `for s in slots`",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-119",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 11, from its blind review of 2026-10-23 (same family, independent context); probe po11; added in the round-3 sync",
+   "text": "fn ap<F: Fn() -> u32>(f: F) -> u32 { f() } policy fn p(slots: &[SlotView], now: Tick) -> Hint<u32> { let k = slots.len() as u32; Hint::some(ap(move || k)) }",
+   "verdict": "accept",
+   "note": "F-118: an escaping closure in (t6) is a closure value that outlives the port call; this one is called inside p",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-120",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 11, from its blind review of 2026-10-23 (same family, independent context); probe pol/p15; added in the round-3 sync",
+   "text": "policy fn p(slots: &[SlotView], now: Tick) -> Hint<usize> { let n = slots.len(); let mut b = 0usize; for i in 0..n { b = i; } Hint::some(b) }",
+   "verdict": "reject",
+   "code": "E-TO-LOOP",
+   "note": "F-118: a range bound is written as a constant or as s.len() of a core-provided slice parameter; a local holding it is not read through (the fix is 0..slots.len())",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-121",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 11, from its blind review of 2026-10-23 (same family, independent context); probe po15; added in the round-3 sync",
+   "text": "fn one() -> u32 { 1 } policy fn p(slots: &[SlotView], now: Tick) -> Hint<fn() -> u32> { Hint::some(one) }",
+   "verdict": "reject",
+   "code": "E-TO-AUTHORITY",
+   "note": "F-118: a function value in the policy's result leaves the port call",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-122",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 12, from its blind review of 2026-10-23 (same family, independent context); probe kc10; added in the round-3 sync",
+   "text": "kernel fn k(i: usize, y: &mut [u32]) requires y.len() >= 1 { let j = if i < y.len() { i } else { 0 }; y[j] = 1; }",
+   "verdict": "accept",
+   "note": "F-119: Phi holds j's SSA definition with its per-arm implications, so j < len(y) holds on both arms",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-123",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 13, from its blind review of 2026-10-23 (same family, independent context); probe linear capture consumed in the body; added in the round-3 sync",
+   "text": "in module store: fn f(store: &Store, id: ExpertId) -> Result<(), IoError> uses { io, spawn } { let l = store.lease(id)?; let c = move || store.release(l); c(); Ok(()) }",
+   "verdict": "accept",
+   "note": "F-120 (a): the body consumes its by-move Linear capture l, and the call consumes the Linear closure c; the accepted twin of N-19",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-124",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 14, from its revision of 2026-10-23; probe r2; added in the round-3 sync",
+   "text": "fn f() -> u32 { let a = 1u32; let v = [2u32, 3]; let mut out = &a; v.iter().for_each(|x: &u32| out = x); *out }",
+   "verdict": "accept",
+   "note": "F-121: the closure takes its signature from for_each's bound, whose parameter is the iterator's item &'a u32, so the annotation does not make x higher-ranked; rustc 1.99.1 [M, 2026-10-23, round-3 sync probe s01: compiles; f() returns 3]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-125",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 14, from its revision of 2026-10-23; probe r2, let-bound twin; added in the round-3 sync",
+   "text": "fn f() -> u32 { let a = 1u32; let v = [2u32, 3]; let mut out = &a; let c = |x: &u32| out = x; v.iter().for_each(c); *out }",
+   "verdict": "reject",
+   "code": "E-LOCAL-MUT-STORE",
+   "note": "F-121: created with no expected signature, the annotated x is higher-ranked, so storing its loan into the capture out is rejected; rustc 1.99.1 [M, 2026-10-23, round-3 sync probe s03: E0521]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-126",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 15, from its revision of 2026-10-23; probe a20_coverproj_ctrl (cc3); added in the round-3 sync",
+   "text": "N-74's M2 and index_mut, with #[grade(exact, cross_device)] fn mm(x: &[f32], y: &mut M2) requires x.len() == y.blocks_per_row { for t in 0..y.rows { for r in 0..y.blocks_per_row { y[t][r] = canon::nan(x[r]); } } } (no write to scale)",
+   "verdict": "reject",
+   "code": "E-NAN-RAW-SINK",
+   "note": "F-122: y.scale is the caller's value, raw in general, and reaches the exact sink untouched, as an untouched &mut f32 output does; this holds with field-sensitive cells too",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-127",
+   "source": "crates/mithi/README.md, 'Findings for the note' item 15, from its revision of 2026-10-23; probe a20 with scale canonicalised; added in the round-3 sync",
+   "text": "N-126 with y.scale = canon::nan(y.scale); before the loops",
+   "verdict": "reject",
+   "code": "E-NAN-RAW-SINK",
+   "note": "F-122: under C-CELL a write to a proper sub-place of *y is a partial update, which cannot reset the cell's NaN bit while another float component lies outside it, so no sequence of field writes makes M2's two float components canonical; field-sensitive cells (OP-24) would accept it",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-128",
+   "source": "round-3 sync (ccsync track), 2026-10-23: T-CallClo's analogue of crates/mithi/README.md 'Findings for the note' item 7; probes n128 (mithi) and s11 (rustc)",
+   "text": "#[grade(exact, cross_device)] fn g(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|v| *v); let mut s = 0u32; let mut c1 = move |x: u32| -> u32 { let o = s; s = x; o }; let mut c2 = c1; { let r = if h > 1 { &mut c1 } else { &mut c2 }; r(9); } c1(0) }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-114: T-CallClo's state update joins gamma_addr(f); the body stores x into its state without reading the old state into it, so theta_state does not mention sigma and only the address grade carries h; c1(0) returns 9 or 0 depending on h; rustc 1.99.1 [M, 2026-10-23, round-3 sync probe s11: the Rust form returns 9 for h = 3 and 0 for h = 0]; mithi at 4b4dd05 accepted it (a mithi defect, fixed in the sync)",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items"
+  },
+  {
+   "id": "N-129",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-1; probes B2 (mithi), t01 (rustc)",
+   "text": "fn put(o: &mut Option<&u32>, d: &u32) { let mut c = move |x| { *o = Some(x); }; c(d); }",
+   "verdict": "reject",
+   "code": "E-LOCAL-MUT-STORE",
+   "note": "F-123: o is captured by move, so the places its mutable loan reaches, *o, are output places (F-92); the body may store x's loan there, and c(d) transfers d's symbolic loan into o's referent at its inner position, a store that E-LOCAL-MUT-STORE checks (F-115, F-123); rustc 1.99.1 [M, 2026-10-23, probe t01: lifetime may not live long enough]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] accept (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-LOCAL-MUT-STORE"
+  },
+  {
+   "id": "N-130",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-1; probes B2c (mithi), t23 (rustc)",
+   "text": "fn put(o: &mut Option<&u32>, d: &u32) { let mut c = move |x| { *o = Some(x); }; c(d); } fn g() -> u32 { let mut o: Option<&u32> = None; { let z = 5u32; put(&mut o, &z); } *o.unwrap() }",
+   "verdict": "reject",
+   "code": "E-LOCAL-MUT-STORE",
+   "note": "F-123: N-129 with a caller whose z dies before o is read; put is rejected at c(d), so g never reads the dead z; before this revision mithi accepted both, and mithi run --entry g returned 5, read from the dead z [M, 2026-10-23]; rustc 1.99.1 [M, probe t23: lifetime may not live long enough]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] accept (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-LOCAL-MUT-STORE"
+  },
+  {
+   "id": "N-131",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-1; probes B2d (mithi), t02 (rustc)",
+   "text": "fn put(o: &mut Vec<&u32>, d: &u32) uses { alloc(Global) } { let mut c = move |x| o.push(x); c(d); }",
+   "verdict": "reject",
+   "code": "E-LOCAL-MUT-STORE",
+   "note": "F-123: the push form of N-129: Vec::push may store x's loan into *o, and c(d) transfers d's symbolic loan there (F-115, F-123); rustc 1.99.1 [M, probe t02: lifetime may not live long enough]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] accept (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-LOCAL-MUT-STORE"
+  },
+  {
+   "id": "N-132",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-1; probes X06 (mithi), t26 (rustc)",
+   "text": "fn g() -> u32 { let mut o: Option<&u32> = None; { let z = 5u32; let r = &mut o; let mut c = move |x| { *r = Some(x); }; c(&z); } *o.unwrap() }",
+   "verdict": "reject",
+   "code": "E-BORROW-OUTLIVE",
+   "note": "F-123: found by the reviser: r = &mut o is captured by move, so o is an output place (F-92); c(&z) gives o the loan on z, and z's scope ends while o, read after the block, still carries it; rustc 1.99.1 [M, probe t26: E0597]; mithi before this revision accepted it",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] accept (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-BORROW-OUTLIVE"
+  },
+  {
+   "id": "N-133",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-2; probes G4 (mithi), t06 (rustc, a plain struct for the lease)",
+   "text": "in module store: fn f(store: &Store, id: ExpertId) -> Result<(), IoError> uses { io, spawn } { let l = store.lease(id)?; let c = move || store.release(l); c(); c(); Ok(()) }",
+   "verdict": "reject",
+   "code": "E-MOVE-USED",
+   "note": "F-124: in module store: c owns the Linear lease l, so c is Linear and runs once (K-LinClo); the first c() consumes it, and the second is a use after move: E-MOVE-USED at the second call (section 5.4, F-124); rustc 1.99.1 [M, probe t06 with a non-Copy struct for the lease: E0382]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-MOVE-USED (the round-3 sync's final build, with --canonical-prelude --module store); after this revision: reject E-MOVE-USED"
+  },
+  {
+   "id": "N-134",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-3; probes D1 (mithi), t07 (rustc)",
+   "text": "fn f(v: &[u32]) -> &u32 { let mut a = 1u32; let r = &a; a = 2; let l = [*r, 2]; &l[0] }",
+   "verdict": "reject",
+   "code": "E-BORROW-CONFLICT",
+   "note": "F-125: class 4 throughout: E-BORROW-CONFLICT at a = 2 (r's loan on a is live) comes before E-REF-ESCAPE at the returned expression and E-BORROW-OUTLIVE at the closing brace (section 5.16, F-125); rustc 1.99.1 lists E0506 before E0515 [M, probe t07]; mithi before this revision anchored E-REF-ESCAPE at the body's opening brace and reported it first",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-REF-ESCAPE (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-BORROW-CONFLICT"
+  },
+  {
+   "id": "N-135",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-3; probes D2 (mithi)",
+   "text": "in module store: fn f(store: &Store, id: ExpertId) -> Result<u32, IoError> uses { io, spawn } { let a = 0u32; let mut r = &a; { let l = store.lease(id)?; let z = 1u32; r = &z; } Ok(*r) }",
+   "verdict": "reject",
+   "code": "E-BORROW-OUTLIVE",
+   "note": "F-125: in module store: at the inner block's closing brace l is dropped (E-LINEAR-DROP) and z's scope ends while r carries its loan (E-BORROW-OUTLIVE); one anchor, so the spelling orders them (F-117, F-125); mithi before this revision anchored E-LINEAR-DROP at l's binding and reported it first",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-LINEAR-DROP (the round-3 sync's final build, with --canonical-prelude --module store); after this revision: reject E-BORROW-OUTLIVE"
+  },
+  {
+   "id": "N-136",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-3; probes D9 (mithi)",
+   "text": "in module store: fn f(store: &Store, id: ExpertId) -> Result<(), IoError> uses { io, spawn } { let l = store.lease(id)?; let mut a = 1u32; let r = &a; a = 2; let _u = *r; Ok(()) }",
+   "verdict": "reject",
+   "code": "E-BORROW-CONFLICT",
+   "note": "F-125: in module store: E-BORROW-CONFLICT at a = 2 comes before E-LINEAR-DROP at the body's closing brace, where the unreleased lease is dropped (section 5.16, F-125); mithi before this revision reported E-LINEAR-DROP first, at l's binding",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-LINEAR-DROP (the round-3 sync's final build, with --canonical-prelude --module store); after this revision: reject E-BORROW-CONFLICT"
+  },
+  {
+   "id": "N-137",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-4; probes R6 (mithi), t10 (rustc)",
+   "text": "struct S { x: u32, y: u32 } fn g() -> u32 { let mut s = S { x: 1, y: 2 }; let mut c = || s.x += 1; let r = &s.y; c(); *r + s.x }",
+   "verdict": "accept",
+   "note": "F-126: captures are places (section 2.4, F-67): c captures s.x by unique borrow, which does not overlap s.y; rustc 1.99.1 [M, probe t10: compiles, returns 4]; mithi before this revision captured the whole local s and answered E-BORROW-CONFLICT",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-BORROW-CONFLICT (the round-3 sync's final build, with --canonical-prelude); after this revision: accept"
+  },
+  {
+   "id": "N-138",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-5; probes C2 (mithi)",
+   "text": "fn hc(c: &Clock) -> u64 uses { time } { c.now_ns() } kernel fn k(c: &Clock) -> u64 uses { time } { hc(c) }",
+   "verdict": "reject",
+   "code": "E-FF-CLOCK",
+   "note": "F-127: hc is not a kernel and is called from the kernel k, so cls(FF-CLOCK) = Dc there (section 5.0 as reworded, F-127): E-FF-CLOCK (class 2), with E-GRADE, E-KERNEL-ROW and E-KERNEL-CALL secondary; under the sync's wording ('a kcall helper') the read had no Dc class, because hc's row {time} makes kcall(hc) false",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-FF-CLOCK (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-FF-CLOCK"
+  },
+  {
+   "id": "N-139",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-6; probes R18 (mithi), t20 (rustc)",
+   "text": "fn g() -> usize uses { alloc(Global) } { let v: Vec<u32> = Vec::new(); let r = &v; let w = v; r.len() + w.len() }",
+   "verdict": "reject",
+   "code": "E-BORROW-CONFLICT",
+   "note": "F-128: the move let w = v while r's loan on v is live is E-BORROW-CONFLICT, as for a write (section 5.4 as reworded, F-128); rustc 1.99.1 [M, probe t20: E0505]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-BORROW-CONFLICT (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-BORROW-CONFLICT"
+  },
+  {
+   "id": "N-140",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-6; probes R19 (mithi), t21 (rustc)",
+   "text": "fn g(v: &Vec<u32>) -> Vec<u32> { *v }",
+   "verdict": "reject",
+   "code": "E-MOVE-BORROWED",
+   "note": "F-128: a move out of a place behind a shared reference is E-MOVE-BORROWED (F-128); rustc 1.99.1 [M, probe t21: E0507]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-MOVE-BORROWED (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-MOVE-BORROWED"
+  },
+  {
+   "id": "N-141",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-7; probes D7 (mithi)",
+   "text": "#[derive(Copy, Clone)] linear struct L { a: u32 } fn g() { println!(\"x\"); }",
+   "verdict": "reject",
+   "code": "E-LINEAR-COPY",
+   "note": "F-129: L is linear and derives Copy (J1): E-LINEAR-COPY, now named in class 1, comes before the println!'s E-AMBIENT-IO (class 2) (F-129); under the sync's class lines E-LINEAR-COPY fell under class 4's E-LINEAR-*",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-LINEAR-COPY (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-LINEAR-COPY"
+  },
+  {
+   "id": "N-142",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-8; probes E5 (mithi)",
+   "text": "#[derive(Copy, Clone)] struct W { f: fn() -> u32 } fn one() -> u32 { 1 } policy fn p(slots: &[SlotView], now: Tick) -> Hint<W> { Hint::some(W { f: one }) }",
+   "verdict": "reject",
+   "code": "E-TO-AUTHORITY",
+   "note": "F-130: (t6): the function value one is a field of W in p's result, so it outlives the port call: E-TO-AUTHORITY at the result type (F-118, F-130); mithi before this revision accepted it (its scan did not enter W)",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] accept (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-TO-AUTHORITY"
+  },
+  {
+   "id": "N-143",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-9; probes F2b (mithi)",
+   "text": "kernel fn k(i: usize, y: &mut [u32]) requires i < y.len() { let j = if i == 0 { 0 } else { i - 1 }; y[j] = 1; }",
+   "verdict": "accept",
+   "note": "F-131: Phi holds i == 0 => j = 0 and i != 0 => j = i - 1 (F-119); with i < len(y), j < len(y) holds on both arms, and i - 1 is under i != 0; mithi before this revision answered E-KERNEL-OBLIGATION at y[j] (its T2 kept no relation across the join); it now keeps the shifted bound j <= i (F-131)",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-KERNEL-OBLIGATION (the round-3 sync's final build, with --canonical-prelude); after this revision: accept"
+  },
+  {
+   "id": "N-144",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-9; probes F2c (mithi)",
+   "text": "kernel fn k(i: usize, y: &mut [u32]) requires i < y.len() { match i { 0 => {}, _ => { y[i - 1] = 1; } } }",
+   "verdict": "accept",
+   "note": "F-131: the second arm's path facts include the negation of the first arm's test, i != 0 (section 5.10 as revised, F-131), so i - 1 does not underflow and i - 1 < len(y); mithi before this revision answered E-KERNEL-OBLIGATION at i - 1",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-KERNEL-OBLIGATION (the round-3 sync's final build, with --canonical-prelude); after this revision: accept"
+  },
+  {
+   "id": "N-145",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-9; probes F2d (mithi)",
+   "text": "kernel fn k(i: usize, y: &mut [u32]) requires i < y.len() { match i { 0 => {}, n => { y[n - 1] = 1; } } }",
+   "verdict": "accept",
+   "note": "F-131: as N-144; the binding arm's n equals the scrutinee i (F-131); mithi before this revision answered E-KERNEL-OBLIGATION",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-KERNEL-OBLIGATION (the round-3 sync's final build, with --canonical-prelude); after this revision: accept"
+  },
+  {
+   "id": "N-146",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-10; probes H1 (mithi), t08 (rustc)",
+   "text": "fn f() -> u32 { let a = 1u32; let v = [2u32, 3]; let mut out = &a; v.iter().for_each((|x: &u32| out = x)); *out }",
+   "verdict": "accept",
+   "note": "F-132: the parenthesised closure is written as an argument at for_each's Fn* bound, so it has an expected signature and x is not higher-ranked (F-121, F-132); x carries the iterator's loan on v; rustc 1.99.1 [M, probe t08: compiles, returns 3]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] accept (the round-3 sync's final build, with --canonical-prelude); after this revision: accept"
+  },
+  {
+   "id": "N-147",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-10; probes H2 (mithi), t09 and t35 (rustc)",
+   "text": "fn f() -> u32 { let a = 1u32; let v = [2u32, 3]; let mut out = &a; v.iter().for_each({ |x: &u32| out = x }); *out }",
+   "verdict": "accept",
+   "note": "F-132: as N-146, with the closure as the tail expression of a block that is the argument (F-132); rustc 1.99.1 [M, probe t09: compiles, returns 3; t35, with a statement before the closure, too]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] accept (the round-3 sync's final build, with --canonical-prelude); after this revision: accept"
+  },
+  {
+   "id": "N-148",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-11; probes R12b (mithi), t11 (rustc)",
+   "text": "fn g() -> u32 uses { alloc(Global) } { let mut v: Vec<u32> = Vec::new(); v.push(3); v[v.len() - 1] = 5; v[0] }",
+   "verdict": "reject",
+   "code": "E-BORROW-CONFLICT",
+   "note": "F-133: on a Vec, v[e] = ... is *IndexMut::index_mut(&mut v, e): the &mut of v is created before v.len() - 1 is evaluated and is not a reservation, so the read of v conflicts (section 3.2, F-133); rustc 1.99.1 [M, probe t11: E0502]; mithi before this revision accepted it",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] accept (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-BORROW-CONFLICT"
+  },
+  {
+   "id": "N-149",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-11; probes R12d (mithi), t12 (rustc)",
+   "text": "fn g() -> u32 uses { alloc(Global) } { let mut v: Vec<u32> = Vec::new(); v.push(3); v[v.len() - 1] += 5; v[0] }",
+   "verdict": "reject",
+   "code": "E-BORROW-CONFLICT",
+   "note": "F-133: the compound form: the right operand first, then the place, with the same base-first &mut (F-133); rustc 1.99.1 [M, probe t12: E0502]; mithi before this revision accepted it",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] accept (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-BORROW-CONFLICT"
+  },
+  {
+   "id": "N-150",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-11; probes R12c (mithi), t13 (rustc)",
+   "text": "fn g() -> u32 { let mut a = [1u32, 2]; a[a.len() - 1] = 5; a[1] }",
+   "verdict": "accept",
+   "note": "F-133: an array uses built-in indexing, which evaluates the index first (F-133); rustc 1.99.1 [M, probe t13: compiles, returns 5]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] accept (the round-3 sync's final build, with --canonical-prelude); after this revision: accept"
+  },
+  {
+   "id": "N-151",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-12; probes A1 (mithi), t22 (rustc)",
+   "text": "fn w(o: &mut u32, k: u32) { *o = k; } #[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|v| *v); let mut y = 0u32; let r = if h > 1 { &mut y } else { &mut y }; w(r, 4); y }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-134: the review expected accept; target*(*r) = {y} is one whole cell, so T-Call's strong case applies without gamma_addr, but w's *o = k is a weak update (OP-25), so theta_mut,o mentions alpha_o, and alpha_o := gamma(&mut *r) includes gamma(r), which includes gamma_h (T-If, P-Deref-Local): y gets h; rustc 1.99.1 [M, probe t22: y is 4 for both h], so the rejection is the cost OP-25 would remove",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-GRADE (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-GRADE"
+  },
+  {
+   "id": "N-152",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-12; probes X30 (mithi), t31 (rustc)",
+   "text": "fn z(o: &mut [u32; 2]) { for i in 0..2 { o[i] = 4; } } #[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|v| *v); let mut y = [h, h]; let r = &mut y; z(r); y[0] }",
+   "verdict": "accept",
+   "note": "F-134: found by the reviser: z covers *o (T-Cover), so theta_mut,o carries no alpha_o; target*(*r) = {y} is one whole cell, so T-Call's strong case replaces y's grade, h's included (F-78, F-134); rustc 1.99.1 [M, probe t31: y[0] is 4 for both h]; mithi before this revision made no strong update through a local reference and answered E-GRADE",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-GRADE (the round-3 sync's final build, with --canonical-prelude); after this revision: accept"
+  },
+  {
+   "id": "N-153",
+   "source": "review of the round-3 sync (reviewer 7: Claude, same family, independent context), 2026-10-23, item RS-12; probes X31 (mithi), t29 (rustc)",
+   "text": "fn z(o: &mut [u32; 2]) { for i in 0..2 { o[i] = 4; } } #[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|v| *v); let mut y = [0u32; 2]; let mut w2 = [0u32; 2]; let r = if h > 1 { &mut y } else { &mut w2 }; z(r); y[0] }",
+   "verdict": "reject",
+   "code": "E-GRADE",
+   "note": "F-134: F-114's own case: target*(*r) = {y, w2}, a weak update; z's theta_mut,o = bottom does not mention alpha_o, so only gamma_addr(r), which includes gamma_h, carries the choice (F-114, F-134); rustc 1.99.1 [M, probe t29: y[0] is 4 for h = 3 and 0 for h = 0]; a mithi build without the address grade accepts it [M]",
+   "scope": "x1",
+   "gate_item": false,
+   "derivation": "derivations.md#n-negative-items",
+   "mithi_pre_review": "[M] reject E-GRADE (the round-3 sync's final build, with --canonical-prelude); after this revision: reject E-GRADE"
   }
  ],
  "precedence": [
-  "1: E-OUT-OF-SCOPE-<KW>, J2 well-formedness, E-TYPE",
+  "1: E-OUT-OF-SCOPE-<KW>, J2 well-formedness, the declaration-level E-LINEAR-COPY, E-COHERENCE and E-GLOBAL-STATE (F-129), E-TYPE",
   "2: class codes from cls and the Dc list (E-FF-*, E-AMBIENT-IO, E-MACRO, E-TRAIT-OFF)",
-  "3: rows and grants (E-ROW-UNDECLARED, E-GRANT-*, E-FP-ENV, E-DET-GRANT)",
-  "4: loans and linearity (E-BORROW-*, E-MOVE-*, E-LOCAL-*, E-REF-ESCAPE, E-LINEAR-*, E-FOOTPRINT)",
+  "3: rows and grants (E-ROW-UNDECLARED, E-GRANT-*, E-FP-ENV, E-DET-GRANT, E-IMPL-ROW)",
+  "4: loans and linearity (E-BORROW-*, E-MOVE-* including E-MOVE-USED (F-124), E-LOCAL-*, E-REF-ESCAPE, E-LINEAR-* other than E-LINEAR-COPY and E-LINEAR-INSTANTIATE, E-FOOTPRINT)",
   "5: par and the deterministic boundary (E-PAR-*, E-DET-POLICY, E-DET-EVIDENCE, E-DET-STALE, E-DET-RESULT)",
   "6: grades and sinks (E-GRADE, E-NAN-RAW-SINK, E-IMPL-GRADE)",
   "7: side judgements (E-KERNEL-*, E-TO-*, E-SCHED-*, E-CLAIM-*)",
-  "within a class: the first by source position"
+  "within a class: the first by the position of the code's anchor (note section 5.16); at one anchor, by the code's spelling in byte order (F-117)"
  ],
  "review": {
   "date": "2026-10-16; 2026-10-23",
@@ -2628,6 +3132,18 @@
     "accepted": 15,
     "rejected": 0,
     "note": "the third round's reviewer 2, items R6-n; R6-5's expected code for c01 (N-97) not adopted; R6-6 narrowed (explicit &mut arguments are not two-phase, rustc E0502); R6-10 in part (deferrals kept as option (ii), Q13); R6-15's fix replaced by a platform taint"
+   },
+   {
+    "id": 7,
+    "round": "3-sync-review",
+    "family": "Claude, same family, independent context",
+    "findings": 12,
+    "blocker": 0,
+    "major": 4,
+    "minor": 8,
+    "accepted": 12,
+    "rejected": 0,
+    "note": "the review of the round-3 sync, items RS-n; RS-12 accepted in part (its example A1 is E-GRADE under the note, not accept); RS-4 fixed in mithi instead of being listed as a known difference"
    }
   ],
   "log": "docs/m0/core-calculus.md#17-review-log-and-signature-block"
@@ -2644,5 +3160,19 @@
   "census": "45 occurrences, 35 distinct hashes, every recorded hash and line range matches at commit 3a66d49 (cc3/rev3/scripts/census.py)",
   "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13), x86_64-pc-windows-gnu, --edition 2021, laptop",
   "mithi": "mithi built with cargo build -j 8 from the worktree; crates/mithi unchanged since dcd4c87; laptop"
+ },
+ "measured_round3_sync": {
+  "tag": "[M]",
+  "by": "ccsync track (Claude), scratch probes outside the repository (ccsync/probes, ccsync/rs)",
+  "date": "2026-10-23",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13), x86_64-pc-windows-gnu, --edition 2021, laptop: probes s01 to s08",
+  "mithi": "mithi at 4b4dd05 plus the round-3 sync's changes to crates/mithi (policy (t5) and (t6), F-118; the tie-break at one anchor, F-117), built with cargo -j4 on the laptop"
+ },
+ "measured_round3_sync_review": {
+  "tag": "[M]",
+  "by": "ccsync track reviser (Claude), scratch probes outside the repository (ccsync-diff: the reviewer's; ccsync/r2: the reviser's)",
+  "date": "2026-10-23",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13), x86_64-pc-windows-gnu, --edition 2021, with code generation, laptop: probes t01 to t37 and z01 to z08",
+  "mithi": "pre-revision: the round-3 sync's final build (ccsync/mithi_final.exe); after: this revision's crates/mithi, built with cargo -j4 on the laptop (ccsync/r2/mithi_r2.exe)"
  }
 }

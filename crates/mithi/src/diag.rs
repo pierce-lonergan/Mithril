@@ -107,9 +107,10 @@ impl SourceMap {
 }
 
 /// Codes mithi introduced because the note does not name one. Each is provisional.
+/// E-MOVE-USED left this list on 2026-10-23: the note's §5.16 now names it (review of the round-3
+/// sync, finding 2; F-124).
 pub const MITHI_CODES: &[(&str, &str)] = &[
     ("E-PARSE", "the text is not in the surface grammar (no note code: syntax errors precede every class)"),
-    ("E-MOVE-USED", "use of a value after it was moved (Rust's E0382 meaning; the note names no code)"),
     ("E-UNRESOLVED", "a name that resolves to nothing (reported under class 1 like E-TYPE)"),
     ("E-X1-NOTYET-CANON", "whole-task canon helper (X1 design 5.1a); also used in checker scope"),
     ("E-HOST-UNSUPPORTED", "a construct mithi v0 can type but not execute (runtime only)"),
@@ -221,11 +222,13 @@ fn kind_of(code: &str) -> &'static str {
     }
 }
 
-/// Sort key: class, then (out-of-scope first inside class 1), then source position.
+/// Sort key: class, then (out-of-scope first inside class 1), then source position (the anchor),
+/// then, at one anchor, the code's spelling in byte order (note section 5.16 and F-117, round-3
+/// sync 2026-10-23; before, ties kept the order the passes emitted them in).
 pub fn sort_diags(ds: &mut [Diag]) {
     ds.sort_by(|a, b| {
-        let ka = (a.warning, a.class(), sub_rank(a), a.span.file, a.span.lo);
-        let kb = (b.warning, b.class(), sub_rank(b), b.span.file, b.span.lo);
+        let ka = (a.warning, a.class(), sub_rank(a), a.span.file, a.span.lo, a.code.as_str());
+        let kb = (b.warning, b.class(), sub_rank(b), b.span.file, b.span.lo, b.code.as_str());
         ka.cmp(&kb)
     });
 }

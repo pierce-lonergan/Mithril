@@ -21,12 +21,57 @@ struct Cap<'a> {
     cid: ClosureId,
     parents: &'a [Option<ClosureId>],
     modes: BTreeMap<LocalId, CaptureMode>,
+    /// per captured local: the field paths used, each with the strongest mode it needs
+    paths: BTreeMap<LocalId, BTreeMap<String, CaptureMode>>,
     moved_out: bool,
     mutated: bool,
     is_copy: &'a mut dyn FnMut(&Ty) -> bool,
     /// the Fn kind of a callable type (0 Fn, 1 FnMut, 2 FnOnce or unknown)
     callee_kind: &'a dyn Fn(&Ty) -> u8,
     nested: &'a BTreeMap<ClosureId, Vec<Capture>>,
+}
+
+fn rank(x: CaptureMode) -> u8 {
+    match x {
+        CaptureMode::Ref => 0,
+        CaptureMode::Mut => 1,
+        CaptureMode::Move => 2,
+    }
+}
+
+/// `s.x`, `s.a.b`: the local and the field path (`.0`, `.1.0`) when e is a chain of field
+/// projections over a local, and nothing else.
+fn field_chain(e: &TExpr) -> Option<(LocalId, String)> {
+    match &e.kind {
+        TK::Local(l) => Some((*l, String::new())),
+        TK::Field(b, i) => field_chain(b).map(|(l, p)| (l, format!("{p}.{i}"))),
+        _ => None,
+    }
+}
+
+fn path_prefix(pre: &str, p: &str) -> bool {
+    p.starts_with(pre) && (p.len() == pre.len() || p.as_bytes()[pre.len()] == b'.')
+}
+
+/// Rust's capture minimisation: a captured place whose ancestor is also captured is absorbed by
+/// the ancestor, which takes the stronger mode.
+fn minimal_paths(ps: Option<&BTreeMap<String, CaptureMode>>) -> Vec<(String, CaptureMode)> {
+    let Some(ps) = ps else { return vec![] };
+    let mut out: Vec<(String, CaptureMode)> = vec![];
+    // shorter paths first, so ancestors are placed before their descendants
+    let mut v: Vec<(&String, &CaptureMode)> = ps.iter().collect();
+    v.sort_by_key(|(p, _)| (p.len(), (*p).clone()));
+    for (p, m) in v {
+        if let Some(a) = out.iter_mut().find(|(q, _)| path_prefix(q, p)) {
+            if rank(*m) > rank(a.1) {
+                a.1 = *m;
+            }
+        } else {
+            out.push((p.clone(), *m));
+        }
+    }
+    out.sort_by(|a, b| a.0.cmp(&b.0));
+    out
 }
 
 impl<'a> Cap<'a> {
@@ -39,6 +84,17 @@ impl<'a> Cap<'a> {
             c = self.parents.get(x as usize).copied().flatten();
         }
         false
+    }
+    /// A use of the place `path` below local l (field paths only; "" the whole local).
+    fn note_path(&mut self, l: LocalId, path: &str, m: CaptureMode) {
+        if self.internal(l) {
+            return;
+        }
+        self.note(l, m);
+        let e = self.paths.entry(l).or_default().entry(path.to_string()).or_insert(m);
+        if rank(m) > rank(*e) {
+            *e = m;
+        }
     }
     fn note(&mut self, l: LocalId, m: CaptureMode) {
         if self.internal(l) {
@@ -63,16 +119,41 @@ impl<'a> Cap<'a> {
                 }
                 match ctx {
                     Ctx::Write => {
-                        self.note(l, CaptureMode::Mut);
+                        self.note_path(l, "", CaptureMode::Mut);
                         self.mutated = true;
                     }
-                    Ctx::Read => self.note(l, CaptureMode::Ref),
+                    Ctx::Read => self.note_path(l, "", CaptureMode::Ref),
                     Ctx::Value => {
                         let ty = self.locals[l as usize].ty.clone();
                         if (self.is_copy)(&ty) {
-                            self.note(l, CaptureMode::Ref);
+                            self.note_path(l, "", CaptureMode::Ref);
                         } else {
-                            self.note(l, CaptureMode::Move);
+                            self.note_path(l, "", CaptureMode::Move);
+                            self.moved_out = true;
+                        }
+                    }
+                }
+            }
+            // a field path over a local, `s.x` or `s.a.b`: the closure captures that place
+            // (Rust 2021, note §2.4; review of the round-3 sync, 2026-10-23, finding 4: R6,
+            // `let mut c = || s.x += 1; let r = &s.y; c();` compiles in rustc [M])
+            TK::Field(..) if field_chain(e).is_some() => {
+                let (l, path) = field_chain(e).unwrap_or_default();
+                if self.internal(l) {
+                    return;
+                }
+                match ctx {
+                    Ctx::Write => {
+                        self.note_path(l, &path, CaptureMode::Mut);
+                        self.mutated = true;
+                    }
+                    Ctx::Read => self.note_path(l, &path, CaptureMode::Ref),
+                    Ctx::Value => {
+                        if (self.is_copy)(&e.ty) {
+                            self.note_path(l, &path, CaptureMode::Ref);
+                        } else {
+                            // moving a field out: mithi moves the whole local (as before)
+                            self.note_path(l, "", CaptureMode::Move);
                             self.moved_out = true;
                         }
                     }
@@ -131,7 +212,13 @@ impl<'a> Cap<'a> {
                 if let Some(caps) = self.nested.get(c) {
                     for cap in caps.clone() {
                         if !self.internal(cap.local) {
-                            self.note(cap.local, cap.mode);
+                            if cap.paths.is_empty() || cap.mode == CaptureMode::Move {
+                                self.note_path(cap.local, "", cap.mode);
+                            } else {
+                                for (path, m) in &cap.paths {
+                                    self.note_path(cap.local, path, *m);
+                                }
+                            }
                             if cap.mode == CaptureMode::Mut {
                                 self.mutated = true;
                             }
@@ -227,9 +314,17 @@ pub fn infer_captures(_p: &Program, locals: &[LocalDecl], cid: ClosureId, parent
         static NESTED: std::cell::RefCell<BTreeMap<ClosureId, Vec<Capture>>> = std::cell::RefCell::new(BTreeMap::new());
     }
     let nested = NESTED.with(|n| n.borrow().clone());
-    let mut c = Cap { locals, cid, parents, modes: BTreeMap::new(), moved_out: false, mutated: false, is_copy, callee_kind, nested: &nested };
+    let mut c = Cap { locals, cid, parents, modes: BTreeMap::new(), paths: BTreeMap::new(), moved_out: false, mutated: false, is_copy, callee_kind, nested: &nested };
     c.visit(&cd.body, Ctx::Value);
-    let mut caps: Vec<Capture> = c.modes.iter().map(|(l, m)| Capture { local: *l, mode: if cd.is_move { CaptureMode::Move } else { *m }, ty: locals[*l as usize].ty.clone() }).collect();
+    let mut caps: Vec<Capture> = c
+        .modes
+        .iter()
+        .map(|(l, m)| {
+            let mode = if cd.is_move { CaptureMode::Move } else { *m };
+            let paths = if mode == CaptureMode::Move { vec![(String::new(), mode)] } else { minimal_paths(c.paths.get(l)) };
+            Capture { local: *l, mode, ty: locals[*l as usize].ty.clone(), paths }
+        })
+        .collect();
     caps.sort_by_key(|x| x.local);
     // K-LinClo: a closure that captures a Linear value by move implements only FnOnce
     let linear_capture = caps.iter().any(|cap| cap.mode == CaptureMode::Move && crate::analysis::wf::is_linear_p(_p, &[], &cap.ty, 0));

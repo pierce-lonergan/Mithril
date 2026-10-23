@@ -44,6 +44,13 @@ pub struct Capture {
     pub local: LocalId,
     pub mode: CaptureMode,
     pub ty: Ty,
+    /// the places of `local` the closure captures (Rust 2021 disjoint captures, note §2.4,
+    /// F-67), as field paths below the local in the ownership pass's spelling (`.0.1`; "" the
+    /// whole local), each with its own mode. No path is a prefix of another (an ancestor capture
+    /// absorbs its descendants with the stronger mode, as rustc does). Only field projections
+    /// are followed: an index, a dereference or a method receiver captures the place up to it.
+    /// Used for the loans of by-ref and by-mut captures; a by-move capture moves the whole local
+    pub paths: Vec<(String, CaptureMode)>,
 }
 
 #[derive(Clone, Debug)]

@@ -78,6 +78,10 @@ ACCEPTED = [
     ("float literal with a trailing dot", "fn f() -> f32 { 2. }\n"),
     ("nested block comment", "fn f() {} /* a /* b */ c */\n"),
     ("unicode escape at 10FFFF", "fn f() -> char { '\\u{10FFFF}' }\n"),
+    # 2026-10-23: the keyword `unsafe` in a row parses, so that J3 can name E-GRANT-UNSAFE (note
+    # section 5.2); mithi parses it since its review of 2026-10-23 (finding 12)
+    ("unsafe in a row", "fn f() uses { unsafe } {}\n"),
+    ("unsafe among other labels", "fn f() uses { io, unsafe, alloc(Global) } {}\n"),
 ]
 
 

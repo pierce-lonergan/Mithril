@@ -7,7 +7,8 @@ subset and is judged against the note's hand verdicts in
 [verdicts.json](../../docs/m0/core-calculus/verdicts.json).
 
 **Status: v0 DRAFT, 2026-10-16 (M0 week 0), revised the same day after an independent review, and
-revised again on 2026-10-23 after a blind adversarial review and the note's third review round (see
+revised again on 2026-10-23 after a blind adversarial review and the note's third review round, and
+synchronised with the note the same day (the round-3 sync: the note's §0.8, F-114 to F-122; see
 [Review log](#review-log)). Not frozen.** Written by the mithi track (Claude). The note's author
 and every reviewer are the same model family, so every agreement below is between contexts of one
 family (same family, independent context), and mithi was developed, and revised, with the note's
@@ -103,6 +104,7 @@ seeds (all maps whose order reaches a diagnostic are ordered; `tests/review_dete
 | `tests/interp.rs` | traps, `par for` order and index, abandonment (named locals and temporaries), deep recursion, f16 widening, canon sum order |
 | `tests/review_*.rs`, `tests/common/` | the regression tests of the 2026-10-16 review (below) |
 | `tests/review_2026_10_23.rs` | the regression tests of the 2026-10-23 review, with rustc-measured expectations for ownership and run-time values |
+| `tests/sync_2026_10_23.rs` | the regression tests of the round-3 sync: policy loops and closures (F-118), the order of codes at one anchor (F-117), closure state through a chosen reference (F-114, N-128), and the twins and values the items name |
 
 ## What is implemented
 
@@ -122,7 +124,7 @@ By judgement of the note (section numbers are the note's):
 | Trap sites, obligations, T2 (§5.10) | `analysis/t2.rs` | E-KERNEL-OBLIGATION, E-FOOTPRINT; the may_trap fact |
 | ⊢_k and kcall (§5.10) | `analysis/kernel.rs` | E-KERNEL-ROW, E-KERNEL-CALL |
 | T-Det (§5.11) | `analysis/det.rs` | E-DET-GRANT, E-DET-POLICY, E-DET-EVIDENCE, E-DET-RESULT |
-| ⊢_to (§5.13) | `analysis/policy.rs` | E-TO-ROW, E-TO-RESULT, E-TO-PARAM, E-TO-LOOP, E-TO-RECURSION, E-TO-AUTHORITY, E-TO-CALL |
+| ⊢_to (§5.13) | `analysis/policy.rs` | E-TO-ROW, E-TO-RESULT, E-TO-PARAM, E-TO-LOOP, E-TO-RECURSION, E-TO-AUTHORITY, E-TO-CALL; (t5) and (t6) as the note's F-118 pins them (ranges bounded by constants or by `s.len()` of a view slice parameter; no closure or function value in the result) |
 | ⊢_fmt (§5.14) | `lower.rs` | generated `Nib{N}o{K}` storage with `elem` accessor (derivation D-C1); codes outside the X1 list (`e8m0`, `e2m1x2`) are E-OUT-OF-SCOPE-<CODE> |
 | ⊢_sch, completeness side (§5.14) | `analysis/sched.rs` | E-SCHED-AMBIGUOUS, E-SCHED-REASSOC, E-SCHED-TARGET |
 | ⊢_spec (§5.14) | `analysis/spec.rs` | E-CLAIM-KIND, E-CLAIM-INADMISSIBLE |
@@ -177,35 +179,52 @@ values, `tests/review_2026_10_23.rs`].
 
 ## Agreement with the note
 
-`tests/verdicts.rs` [M: `cargo test -p mithi --test verdicts -- --nocapture`, laptop, 2026-10-23,
+`tests/verdicts.rs` [M: `cargo test -p mithi -j4 --no-fail-fast -- --test-threads=4 --nocapture`,
+laptop, rustc 1.99.1, 2026-10-23, after the revision that answered the review of the round-3 sync,
 against the working-tree verdicts.json with SHA-256
-`777d7d6f2dc5509bbe4f80971dbe0766f4fb99872e63ecf2d14fb768fb9f7795`: the note's third review round,
-uncommitted, which differs from its last commit `5e16fbb`; the snippet hashes it records all
-matched]:
+`82db4c3f1964009dd6e61abd36917080634aca0a5ac01feebf1568c4bb73bb54`: the note's third round (commit
+`048e9f6`), the sync's items N-110 to N-128 and the review's items N-129 to N-153; the snippet hashes
+it records all matched]:
 
 | Set | Rule | Result |
 |---|---|---|
 | Canonical and derived items D-C1..D-C8, D-D01..D-D27 | `verdict` for x1 / x1-front-end, `x1_expected` otherwise; primary code must match | **35/35 agree** (29 accept, 6 reject with the expected E-OUT-OF-SCOPE-<KW>) |
 | Snippet hashes | SHA-256 per verdicts.json's hash rule | 35/35 match |
 | Gate negatives N-01..N-06 | uncommented in their parent snippet (N-05: the release line deleted) | **6/6 agree** (E-DYN, E-REF-FIELD, E-REF-ESCAPE, E-LOCAL-RETURN, E-LINEAR-DROP, E-REF-ESCAPE) |
-| Supplementary items: every negative item with `gate_item` false, N-07..N-109 (reported, not gate items, Q11) | constructions written in the test from the prose, the expected verdict read from verdicts.json; an item with no construction fails the test unless listed as not constructed | **107/107 constructions agree** (102 items; N-19, N-70, N-73, N-77 and N-87 have two constructions each); N-38 not constructed (a hint port's stack budget, M4) |
+| Supplementary items: every negative item with `gate_item` false, N-07..N-153 (reported, not gate items, Q11) | constructions written in the test from the prose, the expected verdict read from verdicts.json; an item with no construction fails the test unless listed as not constructed | **151/151 constructions agree** (146 items; N-19, N-70, N-73, N-77 and N-87 have two constructions each); N-38 not constructed (a hint port's stack budget, M4) |
 | N-19's reason | `n19_reason`: with the call, the body is blamed for the Linear capture `l` and `c` is consumed; without it, `c` is not consumed | holds |
+| Twins and values the items name | `tests/sync_2026_10_23.rs` and `tests/review_2026_10_23.rs`: N-76's `v[0] = 1`, N-96's 1, N-97's 0, N-109's accepted twin, N-128's 9 and 0, and 13 values of the review of the sync's accepted controls (N-137's 4 among them) | equal to rustc 1.99.1's [M] |
 | Secondary facts (row, may_trap) | where verdicts.json states them; a difference fails the test | 23/23 same |
 
-How to read this: at this revision no item disagrees, so no item needs a "mithi or note wrong"
-diagnosis. The test's `DIAGNOSED` list has one entry, N-43, which applies only against the
-verdicts.json of commit `5e16fbb`: there N-43 expects E-BORROW-OUTLIVE, while the third round
-(F-107) and rustc 1.99.1 (E0521 [M]) give E-LOCAL-MUT-STORE, so this revision passes whether or not
-the third round's verdicts.json lands first [M: both versions run, 2026-10-23; 63/63 with N-43
-diagnosed against `5e16fbb`'s]. The note's third round (§12.2)
-listed 18 verdict or code disagreements of mithi at `dcd4c87` (N-43 and 17 items of N-70..N-109)
-and two interpreter values (N-96, N-97); each was a mithi change, made here (Review log, 2026-10-23).
-Earlier, before the 2026-10-16 review, the harness covered N-07..N-39 only, and 15 of the 28 later
-items disagreed; each was a mithi defect. None was resolved by editing the note. The supplementary
-constructions are mithi's (and the reviewers') reading of prose and are weaker evidence than the
-snippet items. The 2026-10-23 review found that agreement does not mean soundness: N-19 agreed for
-the wrong reason (now `n19_reason` checks the reason), and the review's write-through-reference,
-`par` and closure-transfer holes were in no item until they were added as regression tests.
+How to read this: no item disagrees, so no item needs a "mithi or note wrong" diagnosis, and the
+test's `DIAGNOSED` list is empty. Its one former entry, N-43, applied only to the verdicts.json of
+commit `5e16fbb`, before the note's third round (F-107) landed in `048e9f6`. History: the note's
+third round (§12.2) listed 18 verdict or code disagreements of mithi at `dcd4c87` and two
+interpreter values; each was a mithi change, made in `4b4dd05`. The round-3 sync then took this
+README's items 7 to 15 into the note (F-114 to F-122) and changed mithi where the note's pinned
+reading differed (F-117, F-118) or where the sync found a mithi defect (N-128: a closure called
+through a reference chosen by `if` kept its old state grade). Earlier, before the 2026-10-16
+review, the harness covered N-07..N-39 only, and 15 of the 28 later items disagreed; each was a
+mithi defect. None was resolved by editing the note. The supplementary constructions are mithi's
+(and the reviewers') reading of prose and are weaker evidence than the snippet items. The
+2026-10-23 review found that agreement does not mean soundness: N-19 agreed for the wrong reason
+(now `n19_reason` checks the reason), and the review's write-through-reference, `par` and
+closure-transfer holes were in no item until they were added as regression tests.
+
+**After the review of the round-3 sync (2026-10-23).** That review (one reviewer, Claude, same
+family, independent context) found 12 issues in the sync and in mithi. Eight needed mithi changes
+(the note's F-123 to F-126, F-130, F-131, F-133 and F-134; the review log below lists them). The
+note added N-129 to N-153 for them, and mithi agrees with all of them. The paragraph that follows
+is the sync's own state; the note's §12.2 now lists three known differences, all on the rejecting
+side: T2 is weaker than Φ in general, though no item separates them any more; λ_q over-approximates
+what a closure body stores (Interpretation 12; probes X18, X19, which the note and rustc accept);
+and a match arm after an irrefutable arm gets no facts. The address-grade difference in T-Call's
+strong case is gone (Interpretation 16).
+
+Known differences on programs outside the items (the note's §12.2, at the sync): mithi's T2 is weaker than the
+note's Φ with per-arm implications (F-119; Interpretation 21), so mithi may answer
+E-KERNEL-OBLIGATION where the note accepts; and mithi joins its address grade in T-Call's strong
+case too (Interpretation 16), which can only reject more. Both are on the side of rejecting.
 
 Harness conventions (stated in `tests/verdicts.rs`):
 
@@ -220,8 +239,10 @@ Harness conventions (stated in `tests/verdicts.rs`):
 
 ## Other tests
 
-[M: `cargo test -p mithi -j4 -- --test-threads=4`, 2026-10-23, laptop, rustc 1.99.1: 48 Rust tests,
-all pass; 11 s wall time with the build up to date. Earlier: 39 tests, 2026-10-16]
+[M: `cargo test -p mithi -j4 --no-fail-fast -- --test-threads=4`, 2026-10-23, laptop, rustc 1.99.1,
+after the revision that answered the review of the round-3 sync: 55 Rust tests in 17 test binaries,
+all pass; 11 s wall time with the build up to date. After the sync: 52 tests; before it: 48 tests
+(2026-10-23); 39 tests (2026-10-16)]
 
 - `tests/corpus.rs`: nine programs, each accepted and each with `#[test]` functions that pass under
   the interpreter: six in the shape of the X1 public smoke set (DESIGN §5.2: S-NORM-0, S-EVICT-0,
@@ -238,6 +259,14 @@ all pass; 11 s wall time with the build up to date. Earlier: 39 tests, 2026-10-1
   companions (grade write targets 26 and 14 accepted twins, T-Cover 3, `par` 11, closures and loans
   33, T2 8, rows and policies 3), and a run-time test of closure state, `mem::swap` of references
   and `Option::as_mut`. Each ownership expectation and run-time value is rustc 1.99.1's [M].
+- `tests/sync_2026_10_23.rs` (the round-3 sync): 12 policy cases for (t5) and (t6) as F-118 pins
+  them, the order of four ⊢_to codes with two at one anchor (F-117), 4 cases and 4 run-time values
+  of a closure called through a reference chosen by `if` or `match` (N-128; values [M: rustc
+  1.99.1]), N-109's accepted twin and N-76's value. Since the review of the sync, 83 more cases in
+  eight groups (closure-call transfers, anchors, place captures, codes and (t6), match-arm facts,
+  closures written as arguments, overloaded indexing, T-Call's strong case), 13 run-time values,
+  and the order of the codes of D1 and D2. Every Rust-shaped expectation is rustc 1.99.1's
+  [M: scratch probes `ccsync/r2/rs/t01` to `t37` and `z01` to `z08`].
 - `tests/interp.rs`: every trap kind with its anchor, `par for` lowest index named in the report,
   abandonment order (locals and temporaries), recursion to the frame limit without a crash,
   exhaustive f16 widening, the canon sum16 tree order.
@@ -257,7 +286,13 @@ revision against the pre-revision binary]: 4,000 lines 0.22 s against 0.19 s; 20
 against 0.61 s; 400 sequential `if`/`else` joins with a `%` index 0.19 s against 0.19 s, 1,600 of
 them 1.26 s against 1.22 s, and 1,600 joins whose index is chosen by `i < y.len()` 4.56 s against
 4.29 s. A first version of the relational join facts made 400 joins 8x slower (a full
-Fourier–Motzkin proof at every join); they now use an interval proof only.
+Fourier–Motzkin proof at every join); they now use an interval proof only. [M: 2026-10-23, laptop,
+debug build, one run each, the revision after the review of the sync against the sync's build;
+generated bodies in the scratch area, `ccsync/r2/target/perf`]: 20,000 straight lines 0.80 s
+against 0.87 s; 1,600 joins of `if i < y.len() { i } else { 0 }` 7.6 s against 7.7 s; 1,600 joins
+of `if i == 0 { 0 } else { i - 1 }`, each adding a shifted bound (Interpretation 21), 12.8 s against
+7.6 s, the worst case of the new facts. Both 1,600-join bodies exhaust T2's budget in both builds.
+A first version that added the bound for unshifted values too took 30.4 s on the first body.
 
 ## Not implemented
 
@@ -276,7 +311,9 @@ Fourier–Motzkin proof at every join); they now use an interval proof only.
 - Arithmetic operators on type parameters (`a + b` with `B: Add<Output = B>`) and `sum::<T>` into a
   type parameter: E-TYPE, a false rejection; generic numeric code cannot be written (review
   finding R1-21(d)). The FF class check does run per instantiation for what does type-check.
-- Moves inside closures by field (Rust 2021's disjoint capture): a closure captures whole locals.
+- Moving a field out inside a closure (Rust 2021 captures that field by value): mithi moves the
+  whole local into the closure. By-ref and by-mut captures are places since 2026-10-23
+  (Interpretation 25).
 - Field-sensitive grade cells (the note's OP-24): a grade cell is a whole local or a whole
   parameter referent, so a cover of a field or a row is a partial update (F-89), and a struct's
   untouched raw float field keeps the whole cell raw.
@@ -303,10 +340,8 @@ Fourier–Motzkin proof at every join); they now use an interval proof only.
 
 1. **E-FF-CLOCK scope.** mithi reports reading a clock as E-FF-CLOCK only in code reachable from a
    kernel or in a `timing_only` context; elsewhere a clock read is the `time` effect and grades as
-   nondeterministic (this is what makes N-13 an E-GRADE, as verdicts.json expects). The
-   2026-10-23 review found that the note's §5.0 with (k5) can be read the other way (a clock read
-   in a `#[grade(exact)]` function as E-FF-CLOCK); mithi keeps N-13's reading, and the note's text
-   is handed to the CC track (finding 15).
+   nondeterministic (this is what makes N-13 an E-GRADE, as verdicts.json expects). The note now
+   states this reading (F-116, round-3 sync; item N-115).
 2. **Bodiless functions** in user code are accepted only under `--doc-snippets` (N-03 is a
    signature only); otherwise a function outside a trait without a body is E-TYPE, as Rust rejects
    it.
@@ -321,8 +356,8 @@ Fourier–Motzkin proof at every join); they now use an interval proof only.
 6. **`--subset checker` is the default** (provisional, pending note Q9). With `--subset agent`, the
    canonical snippets that use `par for`, `deterministic`, `schedule`, `spec` or `linear` are
    rejected with E-X1-NOTYET-<KW>, which the agreement rule counts as a disagreement.
-7. **Codes the note does not name** (provisional, listed in `src/diag.rs` `MITHI_CODES`): E-PARSE,
-   E-MOVE-USED, E-UNRESOLVED, E-X1-NOTYET-CANON (also in X1 DESIGN §5.1a), E-HOST-UNSUPPORTED,
+7. **Codes the note does not name** (provisional, listed in `src/diag.rs` `MITHI_CODES`; E-MOVE-USED
+   left the list on 2026-10-23, when the note's §5.16 named it, F-124): E-PARSE, E-UNRESOLVED, E-X1-NOTYET-CANON (also in X1 DESIGN §5.1a), E-HOST-UNSUPPORTED,
    E-GRANT-LOSSY, E-SCHED-TARGET. The E-X1-NOTYET-<KW> suffixes other than CANON follow the note's
    §12 pattern (PATH for `#[path]`, ENV for `env!`/`option_env!`, INCLUDE for the `include*!`
    macros, X1 DESIGN §9.1).
@@ -359,7 +394,15 @@ Fourier–Motzkin proof at every join); they now use an interval proof only.
    into a parameter's referent is E-LOCAL-MUT-STORE. A closure that writes its by-move state gets
    the same loans in the closure value (λ_σ). This over-approximates what the body stores; before
    2026-10-23 closures passed to a call got no transfer at all, and the closure's own capture loans
-   were transferred (a false E-BORROW-CONFLICT, N-84).
+   were transferred (a false E-BORROW-CONFLICT, N-84). Since the review of the round-3 sync
+   (F-123), a by-move capture is a path to output places too, when it is a `&mut` whose referent
+   can hold a loan or a value carrying a mutable loan: the transfer goes through it with
+   `store_into`. So `move |x| { *o = Some(x); }` over a parameter o, called as `c(d)`, is
+   E-LOCAL-MUT-STORE (N-129 to N-131). Before, only by-mut captures received the transfer, and
+   `mithi run` read a dead local [M: N-130]. The over-approximation rejects a closure that writes
+   a captured `&mut`'s referent without storing a loan, when it is called with a reference argument
+   (probes X18, X19). The note and rustc accept those [M: rustc 1.99.1, t27, t28]; the note lists
+   this as a known difference (§12.2).
 13. **Symbolic loans per reference position** (F-62; replaces "per parameter", 2026-10-23): a
    parameter has one symbolic loan per reference position of its type. A by-value destructuring
    of a local whose position is known (`let (v, d) = t;`, `Some(r) = o`) gives each binding only
@@ -379,12 +422,32 @@ Fourier–Motzkin proof at every join); they now use an interval proof only.
    place (`&mut x`, `&mut *y` of a `&mut` parameter) at a parameter `&mut τ` whose τ holds no
    reference, the callee's final referent grade replaces the place's; any other argument (an
    element, a field, a local reference, a may-alias set) is a weak update of its reach set. The
-   update also joins the argument's address grade (finding 7 of 2026-10-23: T-Call as written
-   omits it).
+   update also joins the argument's address grade (finding 7 of 2026-10-23). The note's F-114 joins
+   it in the weak updates only: in the strong case the target is one whole cell, so mithi's join
+   there can only reject more (only where every possible target is that cell). Since the round-3
+   sync, a closure called through a reference (`r()`, `(*r)()`) writes its state where the
+   reference may point, with the reference's address grade, and a closure or reference to one
+   chosen by `if`, `match` or a block's value is found (N-128); before, the state was written into
+   the reference itself, and a closure behind an `if` was not found at all. Since the review of the
+   round-3 sync (F-134), the strong case also covers an argument whose provenance is one whole
+   place on every path, a local reference included (`let r = &mut y; zero(r)`), and it joins no
+   address grade, as the note's T-Call says. Before, a local reference was always a weak update
+   with the address grade, so a covering callee left y's old grade (N-152). The callee's
+   `θ_mut` still takes the argument's grade for its parameter, which for a local reference includes
+   what chose it, so `let r = if h > 1 { &mut y } else { &mut y }; w(r, 4); y` stays E-GRADE
+   (N-151).
 17. **Where E-BORROW-OUTLIVE is anchored** (2026-10-23): at the closing brace of the scope that ends
    (for `break`/`continue`, at the jump), not at the scope's start, so that within class 4 the
    cause (`E-REF-ESCAPE`, an `E-LOCAL-MUT-STORE` at the store) comes first by source position, as
-   rustc reports E0515 for `ow05` [M]. The note's §5.16 does not fix anchors (finding 16).
+   rustc reports E0515 for `ow05` [M]. The note's §5.16 now names every code's anchor and orders
+   codes at one anchor by spelling (F-117, round-3 sync); mithi sorts that way (`diag.rs`). Since
+   the review of the sync (F-125), E-LINEAR-DROP is anchored where the value is dropped: at its
+   scope's closing brace (for a Linear parameter, the body's), or at the jump, assignment, pattern
+   or arm that drops it. It is not reported at a join, because a Linear value consumed on one path
+   only reaches its scope's end, a jump or a later use (E-MOVE-USED). E-REF-ESCAPE is anchored at
+   the returned expression (the body's tail or `return`'s operand) or the closure's result
+   expression, no longer at the body's opening brace. The end-of-scope codes share the brace, so
+   their reports are told apart by the local they name.
 18. **Higher-ranked closure parameters** (F-107, measured): a closure parameter is higher-ranked
    when the closure is passed where an `Fn*` bound writes that parameter as a reference, or when
    its written type mentions a reference **and the closure has no expected signature**. rustc
@@ -392,17 +455,33 @@ Fourier–Motzkin proof at every join); they now use an interval proof only.
    probes r2, r4], so an annotation does not make a parameter higher-ranked when a bound gives the
    closure its signature; the note's F-107 says it does (handed to the CC track). Storing such a
    parameter's loan outside the closure body is E-LOCAL-MUT-STORE; returning it from a closure
-   without an expected signature is E-REF-ESCAPE.
+   without an expected signature is E-REF-ESCAPE. The note adopted this reading as F-121
+   (round-3 sync; items N-124, N-125).
 19. **(t7) for helpers** (2026-10-23): a non-policy helper that fails ⊢_to apart from (t2) is one
    E-TO-CALL at the call site in the policy, with the helper's failures as notes. A cycle in the
    policy's call graph stays E-TO-RECURSION wherever it is: (t9) reads (t5)'s "no recursion" as a
-   property of the whole call graph.
+   property of the whole call graph. (t5) and (t6) follow the note's F-118 (round-3 sync): a range
+   bound is an integer literal, a `const` item or `s.len()` of a core-provided slice parameter
+   (before: literals only, so `0..slots.len()` and `0..N` were E-TO-LOOP); and E-TO-AUTHORITY for
+   a closure means a closure or function value in the policy's result (before: every `move`
+   closure). Since the review of the sync (F-130), the scan enters the fields of user structs and
+   enums, with their type arguments substituted, so `Hint<W>` with `struct W { f: fn() -> u32 }`
+   is E-TO-AUTHORITY (N-142).
 20. **References of unknown provenance** (grades): a write through one is a weak update of every
    place the body lends mutably and every `&mut`-carrying parameter's referent; a read joins every
    lent place's grade. Sound, coarse; it is reached only when no provenance rule applies.
 21. **Relational facts at joins** (T2): kept only when the other branch's value satisfies them by
-   an interval bound or an existing fact, not by a full proof (performance, above). The note says
-   T2 is QF_BV + LIA; mithi's T2 is weaker (finding 18).
+   an interval bound or an existing fact, not by a full proof (performance, above). The note's Φ
+   now holds each SSA definition with its per-arm implications (F-119), which "QF_BV + LIA"
+   decides; mithi's T2 is weaker, a known incompleteness on the rejecting side (finding 18). Since
+   the review of the sync (F-131), two additions. First, a join also keeps a bound shifted by a
+   constant: when one arm's value is L + c, the merged value lies between L + k_lo and L + k_hi,
+   with the k taken from c and from the other arm's interval of (value − L). So
+   `let j = if i == 0 { 0 } else { i - 1 }` keeps `j ≤ i` (N-143). This applies only to values with
+   a constant shift: adding it for every value made 1,600 joins four times slower. Second, a
+   `match` arm adds its pattern's test, and the negation of every earlier unguarded arm's test, for
+   integer literal, range and or-of-literal patterns; a binding arm binds the scrutinee's value
+   (N-144, N-145). Twelve controls, rejections included, are in `tests/sync_2026_10_23.rs`.
 22. **`par` writes** (2026-10-23): a `&mut`-carrying local used as a value (an implicit reborrow,
    a move, a copy) is a write of its whole root; a call of a closure created outside the body
    writes its by-mut captures and the places its by-move `&mut` captures point to, and a call of an
@@ -412,9 +491,25 @@ Fourier–Motzkin proof at every join); they now use an interval proof only.
    variable only when its binder is immutable and never assigned (F-103).
 23. **Cover-Proj is a partial update** (F-89): the receiver's cell keeps its scope, and its NaN bit
    is reset only when the footprint's field holds all of the receiver struct's float content.
-   A consequence the CC track should confirm: the third round's control probe `a20_coverproj_ctrl`
-   (no write to the raw `scale` field) is now rejected, because the caller's `scale` passes through
-   raw.
+   The third round's control probe `a20_coverproj_ctrl` (no write to the raw `scale` field) is
+   rejected, because the caller's `scale` passes through raw; the note confirms this is intended
+   (F-122, item N-126) and records the cost of the twin that canonicalises `scale` (N-127, A-13).
+
+24. **Overloaded indexing borrows the base first** (F-133, 2026-10-23). `v[e]` on a type that is
+   not an array or a slice (`Vec`, a user type with `IndexMut`), in a mutable place context (an
+   assignment's left side, a compound assignment, `&mut v[e]`, a `&mut self` receiver), holds a
+   mutable loan on the base while e is evaluated. This loan is not a reservation. So
+   `v[v.len() - 1] = 5` and `self.items[self.items.len() - 1] = x` are E-BORROW-CONFLICT, as
+   rustc's E0502 [M: probes t11, t12, t17 to t19, t24, t30, t32, t33]. Arrays and slices index
+   built-in, with the index evaluated first. `v[0] = v[1]` and `v.push(v[v.len() - 1])` are
+   accepted, as rustc accepts them [M: t14, t34].
+25. **Closures capture places** (F-126, 2026-10-23). A by-ref or by-mut capture records the field
+   paths the body uses, each with its own mode. As in rustc, an ancestor path absorbs its
+   descendants, and an index, a dereference or a method receiver ends the path. The closure then
+   holds one loan per captured place, so `let mut c = || s.x += 1; let r = &s.y; c();` is accepted
+   (N-137), and two closures can borrow disjoint fields mutably. Eight probes agree with rustc
+   [M: z01 to z08]. A by-move capture moves the whole local, and the grade and `par` passes still
+   treat a captured local as one cell.
 
 Open question (provisional, pending Q9, not decided in code): X1 DESIGN §9.1 says "T2 is not part
 of X1" and lists `ensures` and `invariant` proofs as outside the agent subset, while note §5.10 makes
@@ -613,8 +708,73 @@ expectation of the new tests was measured with rustc 1.99.1 (`--edition 2021`, t
 pinned in `rust-toolchain.toml`, already installed under `.rustup-mithril`; nothing was installed).
 
 Not yet done: a second review of this revision (the fixes were made by one context, with
-verdicts.json and the reviewer's predictions in view); the other-family planted corpus; the
-Lark grammar's `uses { unsafe }`; field-sensitive grade cells (OP-24).
+verdicts.json and the reviewer's predictions in view); the other-family planted corpus;
+field-sensitive grade cells (OP-24). The Lark grammar's `uses { unsafe }` was done in the round-3
+sync (below).
+
+**2026-10-23, the round-3 sync with the note (ccsync track, Claude; not a review).** The note took
+items 7 to 15 of [Findings](#findings-for-the-note-and-the-x1-design) as F-114 to F-122 and added
+supplementary items N-110 to N-128. mithi changed where the note's pinned reading differed from
+mithi's, and where the sync found a mithi defect:
+
+- `analysis/policy.rs` (F-118): (t5) admits ranges bounded by `const` items and by `s.len()` of a
+  core-provided slice parameter; (t6) rejects a closure or function value in the policy's result,
+  no longer every `move` closure. `tests/review_grades.rs` pol/p14 (`let f = move || now.0;`)
+  changed from E-TO-AUTHORITY to accept.
+- `diag.rs` (F-117): at one anchor, codes are ordered by spelling.
+- `analysis/grade.rs` (F-114, N-128, found in the sync): a closure called through a reference
+  (`r()`, `(*r)()`) writes its by-move state where the reference may point, with the reference's
+  address grade, and a closure (or a reference to one) chosen by `if`, `match` or a block's value
+  is found. Before, `let r = if h > 1 { &mut c1 } else { &mut c2 }; r(9); c1(0)` was accepted in a
+  `cross_device` function although its value depends on h [M: rustc 1.99.1 returns 9 for h = 3
+  and 0 for h = 0; mithi's interpreter gives the same].
+- `tests/verdicts.rs`: constructions for N-110 to N-128; the stale `DIAGNOSED` entry for N-43
+  removed. `tests/sync_2026_10_23.rs`: new.
+- `grammar/mithril_v0.lark` accepts `uses { unsafe }`, and `grammar/test_grammar.py` checks it
+  (Grammar and parser, below).
+
+Every Rust claim was compiled with rustc 1.99.1 [M: scratch probes `ccsync/rs/s01` to `s11`].
+Regression sweep [M, laptop, 2026-10-23]: this track's pre-sync build (`4b4dd05`) against the
+post-sync build on the 2,593 `.mith` probe files of the session scratch area (`mithi-rev`,
+`mithi-fix`, `mithi`, `cc3`, `mithirev`, `mrv`, `cc`, `cc2`, `cc2r2`), with no flags and with
+`--canonical-prelude`. 8 runs changed verdict or primary code: po04, po11 and pol/p14, each
+twice, now accepted (F-118), and pol/p09, twice, now E-TO-AUTHORITY first at its anchor
+(F-117). 4 runs without the prelude lost one secondary error (the dropped `move`-closure
+E-TO-AUTHORITY). The grade change altered no probe's verdict. The sync had no independent review
+when it was written, and mithi was revised with verdicts.json in view, as before. The review that
+followed is the next entry.
+
+**2026-10-23, review of the round-3 sync. Reviewer: one, Claude, same family, independent context**
+(it wrote neither mithi nor the note). Lens: soundness of the sync and agreement of mithi with the
+synced note on fresh programs, each Rust-shaped claim compiled with rustc 1.99.1. Its probes are in
+the session scratch area (`ccsync-diff/`). Counts: 12 findings (4 major, 8 minor). All were
+accepted, one in part (its example A1 is E-GRADE under the note, not accept); none was rejected.
+The reviser (the ccsync track, Claude) re-ran every probe on the sync's final build and on the
+revision [M: laptop, 2026-10-23]. The note's §0.9 (F-123 to F-134) and §17 have the dispositions.
+mithi changed in eight places:
+
+- `analysis/own.rs`: closure-call transfers through `move`-captured `&mut` references (F-123;
+  Interpretation 12); the anchors of E-LINEAR-DROP and E-REF-ESCAPE, with no E-LINEAR-DROP at a
+  join, and end-of-scope reports kept apart by the local they name (F-125; Interpretation 17);
+  one loan per captured place (F-126; Interpretation 25); the base-first `&mut` of overloaded
+  indexing (F-133; Interpretation 24).
+- `captures.rs`, `thir.rs`: captures record field paths and their modes (F-126).
+- `analysis/policy.rs`: (t6) through user ADT fields (F-130; Interpretation 19).
+- `analysis/t2.rs`: match-arm facts and shifted join bounds (F-131; Interpretation 21).
+- `analysis/grade.rs`: T-Call's strong case through any argument whose provenance is one whole
+  place, with no address grade there (F-134; Interpretation 16).
+- `diag.rs`: E-MOVE-USED left `MITHI_CODES`; the note now names it (F-124).
+- `tests/verdicts.rs`: constructions for N-129 to N-153. `tests/sync_2026_10_23.rs`: 83 cases, 13
+  values and an anchor-order test.
+
+Regression sweep [M, laptop, 2026-10-23]: the sync's final build against this revision on 2,856
+`.mith` probe files of the session scratch area (the nine directories above plus `ccsync` and
+`ccsync-diff`), with no flags and with `--canonical-prelude`. 122 of 5,712 runs changed. 98 are
+the review's and this reviser's own probes, each now as the note says. The other 24 are 12 earlier
+probes with the same primary code: 10 Linear probes lost the duplicate E-LINEAR-DROP the old build
+gave at a join, and one borrow probe (in two copies) now reports a second local outliving its
+scope at the same brace. **This revision has had no independent review**, and mithi was again
+revised with verdicts.json in view.
 
 ## Findings for the note and the X1 design
 
@@ -641,9 +801,14 @@ Lark grammar's `uses { unsafe }`; field-sensitive grade cells (OP-24).
    another variant also carries a Linear value, `Some(_)`, a `_` arm). mithi's reading is
    Interpretation 15. (Closed by the note's F-111 on 2026-10-23.)
 
-Items 7 to 15 come from the review of 2026-10-23 (Review log). They are for the CC track, which
+Items 7 to 15 come from the review of 2026-10-23 (Review log). They were for the CC track, which
 owns the note; none of them was in the note's draft of that day, which this track did not edit.
-Each states the problem, the evidence and a proposed text.
+Each states the problem, the evidence and a proposed text. **All nine were applied to the note in the
+round-3 sync (2026-10-23) as F-114 to F-122 (the note's §0.8), two of them narrowed: item 7 joins
+the address grade in the weak updates only (F-114), and item 10 orders codes at one anchor by
+spelling, not by list position (F-117). Item 11's open choice was settled as the extent reading
+of (t6) and `s.len()` bounds in (t5) (F-118). Each item's probes are now supplementary items
+N-110 to N-127.**
 
 7. **T-Call omits the address grade of a `&mut` argument** (finding 7). In §5.5, T-Call's second
    and third update lines and T-CallClo's `θ_mut,j` line write `θ_mut,j(γ̄) ⊔ pc`. When the
@@ -652,7 +817,12 @@ Each states the problem, the evidence and a proposed text.
    }` is `cross_device` by the rule as written although y is 4 or 0 depending on h. Proposed: use
    `θ_mut,j(γ̄) ⊔ γ_addr(a_j) ⊔ pc`, with γ_addr as in T-Assign (the grades of the references a_j
    traverses and of its index and slice expressions). Add h9 and h11 (E-GRADE) as supplementary
-   items. mithi does this (Interpretation 16).
+   items. mithi does this (Interpretation 16). **Corrected after the review of the round-3 sync
+   (the note's F-134):** w's `*o = k` is a weak update of the parameter referent, so `θ_mut,o`
+   mentions `α_o`, and `α_o` takes the argument's grade, which already includes h. So h9 and h11
+   were rejected without the address grade too [M: a mithi build without it]. The rule is still
+   needed, for a callee whose `θ_mut` does not mention `α_o`, such as one that covers its
+   referent (N-153).
 8. **E-LOCAL-MUT-STORE does not cover a closure-call transfer into a parameter's referent**
    (finding 8). §5.4's premise lists "by assignment, or through a storing std call", and T-Call
    says a user call adds no loan to the caller's places. `fn put(o: &mut Vec<&u32>, d: &u32) { let
@@ -708,6 +878,14 @@ Each states the problem, the evidence and a proposed text.
    `M2.blocks` with an untouched `scale: f32`): `scale` is the caller's value, raw in general, so
    the partial update keeps the cell's NaN bit raw. This follows from F-89 as written; the CC track
    should confirm it is intended, or make cells field-sensitive (OP-24).
+16. **An assignment to a whole parameter referent is a weak update** (found in the round-3 sync).
+   The note's `T-Assign` is strong only for a whole local, and mithi agrees, so
+   `#[grade(exact, cross_device)] fn f(y: &mut f32, x: f32) { *y = canon::nan(x); }` is
+   E-NAN-RAW-SINK in both [M: probe c13d]. An exact function can then make a float `&mut` output
+   canonical only by a covering loop or a callee's strong update. The note records it as amber
+   candidate A-13 and proposes OP-25: a strong update when `target*(p)` is one whole cell, as
+   `T-Call`'s strong case already has. Neither mithi nor the note changed; the next review should
+   decide.
 
 ## Grammar and parser
 
@@ -718,7 +896,12 @@ probably exceeded [inference]). The grammar is parsed with Lark's Earley parser;
 whitespace is the nullable rule `_s`, which made parsing about 8x faster than inline `_WS?`
 [M: 3.4 s against about 25 s for the 35 snippets, one run each].
 
-`python grammar/test_grammar.py --mithi <mithi> --mutants 150` [M: 2026-10-16, lark 1.3.1]:
+`python grammar/test_grammar.py --mithi <mithi> --mutants 150` [M: 2026-10-16, lark 1.3.1; re-run
+2026-10-23 after the round-3 sync with lark 1.3.1 installed into a scratch directory (`pip install
+--target`), the grammar at 13,324 bytes (SHA-256 `2a43092a…f826`), with mithi at `4b4dd05` and again
+with the post-sync build: every check below passed both times, the accepted forms are 8/8 (the two
+new `uses { unsafe }` forms included), the comparison 69/69 inputs, 6/6 documentation inputs and
+150/150 mutants; the grammar checks took 24.3 s and 23.8 s]:
 
 - canonical snippets 8/8 parse (D-C8 is the README taste snippet), derived snippets 27/27, gate
   negatives 6/6 (with the test's documentation extension for `…` and a signature without a body),
@@ -742,4 +925,3 @@ grammar rejects, mithi accepts unless stated):
 | `\| \|` (spaced empty closure) | the grammar spells it `\|\|` |
 | block comments nested more than one level | Rust nests them without limit; a regular expression cannot, and the grammar allows one level |
 | `if x == S { a: 1 } {}` (grammar accepts, mithi rejects) | mithi forbids struct literals in conditions as Rust does; the grammar does not encode that restriction |
-| `uses { unsafe }` | the grammar's `effect` is a `NAME`, which excludes the keyword `unsafe`; mithi parses it (since 2026-10-23) so that J3 can name the rejection, E-GRANT-UNSAFE. The grammar should accept `unsafe` there too (outside this track's files) |

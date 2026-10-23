@@ -46,7 +46,7 @@ What the note contains:
   distinct by hash [M, CC track script, 2026-10-16, Mithril commit `ec46300`] (§9 and the
   appendices);
 - a trace of 57 Tier 0 rule atoms to the note's rules [M: counted in §10];
-- 12 idioms that X1 reference solutions may need and that do not type, as Dc candidates for the
+- 13 idioms that X1 reference solutions may need and that do not type, as Dc candidates for the
   §3.6 amber (§11), and the X1 freeze list with its convergence tiers (§12, §12.1).
 
 Twenty-nine findings came out of the derivations (§0.4). Four of them change whether a canonical
@@ -124,6 +124,52 @@ Rust coincidence was corrected in several places:
 accept under the narrowed `Proj-Split` and `Cover-Proj`. One supplementary verdict changed code:
 N-43 is now `E-LOCAL-MUT-STORE`. §12.1 now proposes the X1 freeze in three tiers, by how far each
 rule has converged.
+
+**Round-3 sync with `mithi` (2026-10-23).** `mithi`'s blind review and revision of the same day
+handed this note nine items ([crates/mithi/README.md](../../crates/mithi/README.md), "Findings for
+the note", items 7 to 15). This reviser re-derived each one and measured every Rust claim with the
+pinned rustc 1.99.1. All nine were accepted as F-114 to F-122 (§0.8). None changes a canonical or
+derived verdict. Eight change a rule:
+
+- `T-Call`'s address grade (F-114);
+- closure-call loan transfers under `E-LOCAL-MUT-STORE` (F-115);
+- FF-CLOCK's class outside kernels (F-116);
+- anchors, and the order of codes at one anchor, in §5.16 (F-117);
+- policy loops and closures, (t5) and (t6) (F-118);
+- SSA definitions in Φ (F-119);
+- closure bodies under `T-Lin`, and the `par` join as an abandonment site (F-120);
+- F-107's annotation rule, narrowed to what rustc does (F-121).
+
+F-122 confirms that a consequence of F-89 is intended. The 19 supplementary items N-110 to N-128
+record these findings. N-128 is F-114's case for a closure's state, which the sync found; `mithi`
+accepted it, and was fixed. `mithi` at `4b4dd05` already agreed with every third-round item. After
+this sync it agrees on 35/35 snippet items, 6/6 gate negatives and 126/126 supplementary
+constructions [M] (§12.2). In §12.1's tier C, the closure-summary group changed again: the address
+grade in `T-CallClo` (F-114), the store check on loan transfers (F-115) and the annotation rule
+(F-121). The `Proj-Split` and `Cover-Proj` group did not change (F-122).
+
+**Review of the round-3 sync (2026-10-23).** One reviewer (Claude, same family, independent
+context) then checked the sync against `mithi` and rustc and reported 12 findings, 4 major and 8
+minor. This reviser re-ran every probe it cites [M: rustc 1.99.1 and `mithi`, laptop, 2026-10-23].
+All 12 were accepted as F-123 to F-134 (§0.9). In one (F-134) the reviewer's example and its
+claimed verdict were wrong, while the defect it pointed to was wider than reported. Eight needed
+changes in `mithi`; three of those were unsound acceptances: a loan transfer through a
+`move`-captured `&mut` (F-123), a function value inside a struct in a policy's result (F-130), and
+overloaded `Vec` indexing (F-133). Nine changed this note's text:
+
+- a code for use after a move (F-124);
+- FF-CLOCK's wording (F-127);
+- the move access mode's codes (F-128);
+- the precedence classes (F-129);
+- match arms' path facts (F-131);
+- the wording of F-121's closure rule (F-132);
+- the elaboration of `Vec` indexing (F-133);
+- F-114's rationale, which was wrong although its rule is right (F-134);
+- one clarifying sentence on transfers (F-123).
+
+No canonical or derived verdict changed. The 25 supplementary items N-129 to N-153 record these
+findings, and `mithi` agrees with all of them (§12.2). This revision has not been reviewed
+independently.
 
 One cross-track conflict needs the Owner (§12, Q9). The X1 track's design draft rejects `par for`,
 `deterministic`, `schedule`, `spec` and `linear` in `mithi` as "not yet", but ROADMAP §3.6 requires
@@ -355,6 +401,78 @@ supplementary items N-70 to N-109 (derivations §N).
 | F-111 | How a refutable pattern consumes a Linear scrutinee was unstated (`mithi`'s Interpretation 15) (R6-11) | Stated (§5.8) |
 | F-112 | `?` was elaborated only for `Result` (R6-13) | `Option` row (§3.2) |
 | F-113 | FF-NANMAX pins the signed zero of `max`/`min` only for f32. So `f64::max(-0.0, 0.0)` is a non-NaN result that conformance does not fix, and `1.0 / a.max(b) < 0.0` was a `cross_device` bool that can differ by target (R6-15) | Until P-20 pins the f64 forms, their results carry the platform taint `obs⁰`. That is sound in every grade context, which the reviewer's Dc-in-exact-context option is not (§5.3) |
+
+### 0.8 Findings from `mithi`'s review, applied in the round-3 sync (2026-10-23)
+
+`mithi`'s blind adversarial review of 2026-10-23 (one reviewer: Claude, same family, independent
+context) and that track's revision raised nine points against this note. They are items 7 to 15 of
+"Findings for the note" in [crates/mithi/README.md](../../crates/mithi/README.md). They came after
+the third round's text was written, so §0.7 does not have them. This sync (the ccsync track, Claude,
+2026-10-23) re-derived each point against the rules as they stood. Every Rust claim was compiled
+with the pinned rustc 1.99.1 (58cf8f9c3 2026-10-13), x86_64-pc-windows-gnu, `--edition 2021`
+[M: laptop, scratch probes `ccsync/rs/s01` to `s11`]. Every `mithi` claim was run on `mithi` at
+`4b4dd05`, or on it with this sync's changes where the claim says so [M: laptop, built with
+`cargo -j4`].
+
+All nine points were accepted; none was rejected. Two were narrowed: in F-114 the address grade
+joins only the weak updates, and F-117 orders codes at one anchor by spelling instead of by list
+position. F-122 changes no rule. No canonical or derived verdict changed. Every new rule is [prov].
+The counterexamples are supplementary items N-110 to N-128 (derivations §N). The sync was reviewed
+independently afterwards; §0.9 lists that review's findings (§17).
+
+| ID | Finding (`mithi` item; probe) | Fix in this note |
+|---|---|---|
+| F-114 | `T-Call`'s weak lines, its per-κ and std lines, and `T-CallClo`'s `θ_mut,j` line joined `θ_mut,j(γ̄) ⊔ pc` into a `&mut` argument's targets without the address grade that `T-Assign` adds for a write through a reference. A callee that overwrites `*a_j` without reading it erased the choice of place made under h. So `let r = if h > 1 { &mut y } else { &mut z }; w(r, 4); y` was `cross_device`, although y is 4 or 0 depending on h (item 7; h9, h11) | Each of those updates also joins `γ_addr(a_j)`: the grades of the index and slice expressions in a_j's place and of the references it traverses, as in `T-Assign`. The strong case is left as it was. Its target is one whole cell, so no choice among places is made, and the call's pc already covers whether the call runs. Joining there a local reference's grade, which includes its target's grade when it was borrowed, would undo every strong update made through a local reference. `mithi` also joins its own address grade in the strong case (Interpretation 16), which can only reject more. This sync found the same gap in `T-CallClo`'s state line. A call `r(9)` through `r = if h > 1 { &mut c1 } else { &mut c2 }`, where c2 is a copy of c1 and the body stores x into its state without reading the old state into it, changes c1's state or c2's depending on h. Then `c1(0)` returns 9 for h = 3 and 0 for h = 0 [M: rustc 1.99.1, probe s11]. `θ_state` does not mention σ there, so the choice vanished. `mithi` at `4b4dd05` accepted it, because it wrote the state into r itself and found no closure behind an `if`. The line now joins `γ_addr(f)`, and `mithi` was fixed (`analysis/grade.rs`) (§5.5, §5.7). Items N-110, N-111, N-128. **Corrected
+by F-134:** the rationale above is wrong. w's `*o = k` is a weak update (OP-25), so θ_mut,o does
+mention α_o, and α_o := γ(&mut *r) ⊇ γ_h already rejects N-110 and N-111. F-114's rule is still
+needed, for a callee whose θ_mut,j does not mention α_j (item N-153) |
+| F-115 | `E-LOCAL-MUT-STORE` checked stores made "by assignment, or through a storing std call", and `T-Call` says a user call adds no loan to the caller's places. A closure-call loan transfer (λ_q at `T-CallClo`, at a per-κ call or at a std call that runs the closure; λ_σ) that lands in a place reached through a parameter was checked by neither rule. So `fn put(o: &mut Vec<&u32>, d: &u32) { let mut c = \|x\| o.push(x); c(d); }` passed, and its caller dangled. rustc rejects it [M: probe s05, "lifetime may not live long enough"], and the std form `v.iter().for_each(\|x\| o.push(x))` too [M: s07] (item 8; g1) | The premise now covers every way a loan reaches such a place: by assignment, through a storing std call, or through a closure-call loan transfer whose target lies in a parameter's referent. The loans transferred there must be the place's own position's `ℓ_j,k*`. OP-22's remainder, that a user call adds no loan to the caller's places, now follows from this premise (§5.4, §5.7). Items N-112 to N-114 |
+| F-116 | §5.0 makes `cls` depend on ctx. (k5) listed FF-CLOCK among the constructs whose class is Dc "in exact context", so a clock read in a `#[grade(exact, _)]` function that is not a kernel read as `E-FF-CLOCK`. 01 §2.5's FF-CLOCK row ("Dc there": kernels, policies, Forge candidates) and N-13's verdict, `E-GRADE`, say otherwise (item 9; `mithi`'s Interpretation 1) | `cls(FF-CLOCK, ·)` is Dc in kernels, in `kcall` helpers reached from kernels and in `timing_only` code. It is C elsewhere, exact context included, where the `time` label's `nondet` taint gives `E-GRADE` at a `cross_device` sink. (k5) now reads "no construct whose class is Dc in a kernel" (§5.0, §5.10). Item N-115 |
+| F-117 | §5.16 ordered codes "within one class, the first by source position", but named no anchor for any code and no order for codes at one anchor. ow05, `fn f(v: &[u32]) -> &u32 { let l = [1u32, 2]; &l[0] }`, gives `E-BORROW-OUTLIVE` and `E-REF-ESCAPE`, both class 4. po09 gives four ⊢_to codes, two of them at one anchor (item 10) | §5.16 names each code's anchor. At one anchor, codes are ordered by their spelling, in byte order. The item proposed the code's position in the class line's list instead. Those lines use wildcards (`E-BORROW-*`, `E-TO-*`), so the position is undefined for most codes, while byte order is total. So ow05 is `E-REF-ESCAPE`, as rustc's E0515 [M: s08], and N-79's "first failure by source position" holds as written. `mithi` adopted the tie-break (`diag.rs`) (§5.16). Items N-116, N-117 |
+| F-118 | (t5) allowed "loops only over core-provided slices or constant ranges", so `for i in 0..slots.len()` was `E-TO-LOOP`, although its fuel is that of `for s in slots` and §5.13 already calls fuel "a polynomial in view lengths". `mithi` also did not read `const` items as constants. (t6)'s "no escaping closure" had two readings. Read as the kind clo_E, it rejects every closure with no by-ref or by-mut capture, the capture-free `\|s\| s.refs == 0` included. Read by extent, it rejects a closure that outlives the port call. `mithi` implemented a third reading, "a `move` closure" (item 11; po04, po11) | (t5): each bound of a range is an integer literal, a `const` item, or `s.len()` for a parameter s of core-provided slice type. A bound held in a local is not read through (N-120). (t6): no closure or function value outlives the port call, so none is part of P's result or written into port state. Closures of either kind may be created and called inside P, and passed to std functions that run them before returning. (t5) and (t7) apply to their bodies. clo_E's only other exits, `spawn` and `service`, need capabilities, which (t6) already excludes. Calls through function pointers remain T0's binary check (03 §6.2). `mithi` changed both rules (`analysis/policy.rs`) (§5.13). Items N-118 to N-121 |
+| F-119 | §5.10's Φ held contracts, ranges, invariants, `ensures`, loop bounds, branch conditions and passed asserts, but no SSA definitions. Whether `let j = if c { a } else { b }` gives T2 a relation between j and a or b was unstated, while "QF_BV + LIA" (03 §6.5) implies it does (item 12; kc10) | Φ also holds each SSA definition `x_k = e` of an integer-typed local. For an `x_k` defined by `if` or `match`, it holds the per-arm implications `c ⇒ x_k = e_arm` (§5.10). `mithi`'s T2 is weaker: it keeps one arm's relation only when the other arm's value satisfies it by an interval or an existing fact (its Interpretation 21). So `mithi` may answer `E-KERNEL-OBLIGATION` where this note accepts. That is a known incompleteness of `mithi`, not of the rule. No current item separates the two. Item N-122 |
+| F-120 | Two linearity gaps (item 13). (a) `T-CloL` and `T-CloE` never required a closure body to consume its by-move Linear captures, yet N-19 "with the call" is `E-LINEAR-DROP` only by that premise; `mithi` checks it. (b) §5.8 said "Trap paths are exempt" as if traps were the only abandonment. Since F-83, the `par` join also abandons Linear values after an early exit, including case (4), a `Ret` winner, which is a normal outcome (N-67, accept) | (a) `T-CloL` and `T-CloE` gain a premise. Each by-move captured Linear value must be consumed exactly once on every normal path of the body (`T-Lin`), otherwise `E-LINEAR-DROP`. (b) §5.8 lists the `par` join as the second abandonment site and gives the reason. After an early exit, W's contents are unspecified (deviation 1), and an ignored record's value exists only in the parallel realisation. The join releases both through audited routines, and no user code drops them. `T-Lin` constrains the program text, where no such drop is written (§5.7, §5.8). Items N-19 (its reason), N-123 |
+| F-121 | F-107 made a closure parameter higher-ranked whenever its written type has an elided reference lifetime. rustc 1.99.1 is narrower. `v.iter().for_each(\|x: &u32\| out = x)` compiles [M: probe s01, returns 3], and so does `v.iter().map(\|x: &u32\| x)` [M: s02]. A closure written where an `Fn*` bound gives its signature takes its regions from the bound. The same closure bound by `let` first and then passed is rejected [M: s03, E0521] (item 14; `mithi`'s Interpretation 18) | A parameter is higher-ranked by its annotation only when the closure has no expected signature: it is not written directly as an argument at a parameter whose type is bounded by `Fn*`. The bound rule is unchanged. N-43, N-101 and N-102 are unaffected, because their closures are bound by `let` (§5.7). Items N-124, N-125 |
+| F-122 | F-89's partial update rejects round 3's own control probe `a20_coverproj_ctrl`, a `Cover-Proj` over `M2.blocks` with an untouched `scale: f32` (item 15; `mithi`'s Interpretation 23) | Intended, and not caused by F-89. `scale` is the caller's value, raw in general, and it reaches the exact sink untouched, as an untouched `&mut f32` output does [M: `mithi` rejects `#[grade(exact, cross_device)] fn f(y: &mut f32) {}` with `E-NAN-RAW-SINK`]. Field-sensitive cells would reject it too. F-89's real cost is the twin that canonicalises `scale` first. Under C-CELL, no sequence of field writes resets the NaN bit of a cell with two float components, so the twin stays `E-NAN-RAW-SINK`, where field-sensitive cells (OP-24) would accept it. That cost is recorded as §11 A-13 and in OP-24. Checking it showed a wider one: any assignment through a parameter is a weak update, so even `*y = canon::nan(x)` for `y: &mut f32` leaves an exact output raw [M: probe c13d, in this note and in `mithi`]. That is recorded as OP-25, a proposed rule for the next review. No rule changes. Items N-126, N-127 |
+
+### 0.9 Findings from the review of the round-3 sync (2026-10-23)
+
+One reviewer (Claude, same family, independent context) reviewed the round-3 sync: this note's
+§0.8 changes, verdicts.json's items N-110 to N-128, and `mithi` with the sync's changes. The review
+probed both against rustc. It reported 12 findings, 4 major and 8 minor. This reviser (the ccsync
+track, Claude) re-ran every probe:
+
+- rustc 1.99.1 (58cf8f9c3 2026-10-13), x86_64-pc-windows-gnu, `--edition 2021`, with code
+  generation, so values were printed [M: laptop, 2026-10-23]. The reviewer's probes are in
+  `ccsync-diff/rs/`, this reviser's in `ccsync/r2/rs/` (t01 to t37, z01 to z08).
+- `mithi` before this revision: the sync's final build, `ccsync/mithi_final.exe`, which reproduces
+  every pre-revision result the review reports [M]. After this revision: `ccsync/r2/mithi_r2.exe`,
+  built with `cargo -j4`.
+
+All 12 findings were accepted; none was rejected as a whole. In F-134 the reviewer's example, and
+the note verdict it claimed for it, were wrong. The defect behind it was real and wider than
+stated. Five findings were `mithi` defects against rules this note already had (F-123, F-125,
+F-126, F-130, F-134). Seven changed a rule or its wording here (F-124, F-127 to F-129 and F-131 to
+F-133), and three of those also needed `mithi` changes (F-124, F-131, F-133). F-123 and F-134 also
+changed the note's text: a clarifying sentence, and a corrected rationale. No canonical or derived
+verdict changed.
+Every new or reworded rule is [prov]. The counterexamples are supplementary items N-129 to N-153
+(derivations §N).
+
+| ID | Finding (review item; probe) | Fix |
+|---|---|---|
+| F-123 | `mithi` did not transfer a closure call's loans into the places that a `move`-captured `&mut` reaches. Its Interpretation 12 covered by-mut captures only. So `fn put(o: &mut Option<&u32>, d: &u32) { let mut c = move \|x\| { *o = Some(x); }; c(d); }` was accepted. With a caller whose z dies first, `mithi run` returned 5, read from the dead z [M: probe B2c on the pre-revision build]. A `move`-captured `&mut` local had the same defect: its referent never received the loan, so z's scope end was missed (probe X06). rustc rejects both, with "lifetime may not live long enough" and E0597 [M: t01, t02, t23, t26]. This note already rejects them: its output places include the places a by-move capture's mutable loans reach (F-92), and F-115's premise checks the transfer (item 1; B2, B2c, B2d) | No rule changes; "Transfers count as stores" (§5.4) now says so. `mithi` now treats a by-move capture as a path to output places when it is a `&mut` whose referent can hold a loan, or a value carrying a mutable loan. It stores the transfer through that capture (`analysis/own.rs`), with Interpretation 12's over-approximation (§12.2). Items N-129 to N-132 |
+| F-124 | §5.16 named no code for a use after a move (rustc E0382), the most common ownership error. Agreement compares one primary code per item, so for such an item the code was undefined. `mithi` used its own E-MOVE-USED (item 2; G4: rustc E0382 [M: t06]) | `E-MOVE-USED` [prov] joins §5.16's table and §5.4's access modes. It covers a read, move, borrow or call of a place that is moved, or not initialised, on some path to the use. It is anchored at the use, in class 4. A move in an earlier iteration of a loop stays `E-MOVE-LOOP`. `mithi` drops the code from its own list (`diag.rs`). Item N-133 |
+| F-125 | `mithi` did not use §5.16's anchors for two codes. It anchored E-LINEAR-DROP at the binding, not where the value is dropped. It anchored a tail expression's E-REF-ESCAPE at the body's opening brace, not at the returned expression. Both put the code before other class-4 failures (item 3; D1, D2, D9) | No rule changes. `mithi` now anchors E-LINEAR-DROP where the value is dropped: at the closing brace of its scope (for a Linear parameter, the body's), or at the jump, assignment, pattern or arm that drops it. It no longer reports E-LINEAR-DROP at a join: a Linear value consumed on one path only reaches its scope's end or a later use. It anchors E-REF-ESCAPE at the returned expression or the closure's result expression (`analysis/own.rs`). Items N-134 to N-136 |
+| F-126 | `mithi` captured whole locals. So `let mut c = \|\| s.x += 1; let r = &s.y; c(); *r + s.x` was `E-BORROW-CONFLICT`, although §2.4 captures places as Rust 2021 does, and rustc compiles it and returns 4 [M: t10]. Closures are in the agent subset, where a false rejection is the bias X1 tolerates least (§12.1) (item 4; R6) | No rule changes. `mithi` now captures field paths for by-ref and by-mut captures, with one loan per captured place. As in rustc, an ancestor place absorbs its descendants, and an index, a dereference or a method call truncates the place (`captures.rs`, `analysis/own.rs`). Eight probes with disjoint and overlapping fields agree with rustc [M: z01 to z08]. A by-move capture still moves the whole local. The review proposed listing the limitation in §12.2 until `mithi` was fixed; the fix made that unnecessary. Item N-137 |
+| F-127 | §5.0 made a clock read Dc "in a `kcall` helper reached from a kernel". But `kcall(h)` requires `row(h) = ∅`, and a clock read gives the row {time}, so no such helper exists. Read literally, a helper that reads a clock is C, and the kernel that calls it fails (k1) or a grade check instead. `mithi` read the text as any helper that a kernel calls (item 5; C2, C3) | §5.0 now reads "in any non-kernel function reached by a call from a kernel, whether or not it satisfies `kcall`", and (k5) matches. Item N-138 |
+| F-128 | §5.4's Move bullet attached `E-MOVE-BORROWED` to "as for a write … not behind a reference". The code's name suggests a move while a loan is live (rustc E0505); the text suggests a move from behind a reference (E0507). Two checkers could disagree (item 6; R18 and R19: rustc E0505 and E0507 [M: t20, t21]) | The bullet now says that a live loan on a place overlapping p is `E-BORROW-CONFLICT`, as for a write (E0505), and that a move out of a place behind a reference or an index is `E-MOVE-BORROWED` (E0507). This is `mithi`'s reading. Items N-139, N-140 |
+| F-129 | §5.16's class lines put `E-LINEAR-COPY` in class 4 (`E-LINEAR-*`). It is a declaration error (J1: a type that is both Linear and Copy), and `mithi` ranks it in class 1. `E-COHERENCE`, `E-GLOBAL-STATE` and `E-IMPL-ROW` had no class (item 7; D7) | Class 1 now names `E-LINEAR-COPY`, `E-COHERENCE` and `E-GLOBAL-STATE` (declaration-level kind and coherence errors). Class 3 names `E-IMPL-ROW`, a row error. Class 4's `E-LINEAR-*` excludes `E-LINEAR-COPY` and `E-LINEAR-INSTANTIATE`. This is `mithi`'s order. Item N-141 |
+| F-130 | `mithi`'s (t6) scan of a policy's result type did not enter user structs. So `Hint<W>` with `struct W { f: fn() -> u32 }` was accepted, while the `Option` and tuple forms were rejected (item 8; E5) | No rule changes. `mithi` now walks the fields of user ADTs, with their type arguments substituted (`analysis/policy.rs`). Item N-142 |
+| F-131 | Two gaps around Φ (item 9). (a) §5.10 said that no current item separated this note's SSA facts from `mithi`'s weaker T2. That was true of the items, but a program separated them: `let j = if i == 0 { 0 } else { i - 1 }; y[j] = 1` under `requires i < y.len()` is accepted here and was `E-KERNEL-OBLIGATION` in `mithi` (F2b). (b) "the conditions of enclosing branches" did not say what a `match` arm contributes, and `mithi` added nothing for one. So `match i { 0 => {}, _ => { y[i - 1] = 1; } }` failed `i - 1`'s check (F2c, F2d) | Path facts now name a match arm's facts: its pattern's test, and the negation of every earlier unguarded arm's test, for integer literal, range and or-of-literal patterns. A binding arm binds the scrutinee's value. This follows from T-Match being T-If over arms. §5.10 cites F2b as N-143 and states the difference that remains. `mithi` now adds the arm facts. At a join it also keeps a bound shifted by a constant from one arm's value, when the other arm satisfies it by an interval (`analysis/t2.rs`). So F2b, F2c and F2d are accepted, and twelve controls, rejections included, come out as this note says [M: Y01 to Y12]. Items N-143 to N-145 |
+| F-132 | F-121's "written directly as an argument" did not cover a closure in parentheses or as a block's tail expression. Read literally, such a closure is higher-ranked by its annotation, and its store is `E-LOCAL-MUT-STORE`. rustc compiles both and returns 3, also with a statement before the closure and with nesting [M: t08, t09, t35, t36]. `mithi` accepted both (item 10; H1, H2) | The condition now reads "written as an argument at a parameter whose type is bounded by `Fn*`: directly, in parentheses, or as the tail expression of a block so written, recursively". Items N-146, N-147 |
+| F-133 | Indexing a `Vec` in a mutable place context is Rust's overloaded `IndexMut::index_mut(&mut v, i)`. The base is borrowed before the index is evaluated, and F-105's reservations do not include this borrow. §3.2 elaborated every `xs[e]` as built-in indexing, which evaluates e first. So `mithi` accepted `v[v.len() - 1] = 5`, which rustc rejects with E0502 [M: R12b, R12d; t11, t12, t17 to t19, t30, t32, t33]. Arrays and slices compile [M: R12c, t15]. This was an unsound acceptance in the agent subset (item 11) | §3.2's indexing row now says how `xs[e]` elaborates on a `Vec`, or on any other type that is not an array or a slice. In a mutable place context it is `*IndexMut::index_mut(&mut xs, e)`, with the `&mut` created before e and not a reservation. So a read of xs in e is `E-BORROW-CONFLICT`. In a shared context it is `*Index::index(&xs, e)`. `mithi` now holds the base's mutable loan while it evaluates the index (`analysis/own.rs`). `v[0] = v[1]`, `v[1] += v[0]` and `v.push(v[v.len() - 1])` still compile, and `mithi` still accepts them [M: t14, t34]. Items N-148 to N-150 |
+| F-134 | §12.2 listed a known difference: `mithi` joins its address grade in `T-Call`'s strong case. The review gave `let r = if h > 1 { &mut y } else { &mut y }; w(r, 4); y` as a program this note accepts and `mithi` rejects (item 12; A1). That example is wrong. w's `*o = k` is a weak update of `*o`, because `T-Assign`'s strong case is a whole local (OP-25). So θ_mut,o mentions α_o, and α_o := γ(&mut *r) ⊇ γ(r) ⊇ γ_h by T-If and P-Deref-Local. This note rejects A1 with `E-GRADE`, as `mithi` does. The difference was real, but wider than stated: `mithi` made no strong update through a local reference at all. Take a covering callee, `fn z(o: &mut [u32; 2]) { for i in 0..2 { o[i] = 4; } }`, whose θ_mut,o = ⊥. Then `let r = &mut y; z(r); y[0]` is accepted here, and `mithi` answered `E-GRADE` [M: X28, X30]. The same derivation shows that F-114's rationale was wrong: N-110 and N-111 were already rejected through α_o [M: a `mithi` build without the address grade in T-Call still rejects both]. F-114's rule is needed where θ_mut,j does not mention α_j. With z, `let r = if h > 1 { &mut y } else { &mut w2 }; z(r); y[0]` gives 4 or 0 depending on h [M: t29], and only γ_addr carries h; without it `mithi` accepts this program [M] | No rule changes. `mithi` now makes T-Call's strong update through any argument whose provenance is one whole place, a local reference included, and joins no address grade there, as this note says (`analysis/grade.rs`). §12.2's second known difference is removed. F-114's row in §0.8 and T-Call's comment now give the covering callee as F-114's case. Items N-151 to N-153 |
 
 ---
 
@@ -628,7 +746,7 @@ satisfy them, and the differential test (DR-010) compares them.
 | `let mut x: τ = e;` | `acc`, `isum`, `best` | `let mut x: τ = ⟦e⟧;` | `T-Let` |
 | `for pat in a..b { body }` | loops | `let mut c = ⟦a⟧; let n = ⟦b⟧; loop_L { if c >= n { break_L } let pat = c; ⟦body⟧ᶜ; c = c + 1 }`, where c is a fresh counter the body cannot name, and `⟦body⟧ᶜ` rewrites `continue` to `{ c = c + 1; continue_L }`. `pat` is usually `i`, `mut i` or `_`; each iteration binds a fresh copy, as Rust's `Range` iterator yields one, so a body that assigns `i` (under `for mut i`) changes its copy, not the iteration [M: rustc 1.99.1, probe r02: `for mut i in 0..3u32 { i = 0; … }` runs 3 times] (F-103). `b` is evaluated once, as Rust's `Range` is. Only the elaboration writes c, and `c < n`, so the increment cannot overflow and its assert is discharged. The guard's `break_L` raises `J(L)` by the grades of c and n, so the whole body is typed under them (F-30). Rules that speak of "the loop body" (`T-Cover`) mean the surface `body`, not the elaborated header. The previous row used the binder itself as the counter (F-103) | `T-Loop`, `T-Jump` |
 | `for s in xs` with `xs: &[T]` | `pick_victim` | the index loop over `0..xs.len()` with `let s: &T = &xs[i];`, a built-in projection whose bound is discharged | `T-Loop`, `T-Proj` |
-| `xs[e]`, `&xs[a..b]` | indexing, slicing | the place `xs[e]` with `assert⟨idx⟩(e < xs.len())`; a slice adds `assert⟨slice⟩(a <= b && b <= xs.len())` | `T-Proj` |
+| `xs[e]`, `&xs[a..b]` | indexing, slicing | the place `xs[e]` with `assert⟨idx⟩(e < xs.len())`; a slice adds `assert⟨slice⟩(a <= b && b <= xs.len())`. Arrays and slices use built-in indexing, which evaluates e before it accesses xs. On a `Vec`, and on any other type that is not an array or a slice, the indexing is overloaded [prov, F-133]. In a mutable place context (an assignment's left side, a compound assignment, `&mut xs[e]`, a `&mut self` receiver) it is `*IndexMut::index_mut(&mut xs, e)`: the `&mut` of xs is created before e is evaluated, and it is not a two-phase reservation (§5.4). So a read of xs in e is `E-BORROW-CONFLICT`, as rustc's E0502 for `v[v.len() - 1] = 5` [M: rustc 1.99.1, 2026-10-23, probes R12b, R12d, t17 to t19, t32, t33], while `a[a.len() - 1] = 5` on an array compiles [M: R12c]. In a shared context it is `*Index::index(&xs, e)`, and e may read xs. The assigned value is still evaluated first (row `p = e`), so `v[0] = v[1]` compiles [M: t14] (items N-148 to N-150) | `T-Proj` |
 | `x.m(ā)` | `w.row(r)`, `elem(j)`, `to_f32()` | method resolution by Rust's probe order (inherent impls, then traits in scope, with autoref and autoderef), then the UFCS call `T::m(adj(x), ā)` and monomorphisation | `T-Call`, J12 (§5.12) |
 | `e1 op e2` on integers | `isum += …`, `now.0 - …` | `assert⟨ovf(op)⟩(no_overflow_op(e1, e2)); prim_op(e1, e2)`. Division and remainder also assert `e2 != 0` and, for signed types, `!(e1 == MIN && e2 == -1)`; shifts assert `e2 < bits` | `T-Assert`, `T-Prim` |
 | `p op= e` on primitive operands | `isum += …` | `let t = ⟦e⟧; p = p op t`, with p's index expressions and their asserts evaluated after t, once. Rust evaluates the right operand first when both operands are primitive [inference: Rust Reference, compound assignment; not re-read here], so `a += { a = 5; 1 }` gives 6, not 2 (F-54) | `T-Assign` |
@@ -785,6 +903,16 @@ applies (`T-Prim`, `T-Call`, `⊢_k`). For example, `cls(float Iterator::sum, de
 (01 §2.2, §2.5). FF-SUM's row names float `.sum()`, `.product()` and `fold`, so
 `cls(float product, exact) = cls(fold with a float accumulator, exact) = Dc(E-FF-SUM)` as well (F-59).
 §5.16 lists the codes.
+
+**FF-CLOCK [prov, F-116].** One row needs more than ctx. 01 §2.5 makes a clock read Dc in kernels,
+policies and Forge candidates, not in all exact code. So `cls(FF-CLOCK, ·) = Dc(E-FF-CLOCK)` in a
+kernel, in any non-kernel function reached by a call from a kernel, whether or not it satisfies
+`kcall`, and in `timing_only` code. Everywhere else it is C, `#[grade(exact, _)]` functions
+included. There the `time` label's `nondet` taint (§5.3) fails a `cross_device` sink with `E-GRADE`
+(items N-13, N-115). Reading the row as Dc in every exact context would have made N-13
+`E-FF-CLOCK`. The sync's text said "in a `kcall` helper reached from a kernel". `kcall(h)` requires
+`row(h) = ∅`, and a clock read gives the row {time}, so that phrase could never apply. A helper
+that reads a clock and is called from a kernel is `E-FF-CLOCK` there (item N-138, F-127).
 
 ### 5.1 Kinds and well-formedness
 
@@ -1041,8 +1169,16 @@ Access modes:
   loans p is reached through and the loans those are nested in (F-79); p is rooted in a `mut` local
   or reached through `&mut`. Without the exception, `let r = &mut y; *r = 1;` conflicts with r's own
   loan on y.
-- **Move** (`move p`): as for a write, and p is a local or a field path of an owned local, not behind
-  a reference (`E-MOVE-BORROWED`).
+- **Move** (`move p`): a live loan on a place overlapping p is `E-BORROW-CONFLICT`, as for a write
+  (rustc E0505). p is a local or a field path of an owned local; a move out of a place behind a
+  reference or an index is `E-MOVE-BORROWED` (rustc E0507) [M: rustc 1.99.1, probes t20, t21]
+  (items N-139, N-140, F-128). The previous wording attached `E-MOVE-BORROWED` to the whole bullet,
+  so a move while borrowed had two readings.
+- **Use after move [prov, F-124].** A read, move, borrow or call of a place that is moved, or not
+  initialised, on some path to the use is `E-MOVE-USED`, anchored at the use (rustc E0382, E0381).
+  Calling a Linear closure twice is one example (item N-133). When the move happens in an
+  earlier iteration of an enclosing loop, the code is `E-MOVE-LOOP` (T-Loop). §5.16 named no code
+  for this before.
 - **Two-phase borrows [prov, F-105].** Three `&mut` loans are *reservations* from their creation
   until every argument of their call has been evaluated:
   - the autoref of a method call's receiver;
@@ -1126,8 +1262,10 @@ body:
    body every by-move capture is live at the body's end and at every return, because the state
    persists across calls, F-93)
  a value stored into a Local-typed place reached through a parameter j whose type contains a
-   reference (by assignment, or through a storing std call) carries no loan other than ℓ_j,k*, where
-   k is the reference position of the place's own type                       (E-LOCAL-MUT-STORE [prov])
+   reference (by assignment, through a storing std call, or through a closure-call loan transfer
+   λ_q or λ_σ applied at T-CallClo or at T-Call's per-κ and std lines, F-115) carries no loan
+   other than ℓ_j,k*, where k is the reference position of the place's own type
+                                                                             (E-LOCAL-MUT-STORE [prov])
  at the end of a body every live loan is the result's projection loan (T-Ret (a))
 ```
 
@@ -1147,6 +1285,22 @@ also rejects [M: probe r07], because elision gives the two references distinct l
 parameter's own contents (`*it = it.clone()`) and calling std's `next` on `&mut Iter<T>`. The
 alternative, rejecting every user signature that takes `&mut τ` with `τ : Local`, is simpler but
 rejects Rust that compiles (C-STORE in §12).
+
+**Transfers count as stores [prov, F-115].** A closure call can store a loan into a place reached
+through a parameter without an assignment there. In `fn put(o: &mut Vec<&u32>, d: &u32) { let mut
+c = |x| o.push(x); c(d); }`, the closure may store its unannotated parameter's loan into its output
+place `*o` ("Stores into captures", §5.7). The call `c(d)` then transfers `ℓ_d*` into o's referent.
+Until this sync only assignments and storing std calls were checked, so put was accepted and its
+caller dangled. rustc rejects it [M: rustc 1.99.1, probe s05, "lifetime may not live long
+enough"], and the std form `v.iter().for_each(|x| o.push(x))` as well [M: probe s07] (items N-113,
+N-114). With transfers counted, `T-Call`'s statement that a user call adds no loan to the caller's
+places is a consequence of this premise, not an assumption (OP-22's remainder). The output places
+include the places a `move`-captured `&mut` reaches (F-92). So `move |x| { *o = Some(x); }` over a
+parameter `o: &mut Option<&u32>`, called as `c(d)`, is `E-LOCAL-MUT-STORE` at the call. rustc
+rejects it too [M: probes t01, t02, t23] (items N-129 to N-131). For a `move`-captured local
+reference `r = &mut o`, the transfer gives o the loan, so a z that dies before o's use is
+`E-BORROW-OUTLIVE`, as rustc's E0597 [M: t26] (item N-132). `mithi` transferred only into by-mut
+captures until the review of this sync (F-123).
 
 **Write targets [F-39, F-96].** For a write, `target*(p) = res(p)`, the set of places whose grade
 changes, each in one grade cell:
@@ -1331,18 +1485,21 @@ abbreviates `Δ;Γ;Σ;pc ⊢` when Δ does not change.
                                         with τ free of references, when target*(*a_j) is one place
                                         (§5.4) and that place is a whole grade cell c (strong update,
                                         F-78, F-89, F-91)]
-         [t ⊔= θ_mut,j(γ̄) ⊔ pc        for every parameter j whose type contains &mut at any depth and
-                                        each t ∈ R(a_j) (§5.4) that the strong case did not replace
-                                        (weak, F-62, F-91)]
-         [t ⊔= θ_mut,q(γ̄, β̄) ⊔ pc;  L(t) ∪= λ_q[actuals]     if g is re-typed per κ (§5.7 rule 1),
-                                        for each output place q of κ (§4) and t ∈ target*(q),
-                                        with β_q := Γ'(target*(q)) (F-60, F-61, F-92)]
-         [t ⊔= wr_q ⊔ pc ⊔ θ_inv,j(γ̄);  L(t) ∪= λ_q[actuals]  if g is std, for each a_j whose type
-                                        mentions clo⟨κ⟩, each output place q of κ and
-                                        t ∈ target*(q) (F-35, F-67, F-92)]
-         [t ⊔= wr_σ ⊔ pc ⊔ θ_inv,j(γ̄);  L(t) ∪= λ_σ[actuals]   for t ∈ target*(*a_j), if g is std
-                                        and a_j is a `&mut` to a closure whose body writes its own
-                                        state (F-60, F-93)]
+         [t ⊔= θ_mut,j(γ̄) ⊔ γ_addr(a_j) ⊔ pc   for every parameter j whose type contains &mut at
+                                        any depth and each t ∈ R(a_j) (§5.4) that the strong case did
+                                        not replace (weak, F-62, F-91, F-114)]
+         [t ⊔= θ_mut,q(γ̄, β̄) ⊔ γ_addr(a_j) ⊔ pc;  L(t) ∪= λ_q[actuals]   if g is re-typed per κ
+                                        (§5.7 rule 1), for each a_j whose type mentions clo⟨κ⟩, each
+                                        output place q of κ (§4) and t ∈ target*(q), with
+                                        β_q := Γ'(target*(q)) (F-60, F-61, F-92, F-114)]
+         [t ⊔= wr_q ⊔ γ_addr(a_j) ⊔ pc ⊔ θ_inv,j(γ̄);  L(t) ∪= λ_q[actuals]   if g is std, for each
+                                        a_j whose type mentions clo⟨κ⟩, each output place q of κ and
+                                        t ∈ target*(q) (F-35, F-67, F-92, F-114)]
+         [t ⊔= wr_σ ⊔ γ_addr(a_j) ⊔ pc ⊔ θ_inv,j(γ̄);  L(t) ∪= λ_σ[actuals]   for t ∈ target*(*a_j),
+                                        if g is std and a_j is a `&mut` to a closure whose body
+                                        writes its own state (F-60, F-93, F-114)]
+         -- every L(t) ∪= λ[actuals] above is a store for E-LOCAL-MUT-STORE when t is reached
+         --   through a parameter of the caller (§5.4, F-115)
          [ω ⊔= pc ⊔ θ_exit(γ̄) (⊔ Θ_κ.θ_exit for each closure κ that a std g runs)   if mt_g]
          [Φ := Φ with the facts on every place g may write killed (§5.10); Φ += ψ_ens[ā/x̄, result]]
          [L as in §5.4]
@@ -1350,6 +1507,23 @@ abbreviates `Δ;Γ;Σ;pc ⊢` when Δ does not change.
  Γ;Σ;pc ⊢ g::⟨θ⟩(ā) : θτ_r @ θ_ret(γ̄) ⊔ pc ! ⋃ε̄ ∪ ε_g ⊣ Γ''       exercised: ⋃ε̄^x ∪ ε^x_g (F-71)
    -- ε_g ⊆ Σ is the capability check: κ_ℓ for each ℓ ∈ ε_g is passed implicitly
    -- target*(*a_j): for a reborrow &mut *r of a local reference r, the place r's loan targets (F-39)
+   -- γ_addr(a) [prov, F-114]: the address grade of an argument, as in T-Assign: the grades of the
+   --   index and slice expressions in the place a borrows, and of the references it traverses
+   --   (for a local reference r passed as `r` or `&mut *r`, r's grade, which holds whatever chose
+   --   its targets). Every weak line joins it. Without it, a callee whose θ_mut,j does not mention
+   --   α_j erased the choice of place: with `fn z(o: &mut [u32; 2]) { for i in 0..2 { o[i] = 4; } }`,
+   --   which covers *o (θ_mut,o = ⊥), `let r = if h > 1 { &mut y } else { &mut w2 }; z(r); y[0]`
+   --   left y at ⊥, while y[0] is 4 or 0 depending on h [M: rustc 1.99.1, probe t29] (item N-153,
+   --   F-134). F-114 first gave N-110 and N-111 as its cases, saying θ_mut,o does not mention α_o.
+   --   w's `*o = k` is a weak update (OP-25), so it does, and α_o := γ(&mut *r) ⊇ γ_h already
+   --   rejects them. The strong line does not join γ_addr: its target is one whole cell, so no
+   --   choice among places is made, and joining a local reference's grade there would put back the
+   --   borrowed cell's old grade. α_j is still the argument's grade, which for `&mut *r` includes
+   --   r's own grade (P-Deref-Local), so a callee that may leave old contents in place keeps what
+   --   chose r (item N-151); a covering callee replaces the cell (item N-152)
+   -- T-CallClo joins γ_addr(f) into the state update for the same reason: a call `r()` through
+   --   `r = if h > 1 { &mut c1 } else { &mut c2 }` changes c1's state or c2's depending on h
+   --   (item N-128)
    -- strong update: θ_mut,j already contains α_j wherever g may leave old contents in place, so
    --   replacing the caller's grade loses nothing; a write through a sub-slice, an element, a
    --   field, a projection result or a may-alias set stays weak. The first rule joined always, so a
@@ -1444,6 +1618,8 @@ that sub-place plus a read of those fields (F-45). This is what lets loans on di
        by-move captures at the state symbol σ, carrying the loans they carry in Γ
  Γ_c, x̄ : (τ̄, ᾱ, ℓ̄*);Σ;⊥ ⊢ e : τ @ γ ! ε_e ⊣ Γ_e   over parameter symbols ᾱ (with ℓ_j* as in Γ0, §5.15)
  ε_e ⊆ Σ    the result discipline below holds                                      (else E-REF-ESCAPE)
+ each by-move captured Linear value is consumed exactly once on every normal path of e (T-Lin;
+   the body owns it when the Linear closure is called, K-LinClo)           (else E-LINEAR-DROP, F-120)
  Θ_κ = (θ_ret from γ ⊔ Γ_e.ρ;  θ_mut,q from Γ_e(q) ⊔ Γ_e.X(q) for each output place q;
         θ_mut,j likewise for each parameter j whose type contains &mut;  θ_state from the grades of
         the by-move captures the body writes, at its end ⊔ X;  θ_exit from Γ_e.ω;  λ_q from L_e(q) ∪
@@ -1472,12 +1648,18 @@ that sub-place plus a read of those fields (F-45). This is what lets loans on di
  every capture is by move and no captured value is Local
  Γ_c (by-move captures at σ), x̄ : (τ̄, ᾱ);ε_e;⊥ ⊢ e : τ @ γ ! ε_e ⊣ Γ_e     ε_e ⊆ Σ   (capability capture, F-4)
  the result discipline below holds; Θ_κ as for T-CloL                             (else E-REF-ESCAPE)
+ its by-move Linear captures are consumed in e as for T-CloL                 (else E-LINEAR-DROP, F-120)
  ───────────────────────────────────────────── T-CloE
  Γ;Σ;pc ⊢ clo_E⟨κ⟩[c̄] |x̄| e : clo_E⟨κ⟩(τ̄) → τ ! ε_e @ pc ⊔ ⨆γ(c̄) ! ε_e ⊣ Γ[c̄ moved]
    -- the creator is charged ε_e, so a function that hands an io closure to spawn shows io in its row;
    --   the type keeps ε_e for whoever runs the closure; it is Linear if a moved capture is (K-LinClo)
    -- a closure value's grade γ(f) is its state's grade: it starts at the join of its by-move
    --   captures' grades and rises when a call writes the state (T-CallClo)
+   -- the Linear premise (F-120): a Linear closure runs once (FnOnce), and its body then owns the
+   --   by-move captures, so a capture it does not consume would be dropped at the body's end.
+   --   `move || l.bytes().len()` over a lease l is E-LINEAR-DROP in the body, and calling it
+   --   consumes the closure (item N-19 with the call); `move || store.release(l)` is accepted
+   --   (item N-123). The previous rules had no such premise, so N-19's verdict rested on it unstated
 
  f : clo⟨κ⟩ (or fn(τ̄) → τ ! ε_f ▷ Θ)    Γ;Σ;pc ⊢ ā : τ̄ @ γ̄ ! ε̄ ⊣ Γ'    clo_E or fn: ε_f ⊆ Σ
  ι = [ᾱ := γ̄,  β_q := Γ'(target*(q)) for each output place q,  σ := γ(f)]
@@ -1487,11 +1669,11 @@ that sub-place plus a read of those fields (F-45). This is what lets loans on di
  Γ;Σ;pc ⊢ f(ā) : τ @ Θ.θ_ret[ι] ⊔ γ(f) ⊔ pc ! ⋃ε̄ (∪ ε_f for clo_E and fn)
            ⊣ Γ'[t ⊔= Θ.θ_mut,q[ι] ⊔ γ(f) ⊔ pc;  L(t) ∪= λ_q[s]
                                    for each output place q and t ∈ target*(q)]
-               [t ⊔= Θ.θ_mut,j[ι] ⊔ γ(f) ⊔ pc   for each parameter j whose type contains &mut and
-                                   each t ∈ R(a_j) (§5.4, F-91)]
-               [t ⊔= Θ.θ_state[ι] ⊔ pc;  L(t) ∪= λ_σ[s]   for t ∈ target*(f), the place that holds
-                                   the closure called (f itself, or what a reference to it
-                                   borrows), if κ's body writes its by-move state (F-93)]
+               [t ⊔= Θ.θ_mut,j[ι] ⊔ γ_addr(a_j) ⊔ γ(f) ⊔ pc   for each parameter j whose type
+                                   contains &mut and each t ∈ R(a_j) (§5.4, F-91, F-114)]
+               [t ⊔= Θ.θ_state[ι] ⊔ γ_addr(f) ⊔ pc;  L(t) ∪= λ_σ[s]   for t ∈ target*(f), the place
+                                   that holds the closure called (f itself, or what a reference to
+                                   it borrows), if κ's body writes its by-move state (F-93, F-114)]
                [ω ⊔= pc ⊔ Θ.θ_exit[ι]          if mt]
    ε^x ∪= ε^x_κ;  a Linear f is consumed;  if τ is Local, the result carries the loans of κ's by-ref
    captures, the loans κ's by-move captures carry, and λ_ret[s] (F-40, F-61, F-94)
@@ -1529,29 +1711,42 @@ carries the loan of a higher-ranked parameter (below) is `E-REF-ESCAPE` too: rus
 `let id = |d: &u32| d; let r = id(&x);` [M: probe r05, "lifetime may not live long enough"]
 (item N-102, F-107).
 
-**Higher-ranked closure parameters [prov, F-107].** A closure parameter is *higher-ranked* in a
-reference position when:
+**Higher-ranked closure parameters [prov, F-107, F-121].** A closure parameter is *higher-ranked*
+in a reference position when:
 
 - its written type has a reference with an elided lifetime there (`|d: &u32|`,
-  `|d: Option<&u32>|`); or
+  `|d: Option<&u32>|`), **and the closure has no expected signature**: it is not written as an
+  argument at a parameter whose type is bounded by `Fn*`, either directly, in parentheses, or as
+  the tail expression of a block so written, recursively (F-121, F-132); or
 - the closure is instantiated at a type parameter whose `Fn*` bound writes that position as a
   reference with an elided lifetime (`F: FnMut(&u32)`).
 
 An unannotated parameter passed directly (`|d|`) is not, and neither is a bound whose parameter is
 an associated type with a named lifetime (`for_each`'s `F: FnMut(Self::Item)` on
-`slice::Iter<'a, T>`). This is what rustc does [M: rustc 1.99.1, 2026-10-23]:
+`slice::Iter<'a, T>`). A closure written at such a bound takes its regions from the bound, even
+when its parameter is annotated. So `v.iter().for_each(|x: &u32| out = x)` is accepted, while
+the same closure first bound by `let c = |x: &u32| out = x;` and then passed is rejected (items
+N-124, N-125). This is what rustc does [M: rustc 1.99.1, 2026-10-23]:
 
 - these are rejected:
   - `|d: &u32| { slot = Some(d); }`, E0521 (r03);
   - `|d: Option<&u32>| { slot = d; }`, E0521 (q08);
   - a store at an `F: FnMut(&u32)` bound, E0521 (r16);
   - `|d: &u32| d`, whose result is d's loan: "lifetime may not live long enough" (r05);
+  - `let c = |x: &u32| out = x; v.iter().for_each(c);`, E0521 (s03);
 - these compile:
   - `|d| { slot = Some(d); }` (r04);
-  - `xs.iter().for_each(|x| v.push(x))` (r15).
+  - `xs.iter().for_each(|x| v.push(x))` (r15);
+  - `v.iter().for_each(|x: &u32| out = x)`, which returns 3 (s01);
+  - `v.iter().map(|x: &u32| x)` (s02);
+  - `v.iter().for_each((|x: &u32| out = x))` and `v.iter().for_each({ |x: &u32| out = x })`, which
+    return 3, also with a statement before the closure in the block (t08, t09, t35, t36; items
+    N-146, N-147). F-121's "written directly" did not cover them (F-132).
 
 The previous revision transferred the loan at every directly called closure and accepted the
-annotated forms (OP-22, now closed).
+annotated forms (OP-22, now closed). F-107's first statement made every annotated parameter
+higher-ranked, which rejected s01 and s02 although rustc compiles them. `mithi`'s Interpretation 18
+found this, and F-121 narrowed the rule.
 
 **Stores into captures [prov, F-61, F-93, F-94].** A closure body may store into one of its output
 places (by-mut captured places, and places its by-move captures' mutable loans reach) a value
@@ -1660,7 +1855,8 @@ at `clo_L`. The body is then checked with `Δ ⊢ F : Local`.
 | `E-REF-FIELD` | a struct or enum field has a `Local` type (FF-REF, FF-LOCAL) |
 | `E-LOCAL-INSTANTIATE` | a user generic is instantiated at a `Local` type outside the exception |
 | `E-REF-ESCAPE` | a reference is returned outside T-Ret, or a std generic parameter with the implicit `¬Local` bound (such as `with_lock`'s result type R) is instantiated at a reference type (F-28), or a closure's result carries a loan that its bound's elision does not allow (F-40), or a loan on a by-mut captured place or on its own by-move state (F-61), or a higher-ranked parameter's loan (F-107) |
-| `E-LOCAL-MUT-STORE` | a value stored into a parameter's referent, into a closure's output place or into its by-move state carries a loan the rules of §5.4, "Stores into captures" and "By-move state stores" do not allow (F-39, F-61, F-62, F-93, F-107) |
+| `E-LOCAL-MUT-STORE` | a value stored into a parameter's referent, into a closure's output place or into its by-move state carries a loan the rules of §5.4, "Stores into captures" and "By-move state stores" do not allow; a closure-call loan transfer into a parameter's referent counts as a store (F-39, F-61, F-62, F-93, F-107, F-115) |
+| `E-LINEAR-DROP` | a closure body does not consume a by-move Linear capture on some normal path (F-120), besides the cases of §5.8 |
 | `E-MONO-DEPTH` [prov] | a per-κ instantiation chain exceeds the fixed depth (F-80) |
 
 `heat_view` (01 §5.8) is the F-28 case. Its own signature, `fn heat_view(st: &Mutex<StoreState>) ->
@@ -1686,6 +1882,15 @@ at `clo_L`. The body is then checked with `Δ ⊢ F : Local`.
   (`E-LINEAR-PARTIAL` [prov]).
 - Trap paths are exempt. §6.3 abandons live Linear values in reverse order of creation (01 §12.4),
   including Linear by-value parameters and, by E6, every Linear temporary (F-42).
+- **The `par` join is the second abandonment site [prov, F-120].** After an early exit from a
+  `par` (cases (2) to (4) of `E-Par-Join`, §6.4), the join abandons, through audited routines, the
+  Linear values iterations wrote into W and those held by ignored `Ret` records (F-83). Case (4),
+  a `Ret` winner, is a normal outcome, so this abandonment is not on a trap path. It is still not
+  a drop that `T-Lin` must forbid. W's contents after an early exit are unspecified (deviation 1).
+  An ignored record exists only in the parallel realisation; the serial projection, which is the
+  meaning, never runs it. And no user code drops either value. `T-Lin` constrains the program text,
+  where no such drop is written. So N-67 stays accepted. The alternative, rejecting a `par` whose
+  body may return or write a Linear value, would reject N-67's `slots[i].take()` pattern.
 - **Refutable patterns over a Linear scrutinee [prov, F-111].** A `match` whose scrutinee is a
   Linear place consumes it only if every arm consumes the Linear payload of the variants it
   matches. An arm `_`, `Some(_)` or a `ref` binding over a variant that carries a Linear value is
@@ -1873,7 +2078,29 @@ contents in this note.
 **Path facts.** `Φ` at a program point holds: the function's `requires`; the `#[range]` facts of
 parameters and of fields read; the invariants of struct values read; the `ensures` of every call
 already made; `a ≤ i < b` for every enclosing loop over `a..b`; the conditions of enclosing branches;
-and the conditions of asserts already passed.
+and the conditions of asserts already passed. A `match` arm's condition [prov, F-131] is its
+pattern's test together with the negation of every earlier unguarded arm's test. This is stated for
+integer literal, range and or-of-literal patterns, whose tests and negations are linear facts. A
+binding arm's variable equals the scrutinee. This is what T-Match being T-If over arms gives. So in
+`match i { 0 => {}, _ => { y[i - 1] = 1; } }` under `requires i < y.len()`, the second arm has
+`i ≠ 0`, and both obligations hold (items N-144, N-145). The previous text did not say what a
+pattern arm contributes.
+
+**SSA definitions [prov, F-119].** Φ also holds each SSA definition `x_k = e` of an
+integer-typed local whose right-hand side is in T2's theory. An `x_k` defined by `if` or `match`
+has its per-arm implications `c ⇒ x_k = e_arm`, with `c` the arm's condition. So in `let j = if i <
+y.len() { i } else { 0 }; y[j] = 1;` under `requires y.len() >= 1`, the bound `j < len(y)` holds on
+both arms, and the kernel is accepted (item N-122). Earlier text left this unstated, while "QF_BV +
+LIA" (03 §6.5) implies it. `mithi`'s T2 is weaker: it keeps one arm's relation only when the other
+arm's value satisfies it by an interval or an existing fact (its Interpretation 21). Where only a
+full proof at the join discharges an obligation, `mithi` answers `E-KERNEL-OBLIGATION` and this
+note accepts. That is an incompleteness of the checker, to be fixed there. The sync said that no
+item separated the two. The review of the sync found a program that did, `let j = if i == 0 { 0 }
+else { i - 1 }; y[j] = 1` under `requires i < y.len()` (item N-143, F-131). It is accepted here
+and was `E-KERNEL-OBLIGATION` in `mithi`. `mithi` now also keeps, at a join, a bound shifted by a
+constant from one arm's value when the other arm satisfies it by an interval (here `j ≤ i`), and
+accepts N-143. Its T2 is still weaker than Φ in general, on the rejecting side; no item now
+separates the two.
 
 **Facts are over SSA versions [F-44].** Every place name in Φ is a version. An assignment, a write
 through `&mut` or a local reference, a `&mut` argument, and a call to a closure that captures by mut
@@ -1932,8 +2159,9 @@ traps at `hole("n")`.
        a format accessor, or a helper h with kcall(h)                                  (E-KERNEL-CALL)
   (k4) every output sink meets (exact, cross_device), ν = canon for floats, and ω_g is cross_device
                                                                                 (E-GRADE, E-NAN-RAW-SINK)
-  (k5) no construct whose class is Dc in exact context: FF-SUM (float sum, product and fold), FF-TIES,
-       FF-EXP, FF-POWI, FF-F16, FF-CLOCK
+  (k5) no construct whose class is Dc in a kernel: FF-SUM (float sum, product and fold), FF-TIES,
+       FF-EXP, FF-POWI, FF-F16, FF-CLOCK (FF-CLOCK is Dc in kernels and in every non-kernel
+       function a kernel calls, not in all exact code: §5.0, F-116, F-127)
   (k6) no det block, no Mutex access, no capability parameter (02 §2: no ambient authority)
 
  kcall(h)  iff  h is not a kernel, row(h) = ∅, may_trap(h) = false given its requires, and h's body
@@ -2072,8 +2300,12 @@ it ([derivations §P](core-calculus/derivations.md#p-the-canonical-prelude)).
        and slices of them                                                          (E-TO-PARAM [prov])
   (t4) state, if any, is one fixed-size block owned by the port and double-buffered (§6.5)
                                                                                    (E-TO-STATE [prov])
-  (t5) loops only over core-provided slices or constant ranges; no recursion             (E-TO-LOOP, E-TO-RECURSION)
-  (t6) no det block, no Mutex, no capability, no escaping closure                  (E-TO-AUTHORITY [prov])
+  (t5) loops only over core-provided slices, or over ranges a..b and a..=b whose bounds are integer
+       literals, const items, or s.len() for a parameter s of core-provided slice type (F-118);
+       no recursion                                                       (E-TO-LOOP, E-TO-RECURSION)
+  (t6) no det block, no Mutex, no capability, no escaping closure: no closure or function value
+       outlives the port call, so none is part of P's result or written into port state (F-118)
+                                                                                 (E-TO-AUTHORITY [prov])
   (t7) every callee satisfies ⊢_to apart from (t2) (a helper need not return a Hint), or is a
        stateless std function with row ∅ (Hint::none, Hint::some, <[T]>::len, integer and float
        primitives), in the monomorphised call graph (F-53)                           (E-TO-CALL [prov])
@@ -2087,7 +2319,18 @@ it ([derivations §P](core-calculus/derivations.md#p-the-canonical-prelude)).
   shared grade `γ_sh`, because views are snapshots of shared mutable core state. Nothing is required
   of the result's grade: Theorem 3 is what makes the result harmless.
 - **Static fuel.** (t5) gives a bound `fuel(P)`: the sum over back edges of the product of enclosing
-  trip bounds, a polynomial in view lengths. If `fuel(P)` exceeds the port's declared fuel, every call
+  trip bounds, a polynomial in view lengths.
+- **(t5) and (t6) pinned [prov, F-118].** The first text allowed "core-provided slices or constant
+  ranges". That rejected `for i in 0..slots.len()`, whose trip bound equals that of `for s in slots`
+  (item N-118). A bound must be written as a constant or as `s.len()`. A local holding a length is
+  not read through, so `let n = slots.len(); for i in 0..n` stays `E-TO-LOOP` (item N-120), and the
+  fix is to write the bound in the range. "Escaping" had two readings. Read as the kind clo_E, it
+  rejects every closure without a by-ref or by-mut capture, including a capture-free `|s| s.refs ==
+  0` and `move || k` over a Copy k. It is read by extent: closures of either kind may be created
+  and called inside P, and passed to std functions that run them before returning. A closure or
+  function value in P's result is `E-TO-AUTHORITY` (items N-119, N-121). (t5) and (t7) apply to
+  closure bodies as to P's own. clo_E's other exits, `spawn` and `service`, need capabilities,
+  which (t6) excludes. Calls through function pointers are banned on the binary by T0 (03 §6.2). If `fuel(P)` exceeds the port's declared fuel, every call
   would exhaust and fall back; `W-FUEL` warns [prov].
 - **`⊢_store`** (M4, a sketch, outside X1). Each `hint port q: P fallback F validate V …` requires
   `⊢_to P`, a fallback F that is core code with row ∅ and `may_trap(F) = false` (premise F-tot of §8),
@@ -2238,7 +2481,7 @@ another family writes.
 | `E-LINEAR-DROP`, `E-LINEAR-COPY`, `E-LINEAR-PARTIAL` [prov] | T-Lin, J1 | 01 §5.6 |
 | `E-LINEAR-INSTANTIATE` [prov] | J2, T-Call | F-41 |
 | `E-MONO-DEPTH` [prov] | §5.7 rule 4 | F-80 (rustc rejects the same programs at its recursion limit [inference]) |
-| `E-BORROW-CONFLICT` [prov], `E-MOVE-BORROWED`, `E-MOVE-LOOP` | §5.4, T-Loop | Rust's rules |
+| `E-BORROW-CONFLICT` [prov], `E-MOVE-USED` [prov], `E-MOVE-BORROWED`, `E-MOVE-LOOP` | §5.4 (access modes, use after move, F-124, F-128), T-Loop | Rust's rules (E0382, E0505, E0507) |
 | `E-BORROW-OUTLIVE`, `E-LOCAL-MUT-STORE` [prov] | §5.4, T-Let, T-Assign, T-Jump, §5.7 | F-39, F-61, F-62, F-66, F-93, F-94, F-107. rustc rejects the same programs [M: rustc 1.99.1, 2026-10-23, probes r03, r05 to r08, r16, p05a to p05c, p06a, p06c, p08b, q08] and accepts their non-dangling twins (p06b, p06d, p08a, q09, r04, r11, r15). OP-22 is closed |
 | `E-FOOTPRINT` [prov] | §5.6 | F-45 |
 | `E-PAR-DISJOINT`, `E-PAR-RACE`, `E-PAR-SEND`, `E-PAR-BREAK`, `E-PAR-EFFECT` | T-Par | 01 §12.3 |
@@ -2260,12 +2503,13 @@ fixed. `mithi` reports every failure it finds; the primary code is the first in 
 within one class the first by source position:
 
 1. `E-OUT-OF-SCOPE-<KW>`, then J2 well-formedness (`E-DYN`, `E-REF-FIELD`, `E-LIFETIME`,
-   `E-LOCAL-INSTANTIATE`, `E-LINEAR-INSTANTIATE`, `E-MONO-DEPTH`, `E-FF-CELL`, `E-DROP-IMPL`, …) and
-   `E-TYPE`;
+   `E-LOCAL-INSTANTIATE`, `E-LINEAR-INSTANTIATE`, `E-MONO-DEPTH`, `E-FF-CELL`, `E-DROP-IMPL`, …),
+   the declaration-level kind and coherence errors `E-LINEAR-COPY`, `E-COHERENCE` and
+   `E-GLOBAL-STATE` (F-129), and `E-TYPE`;
 2. class codes from `cls` and the Dc list (`E-FF-*`, `E-AMBIENT-IO`, `E-MACRO`, `E-TRAIT-OFF`);
-3. rows and grants (`E-ROW-UNDECLARED`, `E-GRANT-*`, `E-FP-ENV`, `E-DET-GRANT`);
-4. loans and linearity (`E-BORROW-*`, `E-MOVE-*`, `E-LOCAL-*`, `E-REF-ESCAPE`, `E-LINEAR-*`,
-   `E-FOOTPRINT`);
+3. rows and grants (`E-ROW-UNDECLARED`, `E-GRANT-*`, `E-FP-ENV`, `E-DET-GRANT`, `E-IMPL-ROW`);
+4. loans and linearity (`E-BORROW-*`, `E-MOVE-*`, `E-LOCAL-*`, `E-REF-ESCAPE`, `E-LINEAR-*` other
+   than `E-LINEAR-COPY` and `E-LINEAR-INSTANTIATE`, `E-FOOTPRINT`);
 5. `par` (`E-PAR-*`) and the deterministic boundary (`E-DET-POLICY`, `E-DET-EVIDENCE`,
    `E-DET-STALE`, `E-DET-RESULT`);
 6. grades and sinks (`E-GRADE`, `E-NAN-RAW-SINK`, `E-IMPL-GRADE`);
@@ -2273,6 +2517,37 @@ within one class the first by source position:
 
 A verdicts.json item may list secondary codes in `also`; they are reported, not compared. So a clock
 read in a policy (N-09) is primarily `E-FF-CLOCK` (class 2), with `E-TO-ROW` (class 7) in `also`.
+The class lines name every code of the table above. The sync's lines put `E-LINEAR-COPY` in class 4
+through `E-LINEAR-*` and gave `E-COHERENCE`, `E-GLOBAL-STATE` and `E-IMPL-ROW` no class. So
+`#[derive(Copy, Clone)] linear struct L { a: u32 }` beside a `println!` had two primary codes;
+it is `E-LINEAR-COPY` (item N-141, F-129).
+
+**Anchors and ties [prov, F-117].** "Source position" is the position of the code's **anchor**,
+the construct whose premise fails:
+
+| Code | Anchor |
+|---|---|
+| `E-REF-ESCAPE` | the returned expression, or a closure's result expression |
+| `E-BORROW-OUTLIVE` | the end of the dying scope: its block's closing brace, or the `break`, `continue` or `return` that leaves it |
+| `E-LOCAL-MUT-STORE` | the store: the assignment, the storing std call, or the call whose loan transfer stores (F-115) |
+| `E-LINEAR-DROP` | where the value is dropped: the end of its scope or the jump that leaves it, the assignment over it, or the pattern or arm that discards it |
+| `E-BORROW-CONFLICT`, `E-MOVE-*` | the conflicting access or the use after the move |
+| `E-GRADE`, `E-NAN-RAW-SINK` | for the result and the exit grade, the item header; for a `&mut` parameter's referent, that parameter |
+| `E-TO-ROW`, `E-TO-RESULT`, `E-TO-RECURSION` | the item header (the result type for `E-TO-RESULT`) |
+| `E-TO-PARAM` | the parameter |
+| `E-TO-LOOP`, `E-TO-AUTHORITY` | the loop or the construct (a `det` block; a `Mutex` or capability local at its binding; the result type for a closure or function value in it) |
+| `E-TO-CALL`, `E-KERNEL-CALL` | the call |
+| `E-KERNEL-OBLIGATION` | the trap site whose obligation is not discharged |
+| any other code | the expression or item whose premise fails |
+
+At one anchor, codes are ordered by their spelling, in byte order. So ow05, `fn f(v: &[u32]) -> &u32
+{ let l = [1u32, 2]; &l[0] }`, is `E-REF-ESCAPE` (the returned expression comes before the body's
+closing brace), as rustc reports E0515 [M: rustc 1.99.1, probe s08] (item N-116). po09's four ⊢_to
+codes give `E-TO-ROW` at the header first, then `E-TO-AUTHORITY` and `E-TO-PARAM`, which share the
+parameter's anchor (item N-117). The first text fixed no anchors, so two checkers could order one
+program's codes differently. The item's proposal ordered ties by a code's position in its class
+line above. Those lines use wildcards (`E-BORROW-*`, `E-TO-*`), so that position is undefined for
+most codes, while byte order is total.
 
 ---
 
@@ -3268,6 +3543,7 @@ measure its cost.
 | A-10 | `sort_by(\|a, b\| b.partial_cmp(a).unwrap())` inside a kernel | the `unwrap` cannot be discharged (NaN) | `E-KERNEL-OBLIGATION` | `canon::topk` with an explicit NaN rule, or `total_cmp` on canonical values | T-ROUTE, T-NORM |
 | A-11 | Debug output of an address: `format!("{:p}", &x)` | addresses are not observable in safe code (01 §6.1) [prov, F-56] | `E-FF-ADDR` | print an index or an id | all (debugging) |
 | A-12 | `&'static str` or `&'static [T]` in a return type, a field or an error type: `fn name() -> &'static str`, `struct Op { name: &'static str }`, `Result<T, &'static str>` (all compile in Rust [M: rustc 1.99.1, probe q11]) | a named lifetime (J2), or a reference in a field; `mithi` gives `E-LIFETIME` for the return and the `const` read, `E-REF-FIELD` for the field, and accepts a local `[&str; 2]` [M: `mithi` at `dcd4c87`, probes e01 to e04] (F-108) | `E-LIFETIME` / `E-REF-FIELD` | elide the lifetime in returns where elision applies; an enum or `String` for error and field data | all |
+| A-13 | An exact function (a kernel or `#[grade(exact, cross_device)]`) that sets a float `&mut` output by assignment instead of a covering loop: `*y = canon::nan(x)` for `y: &mut f32`, `*y = P2 { … }`, or a struct with two float components field by field, `y.a = canon::nan(x); y.b = canon::nan(x);`. Rust has no such rule | `T-Assign`'s strong case is a whole local, so an assignment through a parameter is a weak update, and the caller's raw value stays. The grade is one per cell (C-CELL), so a field write cannot reset the NaN bit while another float component lies outside it [M: `mithi` with this sync's changes, probes c13a, c13b, c13d to c13g; F-122, items N-126, N-127] | `E-NAN-RAW-SINK` | return the value by value (accepted [M: probe c13c]); for slices, a covering loop (`T-Cover`). OP-25 would accept the whole-referent assignments, and OP-24 the field-by-field form | T-NORM, T-Q4 (outputs with a scale) [G] |
 
 Three further idioms type but cost a row label or a grade, and X1 should count them separately from
 Dc rejections: global heap allocation under the provisional `alloc(Global)` rule (OP-1), `HashMap`
@@ -3296,6 +3572,13 @@ now accepted:
 - `let d = c;` for a closure c (F-104);
 - `v.push(v.len())` (F-105);
 - `let x = v.iter_mut().next().unwrap(); *x = 1;` (F-90).
+
+The round-3 sync found two more, both now accepted:
+
+- an annotated closure parameter at an `Fn*` bound, as in `v.iter().for_each(|x: &u32| out = x)`
+  (F-121, N-124);
+- policy loops over `0..slots.len()` and `move` closures that stay inside a policy (F-118, N-118,
+  N-119). Rust has no such rule, so each of these was a Dc cost with no reason behind it.
 
 OP-22, the old acceptance of annotated-parameter stores, is closed by F-107.
 
@@ -3380,7 +3663,7 @@ review and the Owner's signature on this note.
 | C-ATOMIC | load, store and read-modify-write operations on user-visible std atomics carry `nondet` (01 §6.1); atomics inside `Frozen` refcounts and `par` work distribution are not user-visible | atomics are Dc in the X1 subset | F-56 |
 | C-FMT-ADDR | the `{:p}` format specifier is Dc everywhere (`E-FF-ADDR`) | allow it in test builds only | F-56 |
 | C-LIN-GENERIC | every type parameter has an implicit `¬Linear` bound; only std may write `?Linear`; `drop`, `mem::forget` and discarding container methods keep `¬Linear` (`E-LINEAR-INSTANTIATE`) | linearity checked after monomorphisation, with errors far from their cause | F-41 |
-| C-STORE | storing a value with foreign loans into a parameter's `Local` referent is `E-LOCAL-MUT-STORE`, compared per reference position, for every parameter whose type contains a reference (F-62). The same holds for a store into a closure's output place or by-move state of: a loan on a by-mut capture, on the closure's state or on a body local; or the loan of a higher-ranked parameter (an annotated reference type, or a higher-ranked `Fn*` bound). Unannotated parameters' and other captures' loans are transferred instead (λ_q, λ_σ, capture symbols) (F-61, F-93, F-94, F-107). Every case was measured against rustc 1.99.1 [M] | reject every user signature with `&mut τ`, `τ : Local` (simpler; rejects Rust that compiles) | F-39, F-61, F-62, F-93, F-94, F-107 |
+| C-STORE | storing a value with foreign loans into a parameter's `Local` referent is `E-LOCAL-MUT-STORE`, compared per reference position, for every parameter whose type contains a reference (F-62). The same holds for a store into a closure's output place or by-move state of: a loan on a by-mut capture, on the closure's state or on a body local; or the loan of a higher-ranked parameter (an annotated reference type on a closure with no expected signature, or a higher-ranked `Fn*` bound). Unannotated parameters' and other captures' loans are transferred instead (λ_q, λ_σ, capture symbols) (F-61, F-93, F-94, F-107, F-121). A transfer that lands in a parameter's referent is itself a store under the first sentence (F-115). Every case was measured against rustc 1.99.1 [M] | reject every user signature with `&mut τ`, `τ : Local` (simpler; rejects Rust that compiles) | F-39, F-61, F-62, F-93, F-94, F-107, F-115, F-121 |
 | C-CELL | static grades are one per grade cell (a local, or a parameter's referent); a strong update of a proper sub-place is the partial update of §5.4, which resets only the NaN bit and only when the sub-place holds all of the cell's float content | field-sensitive cells: one grade per field path (more precise; more checker state; OP-24) | F-89 |
 | C-PROJSPLIT | rule `Proj-Split` (§5.9) for footprinted projections inside `par`, with every argument, the receiver reborrow included, invariant in the `par` (F-63, F-102) | none: without it D-D11 is `E-PAR-DISJOINT`, and 02 §9 hoists the row (P-19) and flattens the cover (P-25) | F-45, F-63, F-102 |
 | C-COVERPROJ | rule `Cover-Proj` (§5.9): an outer loop covers a projection's storage when its body is one inner covering loop and the footprints tile it; the update is partial on the storage's cell (F-89) | none: without it D-D11's `y` is raw and its sink is `E-NAN-RAW-SINK`; 02 §9 would need a flat covering loop | F-73, F-89, F-97 |
@@ -3468,13 +3751,67 @@ rules. Each is listed with both options and this reviser's recommendation [G].
 | `Proj-Split` and `Cover-Proj` (rounds 1 to 3: F-45, F-63, F-73, F-89, F-97, F-102) | D-D11 stays accept. `mithi` narrows both rules (probes a10 and a19 become rejections) | X1 rule: a `par` write through a user projection contributes its whole footprint for every iteration, and a nested loop is not a cover. D-D11's `x1_expected` becomes `E-PAR-DISJOINT`, with "accept at M1" recorded beside it as for the out-of-scope items (§0.3), unless 02's owner applies P-19 and P-25. `mithi` removes both rules | **(i).** `par for` is outside the X1 agent subset (X1 DESIGN §9.1), so no agent item can use either rule. Under (i) a later break flips only D-D11 and supplementary items, from M1, at no cost to X1's agent data. Option (ii) would turn a derived snippet's expected verdict into a rejection its authors did not intend, which needs the same kind of Owner reading as Q10 |
 | Precise closure summaries over β, σ and λ (F-60, F-61, F-69; then F-92 to F-94, F-104, F-107) | Closures keep Rust's acceptances, which rustc now checks directly (F-107) | X1 rule: C-CLOSTATE's coarse grade summary plus an over-approximation of loans, as in `mithi`'s Interpretation 12. Its extra rejections of programs rustc accepts get the Dc code `E-CLOSURE-STORE` [prov], counted in X1's `dc_rate` | **(i).** Closures and iterator adapters are in the agent subset, so this choice changes what agents are told and what is rejected. A coarse loan rule rejects programs rustc accepts: `mithi`'s over-approximation already rejects the non-dangling p06b (item N-84). Under "Claude kills; pass provisional" (OWNER-ANSWERS batch 2), a false rejection biases the Mithril arms toward a kill, the direction X1's binding kill can least tolerate. A residual unsound acceptance biases toward a pass, which is provisional. C-CLOSTATE's coarse summary stays registered as the fallback if a fourth round breaks the precise one before the freeze. `E-CLOSURE-STORE` is not adopted |
 
+**Round-3 sync (2026-10-23): what changed, by tier.** The nine findings of §0.8 changed these rules:
+
+- **Tier A.** These were gaps or ambiguities, each closed by Rust's rule or by `mithi`'s existing
+  reading, and none changes a canonical or derived verdict:
+  - §5.0's class of FF-CLOCK and (k5)'s wording (F-116);
+  - §5.8's second abandonment site, and the `T-Lin` premise for closure bodies (F-120);
+  - §5.10's SSA definitions in Φ (F-119);
+  - §5.13's (t5) and (t6) (F-118). This is the one tier-A change that flips verdicts: N-118 and
+    N-119 are now accepted;
+  - §5.16's anchors and the order of codes at one anchor (F-117). No tier listed them before; they
+    freeze with tier A, because the agreement rule reads them.
+- **Tier B.** `T-Call`'s weak lines join the argument's address grade (F-114). This is a
+  soundness fix of the kind round 3 made to `T-Call` (F-89, F-91).
+- **Tier C, closure summaries.** This group changed again, in three places:
+  - `T-CallClo`'s `θ_mut,j` and state lines join the address grade (F-114);
+  - λ_q and λ_σ transfers into a parameter's referent are checked by `E-LOCAL-MUT-STORE` (F-115);
+  - the annotation rule for higher-ranked parameters is narrowed to closures with no expected
+    signature (F-121).
+
+  The group has now changed in every round, this sync included. Option (i) stays the
+  recommendation [G], for its original reason: a coarse loan rule rejects programs rustc accepts.
+  Each sync change either mirrors a rustc measurement (F-115, F-121) or closes an unsound
+  acceptance (F-114).
+- **Tier C, `Proj-Split` and `Cover-Proj`.** No change. F-122 confirms that `a20_coverproj_ctrl`'s
+  rejection is intended and that F-89 makes no field-by-field fix possible (A-13, OP-24).
+
+**Review of the round-3 sync (2026-10-23): what changed, by tier.** The twelve findings of §0.9
+changed these rules or their text:
+
+- **Tier A.** Each change below closes a gap or fixes wording. Each states Rust's rule,
+  `mithi`'s existing reading, or what an existing rule already implies (F-131: T-Match is T-If
+  over arms):
+  - §5.0's FF-CLOCK wording (F-127);
+  - §5.10's match-arm path facts (F-131);
+  - §5.16's code for use after a move (F-124) and its class lines (F-129).
+
+  None changes a canonical, derived or earlier supplementary verdict.
+- **Tier B.**
+  - §5.4's move access mode: its codes (F-128) and the use-after-move bullet (F-124);
+  - §3.2's indexing elaboration for `Vec` and other overloaded types (F-133). This is a soundness
+    fix measured against rustc.
+  - `T-Call` itself is unchanged. F-114's rationale was corrected (F-134), and the disagreement
+    the review asked to settle before freezing tier B is gone: `mithi` now makes the strong update
+    as this note does.
+- **Tier C, closure summaries.** Two changes:
+  - F-121's wording now covers parenthesised and block-tail closures (F-132);
+  - "Transfers count as stores" states that `move`-captured `&mut` references lead to output
+    places (F-123). The rule is unchanged; `mithi` lacked it.
+
+  The group has now changed in every round, this review included. Each change is a rustc
+  measurement or a wording fix, and option (i) stays the recommendation [G].
+- **`mithi` only**, with no rule change: the anchors of E-LINEAR-DROP and E-REF-ESCAPE (F-125),
+  place captures (F-126), and (t6) through user structs (F-130).
+
 **Also to settle at the same freeze.**
 
 | Item | Recommendation | Where the delegation stands |
 |---|---|---|
 | Q9: typing-only acceptance in `mithi` | typing-only (§12) | DELEGATED.md proposed row P16 |
 | Q3: C-ALLOC | C-ALLOC | DELEGATED.md proposed row P44 |
-| Q12: annotated closure parameters | answered by evidence: mirror rustc (F-107, §16) | no row yet; the lead engineer may add one |
+| Q12: annotated closure parameters | answered by evidence: mirror rustc (F-107, narrowed by F-121 in the round-3 sync to closures with no expected signature, §16) | no row yet; the lead engineer may add one |
 | Q6: freeze on same-family review | as Q6 states; DELEGATED.md P3's operating assumption (QWEN3_LOCAL_PROVISIONAL) would add a local-family review | no row for Q6 itself |
 | X1 DESIGN §9.1, "T2 is not part of X1", against §5.10's `E-KERNEL-OBLIGATION` (open question in `mithi`'s README) | `mithi`'s T2 decides kernel acceptance in every arm and subset. DR-011 makes a kernel's acceptance depend on static discharge, so a checker that accepted an undischarged kernel in the agent arm would accept a program the language rejects | no row yet |
 | Q13: adopt this section's tiers | tiers A and B frozen as written; tier C option (i) | no row yet |
@@ -3530,6 +3867,87 @@ above, `mithi` would disagree on none of them. Until then, the items measure the
 disagreements (N-43 and the 17 third-round items above) and the two interpreter values (N-96,
 N-97).
 
+**Status after `mithi` `4b4dd05` and the round-3 sync (2026-10-23).** `mithi` `4b4dd05` made every
+change in the table above, the `Clone` row included. The sync then changed `mithi` in three places:
+
+- (t5) and (t6) (F-118), in `analysis/policy.rs`;
+- the order of codes at one anchor (F-117), in `diag.rs`;
+- a closure called through a reference chosen by `if` or `match` (F-114's `T-CallClo` state line,
+  N-128), in `analysis/grade.rs`. `mithi` had written the state into the reference itself, and had
+  found no closure behind an `if`.
+
+`tests/verdicts.rs` constructs N-07 to N-128, all but N-38. Its stale `DIAGNOSED` entry for N-43,
+which applied only to the verdicts.json of `5e16fbb`, was removed. Agreement
+[M: `cargo test -p mithi -j4 --no-fail-fast -- --test-threads=4`, rustc 1.99.1, laptop, 2026-10-23;
+52 Rust tests, all pass]:
+
+| Set | Result |
+|---|---|
+| Canonical and derived items (D-C1 to D-C8, D-D01 to D-D27) | **35/35 agree**; snippet hashes 35/35 match |
+| Gate negatives N-01 to N-06 | **6/6 agree** |
+| Supplementary items N-07 to N-128 (reported, not gate items, Q11) | **126/126 constructions agree**: 121 items, of which N-19, N-70, N-73, N-77 and N-87 have two constructions each. N-38 is not constructed (a hint port's stack budget, M4) |
+| Secondary facts (row, `may_trap`) | 23/23 same |
+| Twins and values named in the items' text (N-76's `v[0] = 1`, N-96's 1, N-97's 0, N-109's accepted twin, N-128's 9 and 0) | equal to rustc 1.99.1's [M] or to the item's verdict |
+
+So no item disagrees, and no disagreement needs a "`mithi` or note" diagnosis. Two differences
+are known on programs outside the items. In both, `mithi` rejects more than this note:
+
+1. `mithi`'s T2 lacks Φ's full per-arm implications (F-119), so it can answer
+   `E-KERNEL-OBLIGATION` where this note accepts. This is an incompleteness of `mithi`, to be fixed
+   there.
+2. `mithi` joins its address grade in `T-Call`'s strong case too (F-114). This matters only where
+   every possible target is the same whole cell, and it can only reject more.
+
+`mithi` and this note agree that an assignment to a whole parameter referent, `*y = …`, is a weak
+update (`T-Assign`'s strong case is a whole local). A-13 rests on that.
+
+**Status after the review of the round-3 sync (2026-10-23).** The review found five `mithi`
+defects against rules this note already had, and seven places where this note's rules or wording
+were silent or ambiguous (§0.9). `mithi` changed in eight places:
+
+- a loan transfer through a `move`-captured `&mut` (F-123, `analysis/own.rs`);
+- E-MOVE-USED removed from `mithi`'s own codes (F-124, `diag.rs`);
+- the anchors of E-LINEAR-DROP and E-REF-ESCAPE (F-125, `analysis/own.rs`);
+- place captures (F-126, `captures.rs`, `analysis/own.rs`);
+- (t6) through user structs (F-130, `analysis/policy.rs`);
+- match-arm facts and shifted join bounds in T2 (F-131, `analysis/t2.rs`);
+- overloaded indexing (F-133, `analysis/own.rs`);
+- the strong case through a local reference (F-134, `analysis/grade.rs`).
+
+`tests/verdicts.rs` now constructs N-07 to N-153, all but N-38. Agreement [M: `cargo test -p mithi
+-j4 --no-fail-fast -- --test-threads=4`, rustc 1.99.1, laptop, 2026-10-23; 17 test binaries, all
+pass]:
+
+| Set | Result |
+|---|---|
+| Canonical and derived items | **35/35 agree**; snippet hashes 35/35 match |
+| Gate negatives N-01 to N-06 | **6/6 agree** |
+| Supplementary items N-07 to N-153 | **151/151 constructions agree**: 146 items, five of them with two constructions; N-38 is not constructed |
+| Secondary facts (row, `may_trap`) | 23/23 same |
+
+The pre-revision and the revised `mithi` were also run on every `.mith` probe file in the session
+scratch area, with and without `--canonical-prelude` (§17 gives the counts) [M].
+
+Three differences are known on programs outside the items. In all three, `mithi` rejects more than
+this note:
+
+1. `mithi`'s T2 is weaker than Φ with full per-arm implications (F-119, F-131). No item separates
+   them any more.
+2. `mithi` over-approximates λ_q (its Interpretation 12). Every reference argument of a call that
+   may run a closure is transferred into the closure's output places, whether or not the body
+   stores it. So `fn put(o: &mut Option<&u32>, d: &u32) -> u32 { let mut c = |x| { *o = None; x };
+   *c(d) }` is `E-LOCAL-MUT-STORE` in `mithi`. This note accepts it (λ_q is empty, because the
+   body stores only `None`), and so does rustc, which returns 3 [M: rustc 1.99.1, probes t27, t28;
+   `mithi`, X18, X19]. Since F-123 the same applies to `move` closures. This is the kind of cost
+   that §12.1 weighs against a coarse loan rule. It stays a `mithi` incompleteness, to be removed
+   by summarising what the body stores.
+3. A match arm after an irrefutable arm is unreachable. This note's Φ for it is contradictory, so
+   every obligation in it holds. `mithi` adds no facts for it, so it answers
+   `E-KERNEL-OBLIGATION` for `match i { _ => {}, 0 => { y[i - 1] = 1; } }` in a kernel [M]. rustc
+   only warns about such an arm ("unreachable pattern") [M: rustc 1.99.1, probe t38].
+
+§12.2's earlier second difference, the address grade in the strong case, is gone (F-134).
+
 ---
 
 ## 13. Open problems
@@ -3559,7 +3977,8 @@ N-97).
 | OP-21 | Analysis cost of the jump grades and loan sets (F-30, F-39) in `mithi`, and of the closure summaries over capture and state symbols (F-60, F-61) | each adds a fixpoint component to every loop, and closure summaries add symbols per by-mut capture | measure on the prelude and X1's reference solutions |
 | OP-22 | **Closed 2026-10-23 (F-107).** Rust coincidence of directly called closures with annotated reference parameters (F-61) | rustc makes `\|d: &u32\|` higher-ranked in d, so it rejects storing d into a capture or returning it; an unannotated parameter is not higher-ranked [M: rustc 1.99.1, probes r03, r04, r05, q08, p05b, p05c, q09] | closed by §5.7's mirror rule ("Higher-ranked closure parameters"); `mithi` must implement it (§12.2) |
 | OP-23 | `&'static T` of constant data (F-108) | `&'static str` names and error types are common Rust; at v0 they are `E-LIFETIME` or `E-REF-FIELD` (§11 A-12) | M1: admit `&'static T` of constant data as a loan-free, non-`Local`, Copy type. That is a Surface Lab decision and a D extension of FF-REF, not E1; until then X1 counts A-12 in its `dc_rate` (P-18) |
-| OP-24 | Field-sensitive grade cells (F-89) | the partial update keeps a covered field's siblings sound but cannot clear their schedule taint, so a function that overwrites one field of a struct keeps the old taint of the whole struct in its transfer | M1: one grade per field path for struct-typed locals and referents, `P-Field` reading the field's own grade, sinks and `T-Det` joining all fields (review item R5-1's proposal) |
+| OP-24 | Field-sensitive grade cells (F-89) | the partial update keeps a covered field's siblings sound but cannot clear their schedule taint, so a function that overwrites one field of a struct keeps the old taint of the whole struct in its transfer. Nor can field writes make a struct output with two float components canonical (F-122, §11 A-13, items N-126, N-127) | M1: one grade per field path for struct-typed locals and referents, `P-Field` reading the field's own grade, sinks and `T-Det` joining all fields (review item R5-1's proposal) |
+| OP-25 | Strong update for an assignment to a whole parameter referent (found in the round-3 sync, 2026-10-23) | `T-Assign`'s strong case is "p a whole local". So `*y = canon::nan(x)` with `y: &mut f32` is a weak update, and the caller's raw value stays: `#[grade(exact, cross_device)] fn f(y: &mut f32, x: f32) { *y = canon::nan(x); }` is `E-NAN-RAW-SINK` in this note and in `mithi` [M: probe c13d]. An exact function can then make an `&mut` output canonical only by a covering loop (`T-Cover`), by a callee's strong update, or not at all (§11 A-13). Rust has no such rule | proposed for the next review, not adopted in the sync because no finding raised it: extend `T-Assign`'s strong case to p whose `target*(p)` is one whole cell by §5.4's must-alias rule. That covers `*j` for a parameter `&mut τ` with τ free of references, and `*r` for a local reference whose loans all target one whole cell. This is sound by the argument for `T-Call`'s strong case. It would accept c13d and c13b, and leave A-13 only to multi-field writes (OP-24). Changes `mithi`'s `analysis/grade.rs`; it is a tier B rule (§12.1) |
 
 01 §14's four open questions remain open: lexical charging of rows, richer `Local` types, whether
 `abandon` suffices for Hearth's error paths, and whether T1's lockstep rule composes with the serial
@@ -3738,7 +4157,7 @@ No ROADMAP threshold is judged wrong. One ROADMAP wording is made more precise (
 | Q9 | The X1 design draft's agent subset rejects `par for`, `deterministic`, `schedule`, `spec` and `linear` with `E-X1-NOTYET`, but ROADMAP §3.6 needs `mithi` to accept every canonical snippet, which uses them (§12). Should `mithi` accept them typing-only (recommended), or does the Owner want to change the gate? | As drafted, the two documents cannot both hold; the note does not loosen the gate |
 | Q10 | ROADMAP §3.2 requires agreement "on every canonical and derived snippet". Six derived snippets use constructs outside the checker's X1 scope (`flow`, `store`, `evolve slot`, MXFP4 format codes, `MemCap`). This note now includes them in agreement, with the expected X1 verdict `E-OUT-OF-SCOPE-<KW>` (§0.3, §12). Is that what "every derived snippet" means at X1, or should `mithi` type them (more checker work), or may they be excluded (which would loosen §3.2 and needs the Owner)? | The first draft excluded them silently, which the review found loosened §3.2 (R2-19). Until answered, they stay in agreement with these codes |
 | Q11 | The three reviews' counterexamples are supplementary items N-11 to N-109, reported and offered to the planted corpus, not gate items. Should any become gate items? | Making them gate items would add requirements ROADMAP §3.2 does not state; leaving them out means `mithi` could get them wrong without failing the gate. §12.2 lists 18 supplementary items on which `mithi` at `dcd4c87` disagrees in verdict or primary code (N-43 and 17 of N-70 to N-109), and two (N-96, N-97) whose verdicts agree but whose values its interpreter computes differently |
-| Q12 | A directly called closure with an annotated reference parameter is higher-ranked in Rust, so rustc rejects storing or returning that parameter's loan. The second revision's `T-CallClo` transferred the loan and accepted such programs (OP-22). Should `mithi` mirror rustc's closure signature inference before the X1 freeze, or is the transfer rule acceptable for X1? **Answerable by evidence (2026-10-23):** rustc 1.99.1 rejects the annotated forms and accepts the unannotated ones [M: probes r03 to r05, q08, p05b, p05c, q09], and this revision mirrors it (F-107). Recommended answer: mirror. The lead engineer may settle it under the batch-4 delegation and log it in DELEGATED.md | Accepting a program rustc rejects without a keyword is what the subset rule (DR-002) forbids; mirroring rustc costs a closure-signature rule in the checker |
+| Q12 | A directly called closure with an annotated reference parameter is higher-ranked in Rust, so rustc rejects storing or returning that parameter's loan. The second revision's `T-CallClo` transferred the loan and accepted such programs (OP-22). Should `mithi` mirror rustc's closure signature inference before the X1 freeze, or is the transfer rule acceptable for X1? **Answerable by evidence (2026-10-23):** rustc 1.99.1 rejects the annotated forms and accepts the unannotated ones [M: probes r03 to r05, q08, p05b, p05c, q09], and this revision mirrors it (F-107). The round-3 sync measured the remaining case: an annotated closure written at an `Fn*` bound takes its signature from the bound, and rustc accepts its stores [M: probe s01]; F-121 mirrors that too. Recommended answer: mirror. The lead engineer may settle it under the batch-4 delegation and log it in DELEGATED.md | Accepting a program rustc rejects without a keyword is what the subset rule (DR-002) forbids; mirroring rustc costs a closure-signature rule in the checker |
 | Q13 | Adopt §12.1's freeze tiers: tiers A and B frozen as written, tier C frozen with the round-3 fix (option (i)) rather than deferred to M1 behind coarse X1 rules (option (ii))? | Option (ii) would change D-D11's X1 expected verdict to `E-PAR-DISJOINT` and add `E-CLOSURE-STORE` rejections of programs rustc accepts to X1's `dc_rate`; option (i) freezes rules that changed in every review round, so a later break applies only from M1 |
 
 ---
@@ -3753,6 +4172,8 @@ No ROADMAP threshold is judged wrong. One ROADMAP wording is made more precise (
 | 2026-10-16 (second round) | Reviewer 4, the round's "reviewer 2" (soundness counterexamples plus conformance of the derivations, the prelude and verdicts.json; lens read off the report) | Claude, same family, independent context | the first revision: the note, derivations.md, verdicts.json | 18: 6 blocker, 8 major, 4 minor | 18 accepted (1 with its minimal fix declined in favour of its precise one, below); 0 rejected |
 | 2026-10-23 (third round) | Reviewer 5, the round's "reviewer 1" (soundness counterexamples against the second revision's rules and theorems, each with a Rust skeleton compiled by rustc 1.99.1; lens read off the report) | Claude, same family, independent context | the second revision (`5e16fbb`): the note, derivations.md, verdicts.json | 13: 7 blocker, 3 major, 3 minor | 13 accepted (1 with its proposed fix replaced, 1 with the other reviewer's fix adopted for a shared defect, below); 0 rejected |
 | 2026-10-23 (third round) | Reviewer 6, the round's "reviewer 2" (soundness, Rust coincidence measured with rustc 1.99.1, agreement with `mithi` at `dcd4c87`, and convergence of the freeze; lens read off the report) | Claude, same family, independent context | the second revision (`5e16fbb`), with `mithi` at `dcd4c87` | 15: 4 blocker, 7 major, 4 minor | 15 accepted (4 with a proposed fix or expected verdict narrowed or replaced, below); 0 rejected |
+| 2026-10-23 (round-3 sync) | Not a review of this note. The `mithi` track's blind reviewer (soundness of `mithi` against this note; same family, independent context), relayed as items 7 to 15 of `mithi`'s README; 7 to 13 came from the review and 14 and 15 from that track's revision | Claude, same family, independent context (the reviewer); the sync was done by the ccsync track, Claude | the third revision (`048e9f6`), with `mithi` at `4b4dd05` | 9 items, unranked by this note; `mithi`'s review ranked its sources as major (7, 8) or minor (9 to 13) | 9 accepted (2 narrowed: F-114, F-117); 0 rejected; F-114 to F-122 (§0.8) |
+| 2026-10-23 (review of the round-3 sync) | Reviewer 7 (soundness of the sync and agreement of `mithi` with the synced note on fresh programs, each Rust-shaped claim compiled with rustc 1.99.1; lens read off the report) | Claude, same family, independent context | the round-3 sync (uncommitted on `e321593`): §0.8, N-110 to N-128, and `mithi` with the sync's changes | 12: 4 major, 8 minor | 12 accepted (1 with its example and claimed verdict rejected: F-134; 1 fixed in `mithi` instead of being listed as a difference: F-126); 0 rejected; F-123 to F-134 (§0.9) |
 
 Totals: 53 findings, 7 blocker, 31 major, 15 minor [M: counted from the two reviewers' lists,
 2026-10-16]. Every finding was checked against the sources named in it (01 §5–§7, §12, §13; 02 §8,
@@ -4017,6 +4438,72 @@ One supplementary item changed its code: N-43 becomes `E-LOCAL-MUT-STORE` (F-107
 N-66 were re-checked under the new closure rules, and the other supplementary items N-07 to N-69
 were re-checked under the revised §5.4 and §5.9; none of their verdicts changed. In D-C2's and
 D-D04's derivations a step was reworded, and D-D11's cover now names the partial update.
+
+**Round-3 sync (2026-10-23).** The ccsync track (Claude) applied `mithi`'s items 7 to 15 as
+F-114 to F-122 (§0.8). It added the supplementary items N-110 to N-128 and the amber candidate A-13,
+proposed OP-25, and brought `mithi` and this note into agreement on every item (§12.2). Every Rust
+claim of the sync was compiled with rustc 1.99.1 [M: probes `ccsync/rs/s01` to `s11`]. No
+canonical or derived verdict changed. The verdicts that changed are all on items the sync added,
+or on `mithi`'s own regression probes: policy loops and `move` closures in policies, now accepted
+(F-118), and the order of the two ⊢_to codes at one anchor (F-117) [M: the pre-sync and post-sync
+`mithi` on the 2,593 `.mith` probe files of the session scratch area, each with and without
+`--canonical-prelude`: 8 runs changed verdict or primary code (po04, po11 and pol/p14, now
+accepted; pol/p09, now `E-TO-AUTHORITY` first at its anchor), and 4 runs lost one secondary
+error]. The sync had no independent review when it was written; reviewer 7 reviewed it
+afterwards (below). Its rules are [prov] and need the next review round, like the third round's
+(§12.1).
+
+**Review of the round-3 sync (2026-10-23).** Reviewer 7 reported 12 findings. The ccsync track
+(Claude) revised the note, derivations.md, verdicts.json and `mithi` as one change. Every probe the
+review cites was re-run by this reviser [M: laptop, 2026-10-23]: rustc 1.99.1 (58cf8f9c3
+2026-10-13), x86_64-pc-windows-gnu, `--edition 2021`, with code generation; the pre-revision
+`mithi` (the sync's final build); and the revised `mithi`. All reported results reproduced. Two of
+the reviewer's own predictions were wrong. The reviewer had already flagged one, H3's
+`E-LOCAL-INSTANTIATE`, which is intended (J2's implicit bound). The other, R12's "accept", is wrong
+because R12 contains `v[v.len() - 1] = 5`, which rustc rejects with E0502 [M: probe t30]. A1's note
+verdict is discussed under RS-12.
+
+"RS-n" is the n-th item of the reviewer's report.
+
+| Item | Severity | Disposition |
+|---|---|---|
+| RS-1 | major | accepted: F-123, a `mithi` defect (an unsound acceptance; `mithi run` read a dead local [M]); the same defect for a `move`-captured local reference found by this reviser (probe X06); "Transfers count as stores" clarified; N-129 to N-132 |
+| RS-2 | major | accepted: F-124, `E-MOVE-USED` in §5.16 and §5.4; removed from `mithi`'s own codes; N-133 |
+| RS-3 | major | accepted: F-125, `mithi`'s anchors for E-LINEAR-DROP (scope end, jump, assignment, pattern or arm; no report at a join) and E-REF-ESCAPE (the returned expression or the closure's result); N-134 to N-136 |
+| RS-4 | major | accepted: F-126, fixed in `mithi` (place captures for by-ref and by-mut captures) rather than listed as a third difference in §12.2, the review's alternative; N-137 |
+| RS-5 | minor | accepted: F-127, §5.0 and (k5) reworded as proposed; N-138 |
+| RS-6 | minor | accepted: F-128, the Move bullet rewritten as proposed (`mithi`'s reading, not the code swap); N-139, N-140 |
+| RS-7 | minor | accepted: F-129, the first of the two options (class 1 for E-LINEAR-COPY, E-COHERENCE and E-GLOBAL-STATE; class 3 for E-IMPL-ROW), which is `mithi`'s order; N-141 |
+| RS-8 | minor | accepted: F-130, `mithi`'s (t6) walks user ADT fields with substitution; N-142 |
+| RS-9 | minor | accepted: F-131. Part (a): the sentence was true of the items but misleading, and is replaced; `mithi` now accepts F2b. Part (b): match arms' path facts stated, `mithi` adds them; N-143 to N-145 |
+| RS-10 | minor | accepted: F-132, F-121's wording as proposed, with "recursively"; N-146, N-147 |
+| RS-11 | minor | accepted: F-133, §3.2's indexing row and `mithi`'s base-first `&mut` for overloaded indexing; N-148 to N-150 |
+| RS-12 | minor | accepted in part: F-134. Its example A1 and the note verdict claimed for it are rejected (below). The difference it points to is real and wider than stated, and `mithi` was fixed (the review's second option). F-114's rationale corrected; N-151 to N-153 |
+
+**Parts not accepted.** No finding was rejected as a whole.
+
+- **RS-12's example.** The review derived "note: accept" for A1, `let r = if h > 1 { &mut y } else
+  { &mut y }; w(r, 4); y` with `fn w(o: &mut u32, k: u32) { *o = k; }`. The strong case does make
+  no choice among places. But `*o = k` is a weak update of the parameter referent (OP-25), so
+  θ_mut,o = α_o ⊔ α_k, and `T-Call` instantiates α_o with the argument's grade. For `&mut *r` that
+  grade includes r's own grade by P-Deref-Local, and r's grade includes γ_h by T-If. A1 is
+  therefore `E-GRADE` under this note, as in `mithi` (item N-151). The programs that separated the
+  two are those with a callee that covers its referent, such as N-152.
+- **RS-4's interim listing.** The review proposed listing the field-capture limitation in §12.2
+  until `mithi` captured places. `mithi` now captures places, so the listing would have been empty.
+
+**Totals for this review.** 12 findings, all accepted, 1 in part. 7 changed rules or wording in this
+note, and 8 needed `mithi` changes. 25 supplementary items were added (N-129 to N-153). No canonical
+or derived verdict changed, and no earlier supplementary item changed its expected verdict or code.
+The revised `mithi` passes its whole test suite [M: 17 test binaries, `cargo test -p mithi -j4
+--no-fail-fast -- --test-threads=4`, 2026-10-23]. On the session's `.mith` probe files (2,856 files,
+each run with and without `--canonical-prelude`), it differs from the pre-revision build in 122 of
+5,712 runs [M: scratch script `ccsync/r2/sweep2.py`, output `ccsync/r2/sweep_r2_final.txt`]. 98 of
+these are the review's and this reviser's own probes (`ccsync-diff/cases`, `ccsync/r2/cases`),
+each now as this note says. The other 24 runs are 12 earlier probes whose primary code did not
+change: 10 Linear probes lost a duplicate secondary E-LINEAR-DROP, the one the old build gave at a
+join, and one borrow probe (in two copies) now reports a second local that outlives its scope at
+the same brace. **This revision has had no independent review.**
 
 Reviews still required by ROADMAP §3.6: a Prover and an Adversary from a model family other than
 this note's author's (D0-10). Until then reviews are logged as same-family, independent-context
