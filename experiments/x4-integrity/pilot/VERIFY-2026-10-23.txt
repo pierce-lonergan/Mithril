@@ -1,0 +1,118 @@
+== X4 noise-pilot pre-start report, read-only
+host DESKTOP-8RS9J1J; desktop clock 2026-10-23 12:49:14 (Eastern Standard Time); UTC 2026-10-23 16:49:14
+x4svc sha256 36fd0115f19f02a0832985ceae6aca5878f3424a52a1865ae65db28d429f3743
+
+== 1. x4svc verify-profile (the quiet-machine profile, MEASUREMENT section 7)
+quiet-machine profile: NOT MET -- the service refuses to run.
+The service changes no system settings. Pierce runs the commands below (elevated where noted),
+then re-runs `x4svc verify-profile`:
+
+  [FAIL] 7.1 active power scheme is the dedicated measurement plan (GUID pinned for collection)
+         observed: name=Some("Balanced") guid=Some("381b4222-f694-41f0-9685-ff5bb260df2e") pinned=None
+         fix: powercfg /duplicatescheme 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c; powercfg /changename <GUID> MITHRIL-MEASURE; powercfg /setactive <GUID>   (elevated; record the printed GUID and pin it in the prereg)
+
+  [advisory] 7.3 Defender real-time scan excludes the data directory (advisory)
+         observed: ["C:\\Users", "C:\\Users\\Pierce Lonergan", "C:\\Users\\Pierce Lonergan\\.m2", "C:\\Users\\Pierce Lonergan\\AppData\\Local\\JetBrains\\IdeaIC2025.1", "C:\\Users\\Pierce Lonergan\\Desktop\\vscode", "C:\\Users\\Pierce Lonergan\\Documents\\GitHub\\NexusPiercer"]
+         fix: Add-MpPreference -ExclusionPath 'D:\mithril-data'   (elevated; security trade-off, Owner's call)
+
+  [ ok ] 7.2 core parking disabled (CPMINCORES=CPMAXCORES=100)  (Some((100, 100)))
+rc=1
+
+== 2. x4svc verify-profile --collection with the round-3 dev pins (Balanced GUID, mask 0x1 fingerprint)
+quiet-machine profile: required items MET (read-only check).
+  [advisory] 7.3 Defender real-time scan excludes the data directory (advisory)
+         observed: ["C:\\Users", "C:\\Users\\Pierce Lonergan", "C:\\Users\\Pierce Lonergan\\.m2", "C:\\Users\\Pierce Lonergan\\AppData\\Local\\JetBrains\\IdeaIC2025.1", "C:\\Users\\Pierce Lonergan\\Desktop\\vscode", "C:\\Users\\Pierce Lonergan\\Documents\\GitHub\\NexusPiercer"]
+         fix: Add-MpPreference -ExclusionPath 'D:\mithril-data'   (elevated; security trade-off, Owner's call)
+
+  [ ok ] 7.1 active power scheme is the dedicated measurement plan (GUID pinned for collection)  (name=Some("Balanced") guid=Some("381b4222-f694-41f0-9685-ff5bb260df2e") pinned=Some("381b4222-f694-41f0-9685-ff5bb260df2e"))
+  [ ok ] 7.2 core parking disabled (CPMINCORES=CPMAXCORES=100)  (Some((100, 100)))
+  [ ok ] collection mode: plan GUID and fingerprint hash pinned in the pre-registration  (guid Some("381b4222-f694-41f0-9685-ff5bb260df2e"), fingerprint Some("0dec56c78657c9c6b33881629ab486cbf5a61f58d2e8cc72a039e2d45c4cdfc5"))
+collection: REFUSED: fingerprint hash 1cfdbf6ec565f0eae9cf851d0f472ced24154e7fe2f06c0c23438f8d78fabab0 != pinned 0dec56c78657c9c6b33881629ab486cbf5a61f58d2e8cc72a039e2d45c4cdfc5
+rc=1
+
+== 3. x4svc fingerprint for mb-q4-avx512 (what a pins file would hold today; NOT a pin: the plan is still Balanced)
+# bios.version=1.G0 2024-12-19
+# board.product=Micro-Star International Co., Ltd. MAG X670E TOMAHAWK WIFI (MS-7E12)
+# cpu.fclk=unavailable
+# cpu.logical_processors=32
+# cpu.microcode=2340400b
+# cpu.model=AMD Ryzen 9 9950X 16-Core Processor
+# cpu.pbo_curve_optimizer=unavailable
+# disk.models_firmware=Samsung SSD 990 PRO 2TB/5B2QJXD7/NVMe,WD My Passport 260D/2007/USB
+# env.block_sha256=c37ed6238f295869e0daa544b9f7890052140768bc6b970d945a280b37e44e12
+# job.affinity_mask=0x4
+# job.priority_class=0x20
+# mem.configured_speed_mts=6000,6000
+# mem.modules=CMH64GX5M2M6000Z30/34359738368,CMH64GX5M2M6000Z30/34359738368
+# os.build=26200.9711
+# power.scheme_guid=381b4222-f694-41f0-9685-ff5bb260df2e
+# unavailable (explicit in the hash): cpu.pbo_curve_optimizer, cpu.fclk
+# env-block sha256 c37ed6238f295869e0daa544b9f7890052140768bc6b970d945a280b37e44e12
+# pins-file lines:
+power.scheme_guid=381b4222-f694-41f0-9685-ff5bb260df2e
+fingerprint.sha256=1cfdbf6ec565f0eae9cf851d0f472ced24154e7fe2f06c0c23438f8d78fabab0
+
+== 4. x4svc verify-hygiene --as-pilot (every section 10 sensor and pre-start item)
+== X4 noise-pilot pre-start items, read-only (DEV configuration, judged by the PILOT rules; nothing is run or changed)
+  [FAIL] x4svc binary sha256 equals the pin -- D:\mithril\x4c\bin\x4svc.exe sha256 36fd0115f19f02a0832985ceae6aca5878f3424a52a1865ae65db28d429f3743 (pinned None)
+  [FAIL] probe exe sha256 equals the pin -- D:\mithril\x4c\bin\x4sb_probe.exe sha256 2930296885d068058cb73f97f018ae39d7d997c0db2c8b1f759d06fcde3dab51 (pinned None)
+  [FAIL] [mb-q4-avx512] harness sha256 equals the pin -- D:\mithril\x4c\bin\x4harness_hearth.exe a5f15702f28bd75186f24ff1f0b06137e32dbaea32bbd0cb3fc524dc9183bd99 (pinned None)
+  [FAIL] [mb-q4-avx512] verify-profile --collection --pins MET -- The system cannot find the path specified. (os error 3)
+  [FAIL] [e2e-decode] harness sha256 equals the pin -- D:\mithril\x4c\bin\x4harness_hearth.exe a5f15702f28bd75186f24ff1f0b06137e32dbaea32bbd0cb3fc524dc9183bd99 (pinned None)
+  [ ok ] [e2e-decode] model file readable and not on a USB disk -- C:\Users\pierce lonergan\hearth-data\qwen3-30b-a3b-q4.hearth on C: bus 17 (NVMe)
+  [FAIL] [e2e-decode] verify-profile --collection --pins MET -- The system cannot find the path specified. (os error 3)
+  [ ok ] sensor: per-LP CPU load (PDH) -- total Some(7.37)%, 26 LPs, eff clock on 32 LPs, 0 thermal zones
+  [ ok ] sensor: disk queue, write rate, modified page list (PDH) -- queue Some(11.0), write Some(838318.9891211619) B/s, modified Some(330420224.0) B
+  [ ok ] sensor: process CPU (Defender/indexer/Update images readable) -- 419 processes; unreadable listed images []
+  [FAIL] sensor: interactive input (driver in the console session) -- tick Some(0), in console session Some(false)
+  [ ok ] sensor: session list (WTS) -- Some([(0, "Services", 4), (1, "Console", 0)])
+  [ ok ] sensor: GPU utilisation (nvidia-smi query) -- Ok(5.0)
+  [ ok ] sensor: NVMe temperature of C: (storage query) -- Ok(39.0)
+  [ ok ] sensor: active power scheme -- Some("381b4222-f694-41f0-9685-ff5bb260df2e")
+  [advisory] no excluded process running at the start (advisory: one that stays idle does not void) -- ["overwolf(28944)", "onedrive(25472)", "curseforge(40200)", "curseforge(38760)", "curseforge(640)", "curseforge(33352)", "curseforge(35660)", "curseforge(35648)", "curseforge(27804)", "python(16060)", "python(44764)", "python(31892)", "epicgameslauncher(28132)", "claude(50140)", "claude(64248)", "claude(43864)", "claude(25624)", "claude(26168)", "claude(50556)", "claude(12636)", "claude(45660)", "claude(46508)", "claude(64088)", "claude(41664)", "python(59712)", "claude(52464)", "python(25232)", "python(64304)", "python(35804)", "python(11192)", "python(48700)", "python(61772)", "python(28564)", "python(5752)", "python(2084)", "python(64336)", "python(55692)", "python(59000)", "python(56804)", "python(32092)", "python(38592)", "python(12708)", "python(27608)", "python(25700)", "python(4072)", "python(54624)", "python(60040)", "python(37276)", "python(54308)", "python(63092)", "python(53140)", "python(60408)", "python(39552)", "python(45304)", "python(51472)", "python(60204)", "python(56352)", "python(43132)", "python(27592)", "python(54568)", "python(62532)", "python(60268)", "python(62832)", "python(45520)", "python(39104)", "python(10676)", "python(43108)", "python(24436)", "python(39248)", "python(4568)", "python(60588)"]
+7 of 15 required items fail
+rc=1
+
+== 5. x4svc selftest without --sealed (the pilot's nightly sandbox check; expect mode degraded-job-only)
+
+state: in_job=true child_blocked=true appcontainer=false net_blocked=false brokers_blocked=false 
+sealed_unreachable=None
+mode: degraded-job-only
+decision -> hearth-c-ref (trusted C): RunDegraded
+decision -> untrusted workloads:      Refuse
+  note: AppContainer/LPAC not in effect (the launch is not wired in v0) -> untrusted workloads 
+refused.
+  note: LPAC token attribute not determined (probe stubbed in v0).
+  note: network not blocked inside (or no positive control). Pierce: MithrilMeasure + outbound 
+firewall rule (SANDBOX.md 3.2/3.3).
+  note: not running as MithrilMeasure. Pierce: New-LocalUser MithrilMeasure (SANDBOX.md 3.3; 
+elevated, one-time).
+  note: the child token is elevated or has Administrators enabled (Owner's token in degraded 
+mode).
+
+
+
+== 6. settings the pre-night checklist names (read-only queries)
+-- active power scheme:
+Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)-- power schemes:
+
+Existing Power Schemes (* Active)
+-----------------------------------
+Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced) *
+Power Scheme GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c  (High performance)
+Power Scheme GUID: a1841308-3541-4fab-bc81-f71556f20b4a  (Power saver)
+Power Scheme GUID: dcad9f30-b883-479b-8633-65f5707adef8  (Ultimate Performance)
+-- Windows Update active hours (desktop clock): start 6 end 0; smart active hours state 
+-- Windows Update pause: PauseUpdatesExpiryTime= PauseFeatureUpdatesEndTime= PauseQualityUpdatesEndTime=
+-- automatic maintenance: Activation Boundary= MaintenanceDisabled= WakeUp=
+-- Defender exclusion paths (non-elevated reads show a placeholder): C:\Users; C:\Users\Pierce Lonergan; C:\Users\Pierce Lonergan\.m2; C:\Users\Pierce Lonergan\AppData\Local\JetBrains\IdeaIC2025.1; C:\Users\Pierce Lonergan\Desktop\vscode; C:\Users\Pierce Lonergan\Documents\GitHub\NexusPiercer
+-- Windows Search service: Running
+-- D:\mithril-data exists: False
+-- WSL processes: wslservice(5636)
+-- excluded-image processes running now: claude x12, CurseForge x7, EpicGamesLauncher x1, OneDrive x1, Overwolf x1, python x49
+-- this session: id 0; console session: DESKTOP-8RS9J1J\Pierce Lonergan; query user:
+ USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME
+ pierce lonergan       console             1  Active      none   10/15/2026 8:29 AM
+-- free space C: / D: (GB): 158.5 / 3333.6
+-- C: used fraction: 0.915
+-- nvidia-smi: C:\WINDOWS\system32\nvidia-smi.exe

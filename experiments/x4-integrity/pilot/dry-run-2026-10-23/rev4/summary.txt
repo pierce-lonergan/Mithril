@@ -1,0 +1,94 @@
+night dir: D:\mithril\x4c\scratch\dry\dry-20261023T190813Z
+grade=DRY-RUN
+status=closed
+note=
+night=dry-20261023T190813Z
+record=docs/m0/prereg/X4-noise-pilot.md (DRAFT)
+freeze_commit=none
+signed_tag=none (name only: the driver does not verify the signature; record section 10)
+seed=6a314c1f9fc1d48b
+config=D:\mithril\x4c\src\pilot\dry.cfg sha256=dc39dd7353e0c5f3945d3f459e9225a4df59882a8f5291e751da8964e3e9a1f9
+cycle_rate_hz=4297291000
+process_poll_ms=250
+driver_priority_class=0x20 memory_priority=5 elevated=true integrity_rid=0x3000
+written_utc=1792783814.279
+harness[mb-q4-avx512]=D:\mithril\x4c\bin\x4harness_hearth.exe sha256=962a670b853a8a16e26a5188cae792c696758c444b109d45acdfed7ce46110d7
+harness[e2e-decode]=D:\mithril\x4c\bin\x4harness_hearth.exe sha256=962a670b853a8a16e26a5188cae792c696758c444b109d45acdfed7ce46110d7
+x4svc=D:\mithril\x4c\bin\x4svc.exe sha256=68125f5e173d87df4fbe09c565e0964de311b0d6a34607182fd28641772b02f9
+sha256[voids.log]=8c745bf0e1f4b98c3c2279fdb18c627b15f867500bd769549862791a14b0b9ad
+sha256[runs.jsonl]=5d579185bd3f273e1bd1c3bd6e4550b0796b6eba4bb7f09f71d91fb7c9f169c0
+sha256[blocks.jsonl]=afce2878cd99319190d30705fac424b238f7eb590d61d49c3b1aade9e0ecc808
+sha256[sessions.jsonl]=ac9734b3ade08200b96ef56e4cce5ef52f6347eaaf619774bad3671116d47a65
+sha256[sensors.jsonl]=8d606d21ed19e8a272ceeb8a268e131b1b2367ba4c5caa7c2eaa9ef0ee23b957
+sha256[plants.jsonl]=2e3895df5c280cb039dcab772e62380a64676ea1bfbb43e722ade5ffb5c697c8
+sha256[progress.txt]=bf3c8a54de7f84e0237382d24a0d506473be3ed330d38798b5e7a4676dfd974f (D:\mithril\x4c\scratch\dry\dry-20261023T190813Z\progress.txt)
+runs: 1630
+  verdict IntegrityFail: 1630
+  failures golden_hash+bracket_too_short: 3
+  failures bracket_too_short: 1627
+  kappa_post margin : n 1630, min 0.283048, p50 0.306833, p99 0.453011, max 0.529915
+  teardown_wall_ns : n 1630, min 924500, p50 1.0927E+06, p99 1.6257E+06, max 2.7573E+06
+  init_wall_ns : n 1630, min 2.15956E+08, p50 2.28031E+08, p99 3.31616E+08, max 1.08145E+09
+  init_cycles : n 1630, min 6.85423E+08, p50 7.33276E+08, p99 1.08135E+09, max 1.19924E+09
+  eps_idle_observed_us : n 1630, min 7.3046, p50 10.1064, p99 16.3103, max 20.4129
+  eps_spin_observed_us : n 1630, min 0, p50 0, p99 0, max 0
+  abs_diff_ns : n 1630, min 0, p50 5200, p99 26300, max 103600
+  gate_gap_ms : n 1628, min 0.113, p50 0.2303, p99 21.8729, max 71.5725
+  run_wall_s : n 1630, min 0.359, p50 0.434, p99 1.094, max 2.146
+gate readings: 1637; with dropped LPs: 944; clamped>0: 0; after_gpu_query: 1637
+  gate machine load % : n 1637, min 0, p50 4.8889, p99 14.978, max 32.6923
+  gate PDH _Total % : n 1411, min 0, p50 8.6835, p99 33.4729, max 48.0958
+run core rule false: 3
+block_cpu records: 402
+  other_core_s per block : n 402, min 1.1562, p50 4.75, p99 12.1562, max 15.9531
+  job_core_s per block : n 402, min 1.1719, p50 1.3438, p99 1.5938, max 1.7031
+  orchestrator_core_s per block : n 402, min 0.125, p50 0.1875, p99 0.2969, max 0.4219
+sessions:
+  mb-q4-avx512-06    completed      start 2026-10-23 23:00:00 PDT planned    1560 s actual  1146.4 s blocks 24 discards 0 
+  mb-q4-avx512-05    completed      start 2026-10-23 23:19:06 PDT planned    1560 s actual  1145.3 s blocks 24 discards 0 
+  mb-q4-avx512-08    completed      start 2026-10-23 23:38:11 PDT planned    1560 s actual  1144.8 s blocks 24 discards 0 
+  mb-q4-avx512-16    completed      start 2026-10-23 23:57:16 PDT planned    1560 s actual  1144.7 s blocks 24 discards 0 
+  mb-q4-avx512-14    completed      start 2026-10-24 00:16:21 PDT planned    1560 s actual  1144.7 s blocks 24 discards 0 
+  mb-q4-avx512-13    completed      start 2026-10-24 00:35:25 PDT planned    1560 s actual  1145.6 s blocks 24 discards 0 
+  mb-q4-avx512-18    completed      start 2026-10-24 00:54:31 PDT planned    1560 s actual  1144.8 s blocks 24 discards 0 
+  mb-q4-avx512-20    completed      start 2026-10-24 01:13:36 PDT planned    1560 s actual  1144.9 s blocks 24 discards 0 
+  mb-q4-avx512-17    completed      start 2026-10-24 01:32:41 PDT planned    1560 s actual  1144.8 s blocks 24 discards 0 
+  mb-q4-avx512-02    completed      start 2026-10-24 01:51:46 PDT planned    1560 s actual  1147.0 s blocks 24 discards 0 
+  mb-q4-avx512-12    completed      start 2026-10-24 02:10:52 PDT planned    1560 s actual  1153.6 s blocks 24 discards 0 
+  mb-q4-avx512-09    completed      start 2026-10-24 02:30:06 PDT planned    1560 s actual  1163.6 s blocks 24 discards 0 
+  mb-q4-avx512-15    completed      start 2026-10-24 02:49:30 PDT planned    1560 s actual  1162.3 s blocks 24 discards 0 
+  mb-q4-avx512-11    completed      start 2026-10-24 03:08:52 PDT planned    1560 s actual  1171.6 s blocks 24 discards 0 
+  e2e-decode-01      completed      start 2026-10-24 03:28:24 PDT planned    9000 s actual  8743.4 s blocks 12 discards 0 
+  mb-q4-avx512-04    completed      start 2026-10-24 05:54:07 PDT planned    1560 s actual  1165.3 s blocks 24 discards 0 
+  mb-q4-avx512-07    completed      start 2026-10-24 06:13:32 PDT planned    1560 s actual  1168.1 s blocks 24 discards 0 
+  plant-00-none      completed      start 2026-10-23 23:00:00 PDT planned    1560 s actual   208.3 s blocks  2 discards 0 
+  plant-01-excluded  hygiene_void   start 2026-10-23 23:00:00 PDT planned    1560 s actual   133.4 s blocks  0 discards 0 excluded process started: x4plant_gems (pid 17640)
+  plant-02-started   hygiene_void   start 2026-10-23 23:00:00 PDT planned    1560 s actual   133.3 s blocks  0 discards 0 excluded process started: x4plant_shell (pid 56492, parent 24696)
+  plant-03-mithril   hygiene_void   start 2026-10-23 23:00:00 PDT planned    1560 s actual   133.8 s blocks  0 discards 0 another Mithril measurement process: x4harness_foreign (pid 60540)
+  plant-04-load      hygiene_void   start 2026-10-23 23:00:00 PDT planned    1560 s actual   150.0 s blocks  0 discards 2 load gate failed on 3 blocks (last: 2-s CPU load 8.37% >= 5.41%)
+  plant-05-coreload  hygiene_void   start 2026-10-23 23:00:00 PDT planned    1560 s actual   254.6 s blocks  1 discards 2 load gate failed on 3 blocks (last: run core busy (the run LP or its SMT sibling))
+  plant-06-writes    hygiene_void   start 2026-10-23 23:00:00 PDT planned    1560 s actual   129.9 s blocks  0 discards 2 load gate failed on 3 blocks (last: start state not reached (disk queue / writes))
+  plant-07-nvme      hygiene_void   start 2026-10-23 23:00:00 PDT planned    1560 s actual   120.2 s blocks  0 discards 0 NVMe temperature 41 C >= 40 C at a block start
+  plant-08-defender  hygiene_void   start 2026-10-23 23:00:00 PDT planned    1560 s actual   250.6 s blocks  0 discards 2 3 discarded blocks (last: background activity over the block: msmpeng 388.071% of one core over the planned block)
+  plant-09-input     hygiene_void   start 2026-10-23 23:00:00 PDT planned    1560 s actual   131.4 s blocks  0 discards 0 interactive input (last-input tick 0 -> 1)
+  plant-10-session   hygiene_void   start 2026-10-23 23:00:00 PDT planned    1560 s actual   130.9 s blocks  0 discards 0 new or newly active session 99 'RDP-Tcp#planted' (state 0)
+  plant-11-gpu       hygiene_void   start 2026-10-23 23:00:00 PDT planned    1560 s actual   131.1 s blocks  0 discards 0 GPU utilisation 50% > 5%
+  plant-12-scheme    hygiene_void   start 2026-10-23 23:00:00 PDT planned    1560 s actual   131.0 s blocks  0 discards 0 active power scheme changed (Some("381b4222-f694-41f0-9685-ff5bb260df2e") -> Some("00000000-0000-0000-0000-000000000000"))
+  plant-13-cut       cut            start 2026-10-24 06:57:30 PDT planned    1560 s actual   152.7 s blocks  0 discards 0 session cut by the end of the quiet window (07:00 PT)
+  plant-14-integrity integrity_stop start 2026-10-23 23:00:00 PDT planned    1560 s actual   130.9 s blocks  0 discards 0 seq=1630 integrity failure: golden_hash [out-of-process], bracket_too_short [out-of-process]
+progress.txt:
+mb-q4-avx512-06 started DRY-RUN dry-20261023T190813Z seed=6a314c1f9fc1d48b harness=962a670b853a8a16e26a5188cae792c696758c444b109d45acdfed7ce46110d7 x4svc=68125f5e173d87df4fbe09c565e0964de311b0d6a34607182fd28641772b02f9
+mb-q4-avx512-06 completed DRY-RUN dry-20261023T190813Z
+mb-q4-avx512-05 started DRY-RUN dry-20261023T190813Z seed=6a314c1f9fc1d48b harness=962a670b853a8a16e26a5188cae792c696758c444b109d45acdfed7ce46110d7 x4svc=68125f5e173d87df4fbe09c565e0964de311b0d6a34607182fd28641772b02f9
+mb-q4-avx512-05 completed DRY-RUN dry-20261023T190813Z
+...
+mb-q4-avx512-07 started DRY-RUN dry-20261023T190813Z seed=6a314c1f9fc1d48b harness=962a670b853a8a16e26a5188cae792c696758c444b109d45acdfed7ce46110d7 x4svc=68125f5e173d87df4fbe09c565e0964de311b0d6a34607182fd28641772b02f9
+mb-q4-avx512-07 completed DRY-RUN dry-20261023T190813Z
+voids.log kinds:
+  PRESTART-OK: 16
+  PRESTART-FAIL: 2
+  SESSION-VOID: 9
+  VOID-LOGGED: 13
+  DISCARD-LOGGED: 8
+  DISCARD: 3
+  INTEGRITY: 1

@@ -32,6 +32,21 @@ void x4h_io_begin(void);
 void x4h_io_end(void);
 uint64_t x4h_now_ns(void);            /* Hearth's hx_now_ns formula (QPC), monotonic   */
 
+/* Wait, inside the timed region, until every registered thread has either returned from its
+ * function or declared itself parked: the pool "drained to the quiescent state" of
+ * MEASUREMENT-SERVICE.md section 3 step 6. A workload whose registered threads outlive run()
+ * (Hearth's pool workers and store readers, parked in hx_cond_wait through the shim) calls it last
+ * in run(), so the time they need to go idle is charged to the clock. Returns 0, or -1 when the
+ * deadline passed (the workload then returns a non-zero status, an integrity failure).
+ * (X4 pilot track, 2026-10-23.) */
+int x4h_quiesce(uint64_t timeout_ns);
+
+/* Pending condition-variable wakes (revision 4, review 2026-10-23): a thread that was signalled in a
+ * condition wait still reads as parked until it runs, so a wrapper that tracks wakes (the Hearth shim,
+ * hearth_x4_shim.c) adds +1 per wake issued to a waiting thread and -1 when a waiter returns;
+ * x4h_quiesce does not return while the count is above zero. Without a shim the count stays 0. */
+void x4h_wake_pending(long delta);
+
 typedef struct {
     uint8_t *out;          /* the output extent (a view of the orchestrator's section, poisoned);
                               NULL during init -- the extent is handed over only at START       */

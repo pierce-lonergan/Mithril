@@ -1,0 +1,52 @@
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- x4svc binary sha256 equals the pin -- D:\mithril\x4c\bin\x4svc.exe sha256 68125f5e173d87df4fbe09c565e0964de311b0d6a34607182fd28641772b02f9 (pinned None)
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- probe exe sha256 equals the pin -- D:\mithril\x4c\bin\x4sb_probe.exe sha256 f3d9dd3915fd6ba391e91ca3608e6344e06f5d31b4e138236e8a08807fe4e720 (pinned None)
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- [mb-q4-avx512] harness sha256 equals the pin -- D:\mithril\x4c\bin\x4harness_hearth.exe 962a670b853a8a16e26a5188cae792c696758c444b109d45acdfed7ce46110d7 (pinned None)
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- [e2e-decode] harness sha256 equals the pin -- D:\mithril\x4c\bin\x4harness_hearth.exe 962a670b853a8a16e26a5188cae792c696758c444b109d45acdfed7ce46110d7 (pinned None)
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- placement equals the record's topology rule (x4svc topology) -- mb 0x10000000 (rule 0x4), e2e 0x10000000 (rule 0xbfffffff), orchestrator LP 26 (rule LP 30)
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-FAIL] session=- sensor: CPU load (GetSystemTimes; PDH per LP, every LP) -- read 3: machine Some(7.8)% (PDH _Total Some(8.18)%) over 100 ms, 28 of 32 LPs (0 clamped from PDH_CALC_NEGATIVE_VALUE; dropped ["18:0xc0000bba", "19:0xc0000bba", "22:0xc0000bba", "23:0xc0000bba"]), eff clock on 32 LPs, 0 thermal zones
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- sensor: disk queue, write rate, modified page list (PDH) -- queue Some(1.0), write Some(0.0) B/s, modified Some(333242368.0) B
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- sensor: process CPU (listed images readable) -- 369 processes; unreadable listed images []
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-FAIL] session=- sensor: interactive input (driver in the console session) -- tick Some(0), in console session Some(false)
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- sensor: session list (WTS) -- Some([(0, "Services", 4), (1, "Console", 0)])
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- sensor: GPU utilisation (nvidia-smi query) -- Ok(94.0)
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- sensor: NVMe temperature of C: (storage query) -- Ok(41.0)
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- sensor: active power scheme -- Some("381b4222-f694-41f0-9685-ff5bb260df2e")
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- driver at NORMAL_PRIORITY_CLASS and MEMORY_PRIORITY_NORMAL -- priority class Some("0x20"), memory priority Some(5), elevated Some(true), integrity RID Some("0x3000")
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- no excluded process running at the start (advisory: one that stays idle does not void) -- []
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- selftest mode is degraded-job-only -- Ok("degraded-job-only")
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- no uncleared integrity stop in progress.txt (cleared only by a dated amendment: integrity_cleared) -- []
+DRY-RUN 20261024T060000Z 2026-10-23 23:00:00 PDT [PRESTART-OK] session=- progress.txt sessions ran with tonight's seed and binaries (a pinned-hash change is a restart in a new data_dir) -- []
+DRY-RUN 20261024T060213Z 2026-10-23 23:02:13 PDT [SESSION-VOID] session=plant-01-excluded excluded process started: x4plant_gems (pid 17640)
+DRY-RUN 20261024T060213Z 2026-10-23 23:02:13 PDT [VOID-LOGGED] session=plant-01-excluded reason=excluded process started: x4plant_gems (pid 17640) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060213Z 2026-10-23 23:02:13 PDT [SESSION-VOID] session=plant-02-started excluded process started: x4plant_shell (pid 56492, parent 24696)
+DRY-RUN 20261024T060213Z 2026-10-23 23:02:13 PDT [VOID-LOGGED] session=plant-02-started reason=excluded process started: x4plant_shell (pid 56492, parent 24696) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060213Z 2026-10-23 23:02:13 PDT [SESSION-VOID] session=plant-03-mithril another Mithril measurement process: x4harness_foreign (pid 60540)
+DRY-RUN 20261024T060213Z 2026-10-23 23:02:13 PDT [VOID-LOGGED] session=plant-03-mithril reason=another Mithril measurement process: x4harness_foreign (pid 60540) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060229Z 2026-10-23 23:02:29 PDT [DISCARD-LOGGED] session=plant-04-load #1 next_block=1 reason=pre-run gate before run 2 of the block: 2-s CPU load 22.44% >= 5.41% wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060229Z 2026-10-23 23:02:29 PDT [DISCARD-LOGGED] session=plant-04-load #2 next_block=1 reason=pre-run gate before run 1 of the block: 2-s CPU load 5.41% >= 5.41% wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060229Z 2026-10-23 23:02:29 PDT [VOID-LOGGED] session=plant-04-load reason=load gate failed on 3 blocks (last: 2-s CPU load 8.37% >= 5.41%) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060414Z 2026-10-23 23:04:14 PDT [DISCARD-LOGGED] session=plant-05-coreload #1 next_block=1 reason=pre-run gate before run 2 of the block: run core busy (the run LP or its SMT sibling) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060414Z 2026-10-23 23:04:14 PDT [DISCARD-LOGGED] session=plant-05-coreload #2 next_block=2 reason=pre-run gate before run 4 of the block: run core busy (the run LP or its SMT sibling) wealth_after_decision(sup,ni,kill)=(0.5000,0.5000,0.2000)
+DRY-RUN 20261024T060414Z 2026-10-23 23:04:14 PDT [VOID-LOGGED] session=plant-05-coreload reason=load gate failed on 3 blocks (last: run core busy (the run LP or its SMT sibling)) wealth_after_decision(sup,ni,kill)=(0.5000,0.5000,0.2000)
+DRY-RUN 20261024T060209Z 2026-10-23 23:02:09 PDT [DISCARD-LOGGED] session=plant-06-writes #1 next_block=1 reason=pre-run gate before run 1 of the block: start state not reached (disk queue / writes) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060209Z 2026-10-23 23:02:09 PDT [DISCARD-LOGGED] session=plant-06-writes #2 next_block=1 reason=pre-run gate before run 1 of the block: start state not reached (disk queue / writes) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060209Z 2026-10-23 23:02:09 PDT [VOID-LOGGED] session=plant-06-writes reason=load gate failed on 3 blocks (last: start state not reached (disk queue / writes)) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060200Z 2026-10-23 23:02:00 PDT [SESSION-VOID] session=plant-07-nvme NVMe temperature 41 C >= 40 C at a block start
+DRY-RUN 20261024T060200Z 2026-10-23 23:02:00 PDT [VOID-LOGGED] session=plant-07-nvme reason=NVMe temperature 41 C >= 40 C at a block start wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060243Z 2026-10-23 23:02:43 PDT [DISCARD] session=plant-08-defender background activity over the block: msmpeng 388.023% of one core over the planned block
+DRY-RUN 20261024T060327Z 2026-10-23 23:03:27 PDT [DISCARD] session=plant-08-defender background activity over the block: msmpeng 388.214% of one core over the planned block
+DRY-RUN 20261024T060410Z 2026-10-23 23:04:10 PDT [DISCARD] session=plant-08-defender background activity over the block: msmpeng 388.071% of one core over the planned block
+DRY-RUN 20261024T060410Z 2026-10-23 23:04:10 PDT [DISCARD-LOGGED] session=plant-08-defender #1 next_block=1 reason=after the block: background activity over the block: msmpeng 388.023% of one core over the planned block wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060410Z 2026-10-23 23:04:10 PDT [DISCARD-LOGGED] session=plant-08-defender #2 next_block=1 reason=after the block: background activity over the block: msmpeng 388.214% of one core over the planned block wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060410Z 2026-10-23 23:04:10 PDT [VOID-LOGGED] session=plant-08-defender reason=3 discarded blocks (last: background activity over the block: msmpeng 388.071% of one core over the planned block) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060211Z 2026-10-23 23:02:11 PDT [SESSION-VOID] session=plant-09-input interactive input (last-input tick 0 -> 1)
+DRY-RUN 20261024T060211Z 2026-10-23 23:02:11 PDT [VOID-LOGGED] session=plant-09-input reason=interactive input (last-input tick 0 -> 1) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060210Z 2026-10-23 23:02:10 PDT [SESSION-VOID] session=plant-10-session new or newly active session 99 'RDP-Tcp#planted' (state 0)
+DRY-RUN 20261024T060210Z 2026-10-23 23:02:10 PDT [VOID-LOGGED] session=plant-10-session reason=new or newly active session 99 'RDP-Tcp#planted' (state 0) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060211Z 2026-10-23 23:02:11 PDT [SESSION-VOID] session=plant-11-gpu GPU utilisation 50% > 5%
+DRY-RUN 20261024T060211Z 2026-10-23 23:02:11 PDT [VOID-LOGGED] session=plant-11-gpu reason=GPU utilisation 50% > 5% wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060210Z 2026-10-23 23:02:10 PDT [SESSION-VOID] session=plant-12-scheme active power scheme changed (Some("381b4222-f694-41f0-9685-ff5bb260df2e") -> Some("00000000-0000-0000-0000-000000000000"))
+DRY-RUN 20261024T060210Z 2026-10-23 23:02:10 PDT [VOID-LOGGED] session=plant-12-scheme reason=active power scheme changed (Some("381b4222-f694-41f0-9685-ff5bb260df2e") -> Some("00000000-0000-0000-0000-000000000000")) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T140002Z 2026-10-24 07:00:02 PDT [SESSION-VOID] session=plant-13-cut session cut by the end of the quiet window (07:00 PT)
+DRY-RUN 20261024T140002Z 2026-10-24 07:00:02 PDT [VOID-LOGGED] session=plant-13-cut reason=session cut by the end of the quiet window (07:00 PT) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+DRY-RUN 20261024T060210Z 2026-10-23 23:02:10 PDT [INTEGRITY] session=plant-14-integrity seq=1630 integrity failure: golden_hash [out-of-process], bracket_too_short [out-of-process]

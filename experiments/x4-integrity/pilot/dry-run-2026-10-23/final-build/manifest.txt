@@ -1,0 +1,20 @@
+grade=DRY-RUN
+status=closed
+note=
+night=dry-20261023T170250Z
+record=docs/m0/prereg/X4-noise-pilot.md (DRAFT)
+freeze_commit=none
+signed_tag=none
+seed=6a314c1f9fc1d48b
+config=D:\mithril\x4c\src\pilot\dry.cfg sha256=fdb70183c6607ff80ce9def77022163a0889e04e9b97ccece863efd6df1ad647
+cycle_rate_hz=4295986666
+closed_utc=1792775133.010
+harness[mb-q4-avx512]=D:\mithril\x4c\bin\x4harness_hearth.exe sha256=8061f12b727e2ba4a6d4f0448db846af34867ba0b49f9b1a4801157f7a7fc9c0
+harness[e2e-decode]=D:\mithril\x4c\bin\x4harness_hearth.exe sha256=8061f12b727e2ba4a6d4f0448db846af34867ba0b49f9b1a4801157f7a7fc9c0
+x4svc=D:\mithril\x4c\bin\x4svc.exe sha256=1f0a4c252308f885ce6f6bd799ce610a948652c1d0734b949634ecad7699b225
+sha256[voids.log]=c7bee9267279f3ef59d361f10ff3633d0ee21121c73d68aa04f0dce5a3e36f87
+sha256[runs.jsonl]=15e2b3e4e0a4891fe62cada215518ffc7ebb2ef68e519bed7f3df2b25026d275
+sha256[blocks.jsonl]=d7b3891e88c46b1e839d38048fe7d45e3814df02629503900695b9cf60e16ed0
+sha256[sessions.jsonl]=3c525d134fbc17d206d0be5ef7582212ae4e28b7a1e555f27b3cfdefff16a6f7
+sha256[sensors.jsonl]=f10e209482873653ba02934ca63c4a50f26b4be186cf4493b1176ca18982754a
+sha256[plants.jsonl]=891befaf8a65521263323042f881a61fe1489de37c7502b3412e6bae8e3738a8

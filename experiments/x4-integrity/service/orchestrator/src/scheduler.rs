@@ -85,6 +85,9 @@ pub struct GateReading {
     pub background_idle: bool,
     pub nvme_temp_ok: bool,
     pub no_large_writes: bool,
+    /// The run core's LPs (a one-LP run type's LP and its SMT sibling) each quiet over the 2-s window
+    /// (X4-noise-pilot section 3/10, revision 4); true where the rule does not apply.
+    pub run_core_quiet: bool,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -108,15 +111,51 @@ impl LoadGate {
             && r.cpu_load_2s_pct < self.cpu_threshold_pct
             && r.background_idle
             && r.nvme_temp_ok
-            && r.no_large_writes;
+            && r.no_large_writes
+            && r.run_core_quiet;
         if ok {
             return GateDecision::Enter;
         }
+        self.note_discard()
+    }
+    /// Count a discard found by another sensor-only check (a post-block discard, X4-noise-pilot
+    /// section 10); the third discard of a session voids it.
+    pub fn note_discard(&mut self) -> GateDecision {
         self.discards += 1;
         if self.discards >= self.discard_limit {
             GateDecision::VoidSession
         } else {
             GateDecision::Discard
+        }
+    }
+    /// Which condition of a reading failed (for the void log; never an input to a decision).
+    pub fn why(r: &GateReading, cpu_threshold_pct: f64) -> String {
+        let mut v: Vec<String> = Vec::new();
+        if !r.profile_hash_matches {
+            v.push("profile hash mismatch".into());
+        }
+        if !r.quiet_window_active {
+            v.push("outside the quiet window".into());
+        }
+        if !(r.cpu_load_2s_pct < cpu_threshold_pct) {
+            v.push(format!("2-s CPU load {:.2}% >= {:.2}%", r.cpu_load_2s_pct, cpu_threshold_pct));
+        }
+        if !r.background_idle {
+            v.push("background services active".into());
+        }
+        if !r.nvme_temp_ok {
+            v.push("NVMe temperature".into());
+        }
+        if !r.no_large_writes {
+            v.push("start state not reached (disk queue / writes)".into());
+        }
+        if !r.run_core_quiet {
+            v.push("run core busy (the run LP or its SMT sibling)".into());
+        }
+        if v.is_empty() {
+            "none".into()
+        } else {
+            v.join("; ")
         }
     }
 }
@@ -175,6 +214,7 @@ mod tests {
             background_idle: true,
             nvme_temp_ok: true,
             no_large_writes: true,
+            run_core_quiet: true,
         };
         assert_eq!(g.decide(&r), GateDecision::VoidSession);
     }
@@ -189,6 +229,7 @@ mod tests {
             background_idle: true,
             nvme_temp_ok: true,
             no_large_writes: true,
+            run_core_quiet: true,
         };
         assert_eq!(g.decide(&busy), GateDecision::Discard);
         assert_eq!(g.decide(&busy), GateDecision::Discard);

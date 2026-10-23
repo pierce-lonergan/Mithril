@@ -42,10 +42,12 @@ impl StateReader for WinState {
         }
     }
     fn core_parking_min_max(&self) -> Option<(u32, u32)> {
+        // CPMINCORES and CPMAXCORES are hidden settings: `powercfg /query` omits them, so the round-3
+        // reader always saw None (found 2026-10-23 [M]); `/qh` with the setting alias prints them.
         let guid = self.active_power_scheme()?;
-        let out = run("powercfg", &["/query", &guid, "SUB_PROCESSOR"])?;
-        let get = |needle: &str| -> Option<u32> {
-            let idx = out.find(needle)?;
+        let get = |alias: &str| -> Option<u32> {
+            let out = run("powercfg", &["/qh", &guid, "SUB_PROCESSOR", alias])?;
+            let idx = out.find(alias)?;
             let rest = &out[idx..];
             let ac = rest.find("Current AC Power Setting Index:")?;
             let hex = rest[ac..].lines().next()?.split(':').nth(1)?.trim().to_string();

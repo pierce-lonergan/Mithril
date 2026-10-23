@@ -1,0 +1,40 @@
+== X4 noise-pilot night [DRY-RUN] dry-20261023T170250Z -> D:\mithril\x4c\scratch\dry\dry-20261023T170250Z
+window 2026-10-23 23:00:00 PDT .. last end 2026-10-24 06:45:00 PDT .. end 2026-10-24 07:00:00 PDT (virtual clock)
+orchestrator pinned to LP 26; cycle rate 4295986666 Hz
+  [ ok ] x4svc binary sha256 equals the pin -- D:\mithril\x4c\bin\x4svc.exe sha256 1f0a4c252308f885ce6f6bd799ce610a948652c1d0734b949634ecad7699b225 (pinned None)
+  [ ok ] probe exe sha256 equals the pin -- D:\mithril\x4c\bin\x4sb_probe.exe sha256 808d416487bf07a23fd0ff443f635d3afba34f3779e7c392c889064a26fd8450 (pinned None)
+  [ ok ] [mb-q4-avx512] harness sha256 equals the pin -- D:\mithril\x4c\bin\x4harness_hearth.exe 8061f12b727e2ba4a6d4f0448db846af34867ba0b49f9b1a4801157f7a7fc9c0 (pinned None)
+  [ ok ] [e2e-decode] harness sha256 equals the pin -- D:\mithril\x4c\bin\x4harness_hearth.exe 8061f12b727e2ba4a6d4f0448db846af34867ba0b49f9b1a4801157f7a7fc9c0 (pinned None)
+  [note] sensor: per-LP CPU load (PDH) -- total None%, 0 LPs, eff clock on 32 LPs, 0 thermal zones
+  [ ok ] sensor: disk queue, write rate, modified page list (PDH) -- queue Some(12.0), write Some(2762082.1112025767) B/s, modified Some(291500032.0) B
+  [ ok ] sensor: process CPU (Defender/indexer/Update images readable) -- 409 processes; unreadable listed images []
+  [note] sensor: interactive input (driver in the console session) -- tick Some(0), in console session Some(false)
+  [ ok ] sensor: session list (WTS) -- Some([(0, "Services", 4), (1, "Console", 0)])
+  [ ok ] sensor: GPU utilisation (nvidia-smi query) -- Ok(0.0)
+  [ ok ] sensor: NVMe temperature of C: (storage query) -- Ok(39.0)
+  [ ok ] sensor: active power scheme -- Some("381b4222-f694-41f0-9685-ff5bb260df2e")
+  [ ok ] no excluded process running at the start (advisory: one that stays idle does not void) -- []
+  [ ok ] selftest mode is degraded-job-only -- Ok("degraded-job-only")
+  [mb-q4-avx512] learned golden 55b9c367f122fd9a14530ac5bc6e1a872314317cd46f10ff5acf96c042c0a036 (dry only)
+  [e2e-decode] learned golden 55b9c367f122fd9a14530ac5bc6e1a872314317cd46f10ff5acf96c042c0a036 (dry only)
+-- session mb-q4-avx512-06 (mb-q4-avx512) at 2026-10-23 23:00:00 PDT
+   24 blocks, 0 discards, end completed 
+night over at 2026-10-23 23:18:00 PDT: 1 sessions run tonight; 22 unrun: ["mb-q4-avx512-05", "mb-q4-avx512-08", "mb-q4-avx512-16", "mb-q4-avx512-14", "mb-q4-avx512-13", "mb-q4-avx512-18", "mb-q4-avx512-20", "mb-q4-avx512-17", "mb-q4-avx512-02", "mb-q4-avx512-12", "mb-q4-avx512-09", "mb-q4-avx512-15", "mb-q4-avx512-11", "e2e-decode-01", "mb-q4-avx512-04", "e2e-decode-02", "e2e-decode-03", "mb-q4-avx512-07", "mb-q4-avx512-01", "mb-q4-avx512-19", "mb-q4-avx512-03", "mb-q4-avx512-10"]
+start rule: the next unrun session mb-q4-avx512-05 needs 1080 s; 2026-10-23 23:18:00 PDT + that > last end 2026-10-24 06:45:00 PDT
+== planted triggers (DRY-RUN): each a 2-block session of mb-q4-avx512
+  baselines: machine load 7.23%, disk writes 121694 B/s, NVMe Ok(39.0)
+  [FIRED] control (no plant)                                                     expect "completed": end=completed reason= discards=
+  [FIRED] excluded process starts (real: x4plant_gems.exe)                       expect "excluded process started: x4plant_gems": end=hygiene_void reason=excluded process started: x4plant_gems (pid 59112) discards=
+  [FIRED] another Mithril measurement process (real: x4harness_foreign.exe)      expect "another Mithril measurement process": end=hygiene_void reason=another Mithril measurement process: x4harness_foreign (pid 28308) discards=
+  [FIRED] CPU load before a run (real: 3 busy threads)                           expect "2-s CPU load": end=completed reason= discards=pre-run gate before run 2 of the block: 2-s CPU load 15.05% >= 11.23%
+  [FIRED] disk writes before a run (real: 256 MiB to the dry scratch)            expect "start state not reached": end=hygiene_void reason=load gate failed on 3 blocks (last: start state not reached (disk queue / writes)) discards=pre-run gate before run 1 of the block: start state not reached (disk queue / writes) | pre-run gate before run 1 of the block: 2-s CPU load 100.00% >= 100.00%; start state not reached (disk queue / writes)
+  [FIRED] NVMe temperature at a block start (real sensor, dry threshold below it) expect "NVMe temperature": end=hygiene_void reason=NVMe temperature 40 C >= 38 C at a block start discards=
+  [FIRED] Defender CPU over a block (injected reading)                           expect "msmpeng": end=hygiene_void reason=3 discarded blocks (last: background activity over the block: msmpeng 6254.382% of one core) discards=after the block: background activity over the block: msmpeng 6393.561% of one core | after the block: background activity over the block: msmpeng 5929.564% of one core
+  [FIRED] interactive input (injected reading)                                   expect "interactive input": end=hygiene_void reason=interactive input (last-input tick 0 -> 1) discards=
+  [FIRED] a new RDP session (injected reading)                                   expect "session 99": end=hygiene_void reason=new or newly active session 99 'RDP-Tcp#planted' (state 0) discards=
+  [FIRED] GPU utilisation (injected reading)                                     expect "GPU utilisation 50%": end=hygiene_void reason=GPU utilisation 50% > 5% discards=
+  [FIRED] power-scheme change (injected reading)                                 expect "power scheme changed": end=hygiene_void reason=active power scheme changed (Some("381b4222-f694-41f0-9685-ff5bb260df2e") -> Some("00000000-0000-0000-0000-000000000000")) discards=
+  [FIRED] session cut by 07:00 PT (virtual clock)                                expect "session cut": end=hygiene_void reason=session cut by the end of the quiet window (07:00 PT) discards=
+  [FIRED] integrity failure: wrong golden (real run)                             expect "golden_hash": end=integrity_stop reason=seq=137 integrity failure: golden_hash [out-of-process], bracket_too_short [out-of-process] discards=
+  [HELD ] start rule at 2026-10-24 06:44:00 PDT: a session starts only if blocks x 4 x t_run x c + setup ends by 2026-10-24 06:45:00 PDT: fits=false
+planted triggers: every tier fired as expected

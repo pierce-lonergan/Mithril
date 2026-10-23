@@ -1,0 +1,79 @@
+== X4 noise-pilot night [DRY-RUN] dry-20261023T190813Z -> D:\mithril\x4c\scratch\dry\dry-20261023T190813Z
+window 2026-10-23 23:00:00 PDT .. last end 2026-10-24 06:45:00 PDT .. end 2026-10-24 07:00:00 PDT (virtual clock)
+orchestrator pinned to LP 26; cycle rate 4297291000 Hz; process poller every 250 ms
+  [ ok ] x4svc binary sha256 equals the pin -- D:\mithril\x4c\bin\x4svc.exe sha256 68125f5e173d87df4fbe09c565e0964de311b0d6a34607182fd28641772b02f9 (pinned None)
+  [ ok ] probe exe sha256 equals the pin -- D:\mithril\x4c\bin\x4sb_probe.exe sha256 f3d9dd3915fd6ba391e91ca3608e6344e06f5d31b4e138236e8a08807fe4e720 (pinned None)
+  [ ok ] [mb-q4-avx512] harness sha256 equals the pin -- D:\mithril\x4c\bin\x4harness_hearth.exe 962a670b853a8a16e26a5188cae792c696758c444b109d45acdfed7ce46110d7 (pinned None)
+  [ ok ] [e2e-decode] harness sha256 equals the pin -- D:\mithril\x4c\bin\x4harness_hearth.exe 962a670b853a8a16e26a5188cae792c696758c444b109d45acdfed7ce46110d7 (pinned None)
+  [ ok ] placement equals the record's topology rule (x4svc topology) -- mb 0x10000000 (rule 0x4), e2e 0x10000000 (rule 0xbfffffff), orchestrator LP 26 (rule LP 30)
+  [note] sensor: CPU load (GetSystemTimes; PDH per LP, every LP) -- read 3: machine Some(7.8)% (PDH _Total Some(8.18)%) over 100 ms, 28 of 32 LPs (0 clamped from PDH_CALC_NEGATIVE_VALUE; dropped ["18:0xc0000bba", "19:0xc0000bba", "22:0xc0000bba", "23:0xc0000bba"]), eff clock on 32 LPs, 0 thermal zones
+  [ ok ] sensor: disk queue, write rate, modified page list (PDH) -- queue Some(1.0), write Some(0.0) B/s, modified Some(333242368.0) B
+  [ ok ] sensor: process CPU (listed images readable) -- 369 processes; unreadable listed images []
+  [note] sensor: interactive input (driver in the console session) -- tick Some(0), in console session Some(false)
+  [ ok ] sensor: session list (WTS) -- Some([(0, "Services", 4), (1, "Console", 0)])
+  [ ok ] sensor: GPU utilisation (nvidia-smi query) -- Ok(94.0)
+  [ ok ] sensor: NVMe temperature of C: (storage query) -- Ok(41.0)
+  [ ok ] sensor: active power scheme -- Some("381b4222-f694-41f0-9685-ff5bb260df2e")
+  [ ok ] driver at NORMAL_PRIORITY_CLASS and MEMORY_PRIORITY_NORMAL -- priority class Some("0x20"), memory priority Some(5), elevated Some(true), integrity RID Some("0x3000")
+  [ ok ] no excluded process running at the start (advisory: one that stays idle does not void) -- []
+  [ ok ] selftest mode is degraded-job-only -- Ok("degraded-job-only")
+  [ ok ] no uncleared integrity stop in progress.txt (cleared only by a dated amendment: integrity_cleared) -- []
+  [ ok ] progress.txt sessions ran with tonight's seed and binaries (a pinned-hash change is a restart in a new data_dir) -- []
+  [mb-q4-avx512] learned golden 55b9c367f122fd9a14530ac5bc6e1a872314317cd46f10ff5acf96c042c0a036 (dry only)
+  [e2e-decode] learned golden 55b9c367f122fd9a14530ac5bc6e1a872314317cd46f10ff5acf96c042c0a036 (dry only)
+-- session mb-q4-avx512-06 (mb-q4-avx512) at 2026-10-23 23:00:00 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-05 (mb-q4-avx512) at 2026-10-23 23:19:06 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-08 (mb-q4-avx512) at 2026-10-23 23:38:11 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-16 (mb-q4-avx512) at 2026-10-23 23:57:16 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-14 (mb-q4-avx512) at 2026-10-24 00:16:21 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-13 (mb-q4-avx512) at 2026-10-24 00:35:25 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-18 (mb-q4-avx512) at 2026-10-24 00:54:31 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-20 (mb-q4-avx512) at 2026-10-24 01:13:36 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-17 (mb-q4-avx512) at 2026-10-24 01:32:41 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-02 (mb-q4-avx512) at 2026-10-24 01:51:46 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-12 (mb-q4-avx512) at 2026-10-24 02:10:52 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-09 (mb-q4-avx512) at 2026-10-24 02:30:06 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-15 (mb-q4-avx512) at 2026-10-24 02:49:30 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-11 (mb-q4-avx512) at 2026-10-24 03:08:52 PDT
+   24 blocks, 0 discards, end completed 
+-- session e2e-decode-01 (e2e-decode) at 2026-10-24 03:28:24 PDT
+   12 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-04 (mb-q4-avx512) at 2026-10-24 05:54:07 PDT
+   24 blocks, 0 discards, end completed 
+-- session mb-q4-avx512-07 (mb-q4-avx512) at 2026-10-24 06:13:32 PDT
+   24 blocks, 0 discards, end completed 
+night over at 2026-10-24 06:33:00 PDT: 17 sessions run tonight; 6 unrun: ["e2e-decode-02", "e2e-decode-03", "mb-q4-avx512-01", "mb-q4-avx512-19", "mb-q4-avx512-03", "mb-q4-avx512-10"]
+start rule: the next unrun session e2e-decode-02 needs 9000 s; 2026-10-24 06:33:00 PDT + that > last end 2026-10-24 06:45:00 PDT
+== planted triggers (DRY-RUN): each a 2-block session of mb-q4-avx512
+  baselines: machine load 1.41%, disk writes 5964343 B/s, NVMe Ok(41.0)
+  [FIRED] control (no plant)                                                             expect "completed": end=completed reason= discards=
+  [FIRED] excluded process starts and exits between checks (real: x4plant_gems.exe, 1 s) expect "excluded process started: x4plant_gems": end=hygiene_void reason=excluded process started: x4plant_gems (pid 17640) discards=
+  [FIRED] started-only image starts (real: x4plant_shell.exe)                            expect "excluded process started: x4plant_shell": end=hygiene_void reason=excluded process started: x4plant_shell (pid 56492, parent 24696) discards=
+  [FIRED] another Mithril measurement process (real: x4harness_foreign.exe)              expect "another Mithril measurement process": end=hygiene_void reason=another Mithril measurement process: x4harness_foreign (pid 60540) discards=
+  [FIRED] CPU load before a run (real: 3 busy threads)                                   expect "2-s CPU load": end=hygiene_void reason=load gate failed on 3 blocks (last: 2-s CPU load 8.37% >= 5.41%) discards=pre-run gate before run 2 of the block: 2-s CPU load 22.44% >= 5.41% | pre-run gate before run 1 of the block: 2-s CPU load 5.41% >= 5.41%
+  [FIRED] the run core busy before a run (real: 1 busy thread on the run LP)             expect "run core busy": end=hygiene_void reason=load gate failed on 3 blocks (last: run core busy (the run LP or its SMT sibling)) discards=pre-run gate before run 2 of the block: run core busy (the run LP or its SMT sibling) | pre-run gate before run 4 of the block: run core busy (the run LP or its SMT sibling)
+  [FIRED] disk writes before a run (real: 256 MiB to the dry scratch)                    expect "start state not reached": end=hygiene_void reason=load gate failed on 3 blocks (last: start state not reached (disk queue / writes)) discards=pre-run gate before run 1 of the block: start state not reached (disk queue / writes) | pre-run gate before run 1 of the block: start state not reached (disk queue / writes)
+  [FIRED] NVMe temperature at a block start (real sensor, dry threshold below it)        expect "NVMe temperature": end=hygiene_void reason=NVMe temperature 41 C >= 40 C at a block start discards=
+  [FIRED] Defender CPU over a block (injected reading)                                   expect "msmpeng": end=hygiene_void reason=3 discarded blocks (last: background activity over the block: msmpeng 388.071% of one core over the planned block) discards=after the block: background activity over the block: msmpeng 388.023% of one core over the planned block | after the block: background activity over the block: msmpeng 388.214% of one core over the planned block
+  [FIRED] interactive input (injected reading)                                           expect "interactive input": end=hygiene_void reason=interactive input (last-input tick 0 -> 1) discards=
+  [FIRED] a new RDP session (injected reading)                                           expect "session 99": end=hygiene_void reason=new or newly active session 99 'RDP-Tcp#planted' (state 0) discards=
+  [FIRED] GPU utilisation (injected reading)                                             expect "GPU utilisation": end=hygiene_void reason=GPU utilisation 50% > 5% discards=
+  [FIRED] power-scheme change (injected reading)                                         expect "power scheme changed": end=hygiene_void reason=active power scheme changed (Some("381b4222-f694-41f0-9685-ff5bb260df2e") -> Some("00000000-0000-0000-0000-000000000000")) discards=
+  [FIRED] session cut by 07:00 PT (virtual clock)                                        expect "session cut": end=cut reason=session cut by the end of the quiet window (07:00 PT) discards=
+  [FIRED] integrity failure: wrong golden (real run)                                     expect "golden_hash": end=integrity_stop reason=seq=1630 integrity failure: golden_hash [out-of-process], bracket_too_short [out-of-process] discards=
+  [HELD ] start rule at 2026-10-24 06:44:00 PDT: a session starts only if blocks x 4 x (t_run x c + o_rt) + setup ends by 2026-10-24 06:45:00 PDT: fits=false
+planted triggers: every tier fired as expected
+exit=0 

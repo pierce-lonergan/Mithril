@@ -388,6 +388,9 @@ pub struct Observed {
     pub hello: Option<Vec<u64>>,
     pub fail_frame: Option<Vec<u64>>,
     pub report: Option<Report>,
+    /// The CENSUS payload (in-process rows, X4P_CENSUS_W words each); kept for the observe-mode
+    /// per-class post-t1 maxima (observe.rs). Not a verdict input beyond what the REPORT carries.
+    pub census: Option<Vec<u64>>,
     /// QPC stamps (ns since the orchestrator resumed the child's first thread) at receipt of HELLO,
     /// START and STOP. `start_ns` is therefore the out-of-process pre-START (init) wall time.
     pub hello_ns: Option<u64>,
@@ -399,6 +402,22 @@ pub struct Observed {
     pub cycles_start: Option<u64>,
     pub cycles_stop: Option<u64>,
     pub cycles_exit: Option<u64>,
+    /// QueryProcessCycleTime at REPORT receipt (X4 pilot track, 2026-10-23). The post-STOP bound is
+    /// judged over [STOP, REPORT]: the harness's census and hash. What follows REPORT is the process's
+    /// own teardown (TerminateProcess of an address space that, for the end-to-end decode with an
+    /// 8 GiB expert cache, cost 4.0e9 cycles in total after STOP [M, dev run, 2026-10-23]); no frame
+    /// may follow REPORT, the output was copied at STOP, and the watchdog bounds the wall time to exit,
+    /// so it is recorded, not judged. Without a REPORT (a FAIL or a cut stream) the bound falls back to
+    /// [STOP, exit], the stricter reading.
+    pub cycles_report: Option<u64>,
+    /// QPC stamps (ns since launch) at REPORT receipt and when the process was seen to exit
+    /// (revision 4): exit - REPORT is the teardown wall time, recorded per run.
+    pub report_ns: Option<u64>,
+    pub exit_ns: Option<u64>,
+    /// The child had not exited `exit_grace_ms` after REPORT; the orchestrator terminated the job
+    /// (MEASUREMENT section 3 step 8a: the job is ended as soon as the orchestrator holds the copy and
+    /// the typed report). Out-of-process integrity failure (revision 4, review 2026-10-23).
+    pub no_exit_after_report: bool,
     /// Job user+kernel time (100 ns, clock-tick granular): descriptive only.
     pub job_cpu_after_stop_100ns: Option<u64>,
     /// Orchestrator SHA-256 of the extent copied when STOP arrived, and again after exit.
@@ -438,9 +457,27 @@ pub struct Tolerances {
     pub init_max_cycles: u64,
     /// Cores allowed in the timed window beyond the declared threads, in thousandths of a core.
     pub extra_cores_milli: u64,
+    /// Observe mode (X4-noise-pilot section 3): the noise pilot estimates these tolerances, so it must
+    /// not be censored by placeholder values of them. tau_clock then runs at its hard ceiling, 0.1% of
+    /// delta_o, instead of max(1 ms, 2 x pilot max); the other fields carry their ceilings. The bracket
+    /// stays ineligible below the 1 ms floor (runs under 1 s), exactly as in the calibration rule.
+    pub observe_ceiling: bool,
 }
 
 impl Tolerances {
+    /// The tau_clock this run is judged by: the calibration rule, or the observe-mode ceiling.
+    pub fn tau(&self, delta_o_ns: u64) -> Option<u64> {
+        if self.observe_ceiling {
+            let cap = delta_o_ns / 1000;
+            if cap < 1_000_000 {
+                None
+            } else {
+                Some(cap)
+            }
+        } else {
+            Self::tau_clock(self.pilot_max_abs_diff_ns, delta_o_ns)
+        }
+    }
     /// tau_clock = max(1 ms, 2 * pilot max |dh - do|), and it must not exceed 0.1% of delta_o.
     /// When the floor or the pilot term exceeds the cap, the run is too short for the bracket and is
     /// ineligible (None): the stricter reading of the rule, never a loosened tolerance.
@@ -518,6 +555,9 @@ pub fn decide_run(o: &Observed, tol: &Tolerances) -> RunVerdict {
     if o.no_exit {
         fail!("no_exit", OOP, "the child did not exit after its last frame".into());
     }
+    if o.no_exit_after_report {
+        fail!("no_exit_after_report", OOP, "the child was still running at the end of the exit grace after REPORT; the job was terminated".into());
+    }
     match o.exit_code {
         Some(0) => {}
         Some(c) => fail!("exit_code", OOP, format!("exit code {:#x}", c)),
@@ -549,7 +589,7 @@ pub fn decide_run(o: &Observed, tol: &Tolerances) -> RunVerdict {
     // parallel work by threads that exit before the census still counts (review round 3, R1-2).
     // Evaluated where the bracket is eligible; a shorter run is already ineligible.
     if let (Some(d_o), Some(cs), Some(ct)) = (delta_o, o.cycles_start, o.cycles_stop) {
-        if Tolerances::tau_clock(tol.pilot_max_abs_diff_ns, d_o).is_some() {
+        if tol.tau(d_o).is_some() {
             if o.declared_threads == 0 || o.cycle_rate_hz == 0 {
                 fail!("window_cores", OOP, format!("declared_threads {} / cycle rate {} not set", o.declared_threads, o.cycle_rate_hz));
             } else {
@@ -567,10 +607,11 @@ pub fn decide_run(o: &Observed, tol: &Tolerances) -> RunVerdict {
             }
         }
     }
-    if let (Some(cs), Some(ce)) = (o.cycles_stop, o.cycles_exit) {
+    if let (Some(cs), Some(ce)) = (o.cycles_stop, o.cycles_report.or(o.cycles_exit)) {
         let post = ce.saturating_sub(cs);
         if post > tol.kappa_post_cycles {
-            fail!("post_stop_cycles", OOP, format!("{} cycles after STOP > kappa_post {}", post, tol.kappa_post_cycles));
+            let until = if o.cycles_report.is_some() { "REPORT" } else { "exit" };
+            fail!("post_stop_cycles", OOP, format!("{} cycles from STOP to {} > kappa_post {}", post, until, tol.kappa_post_cycles));
         }
     } else if stopped {
         fail!("post_stop_cycles", OOP, "cycle count at STOP or exit unavailable".into());
@@ -648,7 +689,7 @@ pub fn decide_run(o: &Observed, tol: &Tolerances) -> RunVerdict {
         fail!("t1_le_t0", IP, format!("t1 {} <= t0 {}", g(rf::T1_NS), g(rf::T0_NS)));
     }
     if let (Some(dh), Some(d_o)) = (dh, delta_o) {
-        match Tolerances::tau_clock(tol.pilot_max_abs_diff_ns, d_o) {
+        match tol.tau(d_o) {
             None => fail!("bracket_too_short", OOP, format!("delta_o {} ns: tau_clock floor exceeds 0.1% of the run", d_o)),
             Some(tau) => {
                 let diff = dh.abs_diff(d_o);
@@ -709,7 +750,7 @@ fn finish(f: Vec<Failure>) -> RunVerdict {
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use super::*;
 
     fn frame(mtype: u32, seq: u32, n: usize) -> Frame {
@@ -844,7 +885,7 @@ mod tests {
         }
     }
     pub(crate) fn tol() -> Tolerances {
-        Tolerances { pilot_max_abs_diff_ns: 100_000, kappa_post_cycles: 1_000, init_max_ns: 1_000_000_000, init_max_cycles: 1_000_000, extra_cores_milli: 250 }
+        Tolerances { pilot_max_abs_diff_ns: 100_000, kappa_post_cycles: 1_000, init_max_ns: 1_000_000_000, init_max_cycles: 1_000_000, extra_cores_milli: 250, observe_ceiling: false }
     }
     fn fails_with(o: &Observed, check: &str) -> bool {
         decide_run(o, &tol()).failed_checks().contains(&check)
@@ -853,6 +894,14 @@ mod tests {
     #[test]
     fn clean_run_accepts() {
         assert_eq!(decide_run(&good_observed(), &tol()), RunVerdict::Accept);
+    }
+
+    #[test]
+    fn a_child_still_running_after_its_report_grace_fails_out_of_process() {
+        let mut o = good_observed();
+        o.no_exit_after_report = true;
+        let v = decide_run(&o, &tol());
+        assert!(v.failed_checks().contains(&"no_exit_after_report"));
     }
 
     #[test]
@@ -958,6 +1007,41 @@ mod tests {
         let mut o = good_observed();
         o.declared_threads = 0;
         assert!(fails_with(&o, "window_cores"));
+    }
+
+    #[test]
+    fn observe_mode_judges_the_bracket_at_its_ceiling() {
+        let mut t = tol();
+        t.observe_ceiling = true;
+        t.pilot_max_abs_diff_ns = 50_000_000; // a placeholder that would make the rule ineligible
+        assert_eq!(t.tau(10_000_000_000), Some(10_000_000)); // 0.1% of 10 s
+        assert_eq!(t.tau(999_000_000), None); // under 1 s: still ineligible
+        assert_eq!(tol().tau(10_000_000_000), Some(1_000_000));
+        // 1.5 ms of disagreement on a 2 s run: over the calibration tau (1 ms), under the 2 ms ceiling
+        let mut o = good_observed();
+        o.report.as_mut().unwrap().v[rf::T0_NS] -= 1_500_000;
+        assert!(fails_with(&o, "clock_bracket"));
+        assert_eq!(decide_run(&o, &t), RunVerdict::Accept);
+        // 2.5 ms exceeds the ceiling: an integrity failure in observe mode too
+        o.report.as_mut().unwrap().v[rf::T0_NS] -= 1_000_000;
+        assert!(decide_run(&o, &t).failed_checks().contains(&"clock_bracket"));
+    }
+
+    #[test]
+    fn post_stop_bound_is_judged_until_report() {
+        // teardown after REPORT (a large address space) is recorded, not judged
+        let mut o = good_observed();
+        o.cycles_report = Some(100 + 900);
+        o.cycles_exit = Some(100 + 4_000_000_000);
+        assert_eq!(decide_run(&o, &tol()), RunVerdict::Accept);
+        // the harness's own post-STOP work over kappa fails
+        o.cycles_report = Some(100 + 1_001);
+        assert!(fails_with(&o, "post_stop_cycles"));
+        // no REPORT: the bound runs to exit (the stricter reading)
+        let mut o = good_observed();
+        o.cycles_report = None;
+        o.cycles_exit = Some(100 + 1_001);
+        assert!(fails_with(&o, "post_stop_cycles"));
     }
 
     #[test]

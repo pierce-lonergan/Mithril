@@ -1,0 +1,155 @@
+# X4 noise pilot -- PILOT configuration TEMPLATE (X4 pilot track, 2026-10-23; revision 4 the same
+# day). It does not parse until every <FILL ...> is replaced, by design. Nothing here may be run before
+# the record docs/m0/prereg/X4-noise-pilot.md is FROZEN and SIGNED (or covered by an explicit Owner
+# instruction), with D0-7a = YES and the X4-calibration record FROZEN (record section 10).
+#
+#   x4svc pilot-plan     --config <filled copy>            # the session order, read-only
+#   x4svc verify-hygiene --config <filled copy>            # every pre-start item, read-only
+#   x4svc pilot-night    --config <filled copy> --pilot    # a pilot night (Pierce, or the approved job wrapper)
+#
+# Revision 4: `pilot-night --pilot` refuses this file unless EVERY value the record fixes holds exactly
+# (thresholds, windows, schedule, run types and their order, workloads, outputs, environment blocks,
+# observe-mode ceilings, and image lists that contain the record's section 10 lists). Only the values
+# marked [pre-night amendment] are free; they are mechanical (record section "Amendments"), filled by
+# the lead engineer from the commands named beside them, and the filled file's SHA-256 is recorded in
+# the amendment (every night's manifest.txt records the SHA-256 of the file it ran). Values marked
+# [C01]/[C02]/[signing] come from the Owner's answers (OWNER-ANSWERS batch 3, R8) or are listed at
+# signing.
+# Binaries: the pinned copies under D:\mithril-data\x4\bin, copied from the D:\mithril\x4c\bin build
+# the pre-night amendment hashes, so a later dev rebuild cannot change what a night runs.
+grade = PILOT
+record = docs/m0/prereg/X4-noise-pilot.md
+freeze_commit = <FILL: the record's freeze commit, 40 hex>
+# the tag's name only: the driver does not verify the signature (record section 10)
+signed_tag = prereg-sign-x4-noise-pilot
+# [pre-night amendment] `x4svc pilot-plan` prints the rule's value for the freeze commit; the driver
+# refuses any other seed
+seed = <FILL: first 16 hex of SHA-256("X4-noise-pilot" + freeze commit)>
+data_dir = D:\mithril-data\x4\pilot
+scratch = D:\mithril-data\x4\scratch
+probe_exe = D:\mithril-data\x4\bin\x4sb_probe.exe
+# [pre-night amendment] SHA-256 of the pinned copies of the probe exe and of x4svc.exe (the driver
+# refuses the night if either differs)
+probe_sha256 = <FILL>
+x4svc_sha256 = <FILL>
+# record section 10: agent and build images, Mithril binaries other than this pilot's, WSL, the
+# launchers observed on the desktop [M, 2026-10-16]; the local Qwen3 server and the GEMS images Pierce
+# lists at signing [signing]. Starting or using any CPU in a session voids it.
+excluded_images = claude, node, cl, link, cargo, rustc, python, pythonw, mithi, mithc, vmmemWSL, vmmem, wsl, wslhost, OneDrive, Overwolf, CurseForge, EpicGamesLauncher, <FILL: the local Qwen3 server image>, <FILL: GEMS image names [signing]>
+# record section 10 (revision 4): starting voids (a remote login, an agent's or a task's shell); one
+# already running at the session start may use CPU; the driver's own children are exempt
+excluded_started_images = sshd, sshd-session, powershell, pwsh, cmd
+# Defender, the indexer, Windows Update servicing and idle maintenance (block discard above 1% of one
+# core over the planned block time)
+bg_images = MsMpEng, MpDefenderCoreService, MpCmdRun, SearchIndexer, SearchProtocolHost, SearchFilterHost, TiWorker, TrustedInstaller, MoUsoCoreWorker, wuauclt, UsoClient, CompatTelRunner, defrag, ngen, ngentask, mscorsvw, DismHost, cleanmgr, wermgr
+load_max_pct = 40
+# the run core rule (a one-LP run type's LP and its SMT sibling, each over the 2-s window)
+core_load_max_pct = 10
+bg_cpu_max_pct_of_core = 1
+gpu_util_max_pct = 5
+nvme_temp_max_c = 70
+nvme_volume = C
+disk_write_max_bytes_s = 1048576
+disk_queue_max = 0
+settle_timeout_s = 60
+load_window_ms = 2000
+disk_window_ms = 1000
+excluded_cpu_max_ms = 0
+window_start_pt = 23:00
+window_end_pt = 07:00
+last_end_pt = 06:45
+# [pre-night amendment] `x4svc topology`: the first LP of the last core of CCD1 (LP 30 [M, 2026-10-23]);
+# the driver checks it against the topology at the night start
+orchestrator_lp = 30
+session_setup_s = 120
+
+[run_type mb-q4-avx512]
+harness = D:\mithril-data\x4\bin\x4harness_hearth.exe
+# [pre-night amendment] the SHA-256 of the file that will run (the MSVC link stamps the image, so a
+# rebuild is a new pin)
+harness_sha256 = <FILL>
+workload = mb_q4_avx512
+# [pre-night amendment] K = ceil(10 s / (median delta_h / 2^18)) of 3 `x4svc dev-run` runs of this
+# binary with --param 262144 on LP p, each Accept with the bracket eligible (record section 3);
+# indicative only: about 1.76e6 from 2^16-call runs on LP 28 in daytime [M, 2026-10-23]
+param = <FILL: K>
+out_bytes = 960
+# [pre-night amendment] `x4svc topology`: LP p = the first LP of the second core of CCD0 (LP 2 [M]);
+# checked against the topology at the night start
+affinity = 0x4
+threads = 1
+priority = normal
+memory_gib = 2
+env = HEARTH_ISA=avx512
+env = HEARTH_LOG=0
+env = CUDA_VISIBLE_DEVICES=-1
+# [pre-night amendment] the output SHA-256 of one dev run of this binary (independent of K and LP:
+# 55b9c367f122fd9a14530ac5bc6e1a872314317cd46f10ff5acf96c042c0a036 on the 2026-10-23 dev builds [M])
+golden = <FILL>
+# observe-mode ceilings, record section 3 [target]
+kappa_post_cycles = 2000000000
+eps_spin_us = 50
+eps_idle_us = 1000
+init_max_ms = 2000
+init_max_cycles = 8600000000
+extra_cores_milli = 250
+exit_grace_ms = 5000
+time_cap_s = 60
+sessions = 20
+blocks = 24
+t_run_plan_s = 10
+cooldown_factor = 1
+# [pre-night amendment] o_rt: ceil(median (run wall - delta_o) of the same 3 dev runs + the 3 s of
+# gate windows + 1 s for the per-run sensor snapshot [G]), whole seconds (record section Amendments)
+overhead_s = <FILL: o_rt>
+# [pre-night amendment] `x4svc fingerprint --scratch D:\mithril-data\x4\scratch --affinity 0x4
+#   --env HEARTH_ISA=avx512 --env HEARTH_LOG=0 --env CUDA_VISIBLE_DEVICES=-1` prints its two lines
+pins = D:\mithril-data\x4\pins\mb-q4-avx512.txt
+
+[run_type e2e-decode]
+harness = D:\mithril-data\x4\bin\x4harness_hearth.exe
+harness_sha256 = <FILL>
+workload = e2e_decode
+param = 2048
+out_bytes = 607744
+# [C01] answered "lift inside windows only" (R8): every LP but the orchestrator's (0xbfffffff [M]);
+# checked against the topology at the night start
+affinity = 0xbfffffff
+# HEARTH_THREADS + HEARTH_IO_THREADS
+threads = 24
+priority = normal
+memory_gib = 24
+env = HEARTH_ISA=avx512
+env = HEARTH_LOG=0
+env = CUDA_VISIBLE_DEVICES=-1
+# [C01] the record's values [G]: Hearth's own defaults on this box (physical cores, 8 I/O threads, 8 GiB)
+env = HEARTH_THREADS=16
+env = HEARTH_IO_THREADS=8
+env = HEARTH_CACHE_GB=8
+# [C02] answered (R8): the Qwen3-30B-A3B Q4 container on the 990 PRO, read-only (17,028,976,640 B,
+# arch qwen3_moe, source Qwen3-30B-A3B [M, 2026-10-23]); never the USB HDD (D:)
+env = X4_MODEL_PATH=C:\Users\pierce lonergan\hearth-data\qwen3-30b-a3b-q4.hearth
+# [pre-night amendment] the last-token logits SHA-256 of one dev run at N = 2,048 with this binary
+golden = <FILL>
+kappa_post_cycles = 2000000000
+eps_spin_us = 50
+eps_idle_us = 1000
+init_max_ms = 120000
+# record section 3: 120 s x the declared threads x the night's calibrated cycle rate
+init_max_cycles = derive
+extra_cores_milli = 250
+exit_grace_ms = 5000
+# record section 3: max(600, 3 x t_run_plan_s)
+time_cap_s = <FILL: max(600, 3 x t_run_plan_s)>
+sessions = 3
+blocks = 12
+# [pre-night amendment] t_run,plan(e2e) = ceil(1.2 x the median delta_o of 3 dev runs of this binary
+# at N = 2,048 at the 8-LP daytime placement, mask 0xff, HEARTH_THREADS 5 + HEARTH_IO_THREADS 3 [G:
+# the 16:8 default ratio scaled to the daytime cap]) s (record
+# section 6): fewer threads than the pilot's 24, so an overestimate on purpose [inference] and a
+# conservative start rule
+t_run_plan_s = <FILL: t_run,plan>
+cooldown_factor = 1.5
+# [pre-night amendment] o_rt as for mb-q4-avx512, from the 3 dev runs that fix t_run,plan
+overhead_s = <FILL: o_rt>
+pins = D:\mithril-data\x4\pins\e2e-decode.txt

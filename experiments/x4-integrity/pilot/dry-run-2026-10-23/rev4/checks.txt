@@ -1,0 +1,145 @@
+== sources re-extracted
+== binaries
+fcaecb688f95c0b1057542c7edcd9bf0d640e026046c59af7ac29cac4f9f1997  x4harness.exe
+962a670b853a8a16e26a5188cae792c696758c444b109d45acdfed7ce46110d7  x4harness_hearth.exe
+1b4a209e576c3bcb2c4817ef13dd76e62f10039e8d50e9adb5c7dfcb5b3a0ae7  x4harness_hearth_q0.exe
+1f1c73909c9dd32710c2b8a77a8f3bb460e901af589b094f62fbf438465f504e  x4plant.exe
+f3d9dd3915fd6ba391e91ca3608e6344e06f5d31b4e138236e8a08807fe4e720  x4sb_probe.exe
+68125f5e173d87df4fbe09c565e0964de311b0d6a34607182fd28641772b02f9  x4svc.exe
+== checks A-E on the final build
+== process affinity of this checker: 1c000000
+== A. the quiescence race probe (dry_quiesce_wake, 2,000 signal+quiesce rounds per run)
+quiesce-wake-q0 run 1 : verdict: IntegrityFail | [out-of-process] poison_residual_oop: 120 poison/salt words left in the extent at STOP | [out-of-process] bracket_too_short: delta_o 36800 ns: tau_clock floor exceeds 0.1% of the run | [in-process] poison_residual: poison_residual = 120: poison words left in the output (a4/a13) | [in-process] workload_rc: workload status 230
+quiesce-wake-q0 run 2 : verdict: IntegrityFail | [out-of-process] poison_residual_oop: 120 poison/salt words left in the extent at STOP | [out-of-process] bracket_too_short: delta_o 33500 ns: tau_clock floor exceeds 0.1% of the run | [in-process] poison_residual: poison_residual = 120: poison words left in the output (a4/a13) | [in-process] workload_rc: workload status 230
+quiesce-wake-q0 run 3 : verdict: IntegrityFail | [out-of-process] poison_residual_oop: 120 poison/salt words left in the extent at STOP | [out-of-process] bracket_too_short: delta_o 34000 ns: tau_clock floor exceeds 0.1% of the run | [in-process] poison_residual: poison_residual = 120: poison words left in the output (a4/a13) | [in-process] workload_rc: workload status 230
+quiesce-wake run 1 : verdict: IntegrityFail | [out-of-process] bracket_too_short: delta_o 42481700 ns: tau_clock floor exceeds 0.1% of the run
+quiesce-wake run 2 : verdict: IntegrityFail | [out-of-process] bracket_too_short: delta_o 42427600 ns: tau_clock floor exceeds 0.1% of the run
+quiesce-wake run 3 : verdict: IntegrityFail | [out-of-process] bracket_too_short: delta_o 42221300 ns: tau_clock floor exceeds 0.1% of the run
+== B. dev runs of the pilot workloads (observe mode, new fields)
+
+DEV RUN (not pilot data): run type mb-q4-avx512 workload mb_q4_avx512 param 262144 affinity 
+0x10000000 threads 1 env 92cebe5858cd4e6005c44c903b8a6dc31feee2de199872da70b19b24a3952f9b
+golden 55b9c367f122fd9a14530ac5bc6e1a872314317cd46f10ff5acf96c042c0a036 (learned from a first 
+pass)
+cycle rate 4297577666 Hz; harness allowances spin 429757 / idle 4297577 cycles
+observe {"delta_o_ns":1490364600,"delta_h_ns":1490356800,"abs_diff_ns":7800,"tau_ceiling_ns":14903
+64,"tau_margin":0.005234,"post_stop_cycles":932639040,"kappa_post_ceiling":2000000000,"kappa_post_
+margin":0.466320,"teardown_cycles":5150540,"teardown_wall_ns":1216900,"exit_grace_ns":5000000000,"
+exit_grace_margin":0.000243,"post_t1_spin_max_cycles":0,"spin_ceiling_cycles":429757,"spin_margin"
+:0.000000,"eps_spin_observed_cycles":0,"eps_spin_observed_us":0.000000,"post_t1_idle_max_cycles":4
+7730,"idle_ceiling_cycles":4297577,"idle_margin":0.011106,"eps_idle_observed_us":11.106257,"init_w
+all_ns":797492000,"init_wall_ceiling_ns":2000000000,"init_wall_margin":0.398746,"init_cycles":3171
+511010,"init_cycles_ceiling":8600000000,"init_cycles_margin":0.368780,"window_cores":0.999694,"ext
+ra_cores":-0.000306,"extra_cores_ceiling":0.250,"extra_cores_margin":-0.001225}
+verdict: Accept
+DEV RUN (not pilot data): run type e2e-dev workload e2e_decode param 8 affinity 0x18000000 
+threads 2 env 7daab01c811f3a2dd8b5743661a02e3418c882a2675479f78cff5317fd12ae51
+golden 86653fe54db5f08cd62905f71e654bfaf905d7851f1b3069df9f943f1de40f35 (learned from a first 
+pass)
+observe {"delta_o_ns":2963540300,"delta_h_ns":2963556300,"abs_diff_ns":16000,"tau_ceiling_ns":2963
+540,"tau_margin":0.005399,"post_stop_cycles":605780990,"kappa_post_ceiling":2000000000,"kappa_post
+_margin":0.302890,"teardown_cycles":414559560,"teardown_wall_ns":96522500,"exit_grace_ns":50000000
+00,"exit_grace_margin":0.019304,"post_t1_spin_max_cycles":21070,"spin_ceiling_cycles":429658,"spin
+_margin":0.049039,"eps_spin_observed_cycles":0,"eps_spin_observed_us":0.000000,"post_t1_idle_max_c
+ycles":58910,"idle_ceiling_cycles":4296588,"idle_margin":0.013711,"eps_idle_observed_us":13.710877
+,"init_wall_ns":514547800,"init_wall_ceiling_ns":120000000000,"init_wall_margin":0.004288,"init_cy
+cles":1273680210,"init_cycles_ceiling":1031040000000,"init_cycles_margin":0.001235,"window_cores":
+0.678631,"extra_cores":-1.321369,"extra_cores_ceiling":0.250,"extra_cores_margin":-5.285476}
+verdict: Accept
+== C. selftest with the run type's job affinity (expect degraded-job-only)
+job affinity limit: 0x10000000
+15                             blocked(e=0)      SUCCEEDED
+state: in_job=true child_blocked=true appcontainer=false net_blocked=false brokers_blocked=false 
+sealed_unreachable=None
+mode: degraded-job-only
+decision -> hearth-c-ref (trusted C): RunDegraded
+decision -> untrusted workloads:      Refuse
+-- the same without --affinity (the revision-3 behaviour under a confined launcher)
+job affinity limit: none
+15                                SUCCEEDED      SUCCEEDED
+mode: refused
+== D. verify-hygiene --as-pilot (verify-now.cfg), full output in D:\mithril\x4c\jobs\verify_r4.txt
+== X4 noise-pilot pre-start items, read-only (DEV configuration, judged by the PILOT rules; nothing is run or changed)
+  [FAIL] x4svc binary sha256 equals the pin -- D:\mithril\x4c\bin\x4svc.exe sha256 68125f5e173d87df4fbe09c565e0964de311b0d6a34607182fd28641772b02f9 (pinned None)
+  [FAIL] probe exe sha256 equals the pin -- D:\mithril\x4c\bin\x4sb_probe.exe sha256 f3d9dd3915fd6ba391e91ca3608e6344e06f5d31b4e138236e8a08807fe4e720 (pinned None)
+  [FAIL] [mb-q4-avx512] harness sha256 equals the pin -- D:\mithril\x4c\bin\x4harness_hearth.exe 962a670b853a8a16e26a5188cae792c696758c444b109d45acdfed7ce46110d7 (pinned None)
+  [FAIL] [mb-q4-avx512] verify-profile --collection --pins MET -- The system cannot find the path specified. (os error 3)
+  [FAIL] [e2e-decode] harness sha256 equals the pin -- D:\mithril\x4c\bin\x4harness_hearth.exe 962a670b853a8a16e26a5188cae792c696758c444b109d45acdfed7ce46110d7 (pinned None)
+  [ ok ] [e2e-decode] model file readable and not on a USB disk -- C:\Users\pierce lonergan\hearth-data\qwen3-30b-a3b-q4.hearth on C: bus 17 (NVMe)
+  [FAIL] [e2e-decode] verify-profile --collection --pins MET -- The system cannot find the path specified. (os error 3)
+  [ ok ] placement equals the record's topology rule (x4svc topology) -- mb 0x4 (rule 0x4), e2e 0xbfffffff (rule 0xbfffffff), orchestrator LP 30 (rule LP 30)
+  [ ok ] sensor: CPU load (GetSystemTimes; PDH per LP, every LP) -- read 1: machine Some(8.99)% (PDH _Total Some(9.28)%) over 2000 ms, 32 of 32 LPs (0 clamped from PDH_CALC_NEGATIVE_VALUE; dropped []), eff clock on 32 LPs, 0 thermal zones
+  [ ok ] sensor: disk queue, write rate, modified page list (PDH) -- queue Some(2.0), write Some(761300.1747424206) B/s, modified Some(233402368.0) B
+  [ ok ] sensor: process CPU (listed images readable) -- 389 processes; unreadable listed images []
+  [FAIL] sensor: interactive input (driver in the console session) -- tick Some(0), in console session Some(false)
+  [ ok ] sensor: session list (WTS) -- Some([(0, "Services", 4), (1, "Console", 0)])
+  [ ok ] sensor: GPU utilisation (nvidia-smi query) -- Ok(0.0)
+  [ ok ] sensor: NVMe temperature of C: (storage query) -- Ok(43.0)
+  [ ok ] sensor: active power scheme -- Some("381b4222-f694-41f0-9685-ff5bb260df2e")
+  [ ok ] driver at NORMAL_PRIORITY_CLASS and MEMORY_PRIORITY_NORMAL -- priority class Some("0x20"), memory priority Some(5), elevated Some(true), integrity RID Some("0x3000")
+  [advisory] no excluded process running at the start (advisory: one that stays idle does not void) -- ["overwolf(28944)", "onedrive(25472)", "curseforge(40200)", "curseforge(38760)", "curseforge(640)", "curseforge(33352)", "curseforge(35660)", "curseforge(35648)", "curseforge(27804)", "python(16060)", "python(44764)", "python(31892)", "epicgameslauncher(28132)", "claude(50140)", "claude(64248)", "claude(43864)", "claude(25624)", "claude(26168)", "claude(50556)", "claude(12636)", "claude(45660)", "claude(46508)", "claude(64088)", "claude(41664)", "python(59712)", "claude(52464)", "python(59000)", "python(56804)", "python(15268)", "python(27260)", "python(7364)", "python(63656)", "python(52288)", "python(19296)", "python(29700)", "python(45496)", "python(52772)", "python(57012)", "python(55844)", "python(43204)", "python(61072)", "python(27192)", "python(15740)", "python(51692)", "python(51816)", "python(54444)", "python(49248)", "python(58912)", "python(61116)", "python(5380)"]
+7 of 17 required items fail
+== E. five read-only load samples (LP counts; PDH negative values kept)
+  [ ok ] sensor: CPU load (GetSystemTimes; PDH per LP, every LP) -- read 1: machine Some(7.91)% 
+(PDH _Total Some(8.46)%) over 2000 ms, 32 of 32 LPs (0 clamped from PDH_CALC_NEGATIVE_VALUE; 
+dropped []), eff clock on 32 LPs, 0 thermal zones
+  [ ok ] sensor: CPU load (GetSystemTimes; PDH per LP, every LP) -- read 1: machine Some(7.32)% 
+(PDH _Total Some(7.36)%) over 2000 ms, 32 of 32 LPs (0 clamped from PDH_CALC_NEGATIVE_VALUE; 
+dropped []), eff clock on 32 LPs, 0 thermal zones
+  [ ok ] sensor: CPU load (GetSystemTimes; PDH per LP, every LP) -- read 1: machine Some(7.93)% 
+(PDH _Total Some(7.96)%) over 2000 ms, 32 of 32 LPs (0 clamped from PDH_CALC_NEGATIVE_VALUE; 
+dropped []), eff clock on 32 LPs, 0 thermal zones
+  [ ok ] sensor: CPU load (GetSystemTimes; PDH per LP, every LP) -- read 1: machine Some(7.07)% 
+(PDH _Total Some(7.23)%) over 2000 ms, 32 of 32 LPs (0 clamped from PDH_CALC_NEGATIVE_VALUE; 
+dropped []), eff clock on 32 LPs, 0 thermal zones
+  [ ok ] sensor: CPU load (GetSystemTimes; PDH per LP, every LP) -- read 1: machine Some(11.64)% 
+(PDH _Total Some(11.85)%) over 2000 ms, 32 of 32 LPs (0 clamped from PDH_CALC_NEGATIVE_VALUE; 
+dropped []), eff clock on 32 LPs, 0 thermal zones
+
+
+== the template filled with dummy values: parse and plan (read-only)
+grade PILOT; seed 2ac97bc5867a9d82 (rule from freeze commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: 2ac97bc5867a9d82)
+ 1. mb-q4-avx512-16      seed 367e9c5f9a37a733  planned   1560 s (24 blocks x 4 x (10 s x 1 + o_rt 5 s) + 120 s setup)
+ 2. mb-q4-avx512-02      seed 03feef902250572d  planned   1560 s (24 blocks x 4 x (10 s x 1 + o_rt 5 s) + 120 s setup)
+total planned 64680 s = 17.97 h
+rc=0
+-- loosened (load_max_pct = 100):
+x4svc.exe : pilot-plan: D:\mithril\x4c\tmp\filled_loose.cfg: PILOT differs from the record's 
+fixed values (a change is a record amendment): load_max_pct = 100 (record: 40)
+At line:1 char:1
++ & D:\mithril\x4c\bin\x4svc.exe pilot-plan --config D:\mithril\x4c\tmp ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (pilot-plan: D:\...00 (record: 40):String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+rc=2
+-- pilot-night --pilot --max-sessions 1 (expect refusal, exit 1):
+x4svc.exe : pilot-night: --max-sessions, --plants and --plant-exe are dry-run options; refused 
+with --pilot
+At line:1 char:1
+rc=1
++ & D:\mithril\x4c\bin\x4svc.exe pilot-night --config D:\mithril\x4c\tm ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (pilot-night: --...ed with --pilot:String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+-- pilot-night --pilot outside the window (expect refusal, exit 1):
+x4svc.exe : pilot-night: outside the quiet window (2026-10-23 12:31:36 PDT); refusing
+At line:1 char:1
++ & D:\mithril\x4c\bin\x4svc.exe pilot-night --config D:\mithril\x4c\tm ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (pilot-night: ou... PDT); refusing:String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+rc=1
+== regression on the final build
+
+run table: 22 of 22 as expected
+24 passed, 0 failed
+
+
+== verify_report (read-only)
+verify report lines: 121

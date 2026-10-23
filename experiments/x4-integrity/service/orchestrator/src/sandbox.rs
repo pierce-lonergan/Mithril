@@ -12,6 +12,9 @@
 //! - Strict frame order (HELLO,START,STOP,CENSUS,REPORT with seq 0..4, or a prefix + one FAIL); any
 //!   duplicate, reorder, bad seq or extra frame terminates the job and fails the run (review R1-2).
 //! - A watchdog: the job is terminated at the time cap; a run capped before STOP is TimeCapped.
+//! - An exit grace (revision 4, review 2026-10-23): once REPORT is received the child must exit
+//!   within `exit_grace_ms`, or the job is terminated and the run fails `no_exit_after_report`, so no
+//!   load can outlive its report into the next run; REPORT and exit are stamped (teardown wall).
 //! - The child's exit code (must be 0), peak memory, and the bytes outside the extent.
 //!
 //! - HELLO receipt and the launch (first-thread resume) are stamped too, so the pre-START window is
@@ -173,6 +176,8 @@ extern "system" {
     fn DeleteProcThreadAttributeList(list: *mut c_void);
     fn QueryThreadCycleTime(t: Handle, cycles: *mut u64) -> i32;
     fn CreateEventW(sa: *mut SecurityAttributes, manual: i32, initial: i32, name: *const u16) -> Handle;
+    fn SetEvent(h: Handle) -> i32;
+    fn WaitForMultipleObjects(n: u32, handles: *const Handle, wait_all: i32, ms: u32) -> u32;
 }
 
 fn to_wide(s: &str) -> Vec<u16> {
@@ -347,6 +352,13 @@ pub struct RunSpec<'a> {
     pub declared_threads: u32,
     /// From `calibrate_cycle_rate` (once per orchestrator process).
     pub cycle_rate_hz: u64,
+    /// The harness's post-t1 per-thread CPU allowances in cycles (`--spin-cycles` for parked
+    /// registered threads, `--idle-cycles` for every other thread); 0 = the harness's own provisional
+    /// default. Observe mode passes the X4-noise-pilot section 3 ceilings.
+    pub spin_cycles: u64,
+    pub idle_cycles: u64,
+    /// After REPORT the child must exit within this many ms (0 = only the time cap bounds it).
+    pub exit_grace_ms: u32,
 }
 
 pub struct RunOutcome {
@@ -368,12 +380,15 @@ struct ReaderOut {
     hello: Option<Vec<u64>>,
     fail_frame: Option<Vec<u64>>,
     report: Option<Report>,
+    census: Option<Vec<u64>>,
     hello_qpc: Option<i64>,
     start_qpc: Option<i64>,
     stop_qpc: Option<i64>,
     cycles_hello: Option<u64>,
     cycles_start: Option<u64>,
     cycles_stop: Option<u64>,
+    cycles_report: Option<u64>,
+    report_qpc: Option<i64>,
     hash_at_stop: Option<[u64; 4]>,
     outside_at_stop: u64,
     poison_residual_at_stop: Option<u64>,
@@ -446,14 +461,16 @@ pub fn run_once(spec: &RunSpec) -> Result<RunOutcome, String> {
         // the affinity we declare to the harness: the process mask when none is pinned
         let declared_affinity = spec.limits.affinity_mask as u64;
         let cmd = format!(
-            "x4harness.exe --pipe {} --section {} --out-bytes {} --salt {} --workload {}{}{}",
+            "x4harness.exe --pipe {} --section {} --out-bytes {} --salt {} --workload {}{}{}{}{}",
             pipe_w.0 as usize,
             child_section.0 as usize,
             spec.out_bytes,
             spec.salt,
             spec.workload,
             if spec.limits.affinity_mask != 0 { format!(" --affinity {}", spec.limits.affinity_mask) } else { String::new() },
-            if spec.param != 0 { format!(" --param {}", spec.param) } else { String::new() }
+            if spec.param != 0 { format!(" --param {}", spec.param) } else { String::new() },
+            if spec.spin_cycles != 0 { format!(" --spin-cycles {}", spec.spin_cycles) } else { String::new() },
+            if spec.idle_cycles != 0 { format!(" --idle-cycles {}", spec.idle_cycles) } else { String::new() }
         );
         let mut cmd_w = to_wide(&cmd);
         let app_w = to_wide(spec.harness_exe);
@@ -499,6 +516,13 @@ pub fn run_once(spec: &RunSpec) -> Result<RunOutcome, String> {
         // close our copy of the write end so the reader sees EOF at child exit; the child keeps its own
         drop(pipe_w);
 
+        // REPORT event: set by the reader the moment REPORT is decoded (not inheritable: the handle list
+        // names only the pipe and the section)
+        let report_event = OwnedHandle(CreateEventW(std::ptr::null_mut(), 1, 0, std::ptr::null()));
+        if report_event.0.is_null() {
+            return Err(format!("CreateEvent(report) failed {}", GetLastError()));
+        }
+        let ev_for_reader = SendHandle(report_event.0);
         // reader thread: frames + STOP-time stamping, done where the frame is decoded
         let rp = SendHandle(pipe_r.0);
         let proc_for_reader = SendHandle(process.0);
@@ -511,6 +535,8 @@ pub fn run_once(spec: &RunSpec) -> Result<RunOutcome, String> {
             let rp = rp;
             let proc_for_reader = proc_for_reader;
             let vp = vp;
+            let ev_for_reader = ev_for_reader;
+            let report_ev = ev_for_reader.0;
             let pipe = rp.0;
             let pproc = proc_for_reader.0;
             let base = vp.0;
@@ -522,12 +548,15 @@ pub fn run_once(spec: &RunSpec) -> Result<RunOutcome, String> {
                 hello: None,
                 fail_frame: None,
                 report: None,
+                census: None,
                 hello_qpc: None,
                 start_qpc: None,
                 stop_qpc: None,
                 cycles_hello: None,
                 cycles_start: None,
                 cycles_stop: None,
+                cycles_report: None,
+                report_qpc: None,
                 hash_at_stop: None,
                 outside_at_stop: 0,
                 poison_residual_at_stop: None,
@@ -576,7 +605,13 @@ pub fn run_once(spec: &RunSpec) -> Result<RunOutcome, String> {
                             o.outside_at_stop = proto::outside_changed(section, out_bytes);
                         }
                         proto::T_FAIL => o.fail_frame = Some(f.vals.clone()),
-                        proto::T_REPORT => o.report = Report::from_frame(&f).ok(),
+                        proto::T_CENSUS => o.census = Some(f.vals.clone()),
+                        proto::T_REPORT => {
+                            o.report_qpc = Some(qpc());
+                            o.cycles_report = proc_cycles(pproc);
+                            o.report = Report::from_frame(&f).ok();
+                            SetEvent(report_ev);
+                        }
                         _ => {}
                     }
                 }
@@ -587,9 +622,31 @@ pub fn run_once(spec: &RunSpec) -> Result<RunOutcome, String> {
             o
         });
 
-        // watchdog: wait for exit up to the time cap; terminate the job if it overruns
+        // watchdog: wait for exit or REPORT up to the time cap; after REPORT, for at most the exit
+        // grace; terminate the job if either runs out
         let mut watchdog_fired = false;
-        if WaitForSingleObject(process.0, spec.time_cap_ms) == WAIT_TIMEOUT {
+        let mut no_exit_after_report = false;
+        let mut exit_qpc: Option<i64> = None;
+        let elapsed_ms = || ((qpc() - launch_qpc).max(0) as i128 * 1000 / freq as i128) as u64;
+        let waits = [process.0, report_event.0];
+        let first = WaitForMultipleObjects(2, waits.as_ptr(), 0, spec.time_cap_ms);
+        if first == 0 {
+            exit_qpc = Some(qpc());
+        } else if first == 1 {
+            let left_cap = (spec.time_cap_ms as u64).saturating_sub(elapsed_ms());
+            let (wait_ms, by_grace) = if spec.exit_grace_ms != 0 && (spec.exit_grace_ms as u64) < left_cap { (spec.exit_grace_ms as u64, true) } else { (left_cap, false) };
+            if WaitForSingleObject(process.0, wait_ms as u32) == WAIT_TIMEOUT {
+                if by_grace {
+                    no_exit_after_report = true;
+                } else {
+                    watchdog_fired = true;
+                }
+                TerminateJobObject(job.0, 0xC0DE);
+                WaitForSingleObject(process.0, 5000);
+            } else {
+                exit_qpc = Some(qpc());
+            }
+        } else {
             watchdog_fired = true;
             TerminateJobObject(job.0, 0xC0DE);
             WaitForSingleObject(process.0, 5000);
@@ -613,6 +670,8 @@ pub fn run_once(spec: &RunSpec) -> Result<RunOutcome, String> {
         let hello_ns = ro.hello_qpc.map(to_ns);
         let start_ns = ro.start_qpc.map(to_ns);
         let stop_ns = ro.stop_qpc.map(to_ns);
+        let report_ns = ro.report_qpc.map(to_ns);
+        let exit_ns = exit_qpc.map(to_ns);
         let delta_o_ns = match (ro.start_qpc, ro.stop_qpc) {
             (Some(a), Some(b)) if b > a => ((b - a) as i128 * 1_000_000_000i128 / freq as i128) as u64,
             _ => 0,
@@ -632,6 +691,7 @@ pub fn run_once(spec: &RunSpec) -> Result<RunOutcome, String> {
             hello: ro.hello,
             fail_frame: ro.fail_frame,
             report: ro.report,
+            census: ro.census,
             hello_ns,
             start_ns,
             stop_ns,
@@ -639,6 +699,10 @@ pub fn run_once(spec: &RunSpec) -> Result<RunOutcome, String> {
             cycles_start: ro.cycles_start,
             cycles_stop: ro.cycles_stop,
             cycles_exit,
+            cycles_report: ro.cycles_report,
+            report_ns,
+            exit_ns,
+            no_exit_after_report,
             job_cpu_after_stop_100ns,
             hash_at_stop: ro.hash_at_stop,
             hash_at_exit,

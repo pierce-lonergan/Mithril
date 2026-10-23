@@ -86,6 +86,8 @@ struct x4h_thread { HANDLE h; x4h_thread_fn fn; void *arg; DWORD tid; };
 
 static DWORD g_reg_tid[X4H_MAX_REG];
 static volatile LONG g_reg_n;
+static volatile LONG g_reg_created;           /* x4h_thread_create calls that started a thread       */
+static volatile LONG g_reg_done[X4H_MAX_REG]; /* the registered thread's function has returned       */
 static volatile LONG g_reg_entry_mxcsr_bad;   /* registered threads whose MXCSR was non-default on entry */
 static volatile LONG g_reg_exit_mxcsr_bad;    /* ... non-default when their fn returned (set-then-joined) */
 static volatile LONG g_reg_exit_prio_bad;     /* ... priority not normal when their fn returned           */
@@ -93,6 +95,7 @@ static DWORD g_harness_tid;
 
 /* parked / outstanding-I/O bookkeeping, read at t1 */
 static volatile LONG g_parked[X4H_MAX_REG];   /* index by registration slot */
+static volatile LONG g_pending_wakes;          /* wakes issued to waiting threads not yet returned */
 static DWORD __declspec(thread) t_reg_slot = (DWORD)-1;
 static volatile LONG g_io_outstanding;
 
@@ -110,6 +113,7 @@ static DWORD WINAPI x4h_thread_main(LPVOID p) {
      * caught here. A value set and restored before return stays invisible in-process (binary T0, M4). */
     if (mxcsr_ctrl() != X4P_MXCSR_DEFAULT) InterlockedIncrement(&g_reg_exit_mxcsr_bad);
     if (GetThreadPriority(GetCurrentThread()) != THREAD_PRIORITY_NORMAL) InterlockedIncrement(&g_reg_exit_prio_bad);
+    if (slot < X4H_MAX_REG) InterlockedExchange(&g_reg_done[slot], 1);
     return 0;
 }
 
@@ -118,10 +122,41 @@ int x4h_thread_create(x4h_thread **out, x4h_thread_fn fn, void *arg) {
     struct x4h_thread *t = (struct x4h_thread *)calloc(1, sizeof *t);
     if (!t) return -1;
     t->fn = fn; t->arg = arg;
+    InterlockedIncrement(&g_reg_created);
     t->h = CreateThread(NULL, 0, x4h_thread_main, t, 0, &t->tid);
-    if (!t->h) { free(t); return -1; }
+    if (!t->h) { InterlockedDecrement(&g_reg_created); free(t); return -1; }
     *out = t;
     return 0;
+}
+
+void x4h_wake_pending(long delta) { InterlockedAdd(&g_pending_wakes, (LONG)delta); }
+
+static int quiesce_busy(void) {
+    LONG n = g_reg_n;
+    int busy = n < g_reg_created;
+#ifndef X4H_QUIESCE_IGNORE_WAKES   /* defined only in the dev-only demonstration build (revision 4) */
+    if (g_pending_wakes > 0) busy = 1;
+#endif
+    if (n > X4H_MAX_REG) n = X4H_MAX_REG;
+    for (LONG i = 0; i < n && !busy; i++)
+        if (!g_reg_done[i] && !g_parked[i]) busy = 1;
+    return busy;
+}
+
+/* Quiescence (section 3 step 6): every started registered thread has registered its slot and is
+ * either done or parked, and no wake issued to a waiting thread is still pending (revision 4: a
+ * signalled thread reads as parked until it runs); confirmed again after one yield. Spins politely
+ * (the job may have no spare processor). */
+int x4h_quiesce(uint64_t timeout_ns) {
+    const uint64_t deadline = x4h_now_ns() + timeout_ns;
+    for (unsigned spins = 0;; spins++) {
+        if (!quiesce_busy()) {
+            SwitchToThread();
+            if (!quiesce_busy()) return 0;
+        }
+        if (x4h_now_ns() >= deadline) return -1;
+        if ((spins & 63u) == 63u) SwitchToThread(); else YieldProcessor();
+    }
 }
 
 void x4h_thread_join(x4h_thread *t) {
@@ -230,6 +265,41 @@ static int for_each_thread(thread_visit_fn fn, void *ctx) {
 static DWORD g_pre_tid[X4H_MAX_THREADS];
 static int g_pre_n;
 static void visit_pre(DWORD tid, void *ctx) { (void)ctx; if (g_pre_n < X4H_MAX_THREADS) g_pre_tid[g_pre_n++] = tid; }
+
+/* Settle before the allowed set is fixed (X4 pilot track, 2026-10-23). With the job pinned to one
+ * logical processor, the process's own start-up threads (the Windows loader's worker threads
+ * [inference], which appeared 18-61 ms after the harness thread, before any workload code runs) were
+ * created after the pre-init snapshot and counted as NEW_UNREGISTERED: 2 of 3 dev_sleep_long runs
+ * and 3 of 3 mb_q4_avx512 runs at a one-LP mask [M, desktop, 2026-10-23]. The harness therefore waits,
+ * before the workload's init, until no new thread id has appeared for 30 ms (at most 300 ms): it
+ * sleeps 40 ms first (the late threads appeared 18-61 ms after the harness thread [M]), then takes a
+ * snapshot every 10 ms, because a Toolhelp thread snapshot walks every thread on the machine and costs
+ * CPU. Exits do not reset the wait. No workload code runs in it; it is inside the out-of-process
+ * pre-START bound. */
+typedef struct { DWORD tid[256]; int n; int added; } thread_seen;
+static void visit_seen(DWORD tid, void *ctx) {
+    thread_seen *s = (thread_seen *)ctx;
+    for (int i = 0; i < s->n; i++) if (s->tid[i] == tid) return;
+    if (s->n < 256) s->tid[s->n++] = tid;
+    s->added++;
+}
+static void settle_thread_set(void) {
+    static thread_seen seen;
+    const uint64_t t_start = x4h_now_ns();
+    seen.n = 0; seen.added = 0;
+    Sleep(40);
+    for_each_thread(visit_seen, &seen);
+    uint64_t stable_since = x4h_now_ns();
+    for (;;) {
+        Sleep(10);
+        seen.added = 0;
+        for_each_thread(visit_seen, &seen);
+        uint64_t now = x4h_now_ns();
+        if (seen.added) stable_since = now;
+        else if (now - stable_since >= 30000000ull) break;
+        if (now - t_start >= 300000000ull) break;
+    }
+}
 static int was_pre_init(DWORD tid) {
     for (int i = 0; i < g_pre_n; i++) if (g_pre_tid[i] == tid) return 1;
     return 0;
@@ -404,7 +474,9 @@ static int run_workload(run_cfg *cfg) {
     /* step 3: default MXCSR on this thread */
     _mm_setcsr(X4P_MXCSR_DEFAULT);
 
-    /* step 0 / 6: the allowed thread set is fixed BEFORE the workload's init runs. */
+    /* step 0 / 6: the allowed thread set is fixed BEFORE the workload's init runs, once the process's
+     * own start-up threads have appeared (settle_thread_set). */
+    settle_thread_set();
     g_pre_n = 0;
     if (for_each_thread(visit_pre, NULL) < 0) { send_fail(X4P_F_INTERNAL, 1, 0, 0); return 1; }
 
@@ -412,7 +484,10 @@ static int run_workload(run_cfg *cfg) {
      * (re)poisoned after init returns, so nothing init writes there can survive into the run. */
     x4h_ctx ctx; memset(&ctx, 0, sizeof ctx);
     ctx.out = NULL; ctx.out_bytes = cfg->out_bytes; ctx.param = cfg->param;
-    if (cfg->wl->init && cfg->wl->init(&ctx) != 0) { send_fail(X4P_F_WORKLOAD, 0, 0, 0); return 1; }
+    if (cfg->wl->init) {
+        int irc = cfg->wl->init(&ctx);   /* the init status travels in FAIL's first field (diagnostic) */
+        if (irc != 0) { send_fail(X4P_F_WORKLOAD, (uint64_t)(uint32_t)irc, 0, 0); return 1; }
+    }
     _mm_setcsr(X4P_MXCSR_DEFAULT);
 
     /* step 2: poison the head and the output extent (salt across both 64-byte end lines). The guard
