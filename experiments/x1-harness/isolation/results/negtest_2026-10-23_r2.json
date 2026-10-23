@@ -1,0 +1,364 @@
+{
+ "all_pass": true,
+ "duration_s": 46.8,
+ "image_id": "9d3f1913e88dcd4795741254334aea96db96f0acf38f9bf16187006ee9c5993f",
+ "machine": "DESKTOP-F441IUK",
+ "n": 58,
+ "n_pass": 58,
+ "os": "Windows-11-10.0.26200-SP0",
+ "probe_sha256": "fc43637cc294d3a59f6452f5198450ac0dcd76c33f9099efaae5669b6a1716e9",
+ "python": "CPython 3.12.10",
+ "rows": [
+  {
+   "control": "control",
+   "detail": "OK connect connected",
+   "test": "loopback listener reachable outside the sandbox",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "OK read read 24 bytes",
+   "test": "read granted input",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "OK write wrote",
+   "test": "write to out",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR read code=5 Access is denied. (os error 5)",
+   "test": "lpac: read repo README -> os error 5",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR read code=5 Access is denied. (os error 5)",
+   "test": "lpac: read an oracle/design file -> os error 5",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR read code=5 Access is denied. (os error 5)",
+   "test": "lpac: read another attempt -> os error 5",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR read code=5 Access is denied. (os error 5)",
+   "test": "lpac: read claude config -> os error 5",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR write code=5 Access is denied. (os error 5)",
+   "test": "lpac: write to read-only input -> os error 5",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR listdir code=5 Access is denied. (os error 5)",
+   "test": "lpac: list the repo -> os error 5",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR connect code=panic assertion `left == right` failed   left: 10107  right: 0",
+   "test": "lpac: TCP connect out -> winsock 10107",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR resolve code=panic assertion `left == right` failed   left: 10107  right: 0",
+   "test": "lpac: DNS resolve -> winsock 10107",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR connect code=panic assertion `left == right` failed   left: 10107  right: 0",
+   "test": "lpac: loopback listener -> winsock 10107",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR spawnmany code=5 Access is denied. (os error 5) after 0 spawns",
+   "test": "lpac: spawn child -> os error 5, 0 spawned",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "OK envnames ComSpec,LOCALAPPDATA,NUMBER_OF_PROCESSORS,OS,PATH,PATHEXT,PROCESSOR_ARCHITECTURE,RUST_BACKTRACE,SystemDrive,SystemRoot,TEMP,TMP,windir",
+   "test": "lpac: env names within the allowlist",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "OK envget C:\\x1iso-negtest-a020a4b4\\sb_lpac\\14\\out\\tmp\\Packages\\x1iso.3b0c71f04603\\AC\\Temp",
+   "test": "lpac: TEMP lies inside out/ (disk-capped)",
+   "verdict": "PASS"
+  },
+  {
+   "control": "stageA",
+   "detail": "ERR read code=5 Access is denied. (os error 5)",
+   "test": "nonlpac: read repo README -> os error 5",
+   "verdict": "PASS"
+  },
+  {
+   "control": "stageA",
+   "detail": "ERR read code=5 Access is denied. (os error 5)",
+   "test": "nonlpac: read another attempt -> os error 5",
+   "verdict": "PASS"
+  },
+  {
+   "control": "stageA",
+   "detail": "ERR connect code=10013 An attempt was made to access a socket in a way forbidden by its access permissions. (os error 10013)",
+   "test": "nonlpac: TCP connect out -> 10013",
+   "verdict": "PASS"
+  },
+  {
+   "control": "stageA",
+   "detail": "ERR resolve code=11001 No such host is known. (os error 11001)",
+   "test": "nonlpac: DNS resolve -> 1100x",
+   "verdict": "PASS"
+  },
+  {
+   "control": "stageA",
+   "detail": "ERR connect code=TimedOut connection timed out",
+   "test": "nonlpac: loopback listener -> dropped/refused",
+   "verdict": "PASS"
+  },
+  {
+   "control": "stageA",
+   "detail": "OK envnames ComSpec,LOCALAPPDATA,NUMBER_OF_PROCESSORS,OS,PATH,PATHEXT,PROCESSOR_ARCHITECTURE,RUST_BACKTRACE,SystemDrive,SystemRoot,TEMP,TMP,windir",
+   "test": "nonlpac: env names within the allowlist",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "OK burn burned 2836969672910020128",
+   "test": "normal work completes",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "killed=wall wall=3.016 cpu=0.016",
+   "test": "wall budget kills at the cap",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "killed=cpu wall=2.078 cpu=2.0+0.047",
+   "test": "cpu budget kills (user+kernel)",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "ERR alloc code=alloc after 252 MB: memory allocation failed because the memory allocator returned an error | peak=269094912 cap=268435456",
+   "test": "memory cap: 1 MiB chunks refused at the cap",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "ERR alloc1 code=alloc single 400 MB block: memory allocation failed because the memory allocator returned an error | peak=422215680 (counts the refused request) cap=268435456",
+   "test": "memory cap: one 400 MB block refused",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "OK alloc1 allocated one 200 MB block check 2 | peak=212107264",
+   "test": "memory cap: a 200 MB block under the cap works",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "ERR spawnmany code=5 Access is denied. (os error 5) after 0 spawns",
+   "test": "child spawn denied",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "killed=disk | (no output; killed=disk rc=3235774466)",
+   "test": "disk cap: writes into the profile's own folder",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "exists_after_close=False",
+   "test": "profile storage folder removed on close",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "killed=disk | (no output; killed=disk rc=3235774466)",
+   "test": "disk cap: writes into TEMP (inside out/)",
+   "verdict": "PASS"
+  },
+  {
+   "control": "call",
+   "detail": "verdict=accept budget={\"cpu_s_cap\": 60.0, \"cpu_s_used\": 0.313, \"wall_s_cap\": 12.0, \"wall_s_used\": 12.031, \"sandbox_runs\": 3, \"spent\": \"wall\"} passed=1 errors=[None, 'killed:wall', \"not run: the call's wall budget is spent\"]",
+   "test": "one wall deadline per check call (3 x 6 s cases)",
+   "verdict": "PASS"
+  },
+  {
+   "control": "call",
+   "detail": "verdict=accept budget={\"cpu_s_cap\": 8.0, \"cpu_s_used\": 8.063, \"wall_s_cap\": 120.0, \"wall_s_used\": 9.407, \"sandbox_runs\": 3, \"spent\": \"cpu\"} passed=1",
+   "test": "one CPU pool per check call (3 x 5 CPU-s cases)",
+   "verdict": "PASS"
+  },
+  {
+   "control": "call",
+   "detail": "verdict=accept tests={\"run\": true, \"passed\": 2, \"failed\": 0, \"cases\": [{\"case\": 0, \"ok\": true}, {\"case\": 1, \"ok\": true}]}",
+   "test": "stage B: a fresh sandbox per case (no carry-over)",
+   "verdict": "PASS"
+  },
+  {
+   "control": "call",
+   "detail": "verdict=accept checker=accept budget={\"cpu_s_cap\": 60.0, \"cpu_s_used\": 0.032, \"wall_s_cap\": 120.0, \"wall_s_used\": 0.375, \"sandbox_runs\": 1, \"spent\": null}",
+   "test": "mithril stage A: mithi check runs under LPAC",
+   "verdict": "PASS"
+  },
+  {
+   "control": "call",
+   "detail": "left=[]",
+   "test": "call directories removed after each check",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "abandon,check,list_files,read_file,run_tests,str_replace,submit,write_file",
+   "test": "only the 8 x1 tools offered",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "{\"error\": \"path escapes the workspace; only files under your workspace are readable\"}",
+   "test": "read_file cannot escape workspace",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "{\"error\": \"path escapes the workspace; only files under your workspace are readable\"}",
+   "test": "read_file rejects absolute repo path",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "{\"error\": \"you may only write solution.rs\"}",
+   "test": "write_file refuses non-solution",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "verdict=reject attempt_named=False sbx_named=True",
+   "test": "diagnostics name a neutral sandbox path, not the attempt",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "{\"bytes\": 24, \"ok\": true}",
+   "test": "write_file writes the solution",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "verdict=accept tests={'cases': [{'case': 0, 'ok': True}], 'failed': 0, 'passed': 1, 'run': True} budget={'cpu_s_cap': 180.0, 'cpu_s_used': 0.297, 'sandbox_runs': 2, 'spent': None, 'wall_s_cap': 540.0, 'wall_s_used': 0.735}",
+   "test": "sandboxed check runs + tests pass",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "accept,accept,accept,accept,accept,accept,budget_exhausted",
+   "test": "8-check budget enforced (9th refused)",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "{\"ended\": \"submit\", \"final_artifact_hash\": \"sha256:0078dcbfa33c0e834776797a9d9f4e6e374704f56d284177fdb1e384e7fcf2f2\", \"o",
+   "test": "submit ends the attempt",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "{\"end_reason\": \"submit\", \"error\": \"attempt_ended\"}",
+   "test": "no checks after submit",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "inside=[] left_in_sbx=[]",
+   "test": "no sandbox directory in the attempt tree; none left",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "mcp__x1__abandon,mcp__x1__check,mcp__x1__list_files,mcp__x1__read_file,mcp__x1__run_tests,mcp__x1__str_replace,mcp__x1__submit,mcp__x1__write_file",
+   "test": "agent lists only mcp__x1__* tools (md + --agents JSON)",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "md_body_len=0 json_prompt_len=0 append_len=653",
+   "test": "agent prompt empty; instructions appended (2.3 item 4)",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "Bash,Write,Edit,MultiEdit,Read,WebFetch,WebSearch,Task,Agent,Glob,Grep,NotebookEdit,NotebookRead,Skill",
+   "test": "settings deny built-ins, never an mcp__ pattern",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "[\"x1\"]",
+   "test": "settings register only the x1 MCP server",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "--agents {\"x1-subject\":{\"description\":\"X1 cold... --agent x1-subject --tools  --allowedTools mcp__x1__list_files,mcp__x1__read_fil... --mcp-config C:\\x1iso-negtest-a020a4b4\\runs\\06e846...",
+   "test": "launch selects x1-subject; no built-in tools",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "[\"X1_ATTEMPT_DIR\", \"X1_IMAGE_ROOT\", \"X1_SANDBOX_ROOT\"]",
+   "test": "env blocks carry attempt, image and sandbox roots",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "config/ of the attempt",
+   "test": "launch isolates CLAUDE_CONFIG_DIR per attempt",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "{\"CLAUDE.md\": \"refused\", \"CLAUDE.local.md\": \"refused\", \"AGENTS.md\": \"refused\", \".claude\": \"refused\", \".git\": \"refused\"}",
+   "test": "refuses attempts under CLAUDE.md/AGENTS.md/.claude/.git",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "refused",
+   "test": "refuses a labelled (non-opaque) attempt name",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "ok=True deleted=['work', 'harness', 'config', 'launch.json'] left=[] run_tree_exists=False",
+   "test": "finish_attempt moves records, verified by hash",
+   "verdict": "PASS"
+  },
+  {
+   "control": "cleanup",
+   "detail": "profiles=[] folders=[]",
+   "test": "no x1iso AppContainer profile or folder left",
+   "verdict": "PASS"
+  }
+ ],
+ "sandbox_version": "x1iso-winsandbox/2",
+ "schema": "x1iso-negtest/2",
+ "when_utc": "2026-10-23T22:48:21Z"
+}

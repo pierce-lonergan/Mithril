@@ -1,0 +1,186 @@
+{
+ "all_pass": true,
+ "image_id": "2d8d4b073e919439ab35860c53fc114e2d54e8f460f86a21c7b4f497f35b1c9c",
+ "machine": "DESKTOP-F441IUK",
+ "n": 29,
+ "python": "C:\\Users\\Pierce Lonergan\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+ "rows": [
+  {
+   "control": "sandbox",
+   "detail": "OK read read 24 bytes",
+   "test": "read granted input",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "OK write wrote",
+   "test": "write to out",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR read Access is denied. (os error 5)",
+   "test": "read repo README",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR read Access is denied. (os error 5)",
+   "test": "read an oracle/design file",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR read Access is denied. (os error 5)",
+   "test": "read another attempt",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR read Access is denied. (os error 5)",
+   "test": "read claude config",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR write Access is denied. (os error 5)",
+   "test": "write to read-only input",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR listdir Access is denied. (os error 5)",
+   "test": "list the repo",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+   "test": "TCP connect out",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+   "test": "DNS resolve",
+   "verdict": "PASS"
+  },
+  {
+   "control": "sandbox",
+   "detail": "ERR spawnmany after 0 spawns: Access is denied. (os error 5)",
+   "test": "spawn child processes",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "OK burn burned 15654266963376650720",
+   "test": "normal work completes",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "killed=wall wall=3.093 cpu=0.016",
+   "test": "wall budget kills",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "killed=cpu wall=6.734 cpu=6.609",
+   "test": "cpu budget kills",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+   "test": "memory budget blocks alloc",
+   "verdict": "PASS"
+  },
+  {
+   "control": "budget",
+   "detail": "ERR spawnmany after 0 spawns: Access is denied. (os error 5)",
+   "test": "child spawn denied",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "abandon,check,list_files,read_file,run_tests,str_replace,submit,write_file",
+   "test": "only the 8 x1 tools offered",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "{\"error\": \"path escapes the workspace; only files under your workspace are readable\"}",
+   "test": "read_file cannot escape workspace",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "{\"error\": \"path escapes the workspace; only files under your workspace are readable\"}",
+   "test": "read_file rejects absolute repo path",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "{\"bytes\": 24, \"ok\": true}",
+   "test": "write_file writes the solution",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "{\"error\": \"you may only write solution.rs\"}",
+   "test": "write_file refuses non-solution",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "verdict=accept tests={'cases': [{'case': 0, 'ok': True}], 'failed': 0, 'passed': 1, 'run': True}",
+   "test": "sandboxed check runs + tests pass",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "{\"budget\": 8, \"error\": \"budget_exhausted\"}",
+   "test": "8-check budget enforced",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "{\"ended\": \"submit\", \"final_artifact_hash\": \"sha256:0078dcbfa33c0e834776797a9d9f4e6e374704f56d284177fdb1e384e7fcf2f2\", \"o",
+   "test": "submit ends the attempt",
+   "verdict": "PASS"
+  },
+  {
+   "control": "mcp",
+   "detail": "{\"end_reason\": \"submit\", \"error\": \"attempt_ended\"}",
+   "test": "no checks after submit",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "mcp__x1__abandon,mcp__x1__check,mcp__x1__list_files,mcp__x1__read_file,mcp__x1__run_tests,mcp__x1__str_replace,mcp__x1__submit,mcp__x1__write_file",
+   "test": "agent lists only mcp__x1__* tools",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "Bash,Write,Edit,Read,WebFetch,WebSearch",
+   "test": "settings deny shell/file/web/task tools",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "[\"x1\"]",
+   "test": "settings register only the x1 MCP server",
+   "verdict": "PASS"
+  },
+  {
+   "control": "config",
+   "detail": "C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\x1iso_negtest_5k71gqpb\\attempt_CFG\\config",
+   "test": "launch isolates CLAUDE_CONFIG_DIR per attempt",
+   "verdict": "PASS"
+  }
+ ],
+ "sandbox_version": "x1iso-winsandbox/1",
+ "schema": "x1iso-negtest/1",
+ "when_utc": "2026-10-23T22:14:53Z"
+}

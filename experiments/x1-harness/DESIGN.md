@@ -13,6 +13,27 @@ is built, self-tested, reviewed once (12 findings, all accepted) and revised; no
 run. Development tooling only: none of the held-out isolation of §4.2, §4.6 and §11 (SMOKE.md §3);
 its deviations from the amendment are in SMOKE.md §2. Nothing in this design changed.
 
+*Status note (2026-10-23, track x1iso).* The full X1-amendment-1 §2.3 attempt-isolation controls that
+sealed items require (SMOKE.md §3) are built and self-tested on the laptop in
+[isolation/](isolation/) ([isolation/README.md](isolation/README.md)): a per-attempt isolated Claude
+configuration (no CLAUDE.md/memory/skills/hooks; only the x1 MCP server; `CLAUDE_CONFIG_DIR` per
+attempt), the harness tools served over a local stdio MCP server with **no shell** (`list_files`,
+`read_file`, `write_file`, `str_replace`, `check`, `run_tests`, `submit`, `abandon`), a per-`check`
+sandbox (an AppContainer: no network, read-only inputs, nothing hidden reachable, Job Object
+CPU/memory/wall budgets), and the §11.3 two-stage oracle split (Stage A build; Stage B runs agent
+output under LPAC with no child process or network). Each control has a negative test that fails as
+required. Reviewed once (Claude, same family, independent context; 10 findings, all accepted) and
+revised: allowlisted sandbox environment, one CPU pool and wall deadline per `check` call, a fresh
+sandbox per visible case, the AppContainer profile's storage under the disk cap, specific-denial
+assertions, refusal of attempt directories under CLAUDE.md/AGENTS.md/.claude/.git, opaque attempt
+names, and the CLI's documented `--agent`/`--agents`/`--tools ""` flags: 58/58 PASS [M, laptop,
+2026-10-23, isolation/results/negtest_2026-10-23_r2.json; r1's 29/29 is superseded]. This realises
+§11 on Windows with documented Win32 interfaces (AppContainer/LPAC + Job Object) rather than the
+podman image §11.2 sketches; §11.1's Linux host remains an option for the real run. Family-agnostic,
+no sealed content (DELEGATED P2 interim restriction). What cannot be verified until a real run — no
+`claude` CLI on the laptop, so the agent-type tool restriction and turn/token enforcement are
+documented not executed — is listed in isolation/README.md. Nothing in this design changed.
+
 ROADMAP anchor: [§3.2](../../docs/ROADMAP.md#32-x1-cold-agent-writability-with-all-arms-weeks-05)
 (authoritative for every gate, amber and kill); DR-002, DR-003, DR-005, DR-013, DR-017;
 [05-agent-protocol](../../docs/architecture/05-agent-protocol.md) §2, §3, §6, §13, §16;
