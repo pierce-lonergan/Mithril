@@ -6,12 +6,16 @@ ROADMAP §3.2, X1 DESIGN §9). It implements the core calculus of
 subset and is judged against the note's hand verdicts in
 [verdicts.json](../../docs/m0/core-calculus/verdicts.json).
 
-**Status: v0 DRAFT, 2026-10-16 (M0 week 0), revised the same day after an independent review (see
+**Status: v0 DRAFT, 2026-10-16 (M0 week 0), revised the same day after an independent review, and
+revised again on 2026-10-23 after a blind adversarial review and the note's third review round (see
 [Review log](#review-log)). Not frozen.** Written by the mithi track (Claude). The note's author
-and both reviewers are the same model family, so every agreement below is between contexts of one
+and every reviewer are the same model family, so every agreement below is between contexts of one
 family (same family, independent context), and mithi was developed, and revised, with the note's
-verdicts in view: it is not a blind replication. Every rule interpretation mithi had to make is
-listed under [Interpretations](#interpretations-each-needs-review).
+verdicts in view: it is not a blind replication (the 2026-10-23 review's predictions were blind;
+the revision was not). Every rule interpretation mithi had to make is listed under
+[Interpretations](#interpretations-each-needs-review). Since 2026-10-23, claims about what Rust
+accepts or computes are measured with the pinned rustc 1.99.1 where a test says so [M], not
+inferred.
 
 ## Build, test, run
 
@@ -98,6 +102,7 @@ seeds (all maps whose order reaches a diagnostic are ordered; `tests/review_dete
 | `tests/ownership.rs` | 97 ownership and borrowing cases with Rust's verdicts |
 | `tests/interp.rs` | traps, `par for` order and index, abandonment (named locals and temporaries), deep recursion, f16 widening, canon sum order |
 | `tests/review_*.rs`, `tests/common/` | the regression tests of the 2026-10-16 review (below) |
+| `tests/review_2026_10_23.rs` | the regression tests of the 2026-10-23 review, with rustc-measured expectations for ownership and run-time values |
 
 ## What is implemented
 
@@ -128,13 +133,29 @@ Ownership works on places rooted at a local, directly or through a reference: `(
 accesses through them are checked against each other. Loans are named by creation site (F-80);
 loops are evaluated to a fixpoint of the state at their head, including the states at `continue`,
 and the state after a loop joins its exits and its `break`s. `break` and `continue` end the scopes
-they leave (T-Jump), and a Linear binding in a `match` arm exists in that arm only.
+they leave (T-Jump), and a Linear binding in a `match` arm exists in that arm only. A parameter
+carries one symbolic loan per reference position of its type (F-62), and destructuring keeps each
+component's positions. Closure bodies own their by-move captures; a closure's loan transfer
+(λ_q, λ_σ) applies wherever it may run: called directly, or passed to a std or user function.
+Higher-ranked closure parameters (F-107) carry a loan that may not be stored into a capture or
+returned.
+
+Grades resolve every write through a reference to the places it may point to (`target*`, F-39):
+a provenance per reference-carrying value (the places, and the address grade of what chose among
+them), through `if`/`match`, patterns (`Some(r)`, `for r in v.iter_mut()`, `(a, b) =
+v.split_at_mut(1)`), projections and std results, aggregates, std storing calls, and nested `&mut`
+(reach sets, F-91). A reference whose provenance is unknown writes, weakly, every place the body
+lends mutably and every `&mut`-carrying parameter's referent.
 
 T2 is mithi's own decision procedure, not an SMT solver: polynomial atoms over SSA and place
 versions, interval reasoning, `!=` facts at interval ends, Fourier–Motzkin elimination with
 degree-2 products for nonlinear goals, constant-trip loops of up to 64 iterations unrolled, every
 other loop havocking what it writes (no loop invariants, DR-012). Atom intervals and equalities are
-path facts, restored at branches and joined at merges. A write through a reference, a `&mut`
+path facts, restored at branches and joined at merges. Remainders and quotients of non-negative
+values by a positive divisor keep their relation to the operands (`j % n <= n - 1`, `<= j`), as do
+right shifts (`i >> s <= i`), and a value merged from two branches keeps a relational fact of one
+branch when the other branch's value satisfies it by its interval (the per-arm implication, used
+as a case split: `let j = if i < n { i } else { 0 }; y[j]`). A write through a reference, a `&mut`
 argument, a reference held in a local, or a closure call gives every place it may write a new
 version (F-44); a write whose place cannot be resolved gives every address-taken local one. When
 its evaluation budget runs out, every trap site of the body counts as undischarged. It emits no
@@ -150,28 +171,41 @@ abandons, newest first, including temporaries already evaluated in an argument l
 `f32::max`/`f32::min` follow the FF-NANMAX pin; `f32::NAN` is `0x7fc00000` at run time and raw for
 the checker (note §5.3); `format!` follows Rust's placeholder grammar (positional arguments, fill
 and alignment, sign, `#`, zero padding, width and precision including `N$` and `.*`, Display,
-Debug and `{:#?}`, radix and exponent formats).
+Debug and `{:#?}`, radix and exponent formats). A closure copied or cloned owns a copy of its
+by-move state, and one called in place keeps it (K-CloCopy, F-104) [M: rustc 1.99.1 gives the same
+values, `tests/review_2026_10_23.rs`].
 
 ## Agreement with the note
 
-`tests/verdicts.rs` [M: `cargo test -p mithi --test verdicts -- --nocapture`, 2026-10-16, against
-the working-tree verdicts.json with SHA-256 `80000b36f7ee8c2c925963c27c1dd067b9d835a4dc3568104ed668b605a23d87`,
-which differs from the last commit; the snippet hashes it records all matched]:
+`tests/verdicts.rs` [M: `cargo test -p mithi --test verdicts -- --nocapture`, laptop, 2026-10-23,
+against the working-tree verdicts.json with SHA-256
+`777d7d6f2dc5509bbe4f80971dbe0766f4fb99872e63ecf2d14fb768fb9f7795`: the note's third review round,
+uncommitted, which differs from its last commit `5e16fbb`; the snippet hashes it records all
+matched]:
 
 | Set | Rule | Result |
 |---|---|---|
 | Canonical and derived items D-C1..D-C8, D-D01..D-D27 | `verdict` for x1 / x1-front-end, `x1_expected` otherwise; primary code must match | **35/35 agree** (29 accept, 6 reject with the expected E-OUT-OF-SCOPE-<KW>) |
 | Snippet hashes | SHA-256 per verdicts.json's hash rule | 35/35 match |
 | Gate negatives N-01..N-06 | uncommented in their parent snippet (N-05: the release line deleted) | **6/6 agree** (E-DYN, E-REF-FIELD, E-REF-ESCAPE, E-LOCAL-RETURN, E-LINEAR-DROP, E-REF-ESCAPE) |
-| Supplementary items: every negative item with `gate_item` false, N-07..N-69 (reported, not gate items, Q11) | constructions written in the test from the prose, the expected verdict read from verdicts.json; an item with no construction fails the test unless listed as not constructed | **63/63 constructions agree** (62 items; N-19 has two constructions); N-38 not constructed (a hint port's stack budget, M4) |
+| Supplementary items: every negative item with `gate_item` false, N-07..N-109 (reported, not gate items, Q11) | constructions written in the test from the prose, the expected verdict read from verdicts.json; an item with no construction fails the test unless listed as not constructed | **107/107 constructions agree** (102 items; N-19, N-70, N-73, N-77 and N-87 have two constructions each); N-38 not constructed (a hint port's stack budget, M4) |
+| N-19's reason | `n19_reason`: with the call, the body is blamed for the Linear capture `l` and `c` is consumed; without it, `c` is not consumed | holds |
 | Secondary facts (row, may_trap) | where verdicts.json states them; a difference fails the test | 23/23 same |
 
 How to read this: at this revision no item disagrees, so no item needs a "mithi or note wrong"
-diagnosis (the test has a `DIAGNOSED` list for them; it is empty). Before the review the harness
-covered N-07..N-39 only, and 15 of the 28 later items the reviewer constructed disagreed; each was a
-mithi defect (missing rule or unsound shortcut), fixed in mithi with the note's verdict in view.
-None was resolved by editing the note. The supplementary constructions are mithi's (and the
-reviewer's) reading of prose and are weaker evidence than the snippet items.
+diagnosis. The test's `DIAGNOSED` list has one entry, N-43, which applies only against the
+verdicts.json of commit `5e16fbb`: there N-43 expects E-BORROW-OUTLIVE, while the third round
+(F-107) and rustc 1.99.1 (E0521 [M]) give E-LOCAL-MUT-STORE, so this revision passes whether or not
+the third round's verdicts.json lands first [M: both versions run, 2026-10-23; 63/63 with N-43
+diagnosed against `5e16fbb`'s]. The note's third round (§12.2)
+listed 18 verdict or code disagreements of mithi at `dcd4c87` (N-43 and 17 items of N-70..N-109)
+and two interpreter values (N-96, N-97); each was a mithi change, made here (Review log, 2026-10-23).
+Earlier, before the 2026-10-16 review, the harness covered N-07..N-39 only, and 15 of the 28 later
+items disagreed; each was a mithi defect. None was resolved by editing the note. The supplementary
+constructions are mithi's (and the reviewers') reading of prose and are weaker evidence than the
+snippet items. The 2026-10-23 review found that agreement does not mean soundness: N-19 agreed for
+the wrong reason (now `n19_reason` checks the reason), and the review's write-through-reference,
+`par` and closure-transfer holes were in no item until they were added as regression tests.
 
 Harness conventions (stated in `tests/verdicts.rs`):
 
@@ -186,8 +220,8 @@ Harness conventions (stated in `tests/verdicts.rs`):
 
 ## Other tests
 
-[M: `cargo test -p mithi -- --test-threads=2`, 2026-10-16, laptop: 39 Rust tests, all pass; about
-20 s wall time including the incremental build]
+[M: `cargo test -p mithi -j4 -- --test-threads=4`, 2026-10-23, laptop, rustc 1.99.1: 48 Rust tests,
+all pass; 11 s wall time with the build up to date. Earlier: 39 tests, 2026-10-16]
 
 - `tests/corpus.rs`: nine programs, each accepted and each with `#[test]` functions that pass under
   the interpreter: six in the shape of the X1 public smoke set (DESIGN §5.2: S-NORM-0, S-EVICT-0,
@@ -197,7 +231,13 @@ Harness conventions (stated in `tests/verdicts.rs`):
   not run [inference]). All were written by mithi's author, so they are a regression suite, not the
   other-family twins ROADMAP §3.2 asks for.
 - `tests/ownership.rs`: 97 small programs with Rust's verdict (reject with the note's code, or
-  accept), from Rust's rules [inference: rustc was not run on them], and the bodiless-function rule.
+  accept), from Rust's rules [inference: rustc was not run on them, except r26, measured on
+  2026-10-23], the bodiless-function rule, and `r19_blames_the_second_call` (r19's error must be at
+  the second `c()`, not in the closure body).
+- `tests/review_2026_10_23.rs`: 98 table cases from the 2026-10-23 review and the reviser's
+  companions (grade write targets 26 and 14 accepted twins, T-Cover 3, `par` 11, closures and loans
+  33, T2 8, rows and policies 3), and a run-time test of closure state, `mem::swap` of references
+  and `Option::as_mut`. Each ownership expectation and run-time value is rustc 1.99.1's [M].
 - `tests/interp.rs`: every trap kind with its anchor, `par for` lowest index named in the report,
   abandonment order (locals and temporaries), recursion to the frame limit without a crash,
   exhaustive f16 widening, the canon sum16 tree order.
@@ -212,7 +252,12 @@ Harness conventions (stated in `tests/verdicts.rs`):
 Performance [M: 2026-10-16, laptop, debug build]: a straight-line body of 4,000
 `let x{k+1} = x{k} + 1;` over a `u32` parameter checks in 0.4–0.6 s, and 20,000 in about 0.9 s
 (before the review, 400 took 14 s: T2 collected every fact for every goal, and the ownership pass
-scanned every holder for every use).
+scanned every holder for every use). [M: 2026-10-23, laptop, debug build, best of two runs, the
+revision against the pre-revision binary]: 4,000 lines 0.22 s against 0.19 s; 20,000 lines 0.63 s
+against 0.61 s; 400 sequential `if`/`else` joins with a `%` index 0.19 s against 0.19 s, 1,600 of
+them 1.26 s against 1.22 s, and 1,600 joins whose index is chosen by `i < y.len()` 4.56 s against
+4.29 s. A first version of the relational join facts made 400 joins 8x slower (a full
+Fourier–Motzkin proof at every join); they now use an interval proof only.
 
 ## Not implemented
 
@@ -232,6 +277,12 @@ scanned every holder for every use).
   type parameter: E-TYPE, a false rejection; generic numeric code cannot be written (review
   finding R1-21(d)). The FF class check does run per instantiation for what does type-check.
 - Moves inside closures by field (Rust 2021's disjoint capture): a closure captures whole locals.
+- Field-sensitive grade cells (the note's OP-24): a grade cell is a whole local or a whole
+  parameter referent, so a cover of a field or a row is a partial update (F-89), and a struct's
+  untouched raw float field keeps the whole cell raw.
+- Per-position result loans of std signatures (F-90) beyond what the provenance and loan rules
+  above give: `next` on an iterator returns references into what the iterator borrows, through
+  the iterator's own loans and provenance.
 - Std: only the functions declared in `std/std.mith`; anything else is E-TYPE ("no method named …"),
   a false rejection when Rust has the method.
 - `comptime` (out of scope), const generics beyond literal lengths, `u128` arithmetic beyond `i128`,
@@ -252,7 +303,10 @@ scanned every holder for every use).
 
 1. **E-FF-CLOCK scope.** mithi reports reading a clock as E-FF-CLOCK only in code reachable from a
    kernel or in a `timing_only` context; elsewhere a clock read is the `time` effect and grades as
-   nondeterministic (this is what makes N-13 an E-GRADE, as verdicts.json expects).
+   nondeterministic (this is what makes N-13 an E-GRADE, as verdicts.json expects). The
+   2026-10-23 review found that the note's §5.0 with (k5) can be read the other way (a clock read
+   in a `#[grade(exact)]` function as E-FF-CLOCK); mithi keeps N-13's reading, and the note's text
+   is handed to the CC track (finding 15).
 2. **Bodiless functions** in user code are accepted only under `--doc-snippets` (N-03 is a
    signature only); otherwise a function outside a trait without a body is E-TYPE, as Rust rejects
    it.
@@ -276,7 +330,9 @@ scanned every holder for every use).
    that kernels may call them, methods that C-EXACT-STD (§12) does not list: on f32 `to_bits`,
    `from_bits`, `abs`, `sqrt`, `mul_add`, `round`, `round_ties_even`, `floor`, `ceil`, `trunc`,
    `recip`, `copysign`, `clamp`, `total_cmp`, `partial_cmp` and the `is_*` predicates; on f64 the
-   same kind plus `max` and `min`; `<[T]>::is_empty`; and the integer `is_power_of_two`. C-EXACT-STD
+   same kind (not `max` and `min` since 2026-10-23: F-113, their signed zero is unpinned, so they
+   are not exact_std and their results carry the platform taint); `<[T]>::is_empty`; and the
+   integer `is_power_of_two`. C-EXACT-STD
    says every other std function is E-KERNEL-CALL; mithi reads §5.3's IEEE operations, payload-blind
    functions and observers as primitives rather than std functions [prov, mithi: pending note
    review; `is_power_of_two`, `partial_cmp` and `is_empty` are the least clear].
@@ -294,22 +350,71 @@ scanned every holder for every use).
    An unlabelled `break` directly inside a labelled block is E-TYPE (rustc E0695) and `continue 'a`
    naming a block is E-TYPE (E0696); an unlabelled `continue` inside a labelled block continues the
    innermost loop, which the parser labels if it has no label.
-12. **T-CallClo's λ_q** (F-61): a call of a closure value adds the arguments' loans and the closure's
-   own loans to every by-mut captured place of Local type (an over-approximation of what the body
-   stores there). Closures passed to a call (rather than called through a local) get no transfer.
-13. **Symbolic loans per parameter, not per reference position** (F-62): E-LOCAL-MUT-STORE accepts
-   a stored loan that is any symbolic loan of the same parameter, so a callee may store one
-   component of a tuple parameter into another, which rustc rejects [inference].
+12. **λ_q and λ_σ** (F-61, F-93, F-94, F-99; revised 2026-10-23): wherever a closure may run (a
+   direct call, or a std or user call whose argument type mentions the closure), every by-mut
+   captured place that can hold a loan receives the call's non-closure argument loans (not those
+   at higher-ranked parameters), the closure's by-ref capture loans and what its by-move captures
+   carry, and each capture's current loans in place of its capture symbol, but never a loan **on** a
+   by-mut captured place. A capture that is a reference goes through `store_into`, so a transfer
+   into a parameter's referent is E-LOCAL-MUT-STORE. A closure that writes its by-move state gets
+   the same loans in the closure value (λ_σ). This over-approximates what the body stores; before
+   2026-10-23 closures passed to a call got no transfer at all, and the closure's own capture loans
+   were transferred (a false E-BORROW-CONFLICT, N-84).
+13. **Symbolic loans per reference position** (F-62; replaces "per parameter", 2026-10-23): a
+   parameter has one symbolic loan per reference position of its type. A by-value destructuring
+   of a local whose position is known (`let (v, d) = t;`, `Some(r) = o`) gives each binding only
+   the loans at its own positions, and E-LOCAL-MUT-STORE accepts a stored symbolic loan of the
+   destination's parameter only on the destination's own path (its position, a position inside
+   it, or a reference it is reached through). Where a local's position is unknown (a reborrow, a
+   call result), the old per-parameter rule applies.
 14. **Implicit reborrow.** A `&mut` local passed where the callee declares a `&mut` parameter is
-   reborrowed (`&mut *r`), as Rust does at that coercion site, not moved; elsewhere (`let a = r;`)
-   it moves.
+   reborrowed (`&mut *r`), as Rust does at that coercion site, not moved, also through an unsize
+   coercion (`&mut [u32; 4]` for `&mut [u32]`, 2026-10-23); elsewhere (`let a = r;`) it moves.
 15. **Linear scrutinees.** A `match` that consumes a Linear value needs every arm to consume its
    Linear payload (`Some(_)`, a `ref` binding, or `_` over variants that carry one is
    E-LINEAR-DROP); `if let` on a Linear place consumes it on both paths only when the other
-   variants carry no Linear value, and otherwise only on the matching path.
-16. **Strong update through a whole-place argument** (F-78): when an argument lends a whole place
-   (`&mut x`, `&mut *y` of a `&mut` parameter), the callee's final referent grade replaces the
-   place's; any other argument (an element, a field, a local reference) is a weak update.
+   variants carry no Linear value, and otherwise only on the matching path. The note now states
+   this (F-111).
+16. **Strong update through a whole-place argument** (F-78, F-91): when an argument lends a whole
+   place (`&mut x`, `&mut *y` of a `&mut` parameter) at a parameter `&mut τ` whose τ holds no
+   reference, the callee's final referent grade replaces the place's; any other argument (an
+   element, a field, a local reference, a may-alias set) is a weak update of its reach set. The
+   update also joins the argument's address grade (finding 7 of 2026-10-23: T-Call as written
+   omits it).
+17. **Where E-BORROW-OUTLIVE is anchored** (2026-10-23): at the closing brace of the scope that ends
+   (for `break`/`continue`, at the jump), not at the scope's start, so that within class 4 the
+   cause (`E-REF-ESCAPE`, an `E-LOCAL-MUT-STORE` at the store) comes first by source position, as
+   rustc reports E0515 for `ow05` [M]. The note's §5.16 does not fix anchors (finding 16).
+18. **Higher-ranked closure parameters** (F-107, measured): a closure parameter is higher-ranked
+   when the closure is passed where an `Fn*` bound writes that parameter as a reference, or when
+   its written type mentions a reference **and the closure has no expected signature**. rustc
+   1.99.1 compiles `v.iter().for_each(|x: &u32| out = x)` and `.map(|x: &u32| x)` [M: scratch
+   probes r2, r4], so an annotation does not make a parameter higher-ranked when a bound gives the
+   closure its signature; the note's F-107 says it does (handed to the CC track). Storing such a
+   parameter's loan outside the closure body is E-LOCAL-MUT-STORE; returning it from a closure
+   without an expected signature is E-REF-ESCAPE.
+19. **(t7) for helpers** (2026-10-23): a non-policy helper that fails ⊢_to apart from (t2) is one
+   E-TO-CALL at the call site in the policy, with the helper's failures as notes. A cycle in the
+   policy's call graph stays E-TO-RECURSION wherever it is: (t9) reads (t5)'s "no recursion" as a
+   property of the whole call graph.
+20. **References of unknown provenance** (grades): a write through one is a weak update of every
+   place the body lends mutably and every `&mut`-carrying parameter's referent; a read joins every
+   lent place's grade. Sound, coarse; it is reached only when no provenance rule applies.
+21. **Relational facts at joins** (T2): kept only when the other branch's value satisfies them by
+   an interval bound or an existing fact, not by a full proof (performance, above). The note says
+   T2 is QF_BV + LIA; mithi's T2 is weaker (finding 18).
+22. **`par` writes** (2026-10-23): a `&mut`-carrying local used as a value (an implicit reborrow,
+   a move, a copy) is a write of its whole root; a call of a closure created outside the body
+   writes its by-mut captures and the places its by-move `&mut` captures point to, and a call of an
+   FnMut or FnOnce closure or type parameter writes the closure itself. Two writes through a
+   footprinted projection must name the same footprint (the same invariant argument), else
+   E-PAR-DISJOINT (F-95, conservatively: no footprint arithmetic). An index is the iteration
+   variable only when its binder is immutable and never assigned (F-103).
+23. **Cover-Proj is a partial update** (F-89): the receiver's cell keeps its scope, and its NaN bit
+   is reset only when the footprint's field holds all of the receiver struct's float content.
+   A consequence the CC track should confirm: the third round's control probe `a20_coverproj_ctrl`
+   (no write to the raw `scale` field) is now rejected, because the caller's `scale` passes through
+   raw.
 
 Open question (provisional, pending Q9, not decided in code): X1 DESIGN §9.1 says "T2 is not part
 of X1" and lists `ensures` and `invariant` proofs as outside the agent subset, while note §5.10 makes
@@ -424,6 +529,93 @@ line `/target/`, so that a `cargo build` without `CARGO_TARGET_DIR` leaves no un
 Not yet done after the review: a second, independent review of the revision (the fixes were made
 by one context with the expected verdicts in view), and the other-family planted corpus.
 
+**2026-10-23. Reviewer: one, Claude, same family, independent context; blind and adversarial
+(verdicts.json was read only after the predictions were written).** This is the review the
+checker precondition (ROADMAP §3.2) asks for after the 2026-10-16 revision, within the
+same-family limit. Lenses: soundness of grades, `par`, ownership and T2 against the note; rows and
+policies; the note's own rules; run-time meaning against Rust. Probes [M, laptop, the pre-revision
+build of this worktree]: 154 blind probes in set 1 (141 matched the reviewer's prediction), 34 in
+set 2 (26 matched), and about 70 follow-up programs; they are in the session scratch area
+(`mithirev/probes.py`, `probes2.py`, `x/*.mith`, runner `run.py`), not in the repository. Of the 21
+differences, 10 were mithi bugs, 1 a std gap, 5 ambiguities of the note, 1 open (OP-20, ln15) and 4
+the reviewer's own errors (ff14, kc21, os02, gr22; stated by the reviewer and confirmed here).
+
+Counts: 20 findings (3 blockers, 5 majors, 12 minors). **All 20 accepted**; none was rejected.
+12 were mithi defects, fixed with regression tests. 7 were findings against the note: mithi now
+implements the sound reading of each where it has one, and the note's text is handed to the CC
+track ([Findings](#findings-for-the-note-and-the-x1-design) 7 to 13), because the note is that
+track's file and that track was revising it the same day. 1 was this log. In 4 findings the
+proposed fix was adopted in part or replaced (6, 10, 13, 16), with the reason in the table.
+
+| # | Sev | Finding | Disposition |
+|---|---|---|---|
+| 1 | blocker | writes through references not registered in `refs` were dropped; `refs` held one target | Fixed (`grade.rs`): every reference-carrying value has a provenance (places, address grade) through `if`/`match`, patterns, `for` items, projections and std results, aggregates, std storing calls (`push`, `swap`), nested `&mut` (reach sets); unknown provenance writes every lent place weakly. h9, h10, h12, h13, h16–h20, h22–h27 now reject; their canonical twins are accepted |
+| 2 | blocker | `par` W missed implicit reborrows (`set0(y, i)`) and calls of closures or FnMut parameters | Fixed (`par.rs`, shared helper `implicit_mut_uses` in `analysis/mod.rs`): c1, pa14, c6, c8, pa15, c10 are E-PAR-DISJOINT; `Fn` closures and `F: Fn` parameters stay accepted |
+| 3 | blocker | λ_q applied only at direct closure calls | Fixed (`own.rs` `closure_transfer`): at every call whose argument type mentions the closure, std or user, with the closure arguments' own loans excluded (F-99). g3, g4, g5, g7 are E-BORROW-OUTLIVE, as rustc E0597 [M] |
+| 4 | major | by-move captures were moved in the state the body was checked in | Fixed: the body owns its by-move captures; a body that moves one, or a Linear by-move capture, makes the closure FnOnce (`captures.rs`, which also captures a pattern-moved scrutinee by value); a Linear by-move capture must be consumed in the body (T-Lin, K-LinClo). a1, a2, a5, b1–b4, ln06 accepted (rustc compiles them [M]); a4 and r19 reject at the second call; `n19_reason` and `r19_blames_the_second_call` check the reason |
+| 5 | major | T-Cover premise 3 missed `poke(y)` | Fixed (`t2.rs`, the shared helper): e1b and kc38 are E-NAN-RAW-SINK |
+| 6 | major | one symbolic loan per parameter; stores at `F: FnMut(&u32)` bounds accepted | Fixed: per-position symbolic loans, kept through destructuring (e2, ow33 E-LOCAL-MUT-STORE; rustc: "lifetime may not live long enough" [M]); higher-ranked closure parameters (f14, f15 E-LOCAL-MUT-STORE; rustc E0521 [M]). **In part:** the destination's own path is accepted, not only its exact position, so `let x = v[0]; v.push(x)` stays accepted (rustc compiles it [M]) |
+| 7 | major | note: T-Call's `θ_mut,j` update lacks the address grade | mithi joins it at T-Call and T-CallClo (h9 E-GRADE); the note's text is handed to the CC track (Findings 7) |
+| 8 | major | note: E-LOCAL-MUT-STORE does not cover closure-call transfers | mithi stores a transfer into a reference capture through `store_into`: g1 and its unannotated twin are E-LOCAL-MUT-STORE (rustc rejects both [M]); handed to CC (Findings 8) |
+| 9 | minor | implicit reborrow missed through an unsize | Fixed: d3 accepted (rustc compiles [M]) |
+| 10 | minor | T2 lost `j % n < n`, `i >> 1 <= i`, branch-merged indices | Fixed: relational facts for `%`, `/`, `>>`, and at joins when the other branch's value satisfies them by its interval (kc27, e4, f5, kc10 accepted; negative controls still E-KERNEL-OBLIGATION). **In part:** a full proof at each join made long bodies quadratic, so it is interval-only (Interpretation 21) |
+| 11 | minor | `let j = i; y[j]` rejected | Fixed: an immutable, once-bound `let` copy is read through (pa11 accepted) |
+| 12 | minor | `uses { unsafe }` E-PARSE; declared `foreign` unchecked | Fixed: rw08 E-GRANT-UNSAFE, u1 E-GRANT-FOREIGN; the Lark grammar still rejects `uses { unsafe }` (Grammar table) |
+| 13 | minor | a helper's (t5) failure reported as E-TO-LOOP | Fixed: E-TO-CALL at the call site with the helper's failures as notes (po10). **In part:** recursion stays E-TO-RECURSION (Interpretation 19; pol/p08 unchanged) |
+| 14 | minor | `Option::as_mut` missing | Added (std, interpreter): ow31 accepted; h22/h23-style writes through it grade correctly |
+| 15 | minor | note: FF-CLOCK's class in non-kernel exact code | mithi keeps N-13's reading (Interpretation 1); handed to CC (Findings 9) |
+| 16 | minor | note: §5.16 does not fix anchors or ties | mithi anchors E-BORROW-OUTLIVE at the scope's end (Interpretation 17): ow05 is E-REF-ESCAPE, as rustc E0515 [M]. **Not adopted:** a sort by the class line's list index; handed to CC (Findings 10) |
+| 17 | minor | note: (t5) `0..slots.len()`, (t6) "escaping closure" | mithi keeps the literal reading (po04 E-TO-LOOP, po11 E-TO-AUTHORITY); handed to CC, to pin before the freeze (Findings 11) |
+| 18 | minor | note: §5.10 Φ omits SSA definitions and per-arm implications | mithi keeps the implications T2 can check cheaply (finding 10); handed to CC (Findings 12) |
+| 19 | minor | note: no T-Lin premise for closure bodies; N-67 abandons on a normal path | mithi implements the premise (finding 4); both texts handed to CC (Findings 13) |
+| 20 | minor | this README: the 63/63 claim, r19, the blind-review gap | This entry; the agreement section; `n19_reason`; `r19_blames_the_second_call` |
+
+**The note's third round (§12.2 of the note, the CC track, 2026-10-23, uncommitted).** It added
+N-70 to N-109 to verdicts.json, listed 18 verdict or code disagreements and two run-time values of
+mithi at `dcd4c87` as changes for this track, and left `supplementary_items` failing until the
+items were constructed. This revision constructs all 40 items (44 constructions) and makes each
+agree: Cover-Proj's partial update (F-89, N-74); reach sets (F-91, N-77); by-move closure state and
+its stores (F-92, F-93: N-78 to N-81); capture symbols instead of capture loans (F-94, N-84);
+footprints and receivers in `par` (F-95, F-102: N-87, N-93); immutable binders (F-103: N-94, N-95);
+closure Copy and Clone with their own state (F-104: N-96 and N-97 now evaluate to 1 and 0, as rustc
+[M]; `c.clone()` accepted when no capture is by mut); higher-ranked annotated parameters (F-107:
+N-43's new code, N-101, N-102); per-position loans (N-103); f64 `max`/`min` (F-113, N-108). The
+CC track should confirm one consequence: its control probe `a20_coverproj_ctrl` is now rejected
+(Interpretation 23).
+
+Found while revising, beyond the findings (each now a test case):
+
+- **typeck applied the `&&T → &T` coercion before trying zero dereferences**, so
+  `mem::swap(&mut r1, &mut r2)` with `r1: &mut u32` swapped the referents: mithi computed 1001
+  where rustc 1.99.1 gives 110 [M]. A false friend in the interpreter, now fixed (`typeck.rs`
+  `coerce`). Fixing it exposed that the ownership pass exchanged loans only between two plain
+  places; br/b12 (`swap(&mut r, o.as_mut().unwrap())`) was briefly accepted and is E-BORROW-OUTLIVE
+  again.
+- **The interpreter shared a closure's by-move state between copies** (`let mut d = c; d(); c()`
+  gave 2; rustc gives 1 [M]).
+- **Grade holes the reviewer did not probe:** references stored by `Vec::push` or swapped by
+  `mem::swap`, a user projection called with an unsized argument (`*first(&mut a) = h`), a moved
+  reference (`let s = r; *s = h`), a reference inside a tuple, and the `&mut` items that
+  `iter_mut().for_each` and a user `fn each<F: FnMut(&mut u32)>` hand to a closure.
+
+Changed test expectations, each with its evidence: `review_par` c7:p34 E-PAR-DISJOINT → E-PAR-RACE
+(finding 11 makes `let k = i` affine; the read of `y[0]` is the race); `review_ownership`
+reviser:closure-transfer-ok accept → E-LOCAL-MUT-STORE (`|x: &u32|` is higher-ranked; rustc E0521
+[M]), with the accepted unannotated twin added; `ownership` r26 E-BORROW-OUTLIVE → E-REF-ESCAPE
+(rustc E0515 [M]; Interpretation 17); `review_grades` gr/g04 E-NAN-RAW-SINK → E-GRADE (F-113).
+
+Regression sweep [M, laptop, 2026-10-23]: the pre-revision binary and this revision on the 2,057
+`.mith` probe files of the earlier reviews, fixes and note rounds in the session scratch area
+(`mithi-rev`, `mithi-fix`, `mithi`, `cc3`), with no flags and with `--canonical-prelude`: 19
+verdicts changed, every one a third-round item of the note in the direction §12.2 expects or a
+fixed false rejection (m07b, m22, m23), plus `a20_coverproj_ctrl` (above). Every ownership
+expectation of the new tests was measured with rustc 1.99.1 (`--edition 2021`, the toolchain
+pinned in `rust-toolchain.toml`, already installed under `.rustup-mithril`; nothing was installed).
+
+Not yet done: a second review of this revision (the fixes were made by one context, with
+verdicts.json and the reviewer's predictions in view); the other-family planted corpus; the
+Lark grammar's `uses { unsafe }`; field-sensitive grade cells (OP-24).
+
 ## Findings for the note and the X1 design
 
 1. **A kernel that writes an `ActQ8` must discharge the `ActQ8` invariant**
@@ -433,9 +625,10 @@ by one context with the expected verdicts in view), and the other-family planted
    `kernel fn`, this is an amber candidate (ROADMAP §3.6) unless T2 gains a rule for it.
 2. **Loop-carried indices are unprovable without loop invariants (DR-012).** A top-k kernel that
    keeps `best_i` and indexes with it later is E-KERNEL-OBLIGATION; the corpus's top-k keeps the
-   best value alongside the index instead. Candidate for the note's §11 idiom list. Since the
-   review, a value merged from two branches (`let j = if c { i - 1 } else { 0 }`) keeps only its
-   interval, not its relation to a length, so more such kernels need an explicit bound check.
+   best value alongside the index instead. Candidate for the note's §11 idiom list. Since
+   2026-10-23 a value merged from two branches keeps a relation of one branch (`j <= n - 1`) when
+   the other branch's value satisfies it by its interval (Interpretation 21), so `let j = if i < n
+   { i } else { 0 }` is in bounds; relations that need a full proof at the join are still lost.
 3. **`ActQ8::__invariant` may trap in mithi** (mithi does not prove the iterator sum free of
    overflow), whereas the note calls it provable by unrolling. The difference is a fact, not a
    verdict; no item depends on it.
@@ -446,7 +639,75 @@ by one context with the expected verdicts in view), and the other-family planted
    share one index function, or give a stride rule (mithi's reading: Interpretation 10).
 6. **§5.8 does not say how a refutable pattern consumes a Linear value** (`if let A(t) = e` when
    another variant also carries a Linear value, `Some(_)`, a `_` arm). mithi's reading is
-   Interpretation 15.
+   Interpretation 15. (Closed by the note's F-111 on 2026-10-23.)
+
+Items 7 to 15 come from the review of 2026-10-23 (Review log). They are for the CC track, which
+owns the note; none of them was in the note's draft of that day, which this track did not edit.
+Each states the problem, the evidence and a proposed text.
+
+7. **T-Call omits the address grade of a `&mut` argument** (finding 7). In §5.5, T-Call's second
+   and third update lines and T-CallClo's `θ_mut,j` line write `θ_mut,j(γ̄) ⊔ pc`. When the
+   callee overwrites `*a_j` without reading it, the choice of the place made under h vanishes:
+   `let r = if h > 1 { &mut y } else { &mut z }; w(r, 4); y` with `fn w(o: &mut u32, k: u32) { *o = k
+   }` is `cross_device` by the rule as written although y is 4 or 0 depending on h. Proposed: use
+   `θ_mut,j(γ̄) ⊔ γ_addr(a_j) ⊔ pc`, with γ_addr as in T-Assign (the grades of the references a_j
+   traverses and of its index and slice expressions). Add h9 and h11 (E-GRADE) as supplementary
+   items. mithi does this (Interpretation 16).
+8. **E-LOCAL-MUT-STORE does not cover a closure-call transfer into a parameter's referent**
+   (finding 8). §5.4's premise lists "by assignment, or through a storing std call", and T-Call
+   says a user call adds no loan to the caller's places. `fn put(o: &mut Vec<&u32>, d: &u32) { let
+   mut c = |x| o.push(x); c(d); }` passes both, and its caller dangles; rustc rejects it [M: "lifetime
+   may not live long enough"; with `|x: &u32|`, E0521]. Proposed: "by assignment, through a storing
+   std call, or through a closure-call loan transfer (λ_q, λ_σ) whose target* reaches a place
+   through parameter j"; restate OP-22's remainder as a soundness obligation. Add g1 and its
+   unannotated twin (E-LOCAL-MUT-STORE).
+9. **FF-CLOCK's class outside kernels** (finding 15). §5.0 makes `cls` depend on ctx, and (k5)
+   lists FF-CLOCK among the constructs whose class is Dc in exact context, so a clock read in a
+   `#[grade(exact, _)]` function reads as E-FF-CLOCK; 01's FF-CLOCK row and N-13's verdict
+   (E-GRADE) say otherwise. Proposed: a per-row table in §5.0 (`cls(FF-CLOCK, ctx) = Dc` in kernels,
+   kcall helpers reached from kernels and `timing_only` code; C elsewhere, where the `time` label's
+   `nondet` taint gives E-GRADE at the sink), and (k5) reworded to "no construct whose class is Dc
+   in a kernel".
+10. **§5.16 fixes no anchors and no tie-break at one anchor** (finding 16). ow05 `fn f(v: &[u32]) ->
+   &u32 { let l = [1u32, 2]; &l[0] }` gives E-BORROW-OUTLIVE and E-REF-ESCAPE (both class 4); po09
+   gives four ⊢_to codes at one anchor. Proposed: name each code's anchor (E-REF-ESCAPE at the
+   returned expression, E-BORROW-OUTLIVE at the end of the dying scope, E-LOCAL-MUT-STORE at the
+   store, ⊢_to codes at the item header or the offending construct) and break remaining ties by an
+   order the note lists. mithi anchors E-BORROW-OUTLIVE at the scope's end (Interpretation 17), so
+   ow05 is E-REF-ESCAPE, as rustc reports E0515 [M]; the third round's N-79 already assumes this
+   anchor ("the store is the first failure by source position").
+11. **(t5) and (t6) are ambiguous for common policy code** (finding 17). (t5) allows "loops only
+   over core-provided slices or constant ranges", so `for i in 0..slots.len()` is E-TO-LOOP
+   although static fuel is "a polynomial in view lengths"; (t6)'s "no escaping closure", read as
+   clo_E, rejects `move || k` with a Copy capture that does not escape. Proposed: allow `a..b` with
+   constants or `v.len()` of a core-provided view, and say whether (t6) means clo_E or a closure
+   that escapes the policy's extent. Either change flips mithi's verdicts on po04 and po11, so it
+   should be pinned before the X1-subset freeze.
+12. **§5.10's Φ omits SSA definitions and per-arm implications** (finding 18). Whether `let j = if
+   c { a } else { b }` gives T2 a relation between j and a or b is unstated, while "QF_BV + LIA"
+   implies it. Proposed: "Φ also contains each SSA definition x_k = e, and for x_k defined by
+   `if`/`match` the per-arm implications (c ⇒ x_k = e_arm)"; or state that only interval facts
+   survive a join. mithi keeps the implications its interval check can confirm (Interpretation
+   21), so kc10 is accepted; a fuller T2 is not part of this revision.
+13. **Two linearity gaps** (finding 19). (a) T-CloL/T-CloE never require a closure body to consume
+   its by-move Linear captures, but N-19 "with the call" is E-LINEAR-DROP only by that premise.
+   Proposed: "each by-move captured Linear value is consumed exactly once on every normal path of
+   the body (T-Lin); otherwise E-LINEAR-DROP". mithi implements it; `n19_reason` checks it. (b)
+   N-67 (accept) abandons Linear values of ignored `Ret` records on a normal outcome (F-83), but
+   §5.8 says "Trap paths are exempt" as if trap paths were the only abandonment. Proposed: list the
+   `par` Ret-join as a second abandonment site with its reason, or add a T-Par premise that makes
+   N-67 a reject.
+14. **F-107's annotation rule is broader than rustc** (found while revising). rustc 1.99.1
+   compiles `v.iter().for_each(|x: &u32| out = x)` and `v.iter().map(|x: &u32| x).collect()`
+   [M: scratch probes r2, r4]: a closure that gets an expected signature from a non-higher-ranked
+   bound takes its regions from that bound, and the annotation does not make the parameter
+   higher-ranked. Proposed: "a parameter is higher-ranked by its annotation only when the closure
+   has no expected signature". mithi implements this reading (Interpretation 18); N-43, N-101 and
+   N-102 are unaffected.
+15. **F-89 rejects the third round's own control probe** `a20_coverproj_ctrl` (Cover-Proj over
+   `M2.blocks` with an untouched `scale: f32`): `scale` is the caller's value, raw in general, so
+   the partial update keeps the cell's NaN bit raw. This follows from F-89 as written; the CC track
+   should confirm it is intended, or make cells field-sensitive (OP-24).
 
 ## Grammar and parser
 
@@ -481,3 +742,4 @@ grammar rejects, mithi accepts unless stated):
 | `\| \|` (spaced empty closure) | the grammar spells it `\|\|` |
 | block comments nested more than one level | Rust nests them without limit; a regular expression cannot, and the grammar allows one level |
 | `if x == S { a: 1 } {}` (grammar accepts, mithi rejects) | mithi forbids struct literals in conditions as Rust does; the grammar does not encode that restriction |
+| `uses { unsafe }` | the grammar's `effect` is a `NAME`, which excludes the keyword `unsafe`; mithi parses it (since 2026-10-23) so that J3 can name the rejection, E-GRANT-UNSAFE. The grammar should accept `unsafe` there too (outside this track's files) |

@@ -58,6 +58,11 @@ pub struct ClosureDef {
     pub span: Span,
     /// Fn (0), FnMut (1) or FnOnce (2), as inferred from the body
     pub fn_kind: u8,
+    /// per parameter: higher-ranked by its annotation (note §5.7, F-107): the written type has a
+    /// reference with an elided lifetime and the closure has no expected signature (a closure
+    /// passed where an `Fn*` bound gives its signature takes its regions from the bound: rustc
+    /// 1.99.1 compiles `v.iter().for_each(|x: &u32| out = x)` [M, review 2026-10-23])
+    pub hr_annot: Vec<bool>,
 }
 
 #[derive(Clone, Debug)]

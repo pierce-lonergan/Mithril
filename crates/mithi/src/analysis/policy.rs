@@ -4,7 +4,7 @@
 
 use super::*;
 use crate::diag::Diag;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 fn is_view(c: &Checked, t: &Ty) -> bool {
     match t {
@@ -27,16 +27,26 @@ fn view_param(c: &Checked, t: &Ty) -> bool {
 }
 
 /// (t1), (t5), (t6), (t7) for a policy or a helper it calls; (t2), (t3) only for the policy.
-fn check_to(c: &Checked, fid: FnId, is_entry: bool, seen: &mut HashSet<FnId>, stack: &mut Vec<FnId>, diags: &mut Vec<Diag>) {
+/// Returns the failures of `fid` itself. For a helper (not the entry), the caller reports them as
+/// one E-TO-CALL at its call site, with the helper's own failures as notes: (t7) says a callee
+/// that fails ⊢_to apart from (t2) is E-TO-CALL (review 2026-10-23, po10: a helper's loop was
+/// reported as E-TO-LOOP at the helper). Recursion is the exception: (t5)'s "no recursion" is a
+/// property of the policy's whole call graph ((t9): "(t5) makes the call graph acyclic"), so a
+/// cycle anywhere in it is E-TO-RECURSION, reported directly [prov, mithi].
+fn check_to(c: &Checked, fid: FnId, is_entry: bool, memo: &mut HashMap<FnId, Vec<Diag>>, stack: &mut Vec<FnId>, direct: &mut Vec<Diag>) -> Vec<Diag> {
     let f = &c.program.fns[fid as usize];
     let path = f.path.clone();
     if stack.contains(&fid) {
-        diags.push(Diag::new("E-TO-RECURSION", f.sig_span, "recursion in a timing_only policy (t5): fuel and stack must be statically bounded").in_def(&path));
-        return;
+        direct.push(Diag::new("E-TO-RECURSION", f.sig_span, "recursion in a timing_only policy (t5): fuel and stack must be statically bounded").in_def(&path));
+        return vec![];
     }
-    if !seen.insert(fid) {
-        return;
+    if !is_entry {
+        if let Some(d) = memo.get(&fid) {
+            return d.clone();
+        }
     }
+    let mut out: Vec<Diag> = vec![];
+    let diags = &mut out;
     stack.push(fid);
     let row = c.facts.rows.get(&fid).cloned().unwrap_or_default();
     let ex = c.facts.fns.get(&fid).map(|x| x.exercised.clone()).unwrap_or_default();
@@ -58,7 +68,10 @@ fn check_to(c: &Checked, fid: FnId, is_entry: bool, seen: &mut HashSet<FnId>, st
     }
     let Some(b) = c.bodies.get(&fid) else {
         stack.pop();
-        return;
+        if !is_entry {
+            memo.insert(fid, out.clone());
+        }
+        return out;
     };
     let params: HashSet<LocalId> = b.params.iter().copied().collect();
     walk_deep(c, &b.expr, &mut |e| match &e.kind {
@@ -102,10 +115,21 @@ fn check_to(c: &Checked, fid: FnId, is_entry: bool, seen: &mut HashSet<FnId>, st
                 diags.push(Diag::new("E-TO-CALL", sp, format!("`{}` has row {}: a policy calls only stateless std functions with row ∅ (t7)", tf.path, crate::program::row_text(&r))).in_def(&path));
             }
         } else {
-            check_to(c, t, false, seen, stack, diags);
+            let sub = check_to(c, t, false, memo, stack, direct);
+            if !sub.is_empty() {
+                let mut d = Diag::new("E-TO-CALL", sp, format!("`{}` does not satisfy ⊢_to apart from (t2): a policy calls only helpers that do, or stateless std functions with row ∅ (t7)", tf.path)).in_def(&path);
+                for x in &sub {
+                    d = d.note(format!("{} in `{}`: {}", x.code, x.def.clone().unwrap_or_default(), x.msg));
+                }
+                diags.push(d);
+            }
         }
     }
     stack.pop();
+    if !is_entry {
+        memo.insert(fid, out.clone());
+    }
+    out
 }
 
 fn iterates_param(e: &TExpr, params: &HashSet<LocalId>) -> bool {
@@ -125,9 +149,16 @@ pub fn run(c: &mut Checked) {
         if f.kind != FnKind::Policy || f.role == FileRole::Std {
             continue;
         }
-        let mut seen = HashSet::new();
+        let mut memo = HashMap::new();
         let mut stack = vec![];
-        check_to(c, fid, true, &mut seen, &mut stack, &mut diags);
+        let mut direct = vec![];
+        let own = check_to(c, fid, true, &mut memo, &mut stack, &mut direct);
+        diags.extend(own);
+        for d in direct {
+            if !diags.iter().any(|x: &Diag| x.code == d.code && x.span == d.span) {
+                diags.push(d);
+            }
+        }
     }
     c.diags.extend(diags);
 }

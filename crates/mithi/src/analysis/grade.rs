@@ -105,6 +105,49 @@ enum Target {
     MutRef(LocalId),
 }
 
+/// Where a reference value may point (target*, note section 5.4, F-39): the places, and the
+/// address grade (the grades of what chose among them: an `if` or `match` condition, an index,
+/// the references traversed). An empty set is a temporary (or static data). Review 2026-10-23:
+/// a reference held a single target, so one chosen by `if`/`match`, bound by a pattern
+/// (`Some(r)`, `for r in v.iter_mut()`, `(a, b) = v.split_at_mut(1)`) or returned by a std
+/// projection (`get_mut`) had none, and writes through it were dropped.
+#[derive(Clone, Debug, PartialEq, Default)]
+struct Prov {
+    ts: BTreeSet<Target>,
+    addr: G,
+}
+
+impl Prov {
+    fn one(t: Target, addr: G) -> Prov {
+        Prov { ts: [t].into_iter().collect(), addr }
+    }
+    fn union(&mut self, o: &Prov) {
+        self.ts.extend(o.ts.iter().copied());
+        self.addr = self.addr.j(o.addr);
+    }
+}
+
+/// The places a write through a place expression updates.
+#[derive(Clone, Debug, PartialEq)]
+enum Tg {
+    /// a temporary: nothing observable
+    Temp,
+    Set(BTreeSet<Target>),
+    /// a reference whose provenance is unknown: every place the body lends mutably, and every
+    /// `&mut`-carrying parameter's referent (weakly)
+    Unknown,
+}
+
+impl Tg {
+    fn of(p: Option<Prov>) -> (Tg, G) {
+        match p {
+            Some(p) if p.ts.is_empty() => (Tg::Temp, p.addr),
+            Some(p) => (Tg::Set(p.ts), p.addr),
+            None => (Tg::Unknown, G::default()),
+        }
+    }
+}
+
 #[derive(Clone)]
 struct St {
     env: HashMap<LocalId, G>,
@@ -112,8 +155,9 @@ struct St {
     mutref: HashMap<LocalId, G>,
     /// closures a local's value carries (lazy adapters)
     clos: HashMap<LocalId, BTreeSet<ClosureId>>,
-    /// local references: the targets their loans point to (write targets, F-39)
-    refs: HashMap<LocalId, (Target, G)>,
+    /// locals holding references: where they point (write targets, F-39). Absent for a local
+    /// whose type holds a reference: unknown
+    refs: HashMap<LocalId, Prov>,
     dead: bool,
 }
 
@@ -139,6 +183,91 @@ struct Ga<'a> {
     brk_vals: HashMap<LoopId, G>,
     /// while a closure body is summarised: the grades its locals have at its `return`s (F-68)
     clo_x: Option<HashMap<LocalId, G>>,
+    /// the provenance of each reference-carrying expression evaluated (keyed by node address;
+    /// None: unknown)
+    prov: HashMap<usize, Option<Prov>>,
+    /// locals the body (or a closure in it) lends mutably, and those it lends at all: the
+    /// targets of a write, or a read, through a reference of unknown provenance
+    addr_mut: BTreeSet<LocalId>,
+    addr_any: BTreeSet<LocalId>,
+}
+
+fn key(e: &TExpr) -> usize {
+    e as *const TExpr as usize
+}
+
+/// Locals lent mutably (by `&mut p`, a `ref mut` binding or a by-mut closure capture), and lent
+/// at all, anywhere in a body (closures included).
+fn lent_locals(c: &Checked, e: &TExpr) -> (BTreeSet<LocalId>, BTreeSet<LocalId>) {
+    fn pat_refs(p: &TPat, m: &mut bool, any: &mut bool) {
+        match &p.kind {
+            PK::Bind { by_ref, sub, .. } => {
+                if let Some(x) = by_ref {
+                    *any = true;
+                    if *x {
+                        *m = true;
+                    }
+                }
+                if let Some(s) = sub {
+                    pat_refs(s, m, any);
+                }
+            }
+            PK::Tuple(ps) | PK::Or(ps) | PK::Slice(ps, _) => ps.iter().for_each(|x| pat_refs(x, m, any)),
+            PK::Variant { fields, .. } => fields.iter().for_each(|(_, x)| pat_refs(x, m, any)),
+            PK::Deref(x) => pat_refs(x, m, any),
+            _ => {}
+        }
+    }
+    let mut am = BTreeSet::new();
+    let mut aa = BTreeSet::new();
+    walk_deep(c, e, &mut |x| {
+        let scrut_pat = |s: &TExpr, pats: &[&TPat], am: &mut BTreeSet<LocalId>, aa: &mut BTreeSet<LocalId>| {
+            let (mut m, mut any) = (false, false);
+            for p in pats {
+                pat_refs(p, &mut m, &mut any);
+            }
+            if let Some(r) = place_root(s) {
+                if m {
+                    am.insert(r);
+                }
+                if any {
+                    aa.insert(r);
+                }
+            }
+        };
+        match &x.kind {
+            TK::Borrow(m, p) => {
+                if let Some(r) = place_root(p) {
+                    aa.insert(r);
+                    if *m {
+                        am.insert(r);
+                    }
+                }
+            }
+            TK::Match(s, arms) => {
+                let ps: Vec<&TPat> = arms.iter().map(|a| &a.pat).collect();
+                scrut_pat(s, &ps, &mut am, &mut aa);
+            }
+            TK::LetCond(p, s) => scrut_pat(s, &[p.as_ref()], &mut am, &mut aa),
+            TK::Block(stmts, _) => {
+                for st in stmts {
+                    if let TStmt::Let { pat, init: Some(i), .. } = st {
+                        scrut_pat(i, &[pat], &mut am, &mut aa);
+                    }
+                }
+            }
+            TK::Closure(cid) => {
+                for cap in &c.closures[*cid as usize].captures {
+                    aa.insert(cap.local);
+                    if cap.mode == CaptureMode::Mut {
+                        am.insert(cap.local);
+                    }
+                }
+            }
+            _ => {}
+        }
+    });
+    (am, aa)
 }
 
 fn lit_is_nan(bits: u64, t: &Ty) -> bool {
@@ -213,54 +342,48 @@ impl<'a> Ga<'a> {
         self.st.env.get(&l).copied().unwrap_or_default()
     }
 
-    /// The grade of a place read, and the target a write to it updates.
-    fn place(&mut self, e: &TExpr) -> (G, Option<Target>, G) {
-        // returns (grade read, write target, selection/address grade)
+    /// The grade of a place read, the places a write to it updates, and its selection/address
+    /// grade.
+    fn place(&mut self, e: &'a TExpr) -> (G, Tg, G) {
         match &e.kind {
-            TK::Local(l) => (self.read_local(*l), Some(Target::Local(*l)), G::default()),
+            TK::Local(l) => (self.read_local(*l), Tg::Set([Target::Local(*l)].into_iter().collect()), G::default()),
             TK::Deref(b) => {
                 if let TK::Local(l) = &b.kind {
                     if let Some(g) = self.st.mutref.get(l) {
-                        return (*g, Some(Target::MutRef(*l)), G::default());
+                        return (*g, Tg::Set([Target::MutRef(*l)].into_iter().collect()), G::default());
                     }
-                    if let Some((t, addr)) = self.st.refs.get(l).copied() {
-                        let g = self.target_grade(t);
-                        return (g.j(addr), Some(t), addr);
+                    if let Some(p) = self.st.refs.get(l).cloned() {
+                        // P-Deref-Local (F-82): the borrowed places' current grades and the
+                        // address grade
+                        let tg = Tg::Set(p.ts.clone());
+                        let g = self.tg_grade(&tg);
+                        if p.ts.is_empty() {
+                            return (self.read_local(*l).j(p.addr), Tg::Temp, p.addr);
+                        }
+                        return (g.j(p.addr), tg, p.addr);
                     }
-                    return (self.read_local(*l), None, G::default());
+                    // unknown provenance: every place the body lends, weakly
+                    let own = self.read_local(*l);
+                    return (own.j(self.tg_grade(&Tg::Unknown)), Tg::Unknown, own.ctl());
                 }
                 // the unsized view of a place built by method probing
                 if let TK::Unsize(u) = &b.kind {
                     if let TK::Borrow(_, p) = &u.kind {
-                        let p = p.clone();
-                        return self.place(&p);
+                        return self.place(p);
                     }
                 }
                 if let TK::Borrow(_, p) = &b.kind {
-                    let p = p.clone();
-                    return self.place(&p);
+                    return self.place(p);
                 }
-                // a projection result: writes go to the receiver's place (target*, F-39)
-                if let TK::Call { args, .. } = &b.kind {
-                    let g = self.eval(b);
-                    let t = match args.first().map(|a| &a.kind) {
-                        Some(TK::Borrow(_, p)) => {
-                            let p = p.clone();
-                            self.place(&p).1
-                        }
-                        Some(TK::Local(l)) => {
-                            if self.st.mutref.contains_key(l) {
-                                Some(Target::MutRef(*l))
-                            } else {
-                                self.st.refs.get(l).map(|x| x.0)
-                            }
-                        }
-                        _ => None,
-                    };
-                    return (g, t, G::default());
-                }
+                // a reference computed by an expression (a projection result, a reference read
+                // out of an aggregate): the places its provenance names (target*, F-39)
                 let g = self.eval(b);
-                (g, None, G::default())
+                let (tg, addr) = Tg::of(self.prov_of(b));
+                let g = match &b.kind {
+                    TK::Call { .. } | TK::TraitCall { .. } => g,
+                    _ => g.j(self.tg_grade(&tg)),
+                };
+                (g.j(addr), tg, addr)
             }
             TK::Field(b, _) => {
                 let (g, t, a) = self.place(b);
@@ -284,8 +407,9 @@ impl<'a> Ga<'a> {
             }
             TK::Unsize(b) => self.place(b),
             _ => {
+                // an rvalue used as a place: a temporary
                 let g = self.eval(e);
-                (g, None, G::default())
+                (g, Tg::Temp, G::default())
             }
         }
     }
@@ -294,6 +418,178 @@ impl<'a> Ga<'a> {
         match t {
             Target::Local(l) => self.read_local(l),
             Target::MutRef(l) => self.st.mutref.get(&l).copied().unwrap_or_default(),
+        }
+    }
+
+    /// The places a write through a reference of unknown provenance may update.
+    fn fallback_targets(&self, write: bool) -> Vec<Target> {
+        let set = if write { &self.addr_mut } else { &self.addr_any };
+        let mut out: Vec<Target> = set.iter().filter(|l| !self.st.mutref.contains_key(*l)).map(|l| Target::Local(*l)).collect();
+        let mut ms: Vec<LocalId> = self.st.mutref.keys().copied().collect();
+        ms.sort();
+        out.extend(ms.into_iter().map(Target::MutRef));
+        out
+    }
+
+    fn tg_grade(&self, tg: &Tg) -> G {
+        match tg {
+            Tg::Temp => G::default(),
+            Tg::Set(ts) => ts.iter().fold(G::default(), |a, t| a.j(self.target_grade(*t))),
+            Tg::Unknown => self.fallback_targets(false).into_iter().fold(G::default(), |a, t| a.j(self.target_grade(t))),
+        }
+    }
+
+    /// A write to every place `tg` names: strong only to one known place.
+    fn write_tg(&mut self, tg: &Tg, v: G, strong: bool) {
+        match tg {
+            Tg::Temp => {}
+            Tg::Set(ts) => {
+                let one = ts.len() == 1;
+                for t in ts.clone() {
+                    self.write(t, v, strong && one);
+                }
+            }
+            Tg::Unknown => {
+                for t in self.fallback_targets(true) {
+                    self.write(t, v, false);
+                }
+            }
+        }
+    }
+
+    fn prov_of(&self, e: &TExpr) -> Option<Prov> {
+        self.prov.get(&key(e)).cloned().flatten()
+    }
+
+    fn local_prov(&self, l: LocalId) -> Option<Prov> {
+        if self.st.mutref.contains_key(&l) {
+            return Some(Prov::one(Target::MutRef(l), G::default()));
+        }
+        self.st.refs.get(&l).cloned()
+    }
+
+    /// The provenance of a reference-carrying expression evaluated just now, for the kinds whose
+    /// arms do not record it themselves (Borrow, If, Match and calls do).
+    fn compute_prov(&mut self, e: &'a TExpr) -> Option<Prov> {
+        match &e.kind {
+            TK::Lit(_) | TK::Const(_) | TK::Format { .. } => Some(Prov::default()),
+            TK::Local(l) => self.local_prov(*l),
+            TK::Unsize(b) | TK::Repeat(b, _) => self.prov_of(b),
+            TK::Try { e: b, .. } => self.prov_of(b),
+            TK::Det { body, .. } => self.prov_of(body),
+            TK::Block(_, Some(t)) => self.prov_of(t),
+            TK::Ctor { fields, .. } | TK::Tuple(fields) | TK::Array(fields) => {
+                let mut acc = Prov::default();
+                for f in fields {
+                    if f.ty.mentions_ref() {
+                        acc.union(&self.prov_of(f)?);
+                    }
+                }
+                Some(acc)
+            }
+            TK::CtorUpdate { fields, base, .. } => {
+                let mut acc = Prov::default();
+                for (_, f) in fields {
+                    if f.ty.mentions_ref() {
+                        acc.union(&self.prov_of(f)?);
+                    }
+                }
+                if base.ty.mentions_ref() {
+                    acc.union(&self.prov_of(base)?);
+                }
+                Some(acc)
+            }
+            // a reference read out of an aggregate local (`t.0`, `v[i]`): what the local's
+            // references point to, chosen by the index
+            TK::Field(..) | TK::Index(..) | TK::SliceRange { .. } => {
+                let root = aggregate_root(e)?;
+                let mut p = self.local_prov(root)?;
+                let (_, _, a) = self.place(e);
+                p.addr = p.addr.j(a);
+                Some(p)
+            }
+            _ => None,
+        }
+    }
+
+    /// The provenance of a call's reference-carrying result: what its reference-carrying
+    /// arguments point to (a projection or std adapter result borrows from them), chosen by
+    /// every argument (`get_mut(i)`: i's grade).
+    fn call_prov(&self, args: &[TExpr], gs: &[G]) -> Option<Prov> {
+        let mut acc = Prov::default();
+        for (i, a) in args.iter().enumerate() {
+            if a.ty.mentions_ref() {
+                acc.union(&self.prov_of(a)?);
+            } else if let Some(g) = gs.get(i) {
+                acc.addr = acc.addr.j(g.ctl());
+            }
+        }
+        Some(acc)
+    }
+
+    /// Record where the reference-carrying bindings of a pattern point (F-84): a by-value
+    /// binding takes the scrutinee value's provenance; a binding by reference (`ref mut x`,
+    /// default binding mode) points into the scrutinee's place, or under a dereference pattern
+    /// into what the scrutinee reference points to. A binding of a temporary is its own place.
+    fn bind_refs(&mut self, p: &'a TPat, scrut: Option<&'a TExpr>, extra: G) {
+        fn walk<'b>(p: &'b TPat, under: bool, out: &mut Vec<(&'b TPat, LocalId, bool, bool)>) {
+            match &p.kind {
+                PK::Bind { local, by_ref, sub } => {
+                    out.push((p, *local, by_ref.is_some(), under));
+                    if let Some(s) = sub {
+                        walk(s, under || by_ref.is_some(), out);
+                    }
+                }
+                PK::Tuple(ps) | PK::Or(ps) | PK::Slice(ps, _) => ps.iter().for_each(|x| walk(x, under, out)),
+                PK::Variant { fields, .. } => fields.iter().for_each(|(_, x)| walk(x, under, out)),
+                PK::Deref(x) => walk(x, true, out),
+                _ => {}
+            }
+        }
+        let mut bs = vec![];
+        walk(p, false, &mut bs);
+        if bs.iter().all(|(bp, ..)| !bp.ty.mentions_ref()) {
+            return;
+        }
+        let val = scrut.and_then(|s| self.prov_of(s));
+        let simple = matches!(p.kind, PK::Bind { by_ref: None, sub: None, .. });
+        let mut place_tg: Option<(Tg, G)> = None;
+        for (bp, l, by_ref, under) in bs {
+            if !bp.ty.mentions_ref() {
+                continue;
+            }
+            let pv: Option<Prov> = if under {
+                if by_ref || bp.ty.is_ref() { val.clone() } else { None }
+            } else if by_ref {
+                if place_tg.is_none() {
+                    place_tg = Some(match scrut {
+                        Some(s) if s.is_place() => {
+                            let (_, tg, a) = self.place(s);
+                            (tg, a)
+                        }
+                        _ => (Tg::Temp, G::default()),
+                    });
+                }
+                match place_tg.clone() {
+                    Some((Tg::Set(ts), a)) => Some(Prov { ts, addr: a }),
+                    Some((Tg::Temp, a)) => Some(Prov { ts: BTreeSet::new(), addr: a }),
+                    _ => None,
+                }
+            } else {
+                val.clone()
+            };
+            match pv {
+                Some(mut pv) => {
+                    if pv.ts.is_empty() && (simple || by_ref) {
+                        pv.ts.insert(Target::Local(l));
+                    }
+                    pv.addr = pv.addr.j(extra);
+                    self.st.refs.insert(l, pv);
+                }
+                None => {
+                    self.st.refs.remove(&l);
+                }
+            }
         }
     }
 
@@ -345,8 +641,10 @@ impl<'a> Ga<'a> {
     }
 
     /// Apply a closure's writes (by-mut captures, captured `&mut` referents) at the given grade
-    /// for its parameters and the current pc.
-    fn apply_closure_writes(&mut self, cid: ClosureId, params: &[G], extra: G) {
+    /// for its parameters and the current pc. `items`: where the `&mut` items the caller hands
+    /// to the closure's parameters point (`iter_mut().for_each`, F-69), so the closure's θ_mut
+    /// on its `&mut` parameters lands there (review 2026-10-23: it was dropped).
+    fn apply_closure_writes(&mut self, cid: ClosureId, params: &[G], extra: G, items: &Tg) {
         // the summary just computed for this call, if any (it depends on the current state)
         let cs = match self.closums.remove(&cid) {
             Some(s) => s,
@@ -356,6 +654,12 @@ impl<'a> Ga<'a> {
         for (t, g) in cs.writes {
             let v = apply(g, params, self.clo_base).j(pc).j(extra.ctl());
             self.write(t, v, false);
+        }
+        if *items != Tg::Temp {
+            for (_, mg) in &cs.param_muts {
+                let v = apply(*mg, params, self.clo_base).j(pc).j(extra.ctl());
+                self.write_tg(items, v, false);
+            }
         }
     }
 
@@ -398,6 +702,14 @@ impl<'a> Ga<'a> {
             if let (Some(l), Ty::Ref(true, _)) = (p.is_irrefutable_bind(), &p.ty) {
                 self.st.mutref.insert(l, g);
                 mut_params.push((i, l));
+            } else {
+                let mut bs = vec![];
+                p.bindings(&mut bs);
+                for b in bs {
+                    if self.body.locals.get(b as usize).map(|d| d.ty.mentions_ref()).unwrap_or(false) {
+                        self.st.refs.insert(b, Prov::one(Target::Local(b), G::default()));
+                    }
+                }
             }
         }
         let before = self.st.clone();
@@ -415,6 +727,10 @@ impl<'a> Ga<'a> {
             }
             _ => {}
         });
+        // a captured `&mut` passed on by implicit reborrow (`|k| poke(r)`) writes through it too
+        let mut implicit = vec![];
+        implicit_mut_uses(self.c, &cd.body, &mut implicit);
+        written.extend(implicit.into_iter().map(|(r, _)| r));
         let _ = &before;
         let dead = self.st.dead;
         // a write's grade: at the body's normal end, joined with the grades at its returns (F-68)
@@ -434,10 +750,19 @@ impl<'a> Ga<'a> {
             if self.st.mutref.contains_key(&l) {
                 let g = fin(self, l, self.st.mutref[&l]);
                 writes.push((Target::MutRef(l), g));
-            } else if let Some((t, _)) = self.st.refs.get(&l).copied() {
-                // a captured local reference: the place it borrows is written (F-67)
-                let g = fin(self, l, self.target_grade(t));
-                writes.push((t, g));
+            } else if let Some(p) = self.st.refs.get(&l).cloned() {
+                // a captured local reference: the places it borrows are written (F-67), with
+                // the address grade
+                for t in &p.ts {
+                    let g = fin(self, l, self.target_grade(*t)).j(p.addr);
+                    writes.push((*t, g));
+                }
+            } else if cd.captures.iter().any(|c| c.local == l) && self.body.locals.get(l as usize).map(|d| holds_mut_ref(&d.ty)).unwrap_or(false) && !cd.captures.iter().any(|c| c.local == l && c.mode == CaptureMode::Mut) {
+                // a captured `&mut` of unknown provenance written through: every lent place
+                let g = fin(self, l, self.read_local(l));
+                for t in self.fallback_targets(true) {
+                    writes.push((t, g));
+                }
             } else if cd.captures.iter().any(|c| c.local == l) {
                 let g = fin(self, l, self.read_local(l));
                 match holder {
@@ -474,13 +799,13 @@ impl<'a> Ga<'a> {
         let pc = self.pc();
         let env: Vec<(LocalId, G)> = self.st.env.iter().map(|(k, v)| (*k, *v)).collect();
         let muts: Vec<(LocalId, G)> = self.st.mutref.iter().map(|(k, v)| (*k, *v)).collect();
-        let refs: Vec<(LocalId, Target)> = self.st.refs.iter().map(|(k, v)| (*k, v.0)).collect();
+        let refs: Vec<(LocalId, Prov)> = self.st.refs.iter().map(|(k, v)| (*k, v.clone())).collect();
         let mut add: Vec<(LocalId, G)> = vec![];
         for (k, v) in env.into_iter().chain(muts) {
             add.push((k, v.j(pc)));
         }
-        for (k, t) in refs {
-            add.push((k, self.target_grade(t).j(pc)));
+        for (k, p) in refs {
+            add.push((k, self.tg_grade(&Tg::Set(p.ts)).j(p.addr).j(pc)));
         }
         if let Some(cx) = &mut self.clo_x {
             for (k, v) in add {
@@ -490,36 +815,138 @@ impl<'a> Ga<'a> {
         }
     }
 
-    /// The place an argument lends mutably: `&mut p`, a `&mut` local or parameter, or a `&mut`
-    /// inside an aggregate (`Some(&mut y)`, F-62).
-    fn arg_target(&mut self, a: &TExpr) -> Option<Target> {
-        match &a.kind {
-            TK::Borrow(true, p) => self.place(p).1,
-            TK::Local(l) => {
-                if self.st.mutref.contains_key(l) {
-                    Some(Target::MutRef(*l))
-                } else {
-                    self.st.refs.get(l).map(|x| x.0)
+    /// The places an argument lends mutably, and its address grade: `&mut p`, a `&mut` local
+    /// or parameter, a `&mut` inside an aggregate (`Some(&mut y)`, F-62), a reference chosen by
+    /// `if` or returned by a projection. The argument was evaluated just before.
+    fn arg_target(&mut self, a: &TExpr) -> (Tg, G) {
+        if !holds_mut_ref(&a.ty) {
+            return (Tg::Temp, G::default());
+        }
+        Tg::of(self.prov_of(a))
+    }
+
+    /// The reach set of a write through an argument (F-91): its targets, closed under the
+    /// places the references held in those targets point to (`g(&mut r)` with `r = &mut y`
+    /// reaches y; review 2026-10-23, N-77). A target holding references of unknown provenance
+    /// makes the set unknown.
+    fn reach(&self, tg: Tg) -> Tg {
+        let Tg::Set(mut ts) = tg else { return tg };
+        loop {
+            let mut more: Vec<Target> = vec![];
+            for t in &ts {
+                let Target::Local(l) = t else { continue };
+                if !self.body.locals.get(*l as usize).map(|d| d.ty.mentions_ref()).unwrap_or(false) {
+                    continue;
+                }
+                match self.st.refs.get(l) {
+                    Some(p) => more.extend(p.ts.iter().copied().filter(|x| !ts.contains(x))),
+                    None => return Tg::Unknown,
                 }
             }
-            TK::Unsize(inner) => self.arg_target(inner),
-            TK::Ctor { fields, .. } | TK::Tuple(fields) => fields.iter().find_map(|f| self.arg_target(f)),
-            _ => None,
+            if more.is_empty() {
+                return Tg::Set(ts);
+            }
+            ts.extend(more);
         }
     }
 
-    /// `&mut` references bound out of a by-value parameter that holds them (`Some(r) = o` with
-    /// `o: Option<&mut T>`): writes through them go to the parameter's pseudo-place `*o` (F-62).
-    fn bind_mut_refs(&mut self, p: &TPat, scrut: &TExpr) {
-        let TK::Local(o) = scrut.kind else { return };
-        if !self.st.mutref.contains_key(&o) {
+    /// For an argument whose provenance is unknown, the reference's own grade stands in for its
+    /// address grade (it carries what chose it, F-39's "every reference traversed").
+    fn unknown_addr(&self, tg: &Tg, addr: G, g: Option<&G>) -> G {
+        match (tg, g) {
+            (Tg::Unknown, Some(g)) => addr.j(g.ctl()),
+            _ => addr,
+        }
+    }
+
+    /// The places every `&mut`-carrying argument of a call lends (a closure the callee runs may
+    /// write through any of them).
+    fn args_targets(&mut self, args: &[TExpr]) -> (Tg, G) {
+        let mut ts: BTreeSet<Target> = BTreeSet::new();
+        let mut addr = G::default();
+        for a in args {
+            match self.arg_target(a) {
+                (Tg::Unknown, _) => return (Tg::Unknown, addr),
+                (Tg::Set(s), g) => {
+                    ts.extend(s);
+                    addr = addr.j(g);
+                }
+                (Tg::Temp, _) => {}
+            }
+        }
+        if ts.is_empty() {
+            (Tg::Temp, addr)
+        } else {
+            (Tg::Set(ts), addr)
+        }
+    }
+
+    /// A std call that stores references into a container it receives by `&mut` (`v.push(&mut
+    /// y)`, `mem::swap(&mut r1, &mut r2)`, `o.insert(r)`): the container's references may now
+    /// point where the stored ones do (T-Call's storing std functions, §5.4; review 2026-10-23:
+    /// `v.push(&mut y); *v[0] = h` left y untouched). The stored content of a `&mut` argument is
+    /// what its referent's references point to; of any other argument, its own provenance.
+    fn store_refs(&mut self, args: &'a [TExpr]) {
+        let holds = |a: &TExpr| matches!(&a.ty, Ty::Ref(true, inner) if inner.mentions_ref());
+        if !args.iter().any(|a| holds(a)) || args.len() < 2 {
             return;
         }
-        let mut bs = vec![];
-        p.bindings(&mut bs);
-        for b in bs {
-            if matches!(self.body.locals.get(b as usize).map(|d| &d.ty), Some(Ty::Ref(true, _))) {
-                self.st.refs.insert(b, (Target::MutRef(o), G::default()));
+        let mut targets: Vec<Option<Tg>> = vec![];
+        let mut contents: Vec<Option<Option<Prov>>> = vec![];
+        for a in args {
+            if holds(a) {
+                let (tg, _) = self.arg_target(a);
+                let content = match &tg {
+                    Tg::Set(ts) => {
+                        let mut acc = Some(Prov::default());
+                        for t in ts {
+                            match (t, acc.as_mut()) {
+                                (Target::Local(l), Some(x)) => match self.st.refs.get(l) {
+                                    Some(p) => x.union(p),
+                                    None => acc = None,
+                                },
+                                _ => acc = None,
+                            }
+                        }
+                        acc
+                    }
+                    Tg::Temp => Some(Prov::default()),
+                    Tg::Unknown => None,
+                };
+                targets.push(Some(tg));
+                contents.push(Some(content));
+            } else if a.ty.mentions_ref() {
+                targets.push(None);
+                contents.push(Some(self.prov_of(a)));
+            } else {
+                targets.push(None);
+                contents.push(None);
+            }
+        }
+        for (i, tg) in targets.iter().enumerate() {
+            let Some(Tg::Set(ts)) = tg else { continue };
+            let mut add: Option<Prov> = Some(Prov::default());
+            for (j, c) in contents.iter().enumerate() {
+                if j == i {
+                    continue;
+                }
+                match (c, add.as_mut()) {
+                    (Some(Some(p)), Some(x)) => x.union(p),
+                    (Some(None), _) => add = None,
+                    _ => {}
+                }
+            }
+            for t in ts {
+                let Target::Local(l) = t else { continue };
+                match (&add, self.st.refs.get(l).cloned()) {
+                    (Some(p), Some(mut old)) => {
+                        old.union(p);
+                        self.st.refs.insert(*l, old);
+                    }
+                    _ => {
+                        self.st.refs.remove(l);
+                    }
+                }
             }
         }
     }
@@ -553,7 +980,16 @@ impl<'a> Ga<'a> {
         }
     }
 
-    fn eval(&mut self, e: &TExpr) -> G {
+    fn eval(&mut self, e: &'a TExpr) -> G {
+        let g = self.eval_kind(e);
+        if e.ty.mentions_ref() && !matches!(e.kind, TK::Borrow(..) | TK::If(..) | TK::Match(..) | TK::Call { .. } | TK::TraitCall { .. }) {
+            let p = self.compute_prov(e);
+            self.prov.insert(key(e), p);
+        }
+        g
+    }
+
+    fn eval_kind(&mut self, e: &'a TExpr) -> G {
         if self.st.dead {
             return G::default();
         }
@@ -574,7 +1010,19 @@ impl<'a> Ga<'a> {
                 g.j(pc)
             }
             TK::Borrow(_, p) => {
-                let (g, _, _) = self.place(p);
+                let (g, tg, a) = self.place(p);
+                let pv = match tg {
+                    // `&mut Some(&mut y)`: the temporary is not a place the analysis tracks, but
+                    // the references it holds are reachable through the borrow (F-91, N-77)
+                    Tg::Temp if p.ty.mentions_ref() => self.prov_of(p).map(|mut x| {
+                        x.addr = x.addr.j(a);
+                        x
+                    }),
+                    Tg::Temp => Some(Prov { ts: BTreeSet::new(), addr: a }),
+                    Tg::Set(ts) => Some(Prov { ts, addr: a }),
+                    Tg::Unknown => None,
+                };
+                self.prov.insert(key(e), pv);
                 g.j(pc)
             }
             TK::Unsize(b) => self.eval(b),
@@ -616,20 +1064,42 @@ impl<'a> Ga<'a> {
             }
             TK::Assign(p, r) => {
                 let gv = self.eval(r);
-                let (_, t, addr) = self.place(p);
+                let (_, tg, addr) = self.place(p);
                 let pc = self.pc();
+                // T-Assign: γ ⊔ γ_sel ⊔ γ_addr ⊔ pc into every place of target*(p)
                 let val = gv.j(addr).j(pc);
-                if let Some(t) = t {
-                    let strong = matches!(p.kind, TK::Local(_));
-                    self.write(t, val, strong);
-                }
-                // a local reference: remember where it points
-                if let TK::Local(l) = p.kind {
-                    if let TK::Borrow(true, inner) = &r.kind {
-                        let (_, tt, a2) = self.place(inner);
-                        if let Some(tt) = tt {
-                            self.st.refs.insert(l, (tt, a2));
+                let strong = matches!(p.kind, TK::Local(_));
+                self.write_tg(&tg, val, strong);
+                // a local holding references: remember where they point (strongly for a whole
+                // local, joined into an aggregate's otherwise), under the current pc
+                if r.ty.mentions_ref() {
+                    let pv = self.prov_of(r);
+                    match (&p.kind, place_root(p)) {
+                        (TK::Local(l), _) => match pv {
+                            Some(mut pv) => {
+                                if pv.ts.is_empty() {
+                                    pv.ts.insert(Target::Local(*l));
+                                }
+                                pv.addr = pv.addr.j(pc);
+                                self.st.refs.insert(*l, pv);
+                            }
+                            None => {
+                                self.st.refs.remove(l);
+                            }
+                        },
+                        (_, Some(root)) if !self.body.locals.get(root as usize).map(|d| d.ty.is_ref()).unwrap_or(true) => {
+                            match (pv, self.st.refs.get(&root).cloned()) {
+                                (Some(mut pv), Some(old)) => {
+                                    pv.union(&old);
+                                    pv.addr = pv.addr.j(pc).j(addr);
+                                    self.st.refs.insert(root, pv);
+                                }
+                                _ => {
+                                    self.st.refs.remove(&root);
+                                }
+                            }
                         }
+                        _ => {}
                     }
                 }
                 // cover bookkeeping: the RHS of the covering write p[i] = e
@@ -646,7 +1116,7 @@ impl<'a> Ga<'a> {
             }
             TK::AssignOp(_, p, r) => {
                 let gv = self.eval(r);
-                let (gp, t, addr) = self.place(p);
+                let (gp, tg, addr) = self.place(p);
                 self.exit_site(e, gv.j(gp));
                 let pc = self.pc();
                 let mut val = gv.j(gp).j(addr).j(pc);
@@ -655,9 +1125,7 @@ impl<'a> Ga<'a> {
                 } else {
                     val = val.canon();
                 }
-                if let Some(t) = t {
-                    self.write(t, val, false);
-                }
+                self.write_tg(&tg, val, false);
                 pc
             }
             TK::Call { f, args, .. } => self.eval_call(*f, args, e),
@@ -666,6 +1134,10 @@ impl<'a> Ga<'a> {
                 let mut gs = vec![];
                 for a in args {
                     gs.push(self.eval(a));
+                }
+                if e.ty.mentions_ref() {
+                    let pv = self.call_prov(args, &gs);
+                    self.prov.insert(key(e), pv);
                 }
                 let concrete = !matches!(self_ty, Ty::Param(_) | Ty::Infer(_) | Ty::Opaque(_));
                 if concrete {
@@ -705,6 +1177,12 @@ impl<'a> Ga<'a> {
                     if has_float(self.c, &e.ty) {
                         r.raw = true;
                     }
+                    // it may write through its `&mut` arguments, under this call's pc (the
+                    // values written are the caller's closure's, applied at the caller)
+                    let (tg, addr) = self.args_targets(args);
+                    let all = gs.iter().fold(G::default(), |x, y| x.j(*y));
+                    let v = all.j(gf).j(addr).j(self.pc());
+                    self.write_tg(&tg, v, false);
                 }
                 let holder = match &f.kind {
                     TK::Local(l) => Some(*l),
@@ -717,13 +1195,14 @@ impl<'a> Ga<'a> {
                     // the places the arguments borrow
                     for (i, mg) in &s.param_muts {
                         if let Some(a) = args.get(*i) {
-                            if let Some(t) = self.arg_target(a) {
-                                let v = apply(*mg, &gs, self.clo_base).j(self.pc());
-                                self.write(t, v, false);
-                            }
+                            let (tg, addr) = self.arg_target(a);
+                            let addr = self.unknown_addr(&tg, addr, gs.get(*i));
+                            let tg = self.reach(tg);
+                            let v = apply(*mg, &gs, self.clo_base).j(addr).j(self.pc());
+                            self.write_tg(&tg, v, false);
                         }
                     }
-                    self.apply_closure_writes(c, &gs, G::default());
+                    self.apply_closure_writes(c, &gs, G::default(), &Tg::Temp);
                 }
                 r
             }
@@ -775,13 +1254,9 @@ impl<'a> Ga<'a> {
                                     if !cl.is_empty() {
                                         self.st.clos.insert(l, cl);
                                     }
-                                    if let TK::Borrow(true, inner) = &i.kind {
-                                        let (_, tt, a2) = self.place(inner);
-                                        if let Some(tt) = tt {
-                                            self.st.refs.insert(l, (tt, a2));
-                                        }
-                                    }
                                 }
+                                // where the new references point (F-84)
+                                self.bind_refs(pat, Some(i), G::default());
                             }
                             self.bind(pat, g);
                         }
@@ -811,6 +1286,22 @@ impl<'a> Ga<'a> {
                 };
                 let s2 = std::mem::replace(&mut self.st, s1.clone());
                 self.pc.pop();
+                // a reference chosen by the condition: both branches' places, with the
+                // condition's grade as the address grade (F-84; review 2026-10-23, h10, h18)
+                if e.ty.mentions_ref() {
+                    let mut acc = Some(Prov { ts: BTreeSet::new(), addr: gc.ctl() });
+                    for (br, dead) in [(Some(t.as_ref()), s1.dead), (el.as_deref(), s2.dead)] {
+                        let Some(br) = br else { continue };
+                        if dead || matches!(br.ty, Ty::Never) {
+                            continue;
+                        }
+                        match (acc.as_mut(), self.prov_of(br)) {
+                            (Some(a), Some(p)) => a.union(&p),
+                            _ => acc = None,
+                        }
+                    }
+                    self.prov.insert(key(e), acc);
+                }
                 self.join_states(s1, s2);
                 g1.j(g2).j(gc.ctl())
             }
@@ -821,18 +1312,28 @@ impl<'a> Ga<'a> {
                 let s0 = self.st.clone();
                 let mut acc: Option<St> = None;
                 let mut g = gs.ctl();
+                let mut pacc: Option<Prov> = Some(Prov { ts: BTreeSet::new(), addr: gs.ctl() });
                 for a in arms {
                     self.st = s0.clone();
                     self.bind(&a.pat, gs);
-                    self.bind_mut_refs(&a.pat, s);
+                    self.bind_refs(&a.pat, Some(s), G::default());
                     if let Some(gd) = &a.guard {
                         let gg = self.eval(gd);
                         let p2 = self.pc().j(gg.ctl());
                         self.pc.push(p2);
                         g = g.j(self.eval(&a.body));
                         self.pc.pop();
+                        if let Some(pa) = pacc.as_mut() {
+                            pa.addr = pa.addr.j(gg.ctl());
+                        }
                     } else {
                         g = g.j(self.eval(&a.body));
+                    }
+                    if e.ty.mentions_ref() && !self.st.dead && !matches!(a.body.ty, Ty::Never) {
+                        match (pacc.as_mut(), self.prov_of(&a.body)) {
+                            (Some(pa), Some(p)) => pa.union(&p),
+                            _ => pacc = None,
+                        }
                     }
                     acc = Some(match acc {
                         None => self.st.clone(),
@@ -845,6 +1346,9 @@ impl<'a> Ga<'a> {
                 }
                 self.pc.pop();
                 self.st = acc.unwrap_or(s0);
+                if e.ty.mentions_ref() {
+                    self.prov.insert(key(e), pacc);
+                }
                 g
             }
             TK::Loop(id, b) => {
@@ -904,9 +1408,13 @@ impl<'a> Ga<'a> {
                 let item = if range.is_some() { gi.ctl().j(self.pc()) } else { gi.j(self.pc()) };
                 self.bind(pat, item);
                 if range.is_none() {
+                    // the items point where the iterator's references do (`for r in
+                    // v.iter_mut()`: v; review 2026-10-23, h24, h26)
+                    self.bind_refs(pat, Some(iter), G::default());
                     // a lazy adapter that stores a closure runs it here
+                    let (items, _) = Tg::of(self.prov_of(iter));
                     for cid in self.closures_in(iter) {
-                        self.apply_closure_writes(cid, &[gi, gi], gi);
+                        self.apply_closure_writes(cid, &[gi, gi], gi, &items);
                     }
                 }
                 self.eval_loop(*id, body, Some(gi.ctl()), gi);
@@ -1031,7 +1539,7 @@ impl<'a> Ga<'a> {
                 let g = self.eval(s);
                 if let TK::LetCond(p, _) = &e.kind {
                     self.bind(p, g);
-                    self.bind_mut_refs(p, s);
+                    self.bind_refs(p, Some(s), G::default());
                 }
                 g.ctl().j(pc)
             }
@@ -1039,7 +1547,7 @@ impl<'a> Ga<'a> {
         }
     }
 
-    fn eval_loop(&mut self, id: LoopId, body: &TExpr, guard: Option<G>, item: G) {
+    fn eval_loop(&mut self, id: LoopId, body: &'a TExpr, guard: Option<G>, item: G) {
         self.open_loops.push(id);
         if let Some(g) = guard {
             // the guard's break: the bound's grade enters J(L) (F-30)
@@ -1076,13 +1584,66 @@ impl<'a> Ga<'a> {
                 for root in covered {
                     let t = if self.st.mutref.contains_key(&root) { Target::MutRef(root) } else { Target::Local(root) };
                     let _ = &entry;
-                    self.write(t, rhs.j(pcl), true);
+                    match self.cover_sub(body, root) {
+                        // a cover of the whole grade cell replaces it
+                        None => self.write(t, rhs.j(pcl), true),
+                        // F-89: a cover of a proper sub-place (Cover-Proj's `(*y).blocks`) is a
+                        // partial update: the cell keeps its scope, and its NaN bit is reset only
+                        // when the sub-place holds all of the cell's float content (review
+                        // 2026-10-23, N-74: a raw sibling field was erased)
+                        Some(all_float) => {
+                            let old = self.target_grade(t);
+                            let new = rhs.j(pcl);
+                            let mut v = old.j(new);
+                            if all_float {
+                                v.raw = new.raw;
+                                v.nu = new.nu;
+                            }
+                            self.write(t, v, true);
+                        }
+                    }
                 }
             }
         }
         self.open_loops.pop();
         // J(L) persists only inside the loop; what the loop wrote already carries it
         self.jumps.remove(&id);
+    }
+
+    /// For a covering loop over `root` through a footprinted projection (Cover-Proj): Some(the
+    /// footprint's field holds all of the receiver's float content); None for a cover of the
+    /// whole cell (T-Cover's `y[i]`).
+    fn cover_sub(&self, body: &TExpr, root: LocalId) -> Option<bool> {
+        let mut proj: Option<FnId> = None;
+        walk_deep(self.c, body, &mut |x| {
+            if let TK::Call { f, args, .. } = &x.kind {
+                if self.c.bodies.get(f).map(|b| !b.footprints.is_empty()).unwrap_or(false) && args.first().and_then(place_root) == Some(root) {
+                    proj = Some(*f);
+                }
+            }
+        });
+        let pf = proj?;
+        let fp = self.c.bodies.get(&pf)?.footprints.first()?;
+        // the field of the receiver the footprint lies in
+        fn field_of(e: &TExpr) -> Option<u32> {
+            match &e.kind {
+                TK::Field(b, i) => match &b.kind {
+                    TK::Local(_) => Some(*i),
+                    TK::Deref(x) if matches!(x.kind, TK::Local(_)) => Some(*i),
+                    _ => field_of(b),
+                },
+                TK::Index(b, _) | TK::Deref(b) | TK::Unsize(b) | TK::Borrow(_, b) => field_of(b),
+                TK::SliceRange { base, .. } => field_of(base),
+                _ => None,
+            }
+        }
+        let Some(fi) = field_of(fp) else { return Some(false) };
+        let rty = self.body.locals.get(root as usize)?.ty.strip_refs().clone();
+        let Ty::Adt(a, xs) = &rty else { return Some(false) };
+        let ad = &self.c.program.adts[*a as usize];
+        let Some(v) = ad.variants.first() else { return Some(false) };
+        let others_float = v.fields.iter().enumerate().any(|(k, f)| k as u32 != fi && has_float(self.c, &f.ty.subst(xs)));
+        Some(!others_float)
     }
 
     fn join_states(&mut self, a: St, b: St) {
@@ -1106,14 +1667,17 @@ impl<'a> Ga<'a> {
         for (k, v) in b.clos {
             st.clos.entry(k).or_default().extend(v);
         }
+        st.refs.retain(|k, _| b.refs.contains_key(k));
         for (k, v) in b.refs {
-            st.refs.entry(k).or_insert(v);
+            if let Some(x) = st.refs.get_mut(&k) {
+                x.union(&v);
+            }
         }
         st.dead = false;
         self.st = st;
     }
 
-    fn eval_call(&mut self, fid: FnId, args: &[TExpr], e: &TExpr) -> G {
+    fn eval_call(&mut self, fid: FnId, args: &'a [TExpr], e: &'a TExpr) -> G {
         let g = self.eval_call_inner(fid, args, e);
         // F-57: a hint value is graded γ_sh. At X1 a policy is called directly (no hint port,
         // §12), so the result of every call of a policy fn is a hint value [prov, mithi]
@@ -1123,10 +1687,15 @@ impl<'a> Ga<'a> {
         g
     }
 
-    fn eval_call_inner(&mut self, fid: FnId, args: &[TExpr], e: &TExpr) -> G {
+    fn eval_call_inner(&mut self, fid: FnId, args: &'a [TExpr], e: &'a TExpr) -> G {
         let mut gs = vec![];
         for a in args {
             gs.push(self.eval(a));
+        }
+        // a reference-carrying result borrows from the reference-carrying arguments
+        if e.ty.mentions_ref() {
+            let pv = self.call_prov(args, &gs);
+            self.prov.insert(key(e), pv);
         }
         let pc = self.pc();
         let f = &self.c.program.fns[fid as usize];
@@ -1149,23 +1718,30 @@ impl<'a> Ga<'a> {
                         "iter_fold" => vec![gs.get(1).copied().unwrap_or_default(), item],
                         _ => vec![item, item],
                     };
+                    // the `&mut` items the builtin hands to the closure (iter_mut().for_each,
+                    // as_mut().map; with_lock's are the locked state, graded γ_sh, §5.7 rule 2)
+                    let items = if b == "mutex_with_lock" || i == 0 {
+                        Tg::Temp
+                    } else {
+                        Tg::of(args.first().and_then(|a0| self.prov_of(a0))).0
+                    };
                     if super::stdfacts::runs_closure(&b).is_some() || b == "mutex_with_lock" {
                         clo_ret = clo_ret.j(apply(s.ret, &params, self.clo_base));
-                        self.apply_closure_writes(cid, &params, if b == "mutex_with_lock" { G::default() } else { item });
+                        self.apply_closure_writes(cid, &params, if b == "mutex_with_lock" { G::default() } else { item }, &items);
                     } else {
                         // stored or passed along: applied conservatively at this call
-                        self.apply_closure_writes(cid, &params, item);
+                        self.apply_closure_writes(cid, &params, item, &items);
                     }
-                    let _ = i;
                 }
             }
             // a lazy adapter's next runs its stored closures
             if b == "iter_next" {
                 if let Some(a0) = args.first() {
+                    let items = Tg::of(self.prov_of(a0)).0;
                     for cid in self.closures_in(a0) {
                         let s = self.closure_summary(cid);
                         clo_ret = clo_ret.j(apply(s.ret, &[item, item], self.clo_base));
-                        self.apply_closure_writes(cid, &[item, item], item);
+                        self.apply_closure_writes(cid, &[item, item], item, &items);
                     }
                 }
             }
@@ -1174,13 +1750,10 @@ impl<'a> Ga<'a> {
                 "slice_sort_by" | "slice_sort_by_key" => {
                     // θ_mut,self = α_self ⊔ Θ_f.θ_ret(α_item, α_item)
                     if let Some(a0) = args.first() {
-                        if let TK::Borrow(true, p) = &a0.kind {
-                            let (_, t, _) = self.place(p);
-                            if let Some(t) = t {
-                                let v = clo_ret.ctl().j(pc);
-                                self.write(t, v, false);
-                            }
-                        }
+                        let (tg, addr) = self.arg_target(a0);
+                        let addr = self.unknown_addr(&tg, addr, gs.first());
+                        let v = clo_ret.ctl().j(addr).j(pc);
+                        self.write_tg(&tg, v, false);
                     }
                     base
                 }
@@ -1201,6 +1774,11 @@ impl<'a> Ga<'a> {
             } else {
                 g = g.canon();
             }
+            // f64::max / f64::min: the signed zero of a non-NaN result is not pinned (F-113:
+            // P-20 pins only f32's), so the result carries the platform taint obs⁰
+            if matches!(b.as_str(), "f64_max" | "f64_min") {
+                g.plat = true;
+            }
             // observers
             if super::stdfacts::is_observer(&b) {
                 for x in &gs {
@@ -1210,24 +1788,23 @@ impl<'a> Ga<'a> {
                     g.obs |= x.nu;
                 }
             }
-            // &mut arguments of builtins: read_at writes the buffer from file and offset
+            // &mut arguments of builtins (`swap(0, i)`, read_at's buffer): written from the
+            // other arguments, through whatever the argument lends (`&mut p`, a `&mut` local)
             for (i, a) in args.iter().enumerate() {
-                if let TK::Borrow(true, p) = &a.kind {
-                    if matches!(b.as_str(), "slice_sort_by" | "slice_sort_by_key") {
-                        continue;
-                    }
-                    let (_, t, _) = self.place(p);
-                    if let Some(t) = t {
-                        let mut v = pc.j(taint);
-                        for (k, x) in gs.iter().enumerate() {
-                            if k != i {
-                                v = v.j(x.ctl());
-                            }
-                        }
-                        self.write(t, v, false);
+                if !holds_mut_ref(&a.ty) || matches!(b.as_str(), "slice_sort_by" | "slice_sort_by_key") {
+                    continue;
+                }
+                let (tg, addr) = self.arg_target(a);
+                let addr = self.unknown_addr(&tg, addr, gs.get(i));
+                let mut v = pc.j(taint).j(addr);
+                for (k, x) in gs.iter().enumerate() {
+                    if k != i {
+                        v = v.j(x.ctl());
                     }
                 }
+                self.write_tg(&tg, v, false);
             }
+            self.store_refs(args);
             self.exit_site(e, base);
             return g.j(pc);
         }
@@ -1236,17 +1813,23 @@ impl<'a> Ga<'a> {
             Some(s) => {
                 let r = apply(s.ret, &gs, 0);
                 let muts = s.muts.clone();
+                let ptys: Vec<Ty> = f.params.iter().map(|p| p.ty.clone()).collect();
                 for (pi, mg) in &muts {
                     if let Some(a) = args.get(*pi) {
-                        let target = self.arg_target(a);
-                        if let Some(t) = target {
-                            let v = apply(*mg, &gs, 0).j(pc);
-                            // F-78: an argument that lends a whole place (`&mut x`, `&mut *y` of a
-                            // `&mut` parameter) is one place, so the callee's final referent grade
-                            // (stated over its initial grade) replaces it: a strong update
-                            let strong = self.lends_whole(a);
-                            self.write(t, v, strong);
-                        }
+                        let (tg, addr) = self.arg_target(a);
+                        let addr = self.unknown_addr(&tg, addr, gs.get(*pi));
+                        let tg = self.reach(tg);
+                        // the address grade of the argument joins the update (what chose the
+                        // place the callee writes; T-Assign's γ_addr, missing from T-Call as
+                        // written: review 2026-10-23, h9: `w(r, 4)` with r chosen by `if h`)
+                        let v = apply(*mg, &gs, 0).j(addr).j(pc);
+                        // F-78: an argument that lends a whole place (`&mut x`, `&mut *y` of a
+                        // `&mut` parameter) is one place, so the callee's final referent grade
+                        // (stated over its initial grade) replaces it: a strong update
+                        // the strong case needs one whole place with no references inside (F-91)
+                        let flat = matches!(ptys.get(*pi), Some(Ty::Ref(true, inner)) if !inner.mentions_ref());
+                        let strong = flat && self.lends_whole(a);
+                        self.write_tg(&tg, v, strong);
                     }
                 }
                 if s.may_trap {
@@ -1273,14 +1856,16 @@ impl<'a> Ga<'a> {
                 g
             }
         };
-        // closures passed to user functions: their returns and writes count here
+        // closures passed to user functions: their returns and writes count here, and their
+        // writes through `&mut` parameters land in what the call's `&mut` arguments lend
         let mut r = r;
+        let (items, iaddr) = self.args_targets(args);
         for a in args {
             for cid in self.closures_in(a) {
                 let s = self.closure_summary(cid);
-                let all = gs.iter().fold(G::default(), |x, y| x.j(*y));
+                let all = gs.iter().fold(G::default(), |x, y| x.j(*y)).j(iaddr);
                 r = r.j(apply(s.ret, &[all, all, all], self.clo_base).ctl());
-                self.apply_closure_writes(cid, &[all, all, all], all);
+                self.apply_closure_writes(cid, &[all, all, all], all, &items);
             }
         }
         r.j(taint).j(pc)
@@ -1302,7 +1887,18 @@ fn write_root(c: &Checked, p: &TExpr) -> Option<LocalId> {
 }
 
 fn same_state(a: &St, b: &St) -> bool {
-    a.env == b.env && a.mutref == b.mutref
+    a.env == b.env && a.mutref == b.mutref && a.refs == b.refs
+}
+
+/// The local an aggregate place is rooted in without passing through a reference.
+fn aggregate_root(e: &TExpr) -> Option<LocalId> {
+    match &e.kind {
+        TK::Local(l) => Some(*l),
+        TK::Field(b, _) | TK::Index(b, _) => aggregate_root(b),
+        TK::SliceRange { base, .. } => aggregate_root(base),
+        TK::Deref(b) if !b.ty.is_ref() => aggregate_root(b),
+        _ => None,
+    }
 }
 
 /// More passes than the lattice has height over the state's entries (3 flags and 3 sets of at
@@ -1343,8 +1939,12 @@ fn summarize(c: &Checked, fid: FnId, sums: &HashMap<FnId, Summary>) -> Option<(S
             st.mutref.insert(*pl, g);
         } else if holds_mut_ref(ty) {
             st.mutref.insert(*pl, g);
+        } else if ty.mentions_ref() {
+            // a shared reference: reads through it read the parameter's grade
+            st.refs.insert(*pl, Prov::one(Target::Local(*pl), G::default()));
         }
     }
+    let (addr_mut, addr_any) = lent_locals(c, &body.expr);
     let mut ga = Ga {
         c,
         fid,
@@ -1363,6 +1963,9 @@ fn summarize(c: &Checked, fid: FnId, sums: &HashMap<FnId, Summary>) -> Option<(S
         open_loops: vec![],
         brk_vals: HashMap::new(),
         clo_x: None,
+        prov: HashMap::new(),
+        addr_mut,
+        addr_any,
     };
     let r = ga.eval(&body.expr);
     let dead = ga.st.dead;

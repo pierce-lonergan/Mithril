@@ -152,6 +152,8 @@ mod std {
             #[builtin(opt_ok_or)] pub fn ok_or<E>(self, e: E) -> Result<T, E>;
             #[builtin(opt_take)] pub fn take(&mut self) -> Option<T>;
             #[builtin(opt_as_ref)] pub fn as_ref(&self) -> Option<&T>;
+            // a projection: the result borrows *self (note section 5.7 rule 2 names `as_mut().map`)
+            #[builtin(opt_as_mut)] pub fn as_mut(&mut self) -> Option<&mut T>;
         }
 
         impl<T, E> Result<T, E> {
@@ -239,8 +241,10 @@ mod std {
             #[builtin(f64_is_finite)] #[exact_std] pub fn is_finite(self) -> bool;
             #[builtin(f64_abs)] #[exact_std] pub fn abs(self) -> f64;
             #[builtin(f64_sqrt)] #[exact_std] pub fn sqrt(self) -> f64;
-            #[builtin(f64_max)] #[exact_std] pub fn max(self, o: f64) -> f64;
-            #[builtin(f64_min)] #[exact_std] pub fn min(self, o: f64) -> f64;
+            // FF-NANMAX pins only f32's signed zero: f64 max/min are not on C-EXACT-STD and their
+            // results carry the platform taint (note F-113; review 2026-10-23, N-108)
+            #[builtin(f64_max)] pub fn max(self, o: f64) -> f64;
+            #[builtin(f64_min)] pub fn min(self, o: f64) -> f64;
             #[builtin(f64_round)] #[exact_std] pub fn round(self) -> f64;
             #[builtin(f64_floor)] #[exact_std] pub fn floor(self) -> f64;
             #[builtin(f64_total_cmp)] #[exact_std] pub fn total_cmp(&self, o: &f64) -> std::cmp::Ordering;

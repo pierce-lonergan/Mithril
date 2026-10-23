@@ -684,8 +684,17 @@ impl<'p> Typeck<'p> {
                         return TExpr::new(TK::Unsize(Box::new(te)), want.clone(), span);
                     }
                 }
-                // auto-deref coercion: &&T -> &T
-                if let Ty::Ref(_, inner2) = &ig {
+                // auto-deref coercion: &&T -> &T, only when the target does not take the
+                // reference as it is: Rust tries zero dereferences first, so `mem::swap(&mut r1,
+                // &mut r2)` with `r1: &mut u32` infers T = &mut u32 and swaps the references
+                // (review 2026-10-23, found while revising: mithi swapped the referents)
+                let direct = {
+                    let snap = cx.inf.snapshot();
+                    let ok = self.unify(cx, &ig, &iw);
+                    cx.inf.rollback(snap);
+                    ok
+                };
+                if let (Ty::Ref(_, inner2), false) = (&ig, direct) {
                     let snap = cx.inf.snapshot();
                     if self.unify(cx, inner2, &iw) {
                         let span = te.span;
@@ -3265,15 +3274,20 @@ impl<'p> Typeck<'p> {
         });
         let cid = self.closures.len() as ClosureId;
         // reserve the global slot
-        self.closures.push(ClosureDef { owner: cx.fid, params: vec![], param_tys: vec![], ret: Ty::Error, body: TExpr::err(sp), captures: vec![], is_move, span: sp, fn_kind: 0 });
+        self.closures.push(ClosureDef { owner: cx.fid, params: vec![], param_tys: vec![], ret: Ty::Error, body: TExpr::err(sp), captures: vec![], is_move, span: sp, fn_kind: 0, hr_annot: vec![] });
         self.closure_parent.push(cx.closure_stack.last().copied());
         cx.closure_stack.push(cid);
         cx.scopes.push(vec![]);
         let mut ptys = vec![];
         let mut tpats = vec![];
+        let mut hr_annot = vec![];
         for (i, p) in params.iter().enumerate() {
             let t = match &p.ty {
-                Some(t) => self.lower_body_ty(cx, t),
+                Some(t) => {
+                    let lt = self.lower_body_ty(cx, t);
+                    hr_annot.push(exp_sig.is_none() && lt.mentions_ref());
+                    lt
+                }
                 None => match &exp_sig {
                     Some((ps, _)) if i < ps.len() => {
                         let z = cx.inf.zonk(&ps[i]);
@@ -3283,6 +3297,9 @@ impl<'p> Typeck<'p> {
                     _ => cx.inf.fresh(),
                 },
             };
+            if p.ty.is_none() {
+                hr_annot.push(false);
+            }
             if let (Some(_), Some((ps, _))) = (&p.ty, &exp_sig) {
                 if let Some(et) = ps.get(i) {
                     let et = et.clone();
@@ -3312,7 +3329,7 @@ impl<'p> Typeck<'p> {
         cx.ret_stack.pop();
         cx.scopes.pop();
         cx.closure_stack.pop();
-        let def = ClosureDef { owner: cx.fid, params: tpats, param_tys: ptys, ret: rty, body: bt, captures: vec![], is_move, span: sp, fn_kind: 0 };
+        let def = ClosureDef { owner: cx.fid, params: tpats, param_tys: ptys, ret: rty, body: bt, captures: vec![], is_move, span: sp, fn_kind: 0, hr_annot };
         cx.new_closures.push((cid, def));
         let ct = Ty::Closure(cid);
         if let Some(t) = expected {

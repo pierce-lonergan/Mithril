@@ -295,6 +295,11 @@ impl<'a> Solver<'a> {
                     }
                     Ty::Tuple(v) => v.clone().iter().all(|x| self.implements_d(x, tr, &[], depth + 1)),
                     Ty::Array(e, _) => self.implements_d(&e.clone(), tr, &[], depth + 1),
+                    // K-CloCopy (F-104): Clone iff no capture is by mut and every by-move capture
+                    // is Clone. The captures are inferred after the body is checked, so the
+                    // ownership pass decides it (E-TYPE there); rustc 1.99.1 accepts
+                    // `c.clone()` of such a closure [M: note probe q04]
+                    Ty::Closure(_) => true,
                     _ => false,
                 };
             }

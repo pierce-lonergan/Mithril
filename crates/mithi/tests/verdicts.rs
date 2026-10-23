@@ -273,14 +273,64 @@ const SUPP: &[Supp] = &[
     Supp { id: "N-67", module: "store", fixture: None, text: "fn take_first(slots: &mut [Option<Lease>], want: &[bool]) -> Option<Lease> { par for i in 0..slots.len() { if want[i] { return slots[i].take(); } } None }\n" },
     Supp { id: "N-68", module: "", fixture: None, text: "fn t() -> u32 { let a = 1u32; let mut out = &a; { let y = 5u32; let t = (&y,); out = t.0; } *out }\n" },
     Supp { id: "N-69", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn f(m: &Mutex<bool>) -> u32 uses { nondet } { let h = m.with_lock(|s| *s); loop { if h { break 1 } else { break 0 } } }\n" },
+    // third review round (2026-10-23, R5, R6): constructions written from verdicts.json's text by
+    // the mithi reviser; two forms where the text gives two
+    Supp { id: "N-70 (field)", module: "", fixture: None, text: "struct S { buf: [u32; 4], tag: u32 }\n#[grade(exact, cross_device)] fn k(m: &Mutex<u32>, s: &mut S) uses { nondet } { s.tag = m.with_lock(|v| *v); for i in 0..4 { s.buf[i] = 0; } }\n" },
+    Supp { id: "N-70 (call form)", module: "", fixture: None, text: "struct S { buf: [u32; 4], tag: u32 }\nfn zero(s: &mut S) { for i in 0..4 { s.buf[i] = 0; } }\n#[grade(exact, cross_device)] fn k2(m: &Mutex<u32>) -> u32 uses { nondet } { let mut s = S { buf: [1u32; 4], tag: 0 }; s.tag = m.with_lock(|v| *v); zero(&mut s); s.tag }\n" },
+    Supp { id: "N-71", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn k(a: &mut [f32; 4], x: &[f32; 4]) { a[3] = x[0] - x[0]; let r = &mut a[0..2]; for i in 0..r.len() { r[i] = canon::nan(x[i]); } }\n" },
+    Supp { id: "N-72", module: "", fixture: None, text: "struct Pair { buf: [f32; 4], tag: f32 }\n#[grade(exact, cross_device)] fn f(s: &mut Pair, x: &[f32; 4]) { s.tag = s.tag + 1.0; for i in 0..4 { s.buf[i] = canon::nan(x[i]); } }\n" },
+    Supp { id: "N-73 (index)", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn f(vv: &mut [[f32; 4]; 2], x: &[f32; 4]) { vv[1][0] = vv[1][0] + 1.0; for i in 0..4 { vv[0][i] = canon::nan(x[i]); } }\n" },
+    Supp { id: "N-73 (reference)", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn f(vv: &mut [[f32; 4]; 2], x: &[f32; 4]) { vv[1][0] = vv[1][0] + 1.0; let r = &mut vv[0]; for i in 0..4 { r[i] = canon::nan(x[i]); } }\n" },
+    Supp { id: "N-74", module: "", fixture: None, text: "struct M2 { rows: usize, blocks_per_row: usize, blocks: Vec<f32>, scale: f32 }\ninvariant M2 { self.blocks.len() == self.rows * self.blocks_per_row }\nimpl std::ops::IndexMut<usize> for M2 { type Output = [f32]; fn index_mut(&mut self, t: usize) -> &mut [f32] requires t < self.rows ensures footprint(result) == self.blocks[t * self.blocks_per_row .. (t + 1) * self.blocks_per_row] { &mut self.blocks[t * self.blocks_per_row .. (t + 1) * self.blocks_per_row] } }\n#[grade(exact, cross_device)] fn mm(x: &[f32], y: &mut M2) requires x.len() == y.blocks_per_row { y.scale = y.scale + 1.0; for t in 0..y.rows { for r in 0..y.blocks_per_row { y[t][r] = canon::nan(x[r]); } } }\n" },
+    Supp { id: "N-75", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> [u32; 4] uses { nondet } { let h = m.with_lock(|s| *s); let mut v = [0u32; 4]; for x in v.iter_mut() { *x = h; } v }\n" },
+    Supp { id: "N-76", module: "", fixture: None, text: "fn g() -> [u32; 4] { let mut v = [0u32; 4]; let x = v.iter_mut().next().unwrap(); *x = 1; v }\n" },
+    Supp { id: "N-77 (nested)", module: "", fixture: None, text: "fn g(x: &mut &mut u32, h: u32) { **x = h; }\n#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|s| *s); let mut y = 0u32; let mut r = &mut y; g(&mut r, h); y }\n" },
+    Supp { id: "N-77 (by-value form)", module: "", fixture: None, text: "fn g2(o: &mut Option<&mut u32>, h: u32) { if let Some(r) = o { **r = h } }\n#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|s| *s); let mut y = 0u32; g2(&mut Some(&mut y), h); y }\n" },
+    Supp { id: "N-78", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|s| *s); let mut y = 0u32; { let r = &mut y; let mut g = move || { *r = h; }; g(); } y }\n" },
+    Supp { id: "N-79", module: "", fixture: None, text: "fn h() -> u32 { let a = 1u32; let mut r: &u32 = &a; let mut c = move |set: bool| -> u32 { if set { let z = 5u32; r = &z; 0 } else { *r } }; c(true); c(false) }\n" },
+    Supp { id: "N-80", module: "", fixture: None, text: "fn h() -> u32 { let a = 1u32; let mut slot: Option<&u32> = Some(&a); let mut c = move |d: Option<&u32>| -> u32 { if let Some(d) = d { slot = Some(d); 0 } else { *slot.unwrap() } }; { let x = 5u32; c(Some(&x)); } c(None) }\n" },
+    Supp { id: "N-81", module: "", fixture: None, text: "fn h() -> u32 { let a = 1u32; let mut slot: Option<&u32> = Some(&a); let mut c = move |d| -> u32 { if let Some(d) = d { slot = Some(d); 0 } else { *slot.unwrap() } }; { let x = 5u32; c(Some(&x)); } c(None) }\n" },
+    Supp { id: "N-82", module: "", fixture: None, text: "fn g() -> u32 { let a = 1u32; let mut slot: Option<&u32> = Some(&a); let x = 5u32; let mut c = move |d| -> u32 { if let Some(d) = d { slot = Some(d); 0 } else { *slot.unwrap() } }; c(Some(&x)); c(None) }\n" },
+    Supp { id: "N-83", module: "", fixture: None, text: "fn f() -> u32 { let a = 1u32; let mut out1: &u32 = &a; let mut out2: &u32 = &a; { let z0 = 7u32; out2 = &z0; let mut c = || { out1 = out2; out2 = &a; }; c(); } *out1 }\n" },
+    Supp { id: "N-84", module: "", fixture: None, text: "fn f() -> u32 { let a = 1u32; let b = 2u32; let mut out1: &u32 = &a; let mut out2: &u32 = &b; { let mut c = || { out1 = out2; out2 = &a; }; c(); } *out1 + *out2 }\n" },
+    Supp { id: "N-85", module: "", fixture: None, text: "fn g() -> u32 { let a = 1u32; let mut out2: &u32 = &a; let r; { let z0 = 7u32; out2 = &z0; let mut c = || { let t = out2; out2 = &a; t }; r = c(); } *r }\n" },
+    Supp { id: "N-86", module: "", fixture: None, text: "fn g() -> u32 { let a = 1u32; let b = 2u32; let mut out2: &u32 = &b; let r; { let mut c = || { let t = out2; out2 = &a; t }; r = c(); } *r + *out2 }\n" },
+    Supp { id: "N-87 (offsets)", module: "", fixture: None, text: "fn f(y: &mut [f32; 8]) { par for i in 0..7 { y[i] = 1.0; y[i + 1] = 2.0; } }\n" },
+    Supp { id: "N-87 (window form)", module: "", fixture: None, text: "struct W { blocks: Vec<f32> }\nimpl W { fn window(&mut self, t: usize) -> &mut [f32] requires t + 4 <= self.blocks.len() ensures footprint(result) == self.blocks[t..t+4] { &mut self.blocks[t..t+4] } }\nfn race(y: &mut W) { par for i in 0..4 { y.window(0)[i] = 1.0; y.window(1)[i] = 2.0; } }\n" },
+    Supp { id: "N-88", module: "", fixture: None, text: "fn f() -> u32 { let a = 1u32; let mut slot: &u32 = &a; { let y = 5u32; let r = &y; slot = &*r; } *slot }\n" },
+    Supp { id: "N-89", module: "", fixture: None, text: "fn f() -> u32 { let y = 5u32; let slot; { let r = &y; slot = &*r; } *slot }\n" },
+    Supp { id: "N-90", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(|s| *s); let mut y = 0u32; { let t = (&mut y,); *t.0 = h; } y }\n" },
+    Supp { id: "N-91", module: "", fixture: None, text: "fn f() -> u32 { let a = 1u32; let v = [2u32, 3]; let mut out = &a; v.iter().for_each(|x| out = x); *out }\n" },
+    Supp { id: "N-92", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn f(m: &Mutex<bool>, y: &mut [u32; 4]) uses { nondet } { let h = m.with_lock(|s| *s); par for i in 0..4 { if h { continue; } y[i] = 1; } }\n" },
+    Supp { id: "N-93", module: "", fixture: None, text: "trait Whole { fn whole(&mut self, t: usize) -> &mut [f32]; }\nimpl Whole for [f32] { fn whole(&mut self, t: usize) -> &mut [f32] ensures footprint(result) == self[0..self.len()] { &mut self[0..self.len()] } }\nfn race(y: &mut [f32; 4]) { par for i in 0..2 { y[i..4].whole(0)[1 - i] = i as f32; } }\n" },
+    Supp { id: "N-94", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn f(y: &mut [f32; 4], x: &[f32; 4]) { for mut i in 0..4 { i = 0; y[i] = canon::nan(x[i]); } }\n" },
+    Supp { id: "N-95", module: "", fixture: None, text: "fn f(y: &mut [f32; 4]) { par for mut i in 0..4 { i = 0; y[i] = 1.0; } }\n" },
+    Supp { id: "N-96", module: "", fixture: None, text: "fn h() -> u32 { let mut n = 0u32; let mut c = move || { n += 1; n }; let mut d = c; d(); c() }\n" },
+    Supp { id: "N-97", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn leak(st: &Mutex<u32>) -> u32 uses { nondet } { let h = st.with_lock(|v| *v); let mut s = 0u32; let mut c = move |x: u32| { let o = s; s = x; o }; let mut d = c; d(h); c(0) }\n" },
+    Supp { id: "N-98", module: "", fixture: None, text: "fn f() -> usize { let mut v: Vec<usize> = Vec::new(); v.push(v.len()); v.push(v.len()); v[1] }\n" },
+    Supp { id: "N-99", module: "", fixture: None, text: "fn f(a: &mut Vec<usize>, n: usize) { a.push(n); }\nfn g() -> usize { let mut v: Vec<usize> = Vec::new(); f(&mut v, v.len()); v.len() }\n" },
+    Supp { id: "N-100", module: "", fixture: None, text: "fn f(v: &mut [u32; 4]) { let a = &mut v[0]; let b = &mut v[1]; *a = 1; *b = 2; }\n" },
+    Supp { id: "N-101", module: "", fixture: None, text: "fn g() -> u32 { let x = 5u32; let mut slot: Option<&u32> = None; { let mut put = |d: &u32| { slot = Some(d); }; put(&x); } *slot.unwrap() }\n" },
+    Supp { id: "N-102", module: "", fixture: None, text: "fn g() -> u32 { let x = 5u32; let id = |d: &u32| d; let r = id(&x); *r }\n" },
+    Supp { id: "N-103", module: "", fixture: None, text: "fn g(p: (&mut Vec<&u32>, &u32)) { p.0.push(p.1) }\n" },
+    Supp { id: "N-104", module: "", fixture: None, text: "fn g() -> u32 { let x = 5u32; let mut slot: Option<&u32> = None; { let mut put = |d| { slot = Some(d); }; put(&x); } *slot.unwrap() }\n" },
+    Supp { id: "N-105", module: "", fixture: None, text: "fn n() -> &'static str { \"x\" }\n" },
+    Supp { id: "N-106", module: "", fixture: None, text: "struct Op { name: &'static str }\n" },
+    Supp { id: "N-107", module: "", fixture: None, text: "fn g(v: &[u32]) -> Option<u32> { let x = v.first()?; Some(*x + 1) }\n" },
+    Supp { id: "N-108", module: "", fixture: None, text: "#[grade(exact, cross_device)] fn s(a: f64, b: f64) -> bool { 1.0 / a.max(b) < 0.0 }\n" },
+    Supp { id: "N-109", module: "store", fixture: None, text: "enum E { A(Lease), B(Lease) }\nfn f(store: &Store, e: E) uses { io, spawn } { match e { E::A(l) => store.release(l), _ => {} } }\n" },
 ];
 
 /// Supplementary items that are not constructed, and why.
 const NOT_CONSTRUCTED: &[(&str, &str)] = &[("N-38", "a hint port's stack budget (E-TO-STACK): M4, outside X1")];
 
 /// Constructions that disagree with the note, with the diagnosis of which side is wrong ("mithi
-/// wrong" or "note wrong"); reported, not failing. Empty at this commit.
-const DIAGNOSED: &[(&str, &str)] = &[];
+/// wrong" or "note wrong"); reported, not failing. An entry is consulted only on a disagreement.
+/// N-43: the verdicts.json of commit `5e16fbb` expects E-BORROW-OUTLIVE; the note's third round
+/// (F-107, uncommitted on 2026-10-23) changes it to E-LOCAL-MUT-STORE, which is what mithi gives
+/// and what rustc 1.99.1 reports (E0521 on the annotated `|d: &u32|` store [M]). Against the third
+/// round's verdicts.json it agrees; this entry keeps the test right whichever lands first.
+const DIAGNOSED: &[(&str, &str)] = &[("N-43", "note wrong at 5e16fbb: F-107 (third round) makes it E-LOCAL-MUT-STORE, as rustc E0521 [M]")];
 
 #[test]
 fn supplementary_items() {
@@ -328,6 +378,26 @@ fn supplementary_items() {
     println!("supplementary agreement: {}/{n}; not constructed: {NOT_CONSTRUCTED:?}", n - disagreements.len());
     assert!(unconstructed.is_empty(), "supplementary items without a construction: {unconstructed:?}");
     assert!(disagreements.is_empty(), "{}", disagreements.join("\n"));
+}
+
+/// N-19's reason, not only its code (review 2026-10-23: the agreement was coincidental, since
+/// `c` was reported as not consumed although `c()` consumes it). With the call, the rejection is
+/// that the closure body does not consume its by-move Linear capture `l` (K-LinClo: T-Lin in the
+/// body); `c` itself is consumed by the call. Without the call, `c` is never consumed.
+#[test]
+fn n19_reason() {
+    let v = verdicts();
+    let with = SUPP.iter().find(|s| s.id == "N-19 (with the call)").unwrap();
+    let (got, _, all) = run(&config(&v, with.text, with.module));
+    assert_eq!(got, "reject");
+    let drops: Vec<&String> = all.iter().filter(|d| d.starts_with("E-LINEAR-DROP")).collect();
+    assert!(drops.iter().any(|d| d.contains("`l`")), "with the call: the body must be blamed for `l`: {all:#?}");
+    assert!(!drops.iter().any(|d| d.contains("`c`")), "with the call: `c` is consumed by the call: {all:#?}");
+    assert!(!all.iter().any(|d| d.starts_with("E-MOVE-USED")), "with the call: no use-after-move: {all:#?}");
+    let without = SUPP.iter().find(|s| s.id == "N-19 (without)").unwrap();
+    let (got, _, all) = run(&config(&v, without.text, without.module));
+    assert_eq!(got, "reject");
+    assert!(all.iter().any(|d| d.starts_with("E-LINEAR-DROP") && d.contains("`c`")), "without the call: `c` is not consumed: {all:#?}");
 }
 
 #[test]

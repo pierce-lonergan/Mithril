@@ -45,6 +45,12 @@ struct Loan {
     path: String,
     mutable: bool,
     span: Span,
+    /// for a symbolic loan ℓ_j,k* (target None): the reference position k within the type of
+    /// parameter j (F-62: one symbol per reference position, not per parameter; review
+    /// 2026-10-23, e2): `.i` a tuple component, `[]` an element of an array, slice or Vec, `<k>`
+    /// the k-th type argument of a std type (Option and Result payloads), `*` through a
+    /// reference, `~` a reference hidden inside a std adapter; "" the parameter itself
+    pos: String,
 }
 
 /// The holder reported for a loan passed as an earlier argument of the call being evaluated.
@@ -118,6 +124,17 @@ struct Own<'a> {
     targeted: std::collections::HashSet<LocalId>,
     /// the Fn kind of each generic parameter with an Fn* bound
     gen_fn_kinds: Vec<Option<u8>>,
+    /// locals that hold a by-value part of a parameter's value, by destructuring: per parameter,
+    /// the position of the part (F-62). Absent: unknown (the per-parameter rule applies)
+    sym_base: HashMap<LocalId, BTreeMap<LocalId, String>>,
+    /// per closure created in this body: the indices of its parameters that are higher-ranked
+    /// references (the closure is passed where an `Fn*` bound writes that parameter as an elided
+    /// reference, `F: FnMut(&u32)`; note section 5.7 "Stores into captures")
+    hr_params: HashMap<ClosureId, Vec<usize>>,
+    /// the symbolic loans of those parameters, while the closure body is checked
+    hr_loans: BTreeSet<u32>,
+    /// the closures whose bodies are being checked (innermost last)
+    clo_stack: Vec<ClosureId>,
 }
 
 impl<'a> Own<'a> {
@@ -169,17 +186,91 @@ impl<'a> Own<'a> {
     }
 
     fn new_loan(&mut self, target: Option<LocalId>, param: Option<LocalId>, path: String, mutable: bool, span: Span) -> u32 {
-        let key = (target, param, path.clone(), mutable, span);
+        self.new_loan_at(target, param, path, mutable, span, String::new())
+    }
+
+    fn new_loan_at(&mut self, target: Option<LocalId>, param: Option<LocalId>, path: String, mutable: bool, span: Span, pos: String) -> u32 {
+        let key = (target, param, format!("{path}\u{0}{pos}"), mutable, span);
         if let Some(id) = self.loan_ids.get(&key) {
             return *id;
         }
         if let Some(t) = target {
             self.targeted.insert(t);
         }
-        self.loans.push(Loan { target, param, path, mutable, span });
+        self.loans.push(Loan { target, param, path, mutable, span, pos });
         let id = (self.loans.len() - 1) as u32;
         self.loan_ids.insert(key, id);
         id
+    }
+
+    /// The parameter and reference position of a place reached from a local whose position is
+    /// known (`sym_base`): `(*v)[]` for an element of `*v` (F-62).
+    fn place_pos(&self, p: &TExpr) -> Option<(LocalId, String)> {
+        match &p.kind {
+            TK::Local(l) => {
+                let m = self.sym_base.get(l)?;
+                if m.len() != 1 {
+                    return None;
+                }
+                m.iter().next().map(|(j, b)| (*j, b.clone()))
+            }
+            TK::Deref(b) => match &b.kind {
+                TK::Unsize(u) => match &u.kind {
+                    TK::Borrow(_, q) => self.place_pos(q),
+                    _ => None,
+                },
+                TK::Borrow(_, q) => self.place_pos(q),
+                _ if b.ty.is_ref() => self.place_pos(b).map(|(j, s)| (j, format!("{s}*"))),
+                _ => self.place_pos(b),
+            },
+            TK::Field(b, i) => self.place_pos(b).map(|(j, s)| (j, format!("{s}.{i}"))),
+            TK::Index(b, _) => self.place_pos(b).map(|(j, s)| (j, format!("{s}[]"))),
+            TK::SliceRange { base, .. } => self.place_pos(base),
+            TK::Unsize(b) => self.place_pos(b),
+            TK::Borrow(_, q) => self.place_pos(q),
+            _ => None,
+        }
+    }
+
+    /// The bindings of a pattern with the position of the part each binds by value (None: a
+    /// binding by reference, or under a dereference).
+    fn pat_paths(&self, p: &TPat, path: &str, under_ref: bool, out: &mut Vec<(LocalId, Option<String>)>) {
+        match &p.kind {
+            PK::Bind { local, by_ref, sub } => {
+                let r = under_ref || by_ref.is_some();
+                out.push((*local, if r { None } else { Some(path.to_string()) }));
+                if let Some(sp) = sub {
+                    self.pat_paths(sp, path, r, out);
+                }
+            }
+            PK::Tuple(ps) => {
+                for (i, x) in ps.iter().enumerate() {
+                    self.pat_paths(x, &format!("{path}.{i}"), under_ref, out);
+                }
+            }
+            PK::Variant { adt, variant, fields } => {
+                let ad = &self.c.program.adts[*adt as usize];
+                for (fi, x) in fields {
+                    let suffix = match ad.variants.get(*variant as usize).and_then(|v| v.fields.get(*fi as usize)).map(|f| &f.ty) {
+                        Some(Ty::Param(k)) if ad.role == FileRole::Std => format!("<{k}>"),
+                        _ => format!(".{fi}"),
+                    };
+                    self.pat_paths(x, &format!("{path}{suffix}"), under_ref, out);
+                }
+            }
+            PK::Deref(x) => self.pat_paths(x, &format!("{path}*"), true, out),
+            PK::Slice(ps, _) => {
+                for x in ps {
+                    self.pat_paths(x, &format!("{path}[]"), under_ref, out);
+                }
+            }
+            PK::Or(ps) => {
+                for x in ps {
+                    self.pat_paths(x, path, under_ref, out);
+                }
+            }
+            _ => {}
+        }
     }
 
     fn move_origin(&self, e: &TExpr) -> Origin {
@@ -516,23 +607,31 @@ impl<'a> Own<'a> {
                 }
                 let carried = self.eval(f, if fk == 2 { Use::Value } else { Use::Read });
                 let mut arg_loans = BTreeSet::new();
+                let mut per_arg: Vec<BTreeSet<u32>> = vec![];
                 for a in args {
-                    arg_loans.extend(self.eval(a, Use::Value));
+                    let ls = self.eval(a, Use::Value);
+                    arg_loans.extend(ls.iter().copied());
+                    per_arg.push(ls);
                 }
                 // T-CallClo (F-61): a by-mut captured place of Local type may receive what the
                 // body can store into it: the arguments' loans and the closure's own loans
-                // (its by-ref captures and what its by-move captures carry)
+                // (its by-ref captures and what its by-move captures carry). The loans of
+                // arguments at higher-ranked parameters are not transferred: the body may not
+                // store them (F-107; such a store is E-LOCAL-MUT-STORE in the body)
                 if let Ty::Closure(cid) = f.ty.strip_refs() {
-                    if let Some(cd) = self.c.closures.get(*cid as usize) {
-                        let caps: Vec<(LocalId, Ty)> = cd.captures.iter().filter(|cp| cp.mode == CaptureMode::Mut).map(|cp| (cp.local, cp.ty.clone())).collect();
-                        for (q, qt) in caps {
-                            if !is_local(self.c, &qt) {
-                                continue;
-                            }
-                            let add: Vec<u32> = arg_loans.iter().chain(carried.iter()).copied().filter(|x| self.loans[*x as usize].target != Some(q)).collect();
-                            self.st.loans_of.entry(q).or_default().extend(add);
+                    let hr = self.hr_params.get(cid).cloned().unwrap_or_default();
+                    let mut other: BTreeSet<u32> = BTreeSet::new();
+                    for (i, ls) in per_arg.iter().enumerate() {
+                        if !hr.contains(&i) {
+                            other.extend(ls.iter().copied());
                         }
                     }
+                    let mut value: BTreeSet<u32> = carried.clone();
+                    let holder = place_root(f);
+                    if let Some(fl) = holder {
+                        value.extend(self.loans_carried(fl));
+                    }
+                    self.closure_transfer(*cid, &other, &value, holder, e.span);
                 }
                 // a Local result carries the closure's capture loans and the arguments' (F-40)
                 if is_local(self.c, &e.ty) {
@@ -620,7 +719,7 @@ impl<'a> Own<'a> {
                     if moves && !(lin && !others_linear) {
                         self.move_by_pattern(s);
                     }
-                    self.bind_pat(p, sl);
+                    self.bind_pat_from(p, sl, Some(s));
                     let l1 = self.eval(t, u);
                     let scope = self.scopes.pop().unwrap_or_default();
                     if !self.st.dead {
@@ -668,7 +767,7 @@ impl<'a> Own<'a> {
                     self.st = s0.clone();
                     // an arm's bindings exist in that arm only: scoped to it, and gone at the join
                     self.scopes.push(vec![]);
-                    self.bind_pat(&a.pat, sl.clone());
+                    self.bind_pat_from(&a.pat, sl.clone(), Some(s));
                     if let Some(g) = &a.guard {
                         self.eval(g, Use::Read);
                     }
@@ -783,7 +882,7 @@ impl<'a> Own<'a> {
                 if pat_moves(self.c, p, &self.copy_params) && !self.is_copy(&s.ty) {
                     self.move_by_pattern(s);
                 }
-                self.bind_pat(p, ls);
+                self.bind_pat_from(p, ls, Some(s));
                 BTreeSet::new()
             }
         }
@@ -941,7 +1040,45 @@ impl<'a> Own<'a> {
         }
     }
 
+    /// Inside a closure body: a value stored into a by-mut captured place or into the closure's
+    /// by-move state may not carry a loan on a body local, on a by-mut captured place or on the
+    /// state, nor a higher-ranked parameter's loan (§5.7 "Stores into captures", "By-move state
+    /// stores", F-61, F-93; review 2026-10-23, N-79). Checked at the store, the first failure.
+    fn check_capture_store(&mut self, q: LocalId, stored: &BTreeSet<u32>, sp: Span) {
+        let Some(&cid) = self.clo_stack.last() else { return };
+        let cd = &self.c.closures[cid as usize];
+        let Some(cap) = cd.captures.iter().find(|c| c.local == q) else { return };
+        if cap.mode == CaptureMode::Ref {
+            return;
+        }
+        let mut bad: Option<String> = None;
+        for x in stored {
+            if self.hr_loans.contains(x) {
+                bad = Some("a borrow received through a higher-ranked parameter".into());
+                break;
+            }
+            let ln = &self.loans[*x as usize];
+            let Some(t) = ln.target else { continue };
+            if ln.path.starts_with('*') && self.body.locals[t as usize].ty.is_ref() {
+                continue;
+            }
+            let internal = self.body.locals[t as usize].closure == Some(cid);
+            let own_place = cd.captures.iter().any(|c| c.local == t && c.mode != CaptureMode::Ref);
+            if internal || own_place {
+                bad = Some(format!("a borrow of `{}`, {}", self.name(t), if internal { "a local of the closure body" } else { "a place the closure captures by mut or owns" }));
+                break;
+            }
+        }
+        if let Some(why) = bad {
+            let (nm, what) = (self.name(q), if cap.mode == CaptureMode::Move { "the closure's own (by-move) state" } else { "a place the closure captures by mut" });
+            self.err("E-LOCAL-MUT-STORE", sp, format!("storing {why} into `{nm}`, {what}: it would outlive the call (§5.7, F-61, F-93; rustc rejects it too)"));
+        }
+    }
+
     fn assign(&mut self, p: &TExpr, ls: BTreeSet<u32>, sp: Span) {
+        if let Some(r) = place_root_direct(p) {
+            self.check_capture_store(r, &ls, sp);
+        }
         match &p.kind {
             TK::Local(l) => {
                 let l = *l;
@@ -958,6 +1095,7 @@ impl<'a> Own<'a> {
                 self.st.ms.insert(l, MS::Init);
                 self.st.pmoved.remove(&l);
                 self.st.loans_of.insert(l, ls);
+                self.sym_base.remove(&l);
             }
             _ => {
                 // assigning a moved field path (or a parent of it) initialises it again
@@ -975,7 +1113,8 @@ impl<'a> Own<'a> {
                 // stored loans join the written referents
                 let through = deref_chain(p);
                 let what = self.c.sm().snippet(p.span);
-                self.store_into(place_root(p), through, &carried, &ls, sp, &what);
+                let dpos = self.place_pos(p);
+                self.store_into_at(place_root(p), through, &carried, &ls, sp, &what, dpos);
             }
         }
     }
@@ -985,11 +1124,26 @@ impl<'a> Own<'a> {
     /// the caller's memory (it carries the symbolic loan of a parameter j: a reference parameter,
     /// a reborrow of one, or a reference bound out of a by-value parameter such as
     /// `Option<&mut T>`, F-62), the stored value may carry only j's own symbolic loans
-    /// (E-LOCAL-MUT-STORE; one symbol per parameter, not per reference position). Otherwise the
-    /// loans join every referent the reference borrows mutably, and the root.
+    /// (E-LOCAL-MUT-STORE), at the destination's reference position when that is known
+    /// (`store_into_at`), otherwise at any of j's positions. Otherwise the loans join every
+    /// referent the reference borrows mutably, and the root.
     fn store_into(&mut self, dst_root: Option<LocalId>, through: bool, dst_loans: &BTreeSet<u32>, stored: &BTreeSet<u32>, sp: Span, what: &str) {
+        self.store_into_at(dst_root, through, dst_loans, stored, sp, what, None)
+    }
+
+    /// As `store_into`, with the destination's parameter and reference position when known
+    /// (`place_pos`): a stored symbolic loan of that parameter must then be at a position on the
+    /// destination's own path (the destination's position or one inside it, or a reference it
+    /// is reached through), not a sibling position (F-62, item e2 of the 2026-10-23 review).
+    #[allow(clippy::too_many_arguments)]
+    fn store_into_at(&mut self, dst_root: Option<LocalId>, through: bool, dst_loans: &BTreeSet<u32>, stored: &BTreeSet<u32>, sp: Span, what: &str, dpos: Option<(LocalId, String)>) {
         if stored.is_empty() {
             return;
+        }
+        if let Some(r) = dst_root {
+            if !self.body.locals[r as usize].ty.is_ref() {
+                self.check_capture_store(r, stored, sp);
+            }
         }
         let mut params: BTreeSet<LocalId> = BTreeSet::new();
         if through {
@@ -1010,9 +1164,13 @@ impl<'a> Own<'a> {
                 .copied()
                 .filter(|x| {
                     let ln = &self.loans[*x as usize];
-                    let own = ln.param.map(|j| params.contains(&j)).unwrap_or(false);
+                    let own = match (&dpos, ln.param, ln.target) {
+                        // the destination's own position: the same parameter, on its path
+                        (Some((j, dp)), Some(lj), None) if params.contains(j) => lj == *j && (ln.pos.starts_with(dp.as_str()) || dp.starts_with(ln.pos.as_str())),
+                        _ => ln.param.map(|j| params.contains(&j)).unwrap_or(false),
+                    };
                     // a reborrow through a reference is judged by the loans carried with it
-                    let transparent = ln.path.starts_with('*');
+                    let transparent = ln.target.is_some() && ln.path.starts_with('*');
                     !own && !transparent
                 })
                 .collect();
@@ -1032,9 +1190,14 @@ impl<'a> Own<'a> {
     }
 
     /// An argument passed where the parameter is declared `&mut _`: a `&mut` local is implicitly
-    /// reborrowed (`&mut *r`), as Rust does at this coercion site, not moved.
+    /// reborrowed (`&mut *r`), as Rust does at this coercion site, not moved. The coercion may
+    /// also unsize it (`&mut [u32; 4]` passed for `&mut [u32]`: review 2026-10-23, d3).
     fn arg_value(&mut self, a: &TExpr) -> BTreeSet<u32> {
-        let TK::Local(r) = a.kind else { return self.eval(a, Use::Value) };
+        let inner = match &a.kind {
+            TK::Unsize(x) => x.as_ref(),
+            _ => a,
+        };
+        let TK::Local(r) = inner.kind else { return self.eval(a, Use::Value) };
         if !matches!(self.body.locals[r as usize].ty, Ty::Ref(true, _)) {
             return self.eval(a, Use::Value);
         }
@@ -1077,7 +1240,67 @@ impl<'a> Own<'a> {
             arg_loans.push(ls);
         }
         self.pending.truncate(base);
+        // T-Call (F-35, F-61): a call whose argument type mentions clo⟨κ⟩ (directly, through
+        // &F or &mut F, or a std adapter that stores it) may run κ, so κ's loan transfer λ_q into
+        // its by-mut captures applies here too, with the call's arguments for κ's parameters
+        // (review 2026-10-23: only a direct call `c()` transferred, so a closure passed to
+        // `for_each`, `Option::map` or a user `run<F: FnMut()>` stored a dangling loan)
+        let mut clos: BTreeSet<ClosureId> = BTreeSet::new();
+        for a in args {
+            a.ty.walk(&mut |t| {
+                if let Ty::Closure(cid) = t {
+                    clos.insert(*cid);
+                }
+            });
+        }
+        if !clos.is_empty() {
+            // the closure arguments' own loans are the closure value's, not values the call
+            // hands to the closure (F-99: `v.iter().for_each(|x| out = x)` would otherwise give
+            // out a loan on itself)
+            let mut other: BTreeSet<u32> = BTreeSet::new();
+            let mut values: Vec<(BTreeSet<u32>, Option<LocalId>, BTreeSet<ClosureId>)> = vec![];
+            for (i, a) in args.iter().enumerate() {
+                let mut ls: BTreeSet<u32> = arg_loans[i].clone();
+                ls.extend(self.content_loans(a));
+                let holder = place_root(a).filter(|_| !matches!(a.kind, TK::Closure(_)));
+                if let Some(l) = holder {
+                    if !self.body.locals[l as usize].ty.is_ref() {
+                        ls.extend(self.loans_carried(l));
+                    }
+                }
+                let mut mine: BTreeSet<ClosureId> = BTreeSet::new();
+                a.ty.walk(&mut |t| {
+                    if let Ty::Closure(cid) = t {
+                        mine.insert(*cid);
+                    }
+                });
+                if mine.is_empty() {
+                    other.extend(ls);
+                } else {
+                    values.push((ls, holder, mine));
+                }
+            }
+            for (value, holder, mine) in values {
+                for cid in mine {
+                    self.closure_transfer(cid, &other, &value, holder, e.span);
+                }
+            }
+        }
         let cf = &self.c.program.fns[f as usize];
+        // K-CloCopy (F-104): a closure is Clone iff no capture is by mut and every by-move
+        // capture is Clone (the type checker admits `.clone()` on any closure; captures are
+        // known here)
+        if builtin.as_deref() == Some("clone") {
+            if let Some(Ty::Closure(cid)) = args.first().map(|a| a.ty.strip_refs().clone()) {
+                let cd = &self.c.closures[cid as usize];
+                let bad = cd.captures.iter().find(|cp| cp.mode == CaptureMode::Mut || (cp.mode == CaptureMode::Move && !clone_ty(self.c, &cp.ty, &self.copy_params)));
+                if let Some(cp) = bad {
+                    let nm = self.name(cp.local);
+                    let why = if cp.mode == CaptureMode::Mut { "captures it by mut" } else { "owns a value that is not Clone" };
+                    self.err("E-TYPE", e.span, format!("this closure is not Clone: it {why} (`{nm}`; K-CloCopy, F-104)"));
+                }
+            }
+        }
         // std storing calls: the stored value's loans join the receiving referent (F-39), or are
         // E-LOCAL-MUT-STORE when the receiver is the caller's memory
         match builtin.as_deref() {
@@ -1094,25 +1317,39 @@ impl<'a> Own<'a> {
                     }
                     let what = self.c.sm().snippet(dst.span);
                     let dl = arg_loans[0].clone();
-                    self.store_into(place_root(dst), true, &dl, &stored, e.span, &what);
+                    // the stored value lands in an element of the receiver (or the payload)
+                    let sfx = if builtin.as_deref() == Some("opt_insert") { "<0>" } else { "[]" };
+                    let dpos = self.place_pos(dst).map(|(j, s)| (j, format!("{s}{sfx}")));
+                    self.store_into_at(place_root(dst), true, &dl, &stored, e.span, &what, dpos);
                 }
             }
             Some("mem_swap") => {
                 if args.len() == 2 {
-                    if let (Some(a), Some(b)) = (place_root(&args[0]), place_root(&args[1])) {
-                        let la = self.loans_carried(a);
-                        let lb = self.loans_carried(b);
-                        let (da, db) = (arg_loans[0].clone(), arg_loans[1].clone());
-                        let (wa, wb) = (self.c.sm().snippet(args[0].span), self.c.sm().snippet(args[1].span));
-                        if da.iter().any(|x| self.loans[*x as usize].param.is_some()) {
-                            self.store_into(Some(a), true, &da, &lb, e.span, &wa);
-                        } else {
-                            self.st.loans_of.insert(a, lb.clone());
-                        }
-                        if db.iter().any(|x| self.loans[*x as usize].param.is_some()) {
-                            self.store_into(Some(b), true, &db, &la, e.span, &wb);
-                        } else {
-                            self.st.loans_of.insert(b, la);
+                    // each side's content: the loans its place carries, or, for a reference that
+                    // is not a borrow of a local's place (`o.as_mut().unwrap()`), every loan the
+                    // argument carries (review 2026-10-23: such a swap moved no loan, once typeck
+                    // stopped dereferencing `&mut r` to `&mut *r`; probe br/b12)
+                    let roots = [place_root(&args[0]), place_root(&args[1])];
+                    let content: Vec<BTreeSet<u32>> = (0..2)
+                        .map(|i| match (roots[i], &args[i].kind) {
+                            (Some(r), TK::Borrow(..)) if !self.body.locals[r as usize].ty.is_ref() => self.loans_carried(r),
+                            _ => arg_loans[i].clone(),
+                        })
+                        .collect();
+                    for i in 0..2 {
+                        let other = content[1 - i].clone();
+                        let d = arg_loans[i].clone();
+                        let w = self.c.sm().snippet(args[i].span);
+                        match (roots[i], &args[i].kind) {
+                            (Some(r), TK::Borrow(..)) if !self.body.locals[r as usize].ty.is_ref() => {
+                                if d.iter().any(|x| self.loans[*x as usize].param.is_some()) {
+                                    self.store_into(Some(r), true, &d, &other, e.span, &w);
+                                } else {
+                                    self.st.loans_of.insert(r, other);
+                                }
+                            }
+                            // through a reference: into whatever it borrows mutably
+                            _ => self.store_into(roots[i], true, &d, &other, e.span, &w),
                         }
                     }
                 }
@@ -1201,6 +1438,102 @@ impl<'a> Own<'a> {
         }
     }
 
+    /// T-CallClo's (and T-Call's, for a call that may run the closure) loan transfer λ_q into
+    /// each by-mut captured place q of closure `cid` (F-61): what the body may store there is
+    /// over-approximated by `add` (the call's arguments' loans and the closure's own loans),
+    /// less loans on q itself. A capture that is a reference goes through `store_into`, so a
+    /// store into a parameter's referent is E-LOCAL-MUT-STORE (§5.4; review 2026-10-23, g1);
+    /// a capture that cannot hold a loan (`&mut Vec<u32>`) receives nothing.
+    ///
+    /// `other`: the call's argument loans that may reach the closure's parameters (not those of
+    /// higher-ranked parameters). `value`: the loans the closure value carries. What the body may
+    /// store (λ_q, §5.7 "Stores into captures", F-94): by-ref capture loans and what by-move
+    /// captures carry; each capture's current loans in place of its capture symbol ℓ_q*; and
+    /// the parameters' loans. Not the loans **on** by-mut captured places (storing one is
+    /// E-LOCAL-MUT-STORE in the body): review 2026-10-23, N-84, where out1 received a loan on
+    /// out2 and a later read of out2 was a false E-BORROW-CONFLICT. A closure whose body writes
+    /// its by-move state gets the same loans into the value itself (λ_σ, F-93), held by
+    /// `holder`.
+    fn closure_transfer(&mut self, cid: ClosureId, other: &BTreeSet<u32>, value: &BTreeSet<u32>, holder: Option<LocalId>, sp: Span) {
+        let Some(cd) = self.c.closures.get(cid as usize) else { return };
+        let mut add: BTreeSet<u32> = other.clone();
+        for x in value {
+            let ln = &self.loans[*x as usize];
+            let on_mut_capture = cd.captures.iter().any(|c| c.mode == CaptureMode::Mut && ln.target == Some(c.local) && !ln.path.starts_with('*'));
+            if !on_mut_capture {
+                add.insert(*x);
+            }
+        }
+        for cap in &cd.captures {
+            if cap.mode != CaptureMode::Move {
+                add.extend(self.loans_carried(cap.local));
+            }
+        }
+        let add = &add;
+        // λ_σ: a body that stores into its by-move state keeps those loans in the closure value
+        if let Some(h) = holder {
+            let body = &cd.body;
+            let writes_state = cd.captures.iter().any(|c| {
+                c.mode == CaptureMode::Move && is_local(self.c, &c.ty) && {
+                    let mut w = false;
+                    walk_deep(self.c, body, &mut |x| {
+                        if let TK::Assign(p, _) | TK::AssignOp(_, p, _) | TK::Borrow(true, p) = &x.kind {
+                            if place_root(p) == Some(c.local) {
+                                w = true;
+                            }
+                        }
+                    });
+                    w
+                }
+            });
+            if writes_state && !self.body.locals[h as usize].ty.is_ref() {
+                let add_s: Vec<u32> = add.iter().copied().filter(|x| self.loans[*x as usize].target != Some(h) && !self.hr_loans.contains(x)).collect();
+                self.st.loans_of.entry(h).or_default().extend(add_s);
+            }
+        }
+        let caps: Vec<(LocalId, Ty)> = cd.captures.iter().filter(|cp| cp.mode == CaptureMode::Mut).map(|cp| (cp.local, cp.ty.clone())).collect();
+        for (q, qt) in caps {
+            if !self.capture_can_store(cid, q, &qt) {
+                continue;
+            }
+            let add_q: BTreeSet<u32> = add.iter().copied().filter(|x| self.loans[*x as usize].target != Some(q) && !self.hr_loans.contains(x)).collect();
+            if add_q.is_empty() {
+                continue;
+            }
+            if qt.is_ref() {
+                let dl = self.loans_carried(q);
+                let what = self.name(q);
+                self.store_into(Some(q), true, &dl, &add_q, sp, &what);
+            } else {
+                self.st.loans_of.entry(q).or_default().extend(add_q);
+            }
+        }
+    }
+
+    /// Can closure `cid`'s body store a loan into its by-mut capture q? q's value is Local, or q
+    /// is a reference whose referent is Local (or which the body reassigns as a whole).
+    fn capture_can_store(&self, cid: ClosureId, q: LocalId, qt: &Ty) -> bool {
+        match qt {
+            Ty::Ref(m, inner) => {
+                if *m && is_local(self.c, inner) {
+                    return true;
+                }
+                // `out = &y` reassigns the captured reference itself
+                let body = &self.c.closures[cid as usize].body;
+                let mut whole = false;
+                walk_deep(self.c, body, &mut |x| {
+                    if let TK::Assign(p, _) = &x.kind {
+                        if matches!(p.kind, TK::Local(l) if l == q) {
+                            whole = true;
+                        }
+                    }
+                });
+                whole
+            }
+            t => is_local(self.c, t),
+        }
+    }
+
     /// For an argument `&p` or `&mut p` of an owned place p: the loans p's value carries.
     fn content_loans(&self, a: &TExpr) -> BTreeSet<u32> {
         let inner = match &a.kind {
@@ -1251,7 +1584,7 @@ impl<'a> Own<'a> {
                             self.scopes.last_mut().unwrap().push(b);
                         }
                     } else {
-                        self.bind_pat(pat, ls);
+                        self.bind_pat_from(pat, ls, init.as_ref());
                     }
                 }
                 TStmt::Expr(x) => {
@@ -1308,14 +1641,18 @@ impl<'a> Own<'a> {
             }
         }
         hits.sort();
+        // anchored where the scope ends (its closing brace), the point at which the loan
+        // outlives its target; the review of 2026-10-23 found that anchoring at the block's start
+        // put this consequence before its cause in the §5.16 order (N-79, ow05)
+        let end = Span { file: sp.file, lo: sp.hi.saturating_sub(1).max(sp.lo), hi: sp.hi };
         for (l, holder) in hits {
             let (a, b) = (self.name(l), self.name(holder));
-            self.err("E-BORROW-OUTLIVE", sp, format!("`{a}` goes out of scope while `{b}` still borrows it"));
+            self.err("E-BORROW-OUTLIVE", end, format!("`{a}` goes out of scope while `{b}` still borrows it"));
         }
         for &l in scope {
             if result_loans.iter().any(|x| self.loans[*x as usize].target == Some(l) && !self.loans[*x as usize].path.starts_with('*')) {
                 let a = self.name(l);
-                self.err("E-BORROW-OUTLIVE", sp, format!("the block's value borrows `{a}`, which goes out of scope"));
+                self.err("E-BORROW-OUTLIVE", end, format!("the block's value borrows `{a}`, which goes out of scope"));
             }
             self.st.loans_of.remove(&l);
             self.st.pmoved.remove(&l);
@@ -1343,6 +1680,50 @@ impl<'a> Own<'a> {
     }
 
     fn bind_pat(&mut self, p: &TPat, ls: BTreeSet<u32>) {
+        self.bind_pat_from(p, ls, None);
+    }
+
+    /// Bind a pattern whose scrutinee value carries `ls`. When the scrutinee is a local holding
+    /// a known part of a parameter (`sym_base`), a by-value binding of a component receives only
+    /// the symbolic loans at that component's positions, and its own position is recorded
+    /// (F-62: `let (v, d) = t;` with `t: (&mut Vec<&u32>, &u32)` gives v the positions `.0`
+    /// and `.0*[]`, d the position `.1`; review 2026-10-23, e2).
+    fn bind_pat_from(&mut self, p: &TPat, ls: BTreeSet<u32>, scrut: Option<&TExpr>) {
+        let base: Option<BTreeMap<LocalId, String>> = match scrut.map(|x| &x.kind) {
+            Some(TK::Local(y)) => self.sym_base.get(y).cloned(),
+            _ => None,
+        };
+        let mut paths = vec![];
+        self.pat_paths(p, "", false, &mut paths);
+        let mut per: BTreeMap<LocalId, BTreeSet<u32>> = BTreeMap::new();
+        for (b, path) in paths {
+            match (&base, &path) {
+                (Some(bm), Some(sfx)) => {
+                    let keep: BTreeSet<u32> = ls
+                        .iter()
+                        .copied()
+                        .filter(|x| {
+                            let ln = &self.loans[*x as usize];
+                            match (ln.target, ln.param) {
+                                (None, Some(j)) => match bm.get(&j) {
+                                    Some(b0) => {
+                                        let full = format!("{b0}{sfx}");
+                                        ln.pos.starts_with(&full) || full.starts_with(&ln.pos)
+                                    }
+                                    None => true,
+                                },
+                                _ => true,
+                            }
+                        })
+                        .collect();
+                    self.sym_base.insert(b, bm.iter().map(|(j, b0)| (*j, format!("{b0}{sfx}"))).collect());
+                    per.insert(b, keep);
+                }
+                _ => {
+                    self.sym_base.remove(&b);
+                }
+            }
+        }
         let mut bs = vec![];
         p.bindings(&mut bs);
         if std::env::var_os("MITHI_OWN_DEBUG").is_some() {
@@ -1353,7 +1734,8 @@ impl<'a> Own<'a> {
         for b in bs {
             self.st.ms.insert(b, MS::Init);
             self.st.pmoved.remove(&b);
-            self.st.loans_of.insert(b, ls.clone());
+            let own = per.get(&b).cloned().unwrap_or_else(|| ls.clone());
+            self.st.loans_of.insert(b, own);
             if let Some(s) = self.scopes.last_mut() {
                 s.push(b);
             }
@@ -1439,7 +1821,7 @@ impl<'a> Own<'a> {
                         if pat_moves(self.c, p, &self.copy_params) && !self.is_copy(&s.ty) {
                             self.move_by_pattern(s);
                         }
-                        self.bind_pat(p, sl);
+                        self.bind_pat_from(p, sl, Some(s));
                     }
                     _ => {
                         self.eval(c, Use::Read);
@@ -1543,15 +1925,49 @@ impl<'a> Own<'a> {
         let cd = &self.c.closures[cid as usize];
         let saved = self.st.clone();
         let saved_scopes = std::mem::take(&mut self.scopes);
+        let saved_hr = std::mem::take(&mut self.hr_loans);
         self.scopes.push(vec![]);
-        for p in &cd.params {
-            self.bind_pat(p, BTreeSet::new());
+        // by-move captures belong to the closure value: the body owns them, initialised, whatever
+        // the creating state says after the move into the closure (review 2026-10-23: they were
+        // checked in the creating state, where they are moved, so every use was E-MOVE-USED)
+        let mut lin_caps: Vec<LocalId> = vec![];
+        for cap in &cd.captures {
+            if cap.mode == CaptureMode::Move {
+                self.st.ms.insert(cap.local, MS::Init);
+                self.st.pmoved.remove(&cap.local);
+                // K-LinClo, T-Lin in the body: a Linear by-move capture must be consumed on every
+                // normal path of the body (a Linear closure implements only FnOnce)
+                if self.lin(&cap.ty) {
+                    lin_caps.push(cap.local);
+                }
+            }
+        }
+        if let Some(s0) = self.scopes.last_mut() {
+            s0.extend(lin_caps.iter().copied());
+        }
+        let hr = self.hr_params.get(&cid).cloned().unwrap_or_default();
+        for (i, p) in cd.params.iter().enumerate() {
+            if hr.contains(&i) {
+                let mut ls = BTreeSet::new();
+                let mut bs = vec![];
+                p.bindings(&mut bs);
+                for b in bs {
+                    let id = self.new_loan_at(None, Some(b), String::new(), false, p.span, "hr".into());
+                    self.hr_loans.insert(id);
+                    ls.insert(id);
+                }
+                self.bind_pat(p, ls);
+            } else {
+                self.bind_pat(p, BTreeSet::new());
+            }
         }
         // captured-by-move linear values are consumed by the closure body or dropped with it
         let body = cd.body.clone();
         // a `return` inside the closure returns from the closure, not from the enclosing body
         let saved_returns = std::mem::take(&mut self.returned_loans);
+        self.clo_stack.push(cid);
         let mut ls = self.eval(&body, Use::Value);
+        self.clo_stack.pop();
         for (r, _) in std::mem::replace(&mut self.returned_loans, saved_returns) {
             ls.extend(r);
         }
@@ -1559,8 +1975,35 @@ impl<'a> Own<'a> {
         if !self.st.dead {
             self.end_scope(&sc, body.span, &BTreeSet::new());
         }
+        // a higher-ranked parameter's loan stored into a capture (or anything outside the body)
+        // is E-LOCAL-MUT-STORE (§5.7 "Stores into captures"; review 2026-10-23, f15)
+        if !self.hr_loans.is_empty() {
+            let mut escaped: Vec<LocalId> = vec![];
+            for (h, ls) in &self.st.loans_of {
+                if self.body.locals[*h as usize].closure == Some(cid) {
+                    continue;
+                }
+                if ls.iter().any(|x| self.hr_loans.contains(x)) {
+                    escaped.push(*h);
+                }
+            }
+            for h in escaped {
+                let nm = self.name(h);
+                let sp = self.c.closures[cid as usize].span;
+                self.err("E-LOCAL-MUT-STORE", sp, format!("the closure stores a borrow received through a higher-ranked parameter (one whose written reference type has an elided lifetime and no expected signature, or one an `Fn*` bound writes as a reference) into `{nm}`, outside its body: the borrow may end when the call returns (§5.7, F-107; rustc rejects it too, E0521)"));
+            }
+        }
+        let my_hr = std::mem::replace(&mut self.hr_loans, saved_hr);
         self.scopes = saved_scopes;
         self.st = saved;
+        // a result carrying an annotated higher-ranked parameter's loan: `|d: &u32| d` (F-107;
+        // rustc 1.99.1: "lifetime may not live long enough" [M]). A closure that has an expected
+        // signature is judged by its bound's elision instead (F-40, at the call)
+        let annotated_hr = self.c.closures[cid as usize].hr_annot.iter().any(|h| *h);
+        if annotated_hr && ls.iter().any(|x| my_hr.contains(x)) {
+            let sp = self.c.closures[cid as usize].span;
+            self.err("E-REF-ESCAPE", sp, "the closure returns a borrow received through a parameter whose annotated reference type makes it higher-ranked: the result may outlive it (§5.7, F-107; rustc rejects it too)".into());
+        }
         // result discipline (§5.7, F-40): a result borrowing a by-mut captured place or the
         // closure's own by-move state escapes the closure body (rustc rejects it too [inference])
         let cd = &self.c.closures[cid as usize];
@@ -1742,6 +2185,31 @@ pub fn copy_ty_with(c: &Checked, t: &Ty, copy_params: &[bool]) -> bool {
     }
 }
 
+/// Clone, structurally (K-CloCopy's by-move captures): Copy types, std containers of Clone
+/// types, derived Clone, tuples and arrays of Clone types, and closures that are Clone.
+fn clone_ty(c: &Checked, t: &Ty, copy_params: &[bool]) -> bool {
+    if copy_ty_with(c, t, copy_params) {
+        return true;
+    }
+    match t {
+        Ty::Adt(a, xs) => {
+            let ad = &c.program.adts[*a as usize];
+            if ad.linear {
+                return false;
+            }
+            if matches!(ad.lang.as_deref(), Some("Vec") | Some("Buf") | Some("Option") | Some("Result")) {
+                return xs.iter().all(|x| clone_ty(c, x, copy_params));
+            }
+            ad.derives("Clone") || ad.lang.as_deref() == Some("String")
+        }
+        Ty::Tuple(v) => v.iter().all(|x| clone_ty(c, x, copy_params)),
+        Ty::Array(e, _) => clone_ty(c, e, copy_params),
+        Ty::Ref(false, _) => true,
+        Ty::Closure(cid) => c.closures.get(*cid as usize).map(|cd| cd.captures.iter().all(|cp| cp.mode == CaptureMode::Ref || (cp.mode == CaptureMode::Move && clone_ty(c, &cp.ty, copy_params)))).unwrap_or(false),
+        _ => false,
+    }
+}
+
 /// Which generic parameters of a definition are Copy by their bounds (a bound on `Copy` or on a
 /// trait whose supertraits include it).
 fn copy_params_of(c: &Checked, generics: &[crate::program::GParam]) -> Vec<bool> {
@@ -1814,15 +2282,31 @@ pub fn run(c: &mut Checked) {
             copy_params: copy_params_of(c, &f.generics),
             targeted: std::collections::HashSet::new(),
             gen_fn_kinds: f.generics.iter().map(|g| g.bounds.iter().find_map(|b| if let BoundDef::Fn { kind, .. } = b { Some(*kind) } else { None })).collect(),
+            sym_base: HashMap::new(),
+            hr_params: hr_closure_params(c, &body.expr),
+            hr_loans: BTreeSet::new(),
+            clo_stack: vec![],
         };
         // parameters: owned locals; reference parameters carry the symbolic loan ℓ_j*
         for &p in &body.params {
             o.st.ms.insert(p, MS::Init);
             o.scopes[0].push(p);
-            if body.locals[p as usize].ty.is_ref() || is_local(c, &body.locals[p as usize].ty) {
-                let id = o.new_loan(None, Some(p), String::new(), false, body.locals[p as usize].span);
-                o.param_loan.insert(p, id);
-                o.st.loans_of.insert(p, [id].into_iter().collect());
+            let pty = body.locals[p as usize].ty.clone();
+            if pty.is_ref() || is_local(c, &pty) {
+                // one symbolic loan per reference position (F-62)
+                let mut positions = vec![];
+                ref_positions(c, &pty, "", 0, &mut positions);
+                if positions.is_empty() {
+                    positions.push(String::new());
+                }
+                let mut ids = BTreeSet::new();
+                for pos in positions {
+                    let id = o.new_loan_at(None, Some(p), String::new(), false, body.locals[p as usize].span, pos);
+                    o.param_loan.entry(p).or_insert(id);
+                    ids.insert(id);
+                }
+                o.st.loans_of.insert(p, ids);
+                o.sym_base.insert(p, [(p, String::new())].into_iter().collect());
             }
         }
         let ls = o.eval(&body.expr, Use::Value);
@@ -1878,6 +2362,98 @@ pub fn run(c: &mut Checked) {
         diags.extend(o.diags);
     }
     c.diags.extend(diags);
+}
+
+/// The reference positions of a type (F-62): see `Loan::pos`.
+fn ref_positions(c: &Checked, t: &Ty, path: &str, depth: u32, out: &mut Vec<String>) {
+    if depth > 12 {
+        return;
+    }
+    match t {
+        Ty::Ref(_, inner) => {
+            out.push(path.to_string());
+            ref_positions(c, inner, &format!("{path}*"), depth + 1, out);
+        }
+        Ty::Tuple(ts) => {
+            for (i, x) in ts.iter().enumerate() {
+                ref_positions(c, x, &format!("{path}.{i}"), depth + 1, out);
+            }
+        }
+        Ty::Array(e, _) | Ty::Slice(e) => ref_positions(c, e, &format!("{path}[]"), depth + 1, out),
+        Ty::Adt(a, xs) => {
+            let ad = &c.program.adts[*a as usize];
+            let n0 = out.len();
+            if matches!(ad.lang.as_deref(), Some("Vec") | Some("Buf")) {
+                if let Some(x) = xs.first() {
+                    ref_positions(c, x, &format!("{path}[]"), depth + 1, out);
+                }
+            } else {
+                for (k, x) in xs.iter().enumerate() {
+                    ref_positions(c, x, &format!("{path}<{k}>"), depth + 1, out);
+                }
+            }
+            if out.len() == n0 && is_local(c, t) {
+                out.push(format!("{path}~"));
+            }
+        }
+        _ => {
+            if is_local(c, t) {
+                out.push(format!("{path}~"));
+            }
+        }
+    }
+}
+
+/// Closures passed where a parameter's type is a type parameter (or a reference to one) whose
+/// `Fn*` bound writes an argument type that mentions a reference: those closure parameters are
+/// higher-ranked in Rust (no X1 signature names a lifetime, so every such reference is elided).
+fn hr_closure_params(c: &Checked, body: &TExpr) -> HashMap<ClosureId, Vec<usize>> {
+    let mut out: HashMap<ClosureId, Vec<usize>> = HashMap::new();
+    // parameters higher-ranked by their annotation (F-107), for closures with no expected
+    // signature (typeck records which)
+    walk_deep(c, body, &mut |e| {
+        if let TK::Closure(cid) = e.kind {
+            let idx: Vec<usize> = c.closures[cid as usize].hr_annot.iter().enumerate().filter(|(_, h)| **h).map(|(k, _)| k).collect();
+            if !idx.is_empty() {
+                out.insert(cid, idx);
+            }
+        }
+    });
+    walk_deep(c, body, &mut |e| {
+        let (callee, args) = match &e.kind {
+            TK::Call { f, args, .. } => (*f, args),
+            TK::TraitCall { decl, args, .. } => (*decl, args),
+            _ => return,
+        };
+        let cf = &c.program.fns[callee as usize];
+        for (i, a) in args.iter().enumerate() {
+            let cid = match &a.kind {
+                TK::Closure(x) => *x,
+                TK::Borrow(_, inner) => match &inner.kind {
+                    TK::Closure(x) => *x,
+                    _ => continue,
+                },
+                _ => continue,
+            };
+            let gi = match cf.params.get(i).map(|p| &p.ty) {
+                Some(Ty::Param(g)) => Some(*g),
+                Some(Ty::Ref(_, inner)) => match **inner {
+                    Ty::Param(g) => Some(g),
+                    _ => None,
+                },
+                _ => None,
+            };
+            let Some(gi) = gi else { continue };
+            let Some(gp) = cf.generics.get(gi as usize) else { continue };
+            if let Some((_, ps, _)) = crate::lower::fn_bound(gp) {
+                let idx: Vec<usize> = ps.iter().enumerate().filter(|(_, t)| t.mentions_ref()).map(|(k, _)| k).collect();
+                if !idx.is_empty() {
+                    out.insert(cid, idx);
+                }
+            }
+        }
+    });
+    out
 }
 
 fn deref_target_is_param(body: &Body, t: LocalId) -> bool {

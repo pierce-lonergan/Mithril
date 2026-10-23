@@ -189,7 +189,11 @@ fn eat(t: T) -> u32 { let T { id } = t; id }
 enum E { A(T), B(T) }
 fn f(e: E) -> u32 { if let E::A(t) = e { eat(t) } else { 0 } }"####),
     ("reviser:continue-outlive", "E-BORROW-OUTLIVE", "", r####"fn g() -> u32 { let a = 0u32; let mut r = &a; for i in 0..2u32 { let x = i; r = &x; continue; } *r }"####),
-    ("reviser:closure-transfer-ok", "accept", "", r####"fn f(v: &[u32]) -> u32 { let mut best: Option<&u32> = None; let mut up = |x: &u32| { best = Some(x); }; for x in v.iter() { up(x); } match best { Some(b) => *b, None => 0 } }"####),
+    // review 2026-10-23: the annotated parameter `x: &u32` is higher-ranked, so the store is
+    // E-LOCAL-MUT-STORE (F-107); rustc 1.99.1 rejects it with E0521 [M: scratch probe t1]. The
+    // unannotated twin compiles [M: t2] and is accepted
+    ("reviser:closure-transfer-ok", "E-LOCAL-MUT-STORE", "", r####"fn f(v: &[u32]) -> u32 { let mut best: Option<&u32> = None; let mut up = |x: &u32| { best = Some(x); }; for x in v.iter() { up(x); } match best { Some(b) => *b, None => 0 } }"####),
+    ("reviser:closure-transfer-ok2", "accept", "", r####"fn f(v: &[u32]) -> u32 { let mut best: Option<&u32> = None; let mut up = |x| { best = Some(x); }; for x in v.iter() { up(x); } match best { Some(b) => *b, None => 0 } }"####),
     ("cl/c12", "E-REF-ESCAPE", "", r####"fn g(v: &Vec<u32>) -> u32 { let mut keep: Vec<u32> = Vec::new(); let mut f = |x: u32| -> &u32 { keep.push(x); &keep[0] }; *f(1) }"####),
     ("reviser:closure-by-ref-result-ok", "accept", "", r####"fn h(v: &[u32]) -> Option<&u32> { let c = |i: usize| v.get(i); c(0) }"####),
 ];

@@ -1385,6 +1385,24 @@ impl<'a> Ev<'a> {
                 let key = format!("{}({}|{})", op.name(), poly_text(&self.canon(&x)), poly_text(&self.canon(&y)));
                 let a = self.atom_keyed(&key, lo, hi);
                 self.set_iv(a, rl, rh);
+                // relational facts (review 2026-10-23, kc27: `y[j % y.len()]` kept only the
+                // interval [0, hi(n) - 1], not its relation to n): for x >= 0 and y >= 1,
+                // x % y <= y - 1 and x % y <= x; x / y <= x
+                // (only the relations: a constant operand's bound is in the interval already)
+                let relational = x.konst().is_none() || y.konst().is_none();
+                if relational && (xl >= 0 || self.prove(&Fact::Ge(x.clone()))) && (yl >= 1 || self.prove(&Fact::Ge(y.add(&Poly::c(-1)).unwrap_or_default()))) {
+                    let at = Poly::atom(a);
+                    if op == BinOp::Rem && y.konst().is_none() {
+                        if let Some(f) = y.sub(&at).and_then(|d| d.add(&Poly::c(-1))) {
+                            self.add_fact(Fact::Ge(f));
+                        }
+                    }
+                    if x.konst().is_none() {
+                        if let Some(f) = x.sub(&at) {
+                            self.add_fact(Fact::Ge(f));
+                        }
+                    }
+                }
                 Sym::Int(Poly::atom(a))
             }
             _ => Sym::Int(self.fresh_ty("op", t)),
@@ -1407,11 +1425,20 @@ impl<'a> Ev<'a> {
         for g in [g_hi, g_lo].into_iter().flatten() {
             self.add_fact(g);
         }
-        // result interval for an unsigned right shift by a constant
-        if let (BinOp::Shr, Sym::Int(xp), Some(k)) = (op, &x, yk.as_ref().and_then(|y| y.konst())) {
+        // a right shift of a non-negative value by an amount in range: 0 <= x >> s <= x, and
+        // <= hi(x) >> lo(s) (review 2026-10-23, f5: `y[i >> 1]` under `i < y.len()` lost the
+        // relation to i)
+        if let (BinOp::Shr, Sym::Int(xp), Some(yp)) = (op, &x, yk.as_ref()) {
             let (xl, xh) = self.poly_iv(xp);
-            if xl >= 0 && (0..127).contains(&k) {
-                let a = self.fresh("shr", 0, xh >> k);
+            let (sl, _) = self.poly_iv(yp);
+            if (xl >= 0 || self.prove(&Fact::Ge(xp.clone()))) && sl >= 0 {
+                let k = sl.min(126);
+                let a = self.fresh("shr", 0, if xh < 0 { 0 } else { xh >> k });
+                if xp.konst().is_none() {
+                    if let Some(f) = xp.sub(&Poly::atom(a)) {
+                        self.add_fact(Fact::Ge(f));
+                    }
+                }
                 return Sym::Int(Poly::atom(a));
             }
         }
@@ -1805,6 +1832,7 @@ impl<'a> Ev<'a> {
             }
         }
         let mut env = HashMap::new();
+        let mut jobs: Vec<(Poly, Poly, AtomId)> = vec![];
         for (l, a) in &s1.env {
             if let Some(b) = s2.env.get(l) {
                 match (a, b) {
@@ -1815,6 +1843,7 @@ impl<'a> Ev<'a> {
                         let (l1, h1) = self.poly_iv_in(&s1, x);
                         let (l2, h2) = self.poly_iv_in(&s2, y);
                         let at = self.fresh("phi", l1.min(l2), h1.max(h2));
+                        jobs.push((x.clone(), y.clone(), at));
                         env.insert(*l, Sym::Int(Poly::atom(at)));
                     }
                     (Sym::Ref(p), Sym::Ref(q)) if p == q => {
@@ -1829,29 +1858,119 @@ impl<'a> Ev<'a> {
             let e = st.ver.entry(k.clone()).or_insert(0);
             *e = (*e).max(*v);
         }
+        let mut same_value = false;
         let r = match (v1, v2) {
             (Sym::Int(x), Sym::Int(y)) if ty.is_int() => {
                 if x == y {
-                    self.st = st;
-                    return v1.clone();
+                    same_value = true;
+                    None
+                } else {
+                    let (l1, h1) = self.poly_iv_in(&s1, x);
+                    let (l2, h2) = self.poly_iv_in(&s2, y);
+                    Some((l1.min(l2), h1.max(h2), x.clone(), y.clone()))
                 }
-                let (l1, h1) = self.poly_iv_in(&s1, x);
-                let (l2, h2) = self.poly_iv_in(&s2, y);
-                Some((l1.min(l2), h1.max(h2)))
             }
             _ => None,
         };
-        self.st = st;
-        match r {
-            Some((lo, hi)) => {
+        let result_phi = match r {
+            Some((lo, hi, x, y)) => {
                 let at = self.fresh("phi", lo, hi);
-                Sym::Int(Poly::atom(at))
+                jobs.push((x, y, at));
+                Some(at)
             }
+            None => None,
+        };
+        let phi_add = self.phi_facts(s1, s2, &jobs);
+        self.st = st;
+        for f in phi_add {
+            self.add_fact(f);
+        }
+        if same_value {
+            return v1.clone();
+        }
+        match result_phi {
+            Some(at) => Sym::Int(Poly::atom(at)),
             _ => {
                 if ty.is_int() {
                     Sym::Int(self.fresh_ty("phi", ty))
                 } else {
                     Sym::Opaque
+                }
+            }
+        }
+    }
+
+    /// Relational facts across a join (review 2026-10-23, kc10: `let j = if i < n { i } else { 0 };
+    /// y[j]` kept only j's interval). A linear fact of one path about its value (a single atom)
+    /// holds of the merged atom when the other path's value satisfies it too, proved in that
+    /// path's state: the per-arm implication c => x = e_arm, used as a case split. At most a few
+    /// candidates per side, so a join stays cheap.
+    fn phi_facts(&mut self, s1: State, s2: State, jobs: &[(Poly, Poly, AtomId)]) -> Vec<Fact> {
+        let mut out = vec![];
+        if jobs.is_empty() || s1.dead || s2.dead {
+            return out;
+        }
+        // the candidates of each side: facts of that path that relate its value (one atom) to
+        // other atoms, found through the path's per-atom index
+        let mut per_side: [Vec<(usize, AtomId, Poly)>; 2] = [vec![], vec![]];
+        for (k, (x, y, _)) in jobs.iter().enumerate() {
+            for (side, (sa, va)) in [(&s1, x), (&s2, y)].into_iter().enumerate() {
+                let va = self.canon_in(sa, va);
+                let a = match (va.t.len(), va.t.iter().next()) {
+                    (1, Some((m, 1))) if m.0.len() == 1 => m.0[0],
+                    _ => continue,
+                };
+                let mut n = 0;
+                for fi in sa.fidx.get(&a).cloned().unwrap_or_default() {
+                    let Some(f) = sa.facts.get(fi as usize) else { continue };
+                    let ps: Vec<Poly> = match f {
+                        Fact::Ge(p) => vec![p.clone()],
+                        Fact::Eq(p) => vec![p.clone(), p.neg().unwrap_or_default()],
+                        Fact::Ne(_) => vec![],
+                    };
+                    for p in ps {
+                        let linear_in_a = p.t.keys().all(|m| !m.0.contains(&a) || m.0.len() == 1);
+                        // only relations: a fact on a alone is kept by the interval hull already
+                        let relational = p.t.keys().any(|m| !m.0.is_empty() && !m.0.contains(&a));
+                        if linear_in_a && relational && p.t.keys().any(|m| m.0 == vec![a]) && n < 8 {
+                            per_side[side].push((k, a, p));
+                            n += 1;
+                        }
+                    }
+                }
+            }
+        }
+        if per_side[0].is_empty() && per_side[1].is_empty() {
+            return out;
+        }
+        // prove each candidate of one side in the other side's state (the states are moved in,
+        // not cloned)
+        let saved = std::mem::replace(&mut self.st, s2);
+        self.phi_prove(&per_side[0], jobs, 0, &mut out);
+        self.st = s1;
+        self.phi_prove(&per_side[1], jobs, 1, &mut out);
+        self.st = saved;
+        out
+    }
+
+    fn phi_prove(&mut self, cands: &[(usize, AtomId, Poly)], jobs: &[(Poly, Poly, AtomId)], side: usize, out: &mut Vec<Fact>) {
+        for (k, a, p) in cands {
+            let (x, y, at) = &jobs[*k];
+            let vb = if side == 0 { y } else { x };
+            let c = p.t.get(&Mono(vec![*a])).copied().unwrap_or(0);
+            let rest = match Poly::atom(*a).scale(c).and_then(|z| p.sub(&z)) {
+                Some(r) => r,
+                None => continue,
+            };
+            let other = vb.scale(c).and_then(|z| rest.add(&z));
+            let mine = Poly::atom(*at).scale(c).and_then(|z| rest.add(&z));
+            if let (Some(other), Some(mine)) = (other, mine) {
+                // a cheap proof: the interval bound, or the fact itself on that path (a full
+                // Fourier-Motzkin proof at every join made long bodies quadratic)
+                let oc = self.canon(&other);
+                let holds = self.poly_iv(&oc).0 >= 0 || self.st.fset.contains(&Fact::Ge(oc.clone()));
+                if holds {
+                    out.push(Fact::Ge(mine));
                 }
             }
         }
@@ -1874,7 +1993,9 @@ impl<'a> Ev<'a> {
         // T-Cover decision (before the body changes anything)
         if let (Some(l0), Some(h)) = (&lo, &hi) {
             if l0.konst() == Some(0) {
-                if let Some(v) = var {
+                // the index must be the binder itself, immutable (F-103: `for mut i` that assigns
+                // i indexes through an ordinary local; review 2026-10-23, N-94)
+                if let Some(v) = var.filter(|v| !self.body.locals[*v as usize].mutable) {
                     self.decide_cover(id, v, h, body);
                 }
             }
@@ -2664,6 +2785,16 @@ fn no_other_writes(c: &Checked, body: &TExpr, root: LocalId, through_projection:
         }
         _ => {}
     });
+    // premise 3 also covers a `&mut` of p passed by implicit reborrow, or moved or copied into a
+    // binding (review 2026-10-23: `poke(y)` was missed where `poke(&mut *y)` was seen, so the
+    // loop strong-updated y although poke wrote raw values after the covering write)
+    if !through_projection {
+        let mut implicit = vec![];
+        implicit_mut_uses(c, body, &mut implicit);
+        if implicit.iter().any(|(r, _)| *r == root) {
+            other = true;
+        }
+    }
     writes == 1 && !other
 }
 

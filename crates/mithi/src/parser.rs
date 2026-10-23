@@ -640,7 +640,9 @@ impl Parser {
                 self.bump();
                 let mut effs = Vec::new();
                 while !self.is_punct("}") {
-                    let n = self.ident()?;
+                    // `unsafe` is a keyword but also a row label (note section 2.3); review
+                    // 2026-10-23: `uses { unsafe }` was E-PARSE instead of E-GRANT-UNSAFE
+                    let n = if self.is_word("unsafe") { self.any_word()? } else { self.ident()? };
                     let mut arg = None;
                     if self.eat_punct("(") {
                         arg = Some(self.ident()?);

@@ -250,6 +250,79 @@ pub fn place_root(e: &TExpr) -> Option<LocalId> {
     }
 }
 
+/// Does a value of this type hold a `&mut` (at any depth)?
+pub fn holds_mut_ref(t: &Ty) -> bool {
+    let mut h = false;
+    t.walk(&mut |x| {
+        if matches!(x, Ty::Ref(true, _)) {
+            h = true;
+        }
+    });
+    h
+}
+
+/// Writes a body may make without an assignment or an explicit `&mut p`: a `&mut`-carrying
+/// local (or a field, index or unsize of one) used as a value, that is passed to a call by
+/// implicit reborrow, moved or copied into a binding or an aggregate, or moved into a closure
+/// (review 2026-10-23: `set0(y, i)` in a `par for` and `poke(y)` after a covering write were
+/// not seen; only `&mut *y` was). Closure bodies created in `e` are entered. Returns the root
+/// local of each such use and its span.
+pub fn implicit_mut_uses(c: &Checked, e: &TExpr, out: &mut Vec<(LocalId, Span)>) {
+    fn visit(c: &Checked, e: &TExpr, place_ctx: bool, out: &mut Vec<(LocalId, Span)>) {
+        let is_place = matches!(e.kind, TK::Local(_) | TK::Field(..) | TK::Index(..) | TK::Deref(_) | TK::SliceRange { .. });
+        if !place_ctx && is_place && holds_mut_ref(&e.ty) {
+            if let Some(r) = place_root(e) {
+                out.push((r, e.span));
+            }
+        }
+        match &e.kind {
+            TK::Deref(b) | TK::Field(b, _) | TK::Borrow(_, b) => visit(c, b, true, out),
+            TK::Index(b, i) => {
+                visit(c, b, true, out);
+                visit(c, i, false, out);
+            }
+            TK::SliceRange { base, lo, hi, .. } => {
+                visit(c, base, true, out);
+                for x in [lo, hi].into_iter().flatten() {
+                    visit(c, x, false, out);
+                }
+            }
+            TK::Unsize(b) => visit(c, b, place_ctx, out),
+            TK::Assign(p, r) => {
+                visit(c, p, true, out);
+                visit(c, r, false, out);
+            }
+            TK::AssignOp(_, p, r) => {
+                visit(c, p, true, out);
+                visit(c, r, false, out);
+            }
+            TK::CallValue(f, args) => {
+                visit(c, f, true, out);
+                for a in args {
+                    visit(c, a, false, out);
+                }
+            }
+            TK::Closure(cid) => {
+                if let Some(cd) = c.closures.get(*cid as usize) {
+                    // a `&mut` moved into the closure writes through it wherever the closure runs
+                    for cap in &cd.captures {
+                        if cap.mode == CaptureMode::Move && holds_mut_ref(&cap.ty) {
+                            out.push((cap.local, e.span));
+                        }
+                    }
+                    visit(c, &cd.body, false, out);
+                }
+            }
+            _ => {
+                for ch in e.children() {
+                    visit(c, ch, false, out);
+                }
+            }
+        }
+    }
+    visit(c, e, false, out);
+}
+
 pub fn label_set(ls: &[crate::program::Label]) -> Row {
     ls.iter().cloned().collect()
 }

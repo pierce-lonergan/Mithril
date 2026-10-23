@@ -179,7 +179,13 @@ pub fn run(c: &mut Checked, cfg: &Config) {
         if let Some(u) = &f.uses {
             for l in u {
                 match l {
-                    Label::FpEnv => diags.push(Diag::new("E-FP-ENV", f.sig_span, "`fp_env` is reserved to std_platform's audited runtime (01 section 6.1)").in_def(&f.path)),
+                    // J3 applies to the declared row ε_g too (review 2026-10-23: a declared
+                    // `uses { foreign }` without a grant was accepted); a charged label of the same
+                    // kind is reported above, so the declared one is reported only when nothing
+                    // in the body charges it
+                    Label::Unsafe if !cfg.grant_unsafe.contains(&module) && !charged.iter().any(|(x, _)| x == l) => diags.push(Diag::new("E-GRANT-UNSAFE", f.sig_span, "`uses { unsafe }` needs the package grant (FF-UNSAFE; J3 on the declared row)").in_def(&f.path)),
+                    Label::Foreign if !cfg.grant_foreign.contains(&module) && !charged.iter().any(|(x, _)| x == l) => diags.push(Diag::new("E-GRANT-FOREIGN", f.sig_span, "`uses { foreign }` needs the package grant (J3 on the declared row)").in_def(&f.path)),
+                    Label::FpEnv =>diags.push(Diag::new("E-FP-ENV", f.sig_span, "`fp_env` is reserved to std_platform's audited runtime (01 section 6.1)").in_def(&f.path)),
                     Label::Lossy => diags.push(Diag::new("E-GRANT-LOSSY", f.sig_span, "`lossy` has no producer in v0 (reserved; note section 5.2)").in_def(&f.path)),
                     _ => {}
                 }

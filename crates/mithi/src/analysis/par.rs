@@ -38,16 +38,22 @@ fn lossless_cast(from: &Ty, to: &Ty) -> bool {
 struct ParCx<'a> {
     c: &'a Checked,
     v: LocalId,
+    /// the binder is an immutable, unshadowed identifier (F-103: `par for mut i` that assigns i
+    /// indexes through an ordinary local; review 2026-10-23, N-95)
+    var_ok: bool,
     inner: BTreeSet<LocalId>,
     assigned: BTreeSet<LocalId>,
     /// roots of every place the body writes (a field of one is not invariant)
     written_roots: BTreeSet<LocalId>,
+    /// inner locals bound exactly once by an immutable `let x = e0;` (no pattern): x is e0
+    /// (review 2026-10-23, pa11: `let j = i; y[j] = 1` was E-PAR-DISJOINT)
+    defs: BTreeMap<LocalId, &'a TExpr>,
 }
 
 impl<'a> ParCx<'a> {
     fn is_var(&self, e: &TExpr) -> bool {
         match &e.kind {
-            TK::Local(l) => *l == self.v,
+            TK::Local(l) => *l == self.v && self.var_ok,
             // only a cast that keeps every value: `(i as u8) as usize` is not injective
             TK::Cast(x) => lossless_cast(&x.ty, &e.ty) && self.is_var(x),
             _ => false,
@@ -72,7 +78,8 @@ impl<'a> ParCx<'a> {
     fn invariant(&self, e: &TExpr) -> bool {
         match &e.kind {
             TK::Lit(_) | TK::Const(_) => true,
-            TK::Local(l) => *l != self.v && !self.inner.contains(l) && !self.assigned.contains(l),
+            TK::Local(l) if self.inner.contains(l) => !self.assigned.contains(l) && self.defs.get(l).map(|d| self.invariant(d)).unwrap_or(false),
+            TK::Local(l) => *l != self.v && !self.assigned.contains(l),
             TK::Cast(x) | TK::Unary(_, x) => self.invariant(x),
             TK::Binary(_, a, b) => self.invariant(a) && self.invariant(b),
             // a field of a place the body does not write
@@ -86,6 +93,13 @@ impl<'a> ParCx<'a> {
     fn affine(&self, e: &TExpr) -> Option<(i128, Option<i128>)> {
         if self.is_var(e) {
             return Some((1, Some(0)));
+        }
+        if let TK::Local(l) = &e.kind {
+            if let Some(d) = self.defs.get(l) {
+                if !self.assigned.contains(l) {
+                    return self.affine(d);
+                }
+            }
         }
         if let Some(v) = self.const_val(e) {
             return Some((0, Some(v)));
@@ -197,7 +211,7 @@ fn footprint_tiles(c: &Checked, proj: FnId) -> bool {
     let Some(b) = c.bodies.get(&proj) else { return false };
     let Some(fp) = b.footprints.first() else { return false };
     let Some(&t) = b.params.get(1) else { return false };
-    let pc = ParCx { c, v: t, inner: BTreeSet::new(), assigned: BTreeSet::new(), written_roots: BTreeSet::new() };
+    let pc = ParCx { c, v: t, var_ok: !b.locals[t as usize].mutable, inner: BTreeSet::new(), assigned: BTreeSet::new(), written_roots: BTreeSet::new(), defs: BTreeMap::new() };
     match &fp.kind {
         TK::Index(_, ix) => pc.injective(ix),
         TK::SliceRange { lo: Some(lo), hi: Some(hi), inclusive: false, .. } => pc.disjoint_range(lo, hi),
@@ -220,11 +234,27 @@ fn write_root(p: &TExpr) -> Option<LocalId> {
     }
 }
 
+/// The index argument of the footprinted projection a place is reached through, if any.
+fn footprint_arg_of<'a>(c: &Checked, p: &'a TExpr) -> Option<&'a TExpr> {
+    match &p.kind {
+        TK::Deref(inner) => match footprint_call(c, inner) {
+            Some((_, ix, _)) => Some(ix),
+            None => footprint_arg_of(c, inner),
+        },
+        TK::Field(b, _) | TK::Index(b, _) | TK::Unsize(b) => footprint_arg_of(c, b),
+        TK::SliceRange { base, .. } => footprint_arg_of(c, base),
+        _ => None,
+    }
+}
+
 struct Write<'a> {
     root: LocalId,
     index: Option<&'a TExpr>,
     span: Span,
     ok: bool,
+    /// through a footprinted projection called with an invariant argument: that argument (two
+    /// such writes must use the same one, F-95)
+    proj_arg: Option<&'a TExpr>,
 }
 
 /// Closures passed to each (function, parameter): bodies generic over a closure type are
@@ -281,16 +311,22 @@ pub fn run(c: &mut Checked) {
             let mut inner_locals: BTreeSet<LocalId> = BTreeSet::new();
             let mut inner_loops: BTreeSet<LoopId> = BTreeSet::new();
             let mut assigned: BTreeSet<LocalId> = BTreeSet::new();
+            let mut defs: BTreeMap<LocalId, &TExpr> = BTreeMap::new();
             if let Some(v) = var {
                 inner_locals.insert(v);
             }
             walk_deep(c, body, &mut |e| match &e.kind {
                 TK::Block(stmts, _) => {
                     for s in stmts {
-                        if let TStmt::Let { pat, .. } = s {
+                        if let TStmt::Let { pat, init, els, .. } = s {
                             let mut bs = vec![];
                             pat.bindings(&mut bs);
                             inner_locals.extend(bs);
+                            if let (PK::Bind { local, by_ref: None, sub: None }, Some(e0), None) = (&pat.kind, init, els) {
+                                if !b.locals[*local as usize].mutable {
+                                    defs.insert(*local, e0);
+                                }
+                            }
                         }
                     }
                 }
@@ -408,7 +444,8 @@ pub fn run(c: &mut Checked) {
                     }
                 }
             });
-            let pc = ParCx { c, v, inner: inner_locals.clone(), assigned: assigned.clone(), written_roots };
+            let var_ok = !b.locals[v as usize].mutable && !assigned.contains(&v);
+            let pc = ParCx { c, v, var_ok, inner: inner_locals.clone(), assigned: assigned.clone(), written_roots, defs };
             let mut writes: Vec<Write> = vec![];
             let mut stack: Vec<&TExpr> = vec![body];
             let mut all: Vec<&TExpr> = vec![];
@@ -446,6 +483,7 @@ pub fn run(c: &mut Checked) {
                 // through a footprinted projection whose index is this iteration's own
                 let mut ok = false;
                 let mut index = None;
+                let mut proj_arg: Option<&TExpr> = None;
                 let mut cur = place;
                 loop {
                     match &cur.kind {
@@ -453,6 +491,9 @@ pub fn run(c: &mut Checked) {
                             if pc.injective(idx) && pc.base_invariant(base) {
                                 ok = true;
                                 index = Some(idx.as_ref());
+                                // an invariant base reached through a footprinted projection names
+                                // one footprint (F-95)
+                                proj_arg = footprint_arg_of(c, base);
                                 break;
                             }
                             cur = base;
@@ -460,6 +501,14 @@ pub fn run(c: &mut Checked) {
                         TK::Field(base, _) => cur = base,
                         TK::Deref(inner) => {
                             if let Some((_r, ix, proj)) = footprint_call(c, inner) {
+                                // F-102: the receiver and every other argument are invariant
+                                // (`y[i..4].whole(0)[1 - i]` writes one element twice; review
+                                // 2026-10-23, N-93)
+                                let TK::Call { args: pargs, .. } = &inner.kind else { break };
+                                let rest_inv = pc.base_invariant(&pargs[0]) && pargs.iter().skip(2).all(|a| pc.invariant(a));
+                                if !rest_inv {
+                                    break;
+                                }
                                 // Proj-Split (F-63): distinct indices must give disjoint footprints
                                 if pc.injective(ix) && footprint_tiles(c, proj) {
                                     ok = true;
@@ -467,9 +516,15 @@ pub fn run(c: &mut Checked) {
                                     break;
                                 }
                                 // an invariant projection argument: an inner par writes
-                                // footprint[π(j)] (judged there)
-                                let inner_ok = pc.invariant(ix) && matches!(&place.kind, TK::Index(_, ix2) if pc.injective(ix2));
-                                ok = inner_ok;
+                                // footprint[π(j)] (judged there); two such writes must name the
+                                // same footprint (F-95, below)
+                                if let TK::Index(_, ix2) = &place.kind {
+                                    if pc.invariant(ix) && pc.injective(ix2) {
+                                        ok = true;
+                                        index = Some(ix2.as_ref());
+                                        proj_arg = Some(ix);
+                                    }
+                                }
                                 break;
                             }
                             cur = inner;
@@ -488,7 +543,59 @@ pub fn run(c: &mut Checked) {
                         _ => break,
                     }
                 }
-                writes.push(Write { root, index, span: e.span, ok });
+                writes.push(Write { root, index, span: e.span, ok, proj_arg });
+            }
+            // writes without an assignment or an explicit `&mut p` (T-Par's W includes the `&mut`
+            // accesses of §5.4 and of calls; review 2026-10-23, c1, pa14, c6, c8, c10, pa15):
+            // (1) a `&mut`-carrying local passed by implicit reborrow, moved or copied
+            let mut implicit: Vec<(LocalId, Span)> = vec![];
+            implicit_mut_uses(c, body, &mut implicit);
+            for (root, sp) in implicit {
+                if !inner_locals.contains(&root) {
+                    writes.push(Write { root, index: None, span: sp, ok: false, proj_arg: None });
+                }
+            }
+            // (2) a call of a closure created outside the body: its by-mut captures (and the
+            // places its by-move `&mut` captures point to) are written in every iteration, and a
+            // FnMut or FnOnce closure's own state too; (3) a call of an FnMut/FnOnce type
+            // parameter (or `&mut F`) writes the closure it stands for
+            let created_inside: BTreeSet<ClosureId> = {
+                let mut s = BTreeSet::new();
+                walk_deep(c, body, &mut |x| {
+                    if let TK::Closure(cid) = x.kind {
+                        s.insert(cid);
+                    }
+                });
+                s
+            };
+            let gen_kinds: Vec<Option<u8>> = f.generics.iter().map(|g| g.bounds.iter().find_map(|bd| if let crate::program::BoundDef::Fn { kind, .. } = bd { Some(*kind) } else { None })).collect();
+            for x in &all {
+                let TK::CallValue(fv, _) = &x.kind else { continue };
+                let holder = place_root(fv).filter(|r| !inner_locals.contains(r));
+                match fv.ty.strip_refs() {
+                    Ty::Closure(cid) if !created_inside.contains(cid) => {
+                        let cd = &c.closures[*cid as usize];
+                        for cap in &cd.captures {
+                            let writes_cap = cap.mode == CaptureMode::Mut || (cap.mode == CaptureMode::Move && holds_mut_ref(&cap.ty));
+                            if writes_cap && !inner_locals.contains(&cap.local) {
+                                writes.push(Write { root: cap.local, index: None, span: x.span, ok: false, proj_arg: None });
+                            }
+                        }
+                        if cd.fn_kind >= 1 {
+                            if let Some(h) = holder {
+                                writes.push(Write { root: h, index: None, span: x.span, ok: false, proj_arg: None });
+                            }
+                        }
+                    }
+                    Ty::Param(g) => {
+                        if gen_kinds.get(*g as usize).copied().flatten().unwrap_or(0) >= 1 {
+                            if let Some(h) = holder {
+                                writes.push(Write { root: h, index: None, span: x.span, ok: false, proj_arg: None });
+                            }
+                        }
+                    }
+                    _ => {}
+                }
             }
             for w in &writes {
                 if !w.ok {
@@ -503,6 +610,23 @@ pub fn run(c: &mut Checked) {
                 by_root.entry(w.root).or_default().push(w);
             }
             for (root, ws) in &by_root {
+                // F-95: writes through a projection with an invariant argument name one footprint
+                // each; two different footprints (`y.window(0)[i]`, `y.window(1)[i]`) can overlap
+                // across iterations, and so can a footprint and the place itself (review
+                // 2026-10-23, N-87)
+                if ws.iter().any(|w| w.proj_arg.is_some()) {
+                    let first = ws[0].proj_arg;
+                    let same = ws.iter().all(|w| match (w.proj_arg, first) {
+                        (Some(a), Some(b)) => same_index(a, b) || matches!((pc.const_val(a), pc.const_val(b)), (Some(x), Some(y)) if x == y),
+                        _ => false,
+                    });
+                    if !same {
+                        let nm = b.locals[*root as usize].name.clone();
+                        let sp = ws.last().map(|w| w.span).unwrap_or(p.span);
+                        diags.push(Diag::new("E-PAR-DISJOINT", sp, format!("a `par for` iteration writes `{nm}` through two different footprints (or a footprint and the place itself), which can meet across iterations (F-95)")).in_def(&path));
+                        continue;
+                    }
+                }
                 let idxs: Vec<&TExpr> = ws.iter().filter_map(|w| w.index).collect();
                 if idxs.len() < 2 {
                     continue;

@@ -25,7 +25,7 @@ pub fn nanrule(name: &str) -> Option<bool> {
         "opt_unwrap" | "opt_expect" | "opt_unwrap_or" | "res_unwrap" | "res_expect" | "res_unwrap_or" | "slice_first" | "slice_last" | "slice_get" | "vec_pop"
         | "slice_get_mut" | "vec_swap_remove" | "opt_unwrap_or_else" | "res_unwrap_or_else"
         | "vec_remove" | "iter_next" | "iter_max_by" | "iter_min_by" | "iter_max_by_key" | "iter_min_by_key" | "iter_last" | "iter_nth" | "iter_find"
-        | "mem_replace" | "mem_take" | "clone" | "hint_get" | "opt_take" | "cmp_min" | "cmp_max" | "ord_max" | "ord_min" => None,
+        | "mem_replace" | "mem_take" | "clone" | "hint_get" | "opt_take" | "opt_as_ref" | "opt_as_mut" | "cmp_min" | "cmp_max" | "ord_max" | "ord_min" => None,
         _ => Some(false),
     }
 }

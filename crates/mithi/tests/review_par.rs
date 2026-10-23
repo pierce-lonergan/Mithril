@@ -134,7 +134,9 @@ fn cont() -> u32 {
     ("c7:p31", "E-PAR-RACE", "", r####"fn tot(x: &[f32]) -> f32 { x[0] } fn f(y: &mut [f32]) { let n = y.len(); par for i in 0..n { let s = tot(y); y[i] = s; } }"####),
     ("c7:p32", "E-PAR-RACE", "", r####"fn f(y: &mut [f32]) { let n = y.len(); par for i in 0..n { let s = *y.first().unwrap(); y[i] = s; } }"####),
     ("c7:p33", "E-PAR-DISJOINT", "", r####"fn f(y: &mut [f32]) { let n = y.len() / 2; par for i in 0..n { y[2 * i] = 1.0; y[i] = 2.0; } }"####),
-    ("c7:p34", "E-PAR-DISJOINT", "", r####"fn f(y: &mut [f32]) { let n = y.len(); par for i in 0..n { let k = i; y[k] = 1.0; y[i] = y[0]; } }"####),
+    // since the review of 2026-10-23 (pa11) an immutable `let k = i` copy is affine in i, so the
+    // writes y[k] and y[i] share one index function and the rejection is the read of y[0]
+    ("c7:p34", "E-PAR-RACE", "", r####"fn f(y: &mut [f32]) { let n = y.len(); par for i in 0..n { let k = i; y[k] = 1.0; y[i] = y[0]; } }"####),
     ("c7:p35", "E-PAR-RACE", "", r####"fn f(y: &mut [u32]) { let n = y.len(); par for i in 0..n { y[i] = 1; } par for i in 0..n { y[i] += y[n - 1 - i]; } }"####),
     ("c7:p36", "E-PAR-RACE", "", r####"struct S { a: Vec<f32>, b: Vec<f32> } fn f(s: &mut S) { let n = s.a.len(); par for i in 0..n { s.a[i] = s.a[0]; } }"####),
     ("c7:p37", "E-BORROW-CONFLICT", "", r####"fn f(y: &mut [f32]) { let n = y.len(); par for i in 0..n { let r = &y[0]; y[i] = *r; } }"####),

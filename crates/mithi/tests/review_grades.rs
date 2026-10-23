@@ -13,7 +13,9 @@ const GRADE_ROW_CASES: &[(&str, &str, &str, &str)] = &[
     ("gr/g01", "E-NAN-RAW-SINK", "", r####"#[grade(exact, cross_device)] fn f(a: f32, b: f32) -> f32 { a + b }"####),
     ("gr/g02", "accept", "", r####"#[grade(exact, cross_device)] fn f(a: f32, b: f32) -> f32 { canon::nan(a + b) }"####),
     ("gr/g03", "accept", "", r####"#[grade(exact, cross_device)] fn f(a: f32, b: f32) -> f32 { (a + b).max(0.0) }"####),
-    ("gr/g04", "E-NAN-RAW-SINK", "", r####"#[grade(exact, cross_device)] fn f(a: f64, b: f64) -> f64 { (a + b).max(0.0) }"####),
+    // F-113 (note, third review): f64::max carries the platform taint (its signed zero is not
+    // pinned), so the sink fails on scope first
+    ("gr/g04", "E-GRADE", "", r####"#[grade(exact, cross_device)] fn f(a: f64, b: f64) -> f64 { (a + b).max(0.0) }"####),
     ("gr/g05", "E-NAN-RAW-SINK", "", r####"#[grade(exact, cross_device)] fn f() -> f32 { f32::NAN }"####),
     ("gr/g06", "E-GRADE", "", r####"#[grade(exact, cross_device)] fn f(a: f32, b: f32) -> u32 { (a - b).to_bits() }"####),
     ("gr/g07", "accept", "", r####"#[grade(exact, cross_device)] fn f(a: f32, b: f32) -> u32 { canon::nan(a - b).to_bits() }"####),

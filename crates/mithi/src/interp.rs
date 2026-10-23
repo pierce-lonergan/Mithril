@@ -117,6 +117,8 @@ pub struct Interp<'a> {
     pub steps: u64,
     pub max_steps: u64,
     const_cache: HashMap<u32, V>,
+    /// set while the callee of a closure call is read: it is called in place, not copied
+    in_place_call: bool,
 }
 
 #[derive(Clone)]
@@ -127,6 +129,44 @@ enum Place {
 
 fn new_cell(v: V) -> Cell {
     Rc::new(RefCell::new(v))
+}
+
+fn ty_mentions_closure(t: &Ty) -> bool {
+    let mut h = false;
+    t.walk(&mut |x| {
+        if matches!(x, Ty::Closure(_)) {
+            h = true;
+        }
+    });
+    h
+}
+
+/// A copy of a value whose closures own fresh copies of their by-move captured state; by-ref
+/// and by-mut captures stay shared (they are borrows of the creating frame's places).
+fn fresh_closures(closures: &[ClosureDef], v: V) -> V {
+    match v {
+        V::Closure(cl) => {
+            let cd = &closures[cl.id as usize];
+            let env = cl
+                .env
+                .iter()
+                .map(|(l, cell)| {
+                    let by_move = cd.captures.iter().any(|c| c.local == *l && c.mode == CaptureMode::Move);
+                    if by_move {
+                        let inner = cell.borrow().clone();
+                        (*l, new_cell(fresh_closures(closures, inner)))
+                    } else {
+                        (*l, cell.clone())
+                    }
+                })
+                .collect();
+            V::Closure(Rc::new(CloV { id: cl.id, env, nlocals: cl.nlocals, targs: cl.targs.clone(), owner: cl.owner }))
+        }
+        V::Tuple(xs) => V::Tuple(xs.into_iter().map(|x| fresh_closures(closures, x)).collect()),
+        V::Arr(xs) => V::Arr(xs.into_iter().map(|x| fresh_closures(closures, x)).collect()),
+        V::Adt(a, k, xs) => V::Adt(a, k, xs.into_iter().map(|x| fresh_closures(closures, x)).collect()),
+        other => other,
+    }
 }
 
 fn int_ty(t: &Ty) -> Option<IntTy> {
@@ -180,7 +220,7 @@ pub fn canon_sum16(a: &[f32]) -> f32 {
 
 impl<'a> Interp<'a> {
     pub fn new(c: &'a Checked) -> Interp<'a> {
-        Interp { c, frames: vec![], depth: 0, steps: 0, max_steps: 200_000_000, const_cache: HashMap::new() }
+        Interp { c, frames: vec![], depth: 0, steps: 0, max_steps: 200_000_000, const_cache: HashMap::new(), in_place_call: false }
     }
 
     fn trap<T>(&self, kind: &str, sp: Span, msg: Option<String>) -> R<T> {
@@ -348,7 +388,8 @@ impl<'a> Interp<'a> {
     /// Derived and builtin trait methods (clone, eq, cmp, default, partial_cmp ...).
     fn derived(&mut self, name: &str, st: &Ty, args: Vec<V>, sp: Span) -> R<V> {
         match name {
-            "clone" => Ok(self.deref_val(&args[0])),
+            // a cloned closure owns a copy of its by-move state (K-CloCopy, F-104)
+            "clone" => Ok(fresh_closures(&self.c.closures, self.deref_val(&args[0]))),
             "eq" => Ok(V::Bool(self.val_eq(&self.deref_val(&args[0]), &self.deref_val(&args[1])))),
             "ne" => Ok(V::Bool(!self.val_eq(&self.deref_val(&args[0]), &self.deref_val(&args[1])))),
             "cmp" | "partial_cmp" => {
@@ -693,11 +734,17 @@ impl<'a> Interp<'a> {
                 }
             }
             TK::Local(_) | TK::Field(..) | TK::Index(..) | TK::Deref(_) | TK::SliceRange { .. } => {
+                let in_place = std::mem::replace(&mut self.in_place_call, false);
                 let p = self.place(e)?;
                 let v = self.read_place(&p);
                 if let V::Moved = v {
                     return self.host("read of a moved or uninitialised value (the checker should have rejected this)");
                 }
+                // a closure read by value is a copy (or a move): its by-move state is its own
+                // (K-CloCopy, F-104; review 2026-10-23: `let mut d = c; d(); c()` shared the
+                // state, so c() returned 2 where rustc gives 1). A call of the closure in place
+                // keeps its state (`c(); c()`)
+                let v = if !in_place && ty_mentions_closure(&e.ty) { fresh_closures(&self.c.closures, v) } else { v };
                 // a moved Linear local leaves Φ.lin (section 6.2, E-Move): mark it ⊠
                 if let (TK::Local(l), Place::P(ptr)) = (&e.kind, &p) {
                     if ptr.path.is_empty() && self.frames.last().map(|f| f.linear.contains(l)).unwrap_or(false) {
@@ -800,7 +847,11 @@ impl<'a> Interp<'a> {
                 self.derived(method, &st, vs, e.span)
             }
             TK::CallValue(f, args) => {
-                let fv = self.eval(f)?;
+                // the callee is called in place (FnMut state persists across calls)
+                self.in_place_call = f.is_place();
+                let fv = self.eval(f);
+                self.in_place_call = false;
+                let fv = fv?;
                 let vs = self.eval_operands(args, &|k| format!("<arg {k} of a closure call>"))?;
                 self.call_value(fv, vs, e.span)
             }
@@ -2310,7 +2361,7 @@ impl<'a> Interp<'a> {
                 self.write_ptr_or_cell(&p, n);
                 Ok(old)
             }
-            "opt_as_ref" => match arg(0) {
+            "opt_as_ref" | "opt_as_mut" => match arg(0) {
                 V::Ref(p) => match self.read_ptr(&p) {
                     V::Adt(_, 1, _) => {
                         let mut q = p;
@@ -2701,7 +2752,7 @@ impl<'a> Interp<'a> {
                     Ok(self.none())
                 }
             }
-            "clone" => Ok(self.deref_val(&arg(0))),
+            "clone" => Ok(fresh_closures(&self.c.closures, self.deref_val(&arg(0)))),
             "eq" | "ne" | "partial_cmp" | "cmp" | "default" | "into" => {
                 let st = targs.first().cloned().unwrap_or(Ty::Error);
                 self.derived(name, &st, args, sp)

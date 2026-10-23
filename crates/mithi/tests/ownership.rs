@@ -38,7 +38,9 @@ const CASES: &[(&str, &str, &str)] = &[
     ("r23", "E-TYPE", r#"struct S { a: u32 } fn g() { let s = S { a: 1 }; s.a = 2; }"#),
     ("r24", "E-TYPE", r#"fn f(x: u32) -> u32 { x += 1; x }"#),
     ("r25", "E-BORROW-CONFLICT", r#"fn g() -> usize { let mut v = vec![1u32]; let first = &v[0]; v.clear(); *first as usize }"#),
-    ("r26", "E-BORROW-OUTLIVE", r#"fn g(v: &mut Vec<u32>) -> &u32 { let x = 5u32; v.push(x); &x }"#),
+    // rustc 1.99.1: E0515 "cannot return reference to local variable" [M, review 2026-10-23];
+    // E-BORROW-OUTLIVE is now anchored at the scope's end, so E-REF-ESCAPE is first
+    ("r26", "E-REF-ESCAPE", r#"fn g(v: &mut Vec<u32>) -> &u32 { let x = 5u32; v.push(x); &x }"#),
     ("r27", "E-BORROW-CONFLICT", r#"fn g() { let mut s = String::new(); let r = &s; s.push_str("a"); let n = r.len(); }"#),
     ("r28", "E-BORROW-CONFLICT", r#"fn f(a: &mut u32, b: &mut u32) {} fn g() { let mut x = 1u32; f(&mut x, &mut x); }"#),
     ("r29", "E-BORROW-CONFLICT", r#"fn g() { let mut x = 1u32; let r = &x; x += 1; let y = *r; }"#),
@@ -132,6 +134,30 @@ fn ownership_cases_match_rust() {
     assert!(bad.is_empty(), "{} of {} cases differ:
 {}", bad.len(), CASES.len(), bad.join("
 "));
+}
+
+/// r19's reason, not only its code (review 2026-10-23: r19 passed vacuously, because its
+/// E-MOVE-USED came from the closure body, where the by-move capture was wrongly seen as moved,
+/// not from the second call). The only error must be at the second `c()`: the closure moves its
+/// capture `v`, so it is FnOnce and the first call consumes it.
+#[test]
+fn r19_blames_the_second_call() {
+    for src in [
+        "fn g() { let v = vec![1u32]; let c = move || { let w = v; w.len() }; c(); c(); }",
+        "struct S { a: u32 } fn eat(s: S) -> u32 { s.a } fn f() -> u32 { let s = S { a: 1 }; let c = move || eat(s); c() + c() }",
+    ] {
+        let mut cfg = Config::default();
+        cfg.inputs.push(SourceInput { name: "r19.mith".into(), text: format!("{src}
+"), role: FileRole::User, module: String::new() });
+        let c = check(&cfg);
+        let errs = c.errors();
+        let second = src.rfind("c()").unwrap() as u32;
+        assert!(!errs.is_empty(), "{src}: accepted");
+        for d in errs {
+            assert_eq!(d.code, "E-MOVE-USED", "{src}: {}", mithi::diag::render_text(c.sm(), d));
+            assert_eq!(d.span.lo, second, "{src}: the error must be at the second call: {}", mithi::diag::render_text(c.sm(), d));
+        }
+    }
 }
 
 #[test]
