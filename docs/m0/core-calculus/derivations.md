@@ -7,7 +7,13 @@ D-D01, D-D04, D-D06, D-D09, D-D11 to D-D13, D-D18, D-D19, D-D21 to D-D23, §N an
 canonical verdict changed. Revised again 2026-10-16 after the second same-family review (note §0.6,
 §17): the prelude (`BlockQ4`, `Lease`, `Clock`, `Buf<T>` declared; std higher-order transfers),
 D-C2, D-C3, D-C5 (a fact corrected), D-D02, D-D04, D-D10, D-D11 (now `Cover-Proj`), D-D19, D-D21,
-D-D22, D-D23, §N (N-40 to N-69) and §V changed. No canonical verdict changed.
+D-D22, D-D23, §N (N-40 to N-69) and §V changed. No canonical verdict changed. Revised a third time
+2026-10-23 after the third same-family review (note §0.7, §17). These changed: the prelude
+(`Iterator::next`'s per-position result loan, F-90); D-C2 (the hidden loop counter, F-103, and the
+whole-cell strong update, F-89); D-D04 (the result loan of `max_by_key`, F-90, F-99); D-D11 (the
+receiver premise of `Proj-Split`, F-102, pairwise disjointness, F-95, and the partial update of
+`Cover-Proj`, F-89, F-97); D-D21 (whole cells); §N (N-43's code, F-107, and the new items N-70 to
+N-109); and §V. No canonical or derived verdict changed.
 
 Every snippet below was hashed by the CC track's scratch script on 2026-10-16, at Mithril commit
 `ec46300` [M]. The hash is the SHA-256 of the fenced block's body (the lines between the opening
@@ -50,7 +56,12 @@ F-87).
 impl<T> [T] {
     fn len(&self) -> usize            ensures result <= isize::MAX as usize          // kcall
     fn iter(&self) -> slice::Iter<T>  // std adapter: result loan = the loan on *self (T-Ret (b))
+    fn iter_mut(&mut self) -> slice::IterMut<T>   // result loan = the &mut loan on *self
 }
+// Iterator::next on slice::Iter<'a, T> and IterMut<'a, T>, and on adapters over them: the Some
+// payload's position is tied to 'a inside the referent of &mut self, so it carries the loans the
+// iterator carries, not the loan on the iterator (note §5.4's per-position rule, F-90). Option::take
+// on Option<&'a mut T> likewise.
 impl f16 { fn to_f32(self) -> f32 }   // exact widening; nanrule raw (01 §2.5 FF-F16)
 mod canon {
     fn nan(x: f32) -> f32             // nanrule canon (02 §5)
@@ -235,13 +246,15 @@ argument list; 02 §20 asks the Surface Lab to test it.
 ```text
 kernel fn q4_row_dot(w: &[BlockQ4], a: &[ActQ8]) -> f32  requires w.len() == a.len() {
   let mut acc: f32 = 0.0;
-  let mut g: usize = 0;  let n_g: usize = <[BlockQ4]>::len(&*w);
+  let mut c_g: usize = 0;  let n_g: usize = <[BlockQ4]>::len(&*w);     // c_g: hidden counter (F-103)
   loop {
-    if g >= n_g { break }
+    if c_g >= n_g { break }
+    let g: usize = c_g;                              // the binder: immutable, one per iteration
     let mut isum: i32 = 0;
-    let mut j: usize = 0;
+    let mut c_j: usize = 0;
     loop {
-      if j >= 32 { break }
+      if c_j >= 32 { break }
+      let j: usize = c_j;
       // isum += w[g].q.elem(j) * (a[g].q[j] as i32);
       assert⟨idx⟩(g < len(*w));  assert⟨req(elem)⟩(j < 64);
       let t1: i32 = Nib64o8::elem(&(*w)[g].q, j);
@@ -252,7 +265,7 @@ kernel fn q4_row_dot(w: &[BlockQ4], a: &[ActQ8]) -> f32  requires w.len() == a.l
       // isum += w[g].q.elem(j + 32) * (a[g].q[j + 32] as i32);
       assert⟨ovf(add)⟩(no_ovf_add_usize(j, 32));    let j2: usize = j + 32;
       … the same five steps with j2 …
-      j = j + 1;                                     // its overflow assert is discharged: j < 32
+      c_j = c_j + 1;                                 // its overflow assert is discharged: c_j < 32
     }
     let c: f32  = prim_cvt_i32_f32(isum);           // round to nearest even
     let dw: f32 = prim_cvt_f16_f32(copy (*w)[g].d);  // exact
@@ -260,7 +273,7 @@ kernel fn q4_row_dot(w: &[BlockQ4], a: &[ActQ8]) -> f32  requires w.len() == a.l
     let s: f32  = prim_fmul32(dw, da);              // w[g].d.to_f32() * a[g].d
     let t: f32  = prim_fmul32(c, s);                // (isum as f32) * (…)
     acc = prim_fadd32(acc, t);                      // two roundings, never contracted (FF-FMA)
-    g = g + 1;
+    c_g = c_g + 1;
   }
   return prim_canon_nan(acc)
 }
@@ -273,11 +286,11 @@ kernel fn q4_row_dot(w: &[BlockQ4], a: &[ActQ8]) -> f32  requires w.len() == a.l
 **Judgement steps.**
 
 1. `T-Let`: `acc : (f32, ⊥ with ν canon)`, from the literal `0.0`.
-2. `T-Loop` (outer) with `T-Jump`. The guard's `break_L` is decided under the grade of `g >= n_g`,
+2. `T-Loop` (outer) with `T-Jump`. The guard's `break_L` is decided under the grade of `c_g >= n_g`,
    which is `α_w` (the length of `*w`), so `J(L) = α_w`, and by `T-Loop`'s fixpoint every iteration's
    body runs under the effective pc `α_w` (note §5.5, F-30). The first draft asserted this step
    without a rule that produced it.
-3. `T-Loop` (inner). The guard `j >= 32` is constant, so `J(L_inner) = ⊥`; the inner body's effective
+3. `T-Loop` (inner). The guard `c_j >= 32` is constant, so `J(L_inner) = ⊥`; the inner body's effective
    pc stays `α_w`, because `J(L)` of the outer loop is still open.
 4. `T-Call` of `Nib64o8::elem`: a format accessor; `ε = ∅ ⊆ Σ`; its requires `j < 64` is discharged;
    its ensures `t1 ∈ [−8, 7]` joins Φ.
@@ -293,7 +306,7 @@ kernel fn q4_row_dot(w: &[BlockQ4], a: &[ActQ8]) -> f32  requires w.len() == a.l
 
 | # | Site | Obligation | Facts used | Discharged |
 |---|---|---|---|---|
-| 1 | `w[g]` | `g < len(*w)` | `g < n_g = len(*w)` (outer loop) | T2 |
+| 1 | `w[g]` | `g < len(*w)` | `g = c_g < n_g = len(*w)` (outer loop) | T2 |
 | 2 | `a[g]` | `g < len(*a)` | 1 and `len(*w) == len(*a)` (requires) | T2 |
 | 3 | `elem(j)` | `j < 64` | `j < 32` | T2 |
 | 4 | `a[g].q[j]` | `j < 64` (array of 64) | `j < 32` | T2 |
@@ -301,8 +314,8 @@ kernel fn q4_row_dot(w: &[BlockQ4], a: &[ActQ8]) -> f32  requires w.len() == a.l
 | 6 | `elem(j + 32)`, `q[j + 32]` | `j + 32 < 64` | `j < 32` | T2 |
 | 7 | both multiplications | the product fits `i32` | `t1 ∈ [−8, 7]` (ensures), `t2 ∈ [−127, 127]` (range), so `\|p\| ≤ 1,016` [D: 8 · 127] | T2 |
 | 8 | the 64 additions to `isum` | no `i32` overflow | over SSA versions (note §5.10, F-44): `isum_0 = 0` and `\|isum_k\| ≤ 1,016 · k ≤ 65,024` [D: 64 · 8 · 127] for the k-th version | T2, by unrolling the constant 32-trip inner loop (two additions per trip); no loop invariant is needed or inferred (DR-012) |
-| 9 | `j = j + 1` | no overflow | `j < 32` | T2 |
-| 10 | `g = g + 1` | no overflow | `g < len(*w) ≤ isize::MAX` | T2 |
+| 9 | `c_j = c_j + 1` | no overflow | `c_j < 32` | T2 |
+| 10 | `c_g = c_g + 1` | no overflow | `c_g < len(*w) ≤ isize::MAX` | T2 |
 
 Not an obligation: `|isum| < 2^24`, which makes `isum as f32` exact. The cast is defined (round to
 nearest even) for every `i32`, so typing does not need the bound. It holds anyway, since 65,024 <
@@ -371,10 +384,13 @@ kernel fn q4_matvec(w: &Matrix<BlockQ4>, a: &[ActQ8], y: &mut [f32])
 3. No other write to `*y`: no other element, no whole-`y` write, no `&mut` of `*y` or of any place
    overlapping it passed to a call, and no closure.
 4. `target*((*y)[r])` is one place: `*y` is the referent of the reference parameter y (must-alias,
-   F-64).
+   F-64), whose type `[f32]` holds no reference.
 
-So the referent of `y` becomes `(exact, cross_device-if-inputs-are, {}, canon) ⊔ α_w`, a strong
-update. `θ_mut,y = (⊥, {w, a}, canon)`: the output does not depend on y's old contents.
+The index r is the `par for`'s binder, a plain identifier without `mut`, never shadowed (premise 1,
+F-103). `*y` is a whole grade cell, so the strong update replaces the cell (note §5.4, F-89). The
+referent of `y` becomes `(exact, cross_device-if-inputs-are, {}, canon) ⊔ α_w`, and
+`θ_mut,y = (⊥, {w, a}, canon)`: the output does not depend on y's old contents. `T-Par`'s
+pairwise premise has one write, `(*y)[r]` with index function `r`, so it holds affinely (F-95).
 
 **`⊢_k q4_matvec`.** (k1)–(k6) hold. The sink `y` is canonical by `T-Cover`.
 
@@ -709,8 +725,11 @@ fn hottest(slots: &[SlotView], heat: &[u32]) -> Option<SlotId> {
 3. The `max_by_key` closure captures `heat` by reference, so it is `clo_L` (`T-CloL`, ε = ∅). The
    closure-parameter exception admits it, because F occurs in one parameter and not in the return
    type. The key `(u32, Reverse<usize>)` is `Ord`. FF-TIES concerns float keys only, so this is C.
-4. `max_by_key` returns `Option<&SlotView>`, which is `Local`. Its loan is the union of its `Local`
-   arguments' loans (`T-Ret` (b)). Its result grade is `α_slots ⊔ Θ_κ.θ_ret(α_slots)` (prelude), where
+4. `max_by_key` returns `Option<&SlotView>`, which is `Local`. Its loan is the loan of its by-value
+   `Local` self, the `filter` adapter, which carries the shared loan on `*slots`. The key closure is
+   a closure argument, so its capture loan on `heat` is not among the result's loans (`T-Ret` (b),
+   note §5.4's per-position rule, F-90, F-99). The previous text took the union of every `Local`
+   argument's loans, closure included, which only over-approximated. Its result grade is `α_slots ⊔ Θ_κ.θ_ret(α_slots)` (prelude), where
    the key closure's summary `Θ_κ` reads `heat`, so the grade is `α_slots ⊔ α_heat`; its `mt_κ` is
    true (the `heat[s.idx]` check), and `max_by_key`'s `may_trap` includes the `mt_κ` of the closure
    it runs, so `T-Call` puts it into `may_trap` (note §5.5, §5.7 rule 2, F-35, F-69). `θ_inv,f =
@@ -856,11 +875,13 @@ kernel fn q4_matmul(w: &Matrix<BlockQ4>, a: &Matrix<ActQ8>, y: &mut Matrix<f32>)
   not admit that: the place is not of the form `p[π(r)]`, and every iteration borrows the same row.
   `Proj-Split` lets a footprinted projection whose result is used, within the iteration, only as the
   base of a write at index `π(r) = r` contribute only `footprint[r]` to W, with its loan split per
-  iteration. Its premise added after the second review holds: `index_mut`'s only argument besides
-  the receiver is t, the outer `par`'s index, which mentions neither the inner index r nor any place
-  the inner body writes (note §5.9, F-63). The inner W is then `{ blocks[t·bpr + r] }`, injective in r. At the
-  outer level the same call varies with t, so `Proj-Split` does not apply there; the outer W is
-  checked through the footprint's form, as above.
+  iteration. Its premise holds in the form the third review gave it: every argument, the receiver
+  included, is invariant in the inner `par`. The receiver is `&mut *y`, and the only other argument
+  is t, the outer `par`'s index. Neither mentions the inner index r or a place the inner body
+  writes (note §5.9, F-63, F-102). The inner W is then `{ blocks[t·bpr + r] }`, from one write with
+  index function r, so the pairwise premise holds affinely (F-95). At the outer level the same
+  call varies with t, so `Proj-Split` does not apply there. The outer W is checked through the
+  footprint's form, as above, and the outer body has that one write only.
 - **Invariant.** The `&mut` loans on rows of `*y` end inside the `par` bodies; under F-43 the `Matrix`
   invariant re-check they trigger is deferred to each join, so it never reads a row another
   iteration is writing.
@@ -875,11 +896,22 @@ kernel fn q4_matmul(w: &Matrix<BlockQ4>, a: &Matrix<ActQ8>, y: &mut Matrix<f32>)
      and the `Matrix` invariant; and `k = rows(*w) = cols(*y) = bpr(*y)` by the requires and `cols`'s
      ensures [D: T2 obligations, linear given the invariant];
   3. the only other access to `*y` is the receiver reborrow, which `Proj-Split` resolves to
-     `footprint[r]`, with t invariant in the inner loop;
-  4. `*y` is the referent of the reference parameter y, one place.
+     `footprint[r]`, with the receiver `&mut *y` and t invariant in the inner loop (F-102);
+  4. `*y` is the referent of the reference parameter y, one place, and `Matrix<f32>` holds no
+     reference.
 
-  So `S[*] := γ(q4_row_dot(…)) ⊔ pc'_t ⊔ pc'_r`, which is `(exact, cross_device-if-inputs-are, ∅,
-  canon)` joined with the bounds' grades: a strong update with ν canon, and the kernel's sink holds.
+  S is the field `(*y).blocks` of the grade cell `*y`, so the update is the partial update of note
+  §5.4 (F-89), with `γ_new = γ(q4_row_dot(…)) ⊔ pc'_t ⊔ pc'_r`. γ(q4_row_dot(…)) is
+  `(exact, cross_device-if-inputs-are, ∅, canon)`.
+
+  `Matrix<f32>`'s other fields, `rows` and `blocks_per_row`, are `usize`, so S holds all of the
+  cell's float content. The NaN bit is therefore reset to canon. The cell keeps α_y's fidelity,
+  scope and B, so `θ_mut,y` depends on y in scope only, with ν canon, and the kernel's sink holds.
+  The previous revisions wrote `S[*] := …`, which replaced the whole cell. With a raw `f32` field
+  beside `blocks` that was unsound (item N-74), but D-D11 has no such field, so its verdict does
+  not change.
+
+  At run time the partly run nest is typed by `RT-CoverProj` (note §7.1, F-97).
 - **Schedule.**
   - `t`, `r`: own scope.
   - `j`, `acc`: unique in the inlined `q4_row_dot`.
@@ -890,9 +922,12 @@ kernel fn q4_matmul(w: &Matrix<BlockQ4>, a: &Matrix<ActQ8>, y: &mut Matrix<f32>)
 - **Verdict: accept**, under the `IndexMut` footprint, `cols() == blocks_per_row()` in the prelude, and
   the provisional rules `Proj-Split` and `Cover-Proj`. Without a footprint, the outer `par` is checked
   as if it wrote all of `*y`, and `E-PAR-DISJOINT` rejects it. Without `Proj-Split`, the inner `par`
-  is `E-PAR-DISJOINT`, and the fix is the hoist that note §14 P-19 proposes to 02's owner. Without
-  `Cover-Proj`, `*y`'s float content is the weak join `raw ⊔ canon = raw`, and the kernel's sink is
-  `E-NAN-RAW-SINK` (P-25).
+  is `E-PAR-DISJOINT`, and the fix is the hoist that note §14 P-19 proposes to 02's owner, together
+  with P-25's flat cover. Since F-89, a cover of the hoisted row is a partial update that cannot
+  reset the cell's NaN bit. Without `Cover-Proj`, `*y`'s float content is the weak join
+  `raw ⊔ canon = raw`, and the kernel's sink is `E-NAN-RAW-SINK` (P-25). Note §12.1 lists
+  `Proj-Split` and `Cover-Proj` in freeze tier C. Under its option (ii), D-D11's X1 expected
+  verdict would become `E-PAR-DISJOINT`. This reviser recommends option (i), which keeps accept.
 
 ### D-D12: `flow moe_ffn`
 
@@ -1059,7 +1094,9 @@ for i in 0..len(*x) { (*x)[i] = canon::nan(prim_fdiv32(copy (*x)[i], s)) }      
 - The two write loops each satisfy `T-Cover`: each body is the one top-level write `(*x)[i] = …`
   over `0..len(*x)` (premise 1), neither body contains a `break`, `continue`, `return` or `?`
   (premise 0, F-37), neither passes `&mut` of `*x` or of an overlapping place to a call (premise 3),
-  and `*x` is the referent of the reference parameter x, one place (premise 4, F-64). Each reads
+  and `*x` is the referent of the reference parameter x, one place and a whole grade cell, so each
+  update replaces the cell (premise 4, F-64, F-89). Each binder i is a plain identifier without
+  `mut` (premise 1, F-103). Each reads
   `(*x)[i]` before writing it; the strong update's grade `γ(e_w)` includes that read.
 - After the second loop the referent of `x` has ν canon and grade `α_x`.
 - `canon::sum16(x)` takes `&[f32]`; the `&mut` is reborrowed as shared for the call (Rust's coercion),
@@ -1149,12 +1186,26 @@ two halves of D-C2, verdict accept.
 Items N-01 to N-06 are the commented-out examples inside snippet blocks, uncommented; they are gate
 items. N-07 comes from ARCHITECTURE §5.3's reviewer note, which quotes the outline's earlier
 `q4_matvec`. N-08 to N-10 are constructed here from the documents' rules. N-11 to N-39 are the
-counterexamples of the first 2026-10-16 review, and N-40 to N-69 those of the second (note §17),
-each with the verdict the revised rules give. N-07 to N-69 are supplementary: reported, and offered
-to the planted corpus, but not gate inputs, because they are not in any fenced snippet (note Q11).
-In N-40 to N-69, `h` is a value read under `with_lock`, so its grade is `γ_sh`, and "rustc rejects"
-is [inference]: no program was compiled (no rustc on this host). Primary codes follow the precedence of note
-§5.16; secondary codes are in verdicts.json's `also`.
+counterexamples of the first 2026-10-16 review, N-40 to N-69 those of the second, and N-70 to N-109
+those of the third (2026-10-23) (note §17). Each has the verdict the revised rules give. N-07 to
+N-109 are supplementary: reported, and offered to the planted corpus, but not gate inputs, because
+they are not in any fenced snippet (note Q11). In N-40 to N-109, `h` is a value read under
+`with_lock`, so its grade is `γ_sh`.
+
+The second round's "rustc rejects" statements were [inference] when written. The third revision
+compiled them with the pinned rustc 1.99.1 [M: laptop, 2026-10-23]:
+
+- N-24 (probe r07), N-25 to N-27, N-43, N-44, N-46 (r06), N-63 (r10), N-66 and N-68 are all
+  rejected:
+  - N-43 with E0521;
+  - N-63 at the recursion limit;
+  - the others with E0597, E0502 (N-27) or "lifetime may not live long enough" (N-24, N-46);
+- every third-round item's rustc result is in its row;
+- the probe files are in the session scratch area, `cc3/` (note §0.7).
+
+Primary codes follow the precedence of note §5.16; secondary codes are in verdicts.json's `also`.
+For N-70 to N-109, verdicts.json's `mithi_dcd4c87` field records what `mithi` at `dcd4c87` gives
+(note §12.2).
 
 | Item | Text (uncommented) | Expected | Code | Rule |
 |---|---|---|---|---|
@@ -1200,7 +1251,7 @@ is [inference]: no program was compiled (no rustc on this host). Primary codes f
 | N-40 | `#[grade(exact, cross_device)] fn leak(m: &Mutex<bool>) -> bool uses { nondet } { let h = m.with_lock(\|s\| *s); let mut c = false; let mut f = \|\| { let o = c; c = true; o }; if h { f(); } f() }` (R3-1, R4-2) | reject | `E-GRADE` | the first call raises c to `γ_sh`; the second call's `θ_ret` reads `β_c := Γ(c) = γ_sh` (F-60). Before: `θ_ret` was the creation constant ⊥ and the result, which equals h, was `cross_device` |
 | N-41 | N-40 with `let mut n = false; let mut f = move \|\| { let o = n; n = true; o };` (R3-1, R4-2) | reject | `E-GRADE` | the first call raises `γ(f)` by `θ_state ⊔ pc = γ_sh`; the second returns `θ_ret[σ := γ(f)] ⊔ γ(f)` (F-60) |
 | N-42 | `fn twice<F: FnMut(u32) -> u32>(mut f: F, h: u32) -> u32 { f(h); f(0) }` and `#[grade(exact, cross_device)] fn g(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(\|s\| *s); let mut c = 0u32; twice(\|x: u32\| -> u32 { let old = c; c = x; old }, h) }` (R4-2) | reject | `E-GRADE` | per-κ re-typing of `twice` treats c as an implicit `&mut` referent: after `f(h)` it holds `α_h`, so `f(0)` returns `α_h` and `twice`'s per-κ `θ_ret` carries it (F-60, rule 1) |
-| N-43 | `fn f() -> u32 { let mut slot: Option<&u32> = None; { let mut put = \|d: &u32\| { slot = Some(d); }; let x = 5u32; put(&x); } *slot.unwrap() }` (R3-2, R4-6) | reject | `E-BORROW-OUTLIVE` | `T-CallClo` transfers `λ_slot = {ℓ_d*}` with `ℓ_d* := {(x, ref)}`, so slot carries the loan on x when x's scope ends (F-61); rustc rejects it too |
+| N-43 | `fn f() -> u32 { let mut slot: Option<&u32> = None; { let mut put = \|d: &u32\| { slot = Some(d); }; let x = 5u32; put(&x); } *slot.unwrap() }` (R3-2, R4-6) | reject | `E-LOCAL-MUT-STORE` (changed 2026-10-23, F-107; was `E-BORROW-OUTLIVE`) | d is annotated `&u32`, so it is higher-ranked, and storing its loan into the capture slot is `E-LOCAL-MUT-STORE`, as rustc's E0521 [M: rustc 1.99.1, this program]. With an unannotated `\|d\|`, `T-CallClo` transfers `λ_slot = {ℓ_d*}` with `ℓ_d* := {(x, ref)}`, and x's scope end is `E-BORROW-OUTLIVE` (F-61), as rustc's E0597 [M: probe n43u] |
 | N-44 | `fn bad2() -> u32 { let a = 1u32; let mut out: &u32 = &a; { let y = 5u32; let mut c = \|\| { out = &y; }; c(); } *out }` (R4-6) | reject | `E-BORROW-OUTLIVE` | `λ_out` holds the by-ref capture loan on y, which `T-CallClo` adds to `L(out)` (F-61); rustc rejects it with E0597 |
 | N-45 | `fn set(o: Option<&mut u32>, h: bool) { if let Some(r) = o { if h { *r = 1; } } }` and `#[grade(exact, cross_device)] fn g(m: &Mutex<bool>) -> u32 uses { nondet } { let h = m.with_lock(\|s\| *s); let mut y = 0u32; set(Some(&mut y), h); y }` (R3-3) | reject | `E-GRADE` | `set` has `θ_mut,o = α_o ⊔ α_h` for its `&mut`-carrying by-value parameter, and `T-Call` applies it to y through the loan `(y, mut)` that `Some(&mut y)` carries (F-62) |
 | N-46 | `fn put(o: Option<&mut Option<&u32>>, d: &u32) { if let Some(r) = o { *r = Some(d); } }`, called as `let mut slot = None; { let d = 5u32; put(Some(&mut slot), &d); } *slot.unwrap()` (R3-3) | reject | `E-LOCAL-MUT-STORE` | the stored value carries `ℓ_d*` into a place at reference position `o.2` (F-62); rustc rejects it too, the elided lifetimes differ |
@@ -1227,6 +1278,46 @@ is [inference]: no program was compiled (no rustc on this host). Primary codes f
 | N-67 | `fn take_first(slots: &mut [Option<Lease>], want: &[bool]) -> Option<Lease> { par for i in 0..slots.len() { if want[i] { return slots[i].take(); } } None }` (R4-7) | accept, if `SlabBuf : Send` | — | typing accepts; dynamically, with `want[3]` and `want[9]` true, iteration 9's lease is abandoned at the join instead of lost (F-83) |
 | N-68 | `fn t() -> u32 { let a = 1u32; let mut out = &a; { let y = 5u32; let t = (&y,); out = t.0; } *out }` (R4-9) | reject | `E-BORROW-OUTLIVE` | the tuple literal carries the loan on y, and `t.0` carries `L(t)` (F-84) |
 | N-69 | `#[grade(exact, cross_device)] fn f(m: &Mutex<bool>) -> u32 uses { nondet } { let h = m.with_lock(\|s\| *s); loop { if h { break 1 } else { break 0 } } }` (R4-10) | reject | `E-GRADE` | the elaboration assigns `t_L` under the effective pc `γ_sh` before each break (F-85) |
+| N-70 | `struct S { buf: [u32; 4], tag: u32 } #[grade(exact, cross_device)] fn k(m: &Mutex<u32>, s: &mut S) uses { nondet } { s.tag = m.with_lock(\|v\| *v); for i in 0..4 { s.buf[i] = 0; } }`; the call form: `fn zero(s: &mut S) { for i in 0..4 { s.buf[i] = 0; } } #[grade(exact, cross_device)] fn k2(m: &Mutex<u32>) -> u32 uses { nondet } { let mut s = S { buf: [1u32; 4], tag: 0 }; s.tag = m.with_lock(\|v\| *v); zero(&mut s); s.tag }` (R5-1) | reject | `E-GRADE` | `s.buf` is a proper sub-place of the cell `*s`, so the cover's update is partial and keeps `s.tag`'s `γ_sh` (F-89). In the call form, `zero`'s own cover is partial too, so its `θ_mut,s` keeps `α_s`, and the caller's strong update of the whole cell s keeps the tag's grade. Before: `*s := ⊥ ⊔ pc'`, and both returned `s.tag` at `cross_device`. rustc 1.99.1: the Rust skeleton compiles (probe p01, k_field). `mithi` at `dcd4c87`: reject E-GRADE (m01, m03): agrees |
+| N-71 | `#[grade(exact, cross_device)] fn k(a: &mut [f32; 4], x: &[f32; 4]) { a[3] = x[0] - x[0]; let r = &mut a[0..2]; for i in 0..r.len() { r[i] = canon::nan(x[i]); } }` (R5-1) | reject | `E-NAN-RAW-SINK` | `res(*r)` is the range `(*a)[0..2]` of the cell `*a`. An index or range suffix never holds all of the cell's float content, so the update is partial, and `a[3]`'s raw NaN keeps the cell raw (F-89). For `x[0] = +∞`, `a[3]` is the target's default NaN [inference, as note §5.3]. rustc 1.99.1: the Rust skeleton compiles (probe p01, k_sub). `mithi` at `dcd4c87`: reject E-NAN-RAW-SINK (m02): agrees |
+| N-72 | `struct Pair { buf: [f32; 4], tag: f32 } #[grade(exact, cross_device)] fn f(s: &mut Pair, x: &[f32; 4]) { s.tag = s.tag + 1.0; for i in 0..4 { s.buf[i] = canon::nan(x[i]); } }` (R6-3) | reject | `E-NAN-RAW-SINK` | the field `tag` is float content outside `s.buf`, so the partial update keeps the cell's NaN bit raw (F-89). `mithi` at `dcd4c87`: reject E-NAN-RAW-SINK (a03): agrees |
+| N-73 | `#[grade(exact, cross_device)] fn f(vv: &mut [[f32; 4]; 2], x: &[f32; 4]) { vv[1][0] = vv[1][0] + 1.0; for i in 0..4 { vv[0][i] = canon::nan(x[i]); } }`; the same through a local reference: `let r = &mut vv[0]; for i in 0..4 { r[i] = canon::nan(x[i]); }` (R6-3) | reject | `E-NAN-RAW-SINK` | a row is an index suffix of the cell `*vv`, so the update is partial, and the raw `vv[1][0]` keeps the NaN bit raw; through `r`, `res(*r) = {(*vv)[0]}` gives the same (F-89). `mithi` at `dcd4c87`: reject E-NAN-RAW-SINK (a04, a05): agrees |
+| N-74 | `struct M2 { rows: usize, blocks_per_row: usize, blocks: Vec<f32>, scale: f32 } invariant M2 { self.blocks.len() == self.rows * self.blocks_per_row } impl std::ops::IndexMut<usize> for M2 { type Output = [f32]; fn index_mut(&mut self, t: usize) -> &mut [f32] requires t < self.rows ensures footprint(result) == self.blocks[t * self.blocks_per_row .. (t + 1) * self.blocks_per_row] { &mut self.blocks[t * self.blocks_per_row .. (t + 1) * self.blocks_per_row] } } #[grade(exact, cross_device)] fn mm(x: &[f32], y: &mut M2) requires x.len() == y.blocks_per_row { y.scale = y.scale + 1.0; for t in 0..y.rows { for r in 0..y.blocks_per_row { y[t][r] = canon::nan(x[r]); } } }` (R6-3) | reject | `E-NAN-RAW-SINK` | `Cover-Proj`'s S is the field `(*y).blocks` of the cell `*y`, beside the raw `f32` field `scale`, so its update is partial and keeps ν raw (F-89). Without the loops (probe a21) and with the raw write after them (a22) the program is rejected too. D-D11 differs: `Matrix<f32>` has no float field outside `blocks`. `mithi` at `dcd4c87`: accept (a19): disagrees |
+| N-75 | `#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> [u32; 4] uses { nondet } { let h = m.with_lock(\|s\| *s); let mut v = [0u32; 4]; for x in v.iter_mut() { *x = h; } v }` (R5-2) | reject | `E-GRADE` | `next`'s `Some` payload on `IterMut<'a, u32>` carries the loans the iterator carries, `{(v, mut)}`, so `*x = h` writes v under h's grade (F-90). Before: the item carried `(it, mut)`, the write went to the iterator, and v was returned at `cross_device`. rustc 1.99.1: the Rust skeleton compiles (probe p02, f). `mithi` at `dcd4c87`: accept (m04): disagrees |
+| N-76 | `fn g() -> [u32; 4] { let mut v = [0u32; 4]; let x = v.iter_mut().next().unwrap(); *x = 1; v }` (R5-2) | accept | — | x carries the loan on v, not on the temporary iterator, which dies at the end of its statement (F-90). Before: x carried a loan on the dead temporary, `E-BORROW-OUTLIVE`. rustc 1.99.1: compiles (probe p02, g). `mithi` at `dcd4c87`: accept (m05); its test gives v[0] = 1: agrees |
+| N-77 | `fn g(x: &mut &mut u32, h: u32) { **x = h; } #[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(\|s\| *s); let mut y = 0u32; let mut r = &mut y; g(&mut r, h); y }`; by-value form: `fn g2(o: &mut Option<&mut u32>, h: u32) { if let Some(r) = o { **r = h } }`, called on `&mut Some(&mut y)` (R5-3) | reject | `E-GRADE` | `R(&mut r) = {r, y}`. τ = `&mut u32` holds a reference, so the strong case does not apply, and y is raised weakly by `θ_mut,x = α_x ⊔ α_h` (F-91). Before: the strong case replaced r's grade and y stayed ⊥. rustc 1.99.1: the Rust skeleton compiles (probe p03). `mithi` at `dcd4c87`: accept (m06): disagrees |
+| N-78 | `#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(\|s\| *s); let mut y = 0u32; { let r = &mut y; let mut g = move \|\| { *r = h; }; g(); } y }` (R5-4) | reject | `E-GRADE` | the by-move capture r carries `(y, mut)`, so y is an output place of the closure, and `T-CallClo` raises it by `θ_mut,y`, which carries h's grade (F-92). Before: the write went to a place outside Γ_c and was lost. rustc 1.99.1: the Rust skeleton compiles (probe p04). `mithi` at `dcd4c87`: reject E-MOVE-USED (m07), a false rejection, with E-GRADE secondary: disagrees in code |
+| N-79 | `fn h() -> u32 { let a = 1u32; let mut r: &u32 = &a; let mut c = move \|set: bool\| -> u32 { if set { let z = 5u32; r = &z; 0 } else { *r } }; c(true); c(false) }` (R5-5) | reject | `E-LOCAL-MUT-STORE` (and `E-BORROW-OUTLIVE`) | storing a loan on the body local z into the by-move state r (F-93). r is live at the body's end, so z's scope end is `E-BORROW-OUTLIVE` too, later by source position. Before: accepted, and `c(false)` read a dangling reference. rustc 1.99.1: E0521 (probe p05a). `mithi` at `dcd4c87`: reject E-BORROW-OUTLIVE (m08): verdict agrees, primary code differs |
+| N-80 | `fn h() -> u32 { let a = 1u32; let mut slot: Option<&u32> = Some(&a); let mut c = move \|d: Option<&u32>\| -> u32 { if let Some(d) = d { slot = Some(d); 0 } else { *slot.unwrap() } }; { let x = 5u32; c(Some(&x)); } c(None) }` (R5-5) | reject | `E-LOCAL-MUT-STORE` | d's written type has an elided reference lifetime, so d is higher-ranked, and storing its loan into the by-move state slot is rejected (F-93, F-107). rustc 1.99.1: E0521 (probe p05b). `mithi` at `dcd4c87`: accept (m09): disagrees |
+| N-81 | N-80 with `move \|d\|` (unannotated) (R5-5) | reject | `E-BORROW-OUTLIVE` | `λ_σ = {ℓ_d*}`, so the call `c(Some(&x))` adds `(x, ref)` to `L(c)`, and c is live when x's scope ends (F-93). rustc 1.99.1: E0597 (probe p05c). `mithi` at `dcd4c87`: accept (m21): disagrees |
+| N-82 | `fn g() -> u32 { let a = 1u32; let mut slot: Option<&u32> = Some(&a); let x = 5u32; let mut c = move \|d\| -> u32 { if let Some(d) = d { slot = Some(d); 0 } else { *slot.unwrap() } }; c(Some(&x)); c(None) }` (R5-5) | accept | — | the transfer adds `(x, ref)` to `L(c)`, and x outlives c (F-93). The reviewer's proposed rule would have rejected it. rustc 1.99.1: compiles (probe q09). `mithi` at `dcd4c87`: accept (m20): agrees |
+| N-83 | `fn f() -> u32 { let a = 1u32; let mut out1: &u32 = &a; let mut out2: &u32 = &a; { let z0 = 7u32; out2 = &z0; let mut c = \|\| { out1 = out2; out2 = &a; }; c(); } *out1 }` (R5-6) | reject | `E-BORROW-OUTLIVE` | `λ_out1 = {ℓ_out2*}`, substituted with `L(out2) = {(z0, ref)}` before the call, so out1 carries the loan on z0 when z0's scope ends (F-94). Before: `ℓ_out2*` stayed symbolic and the program read a dangling reference. rustc 1.99.1: E0597 (probe p06a). `mithi` at `dcd4c87`: reject E-BORROW-OUTLIVE (m10): agrees |
+| N-84 | `fn f() -> u32 { let a = 1u32; let b = 2u32; let mut out1: &u32 = &a; let mut out2: &u32 = &b; { let mut c = \|\| { out1 = out2; out2 = &a; }; c(); } *out1 + *out2 }` (R5-6) | accept | — | after substitution out1 carries `(b, ref)` and out2 `(a, ref)`; both outlive the reads (F-94). rustc 1.99.1: compiles (probe p06b). `mithi` at `dcd4c87`: reject E-BORROW-CONFLICT (m23), a false rejection from its Interpretation 12: disagrees |
+| N-85 | `fn g() -> u32 { let a = 1u32; let mut out2: &u32 = &a; let r; { let z0 = 7u32; out2 = &z0; let mut c = \|\| { let t = out2; out2 = &a; t }; r = c(); } *r }` (R5-6) | reject | `E-BORROW-OUTLIVE` | `λ_ret = {ℓ_out2*}`, substituted with `{(z0, ref)}`, so r carries the loan on z0 when z0's scope ends (F-94). rustc 1.99.1: E0597 (probe p06c). `mithi` at `dcd4c87`: reject E-BORROW-OUTLIVE (m11): agrees |
+| N-86 | `fn g() -> u32 { let a = 1u32; let b = 2u32; let mut out2: &u32 = &b; let r; { let mut c = \|\| { let t = out2; out2 = &a; t }; r = c(); } *r + *out2 }` (R5-6) | accept | — | r carries `(b, ref)` and out2 `(a, ref)` (F-94). rustc 1.99.1: compiles (probe p06d). `mithi` at `dcd4c87`: accept (m24): agrees |
+| N-87 | `fn f(y: &mut [f32; 8]) { par for i in 0..7 { y[i] = 1.0; y[i + 1] = 2.0; } }`; through a projection, with N-47's W: `fn race(y: &mut W) { par for i in 0..4 { y.window(0)[i] = 1.0; y.window(1)[i] = 2.0; } }` (R5-7, R6-2) | reject | `E-PAR-DISJOINT` | the two writes' footprints meet across iterations: iteration i writes `y[i + 1]` and iteration i + 1 writes `y[i + 1]`; through the projection, `blocks[1 + i]` and `blocks[0 + (i + 1)]` (F-95). Before: each write was injective on its own, and both were accepted. `mithi` at `dcd4c87`: reject E-PAR-DISJOINT for the first form (d03), accept for the window form (m19): disagrees on the second |
+| N-88 | `fn f() -> u32 { let a = 1u32; let mut slot: &u32 = &a; { let y = 5u32; let r = &y; slot = &*r; } *slot }` (R5-8) | reject | `E-BORROW-OUTLIVE` | the reborrow `&*r` carries a loan on y, resolved when it is created (F-96). rustc 1.99.1: E0597 (probe p08b). `mithi` at `dcd4c87`: reject E-BORROW-OUTLIVE (m16): agrees |
+| N-89 | `fn f() -> u32 { let y = 5u32; let slot; { let r = &y; slot = &*r; } *slot }` (R5-8) | accept | — | slot's loan is on y, not on r, so r's scope end does not matter (F-96). rustc 1.99.1: compiles (probe p08a). `mithi` at `dcd4c87`: accept (m17): agrees |
+| N-90 | `#[grade(exact, cross_device)] fn f(m: &Mutex<u32>) -> u32 uses { nondet } { let h = m.with_lock(\|s\| *s); let mut y = 0u32; { let t = (&mut y,); *t.0 = h; } y }` (R5-8) | reject | `E-GRADE` | `res(*t.0) = {y}` through `L̂(t.0) = L(t)` (F-96). Before: no rule typed the write. rustc 1.99.1: the Rust skeleton compiles (probe p08c). `mithi` at `dcd4c87`: accept (m18): disagrees |
+| N-91 | `fn f() -> u32 { let a = 1u32; let v = [2u32, 3]; let mut out = &a; v.iter().for_each(\|x\| out = x); *out }` (R5-11) | accept | — | `for_each`'s item carries the iterator's loan `(v, ref)`. The closure argument's own capture loan on out is excluded, so out does not borrow itself (F-99). Before: `E-BORROW-CONFLICT`. rustc 1.99.1: compiles (probe p10). `mithi` at `dcd4c87`: accept (m12): agrees |
+| N-92 | `#[grade(exact, cross_device)] fn f(m: &Mutex<bool>, y: &mut [u32; 4]) uses { nondet } { let h = m.with_lock(\|s\| *s); par for i in 0..4 { if h { continue; } y[i] = 1; } }` (R5-12) | reject | `E-GRADE` | `J(par)` holds h's grade at the write, and `γ_w` includes the effective pc (F-100). `mithi` at `dcd4c87`: reject E-GRADE (m13): agrees |
+| N-93 | `trait Whole { fn whole(&mut self, t: usize) -> &mut [f32]; } impl Whole for [f32] { fn whole(&mut self, t: usize) -> &mut [f32] ensures footprint(result) == self[0..self.len()] { &mut self[0..self.len()] } } fn race(y: &mut [f32; 4]) { par for i in 0..2 { y[i..4].whole(0)[1 - i] = i as f32; } }` (R6-1) | reject | `E-PAR-DISJOINT` | the receiver `y[i..4]` varies with i, so `Proj-Split` does not apply. The composed map `i ↦ y[i + 1 − i] = y[1]` is not injective, so each call contributes its whole footprint `y[i..4]`, and those overlap (F-102). rustc 1.99.1: the serial for form compiles (probe r20). `mithi` at `dcd4c87`: accept (a10); its serial run writes y[1] in both iterations and y[0] never (a13): disagrees |
+| N-94 | `#[grade(exact, cross_device)] fn f(y: &mut [f32; 4], x: &[f32; 4]) { for mut i in 0..4 { i = 0; y[i] = canon::nan(x[i]); } }` (R6-4) | reject | `E-NAN-RAW-SINK` | the index is a `mut` binder, so the loop is not a cover (premise 1). Only `y[0]` is written, and the weak join keeps the caller's raw NaN bit (F-103). rustc 1.99.1: the Rust form compiles (probe r19), and r02 shows that for mut i runs every iteration. `mithi` at `dcd4c87`: accept (a06); its run leaves y[1] = 0x7fc00001 (a06r): disagrees |
+| N-95 | `fn f(y: &mut [f32; 4]) { par for mut i in 0..4 { i = 0; y[i] = 1.0; } }` (R6-4) | reject | `E-PAR-DISJOINT` | through SSA the index is the constant 0 in every iteration (F-103). `mithi` at `dcd4c87`: accept (a16): disagrees |
+| N-96 | `fn h() -> u32 { let mut n = 0u32; let mut c = move \|\| { n += 1; n }; let mut d = c; d(); c() }` (R6-5) | accept | — | c is Copy (K-CloCopy): no by-mut capture, and n is Copy. d has its own state, so `h()` returns 1 (F-104). Before: `let mut d = c` moved c, and `c()` was a use after move. rustc 1.99.1: compiles and returns 1 (probe r09). `mithi` at `dcd4c87`: accept (b09), but h() evaluates to 2: verdict agrees, value differs |
+| N-97 | `#[grade(exact, cross_device)] fn leak(st: &Mutex<u32>) -> u32 uses { nondet } { let h = st.with_lock(\|v\| *v); let mut s = 0u32; let mut c = move \|x: u32\| { let o = s; s = x; o }; let mut d = c; d(h); c(0) }` (R6-5) | accept | — | d is a copy of c with its own state, so `d(h)` raises only `γ(d)`, and `c(0)` returns c's state, 0, graded ⊥ (F-104). The result is the same for every h, so `cross_device` is right. The reviewer expected `E-GRADE`, which holds only if the copies share state, as `mithi`'s interpreter wrongly does. rustc 1.99.1: compiles; leak(7) returns 0 (probe r13). `mithi` at `dcd4c87`: accept (c01), but its run returns 7: verdict agrees, value differs |
+| N-98 | `fn f() -> usize { let mut v: Vec<usize> = Vec::new(); v.push(v.len()); v.push(v.len()); v[1] }` (R6-6) | accept | — | the receiver's autoref is a two-phase reservation while `v.len()` is evaluated (F-105). Before: `E-BORROW-CONFLICT`. rustc 1.99.1: compiles (probe r14). `mithi` at `dcd4c87`: accept (d01): agrees |
+| N-99 | `fn f(a: &mut Vec<usize>, n: usize) { a.push(n); } fn g() -> usize { let mut v: Vec<usize> = Vec::new(); f(&mut v, v.len()); v.len() }` (R6-6) | reject | `E-BORROW-CONFLICT` | an explicit `&mut v` written as an argument is an ordinary loan, not a reservation (F-105). rustc 1.99.1: E0502 (probe q01). `mithi` at `dcd4c87`: reject E-BORROW-CONFLICT (m14): agrees |
+| N-100 | `fn f(v: &mut [u32; 4]) { let a = &mut v[0]; let b = &mut v[1]; *a = 1; *b = 2; }` (R6-7) | reject | `E-BORROW-CONFLICT` | places that differ only at an index overlap outside `par` (F-106). Before: T2 proved `0 ≠ 1`, and the program was accepted. rustc 1.99.1: E0499 (probe r01). `mithi` at `dcd4c87`: reject E-BORROW-CONFLICT (a08): agrees |
+| N-101 | `fn g() -> u32 { let x = 5u32; let mut slot: Option<&u32> = None; { let mut put = \|d: &u32\| { slot = Some(d); }; put(&x); } *slot.unwrap() }` (R6-8) | reject | `E-LOCAL-MUT-STORE` | d is higher-ranked, so storing its loan into the by-mut capture slot is rejected, though x outlives slot (F-107). rustc 1.99.1: E0521 (probe r03). `mithi` at `dcd4c87`: accept (b03): disagrees |
+| N-102 | `fn g() -> u32 { let x = 5u32; let id = \|d: &u32\| d; let r = id(&x); *r }` (R6-8) | reject | `E-REF-ESCAPE` | returning a higher-ranked parameter's loan (F-107). rustc 1.99.1: "lifetime may not live long enough" (probe r05). `mithi` at `dcd4c87`: accept (b05): disagrees |
+| N-103 | `fn g(p: (&mut Vec<&u32>, &u32)) { p.0.push(p.1) }` (R6-8, R6-11) | reject | `E-LOCAL-MUT-STORE` | the pushed value carries `ℓ_p,2*` into a place at reference position `p.1`'s inner position (F-62, per position). rustc 1.99.1: "lifetime may not live long enough" (probe r08). `mithi` at `dcd4c87`: accept (d02): disagrees |
+| N-104 | `fn g() -> u32 { let x = 5u32; let mut slot: Option<&u32> = None; { let mut put = \|d\| { slot = Some(d); }; put(&x); } *slot.unwrap() }` (R6-8) | accept | — | an unannotated parameter's loan is transferred into slot, and x outlives slot (F-61, F-107). rustc 1.99.1: compiles (probe r04). `mithi` at `dcd4c87`: accept (m25): agrees |
+| N-105 | `fn n() -> &'static str { "x" }` (R6-9) | reject | `E-LIFETIME` | a named lifetime (J2); a Dc cost X1 counts (note §11 A-12, F-108, OP-23). rustc 1.99.1: compiles (probe q11). `mithi` at `dcd4c87`: reject E-LIFETIME (e01): agrees |
+| N-106 | `struct Op { name: &'static str }` (R6-9) | reject | `E-REF-FIELD` (and `E-LIFETIME`) | a reference in a field (J2), first by source position; the lifetime is also `E-LIFETIME` (F-108). rustc 1.99.1: compiles (probe q11). `mithi` at `dcd4c87`: reject E-REF-FIELD (e02): agrees |
+| N-107 | `fn g(v: &[u32]) -> Option<u32> { let x = v.first()?; Some(*x + 1) }` (R6-13) | accept | — | `?` on `Option` in a function returning `Option` (F-112); `may_trap` true (the addition). rustc 1.99.1: compiles (probe q10). `mithi` at `dcd4c87`: accept (m15): agrees |
+| N-108 | `#[grade(exact, cross_device)] fn s(a: f64, b: f64) -> bool { 1.0 / a.max(b) < 0.0 }` (R6-15) | reject | `E-GRADE` | `f64::max`'s result carries the platform taint until P-20 pins its signed zero; for `a = -0.0, b = 0.0` the bool can differ between conforming targets (F-113). `mithi` at `dcd4c87`: accept (m26): disagrees |
+| N-109 | in module `store`: `enum E { A(Lease), B(Lease) } fn f(store: &Store, e: E) uses { io, spawn } { match e { E::A(l) => store.release(l), _ => {} } }`; accepted twin: `fn f(store: &Store, o: Option<Lease>) uses { io, spawn } { if let Some(l) = o { store.release(l) } }` (R6-11) | reject | `E-LINEAR-DROP` | the `_` arm matches `B`, which carries a Linear value, and would drop it (F-111). The twin is accepted: the variant `if let` does not match, `None`, carries no Linear value. `mithi` at `dcd4c87`: reject E-LINEAR-DROP (m27); the twin is accepted (m28): agrees |
 
 ---
 
@@ -1246,7 +1337,9 @@ is [inference]: no program was compiled (no rustc on this host). Primary codes f
    R2-19).
 3. **Secondary facts** are compared and reported, but are not gate inputs: row, `may_trap`, trap
    sites, and the output grade's scope and NaN bit.
-4. Negative items N-01 to N-06 are gate items. N-07 to N-69 are reported only (note Q11).
+4. Negative items N-01 to N-06 are gate items. N-07 to N-109 are reported only (note Q11). For
+   N-70 to N-109, verdicts.json's `mithi_dcd4c87` field records the result of `mithi` at `dcd4c87`
+   (note §12.2), so that a later build's agreement can be compared with it.
 5. An item whose `verdict` is `not-derived` (D-D10, D-D19, D-D23) is compared only on its
    `x1_expected`; `not-derived` is never an expected verdict (note §0.3).
 6. The X1 design draft would reject several canonical constructs with `E-X1-NOTYET` (note §12, Q9).
