@@ -5,7 +5,7 @@ ROADMAP anchor: [§3.5](../../ROADMAP.md#35-x4-evaluator-integrity-kit-weeks-06)
 
 This is a DRAFT (revision 2, 2026-10-16, after two same-family, independent-context reviews; §12). Under the [collection rule](../README.md#pre-registration-lifecycle-roadmap-1-rule-1-d0-12), **no data may be collected under it** until it is FROZEN and either SIGNED (D0-12) or covered by an explicit Owner instruction to start X4. Thresholds here may make a ROADMAP threshold more precise (a unit, a counting rule, a sample) but never loosen it; where this record and ROADMAP §3.5 differ, ROADMAP wins. Evidence tags: **[M]** measured, **[D]** derived, **[S]** simulated, **[G]** judgment, **[inference]**, **[target]**; dossier numbers keep their label.
 
-[PLAN §8](../PLAN.md#8-pre-registration-schedule) proposes six X4 records (X4-noise-pilot, X4-calibration, X4-hacks-catalogue, X4-hacks-blind, X4-forge-sim, X4-tombstone-replay). This DRAFT holds the content for all six; the lead engineer splits it at freeze. Design detail for every clause: [experiments/x4-integrity/](../../../experiments/x4-integrity/) (DESIGN, MEASUREMENT-SERVICE, SANDBOX, HACK-SUITE, F1-SIM, TOMBSTONES, stats/).
+[PLAN §8](../PLAN.md#8-pre-registration-schedule) proposes six X4 records (X4-noise-pilot, X4-calibration, X4-hacks-catalogue, X4-hacks-blind, X4-forge-sim, X4-tombstone-replay). This DRAFT holds the content for all six; the lead engineer splits it at freeze. *(Pointer, 2026-10-23: two are split out as their own DRAFTs, [X4-noise-pilot](X4-noise-pilot.md) (the σ-pilot) and [X4-calibration](X4-calibration.md) (A/A, planted regression, end-to-end A/A, A/A′, positive control, time-to-pass, σ_d, throughput; owner questions 1, 3–6, 8 and 9). For those clauses the split records govern; where they differ from the text below, the text below is superseded and kept for history. The differences are listed in [X4-calibration §10.3](X4-calibration.md#103-cross-record-items-for-the-lead-engineer-outside-this-tracks-files).)* Design detail for every clause: [experiments/x4-integrity/](../../../experiments/x4-integrity/) (DESIGN, MEASUREMENT-SERVICE, SANDBOX, HACK-SUITE, F1-SIM, TOMBSTONES, stats/).
 
 ---
 
@@ -33,6 +33,8 @@ This is a DRAFT (revision 2, 2026-10-16, after two same-family, independent-cont
 
 ## 3. Arms / configurations
 
+*(Pointer, 2026-10-23: σ-pilot → [X4-noise-pilot §3](X4-noise-pilot.md#3-arms--configurations); A/A, A/A′, positive control, planted regression and end-to-end A/A → [X4-calibration §3](X4-calibration.md#3-arms--configurations).)*
+
 - **σ-pilot (the X4 noise pilot of PLAN §8).** 20 microbenchmark A/A sessions × 24 blocks and 3 end-to-end A/A sessions × 12 blocks [target]. Excluded from **every** gate tally. It fixes, by the frozen rules of §7, every data-dependent constant; the values enter this record by a dated *pre-data fill-in amendment* before the first counted session.
 - **A/A calibration (superiority null).** Arm A = `hearth-c-ref`; arm B = the **identical** binary. Microbenchmark run type (single-thread, L2-resident Q4/Q8 matvec, pinned per [06 §6.7](../../architecture/06-forge.md)); ≥ 100 counted sessions, each to N blocks, no sentinels. End-to-end decode run type: ≥ 20 sessions to N.
 - **A/A′ layout arm.** A vs A′ (§2), microbenchmark, 20 sessions to N [target]. Descriptive.
@@ -45,6 +47,8 @@ This is a DRAFT (revision 2, 2026-10-16, after two same-family, independent-cont
 ---
 
 ## 4. Units and counting rules (defined before data)
+
+*(Pointer, 2026-10-23: the calibration units, counted sets, horizon (L, by C29), coverage rule, scorers and their run-reference rule, margins, planted level, separate long run (revision 2: sized by σ̂_d, on the raw d), two-sided premise check and time-to-pass → [X4-calibration §4](X4-calibration.md#4-units-and-counting-rules-defined-before-data); the pilot's → [X4-noise-pilot §4](X4-noise-pilot.md#4-units-and-counting-rules-defined-before-data).)*
 
 - **Run** — one execution of one arm to its declared stopping point (N decode tokens, or K matvec repetitions), in a fresh harness process with the pinned environment block and a fresh empty scratch tree, passing the per-run start-state gate; the precise clock is the harness's, with **all threads, pool tasks and I/O joined before it stops**; the run counts only if the **orchestrator's out-of-process bracket** agrees (|Δ_h − Δ_o| ≤ τ_clock; CPU after `STOP` ≤ κ_post), the **thread census** and post-`t1` CPU rule pass, **every thread's MXCSR** is default, affinity/priority equal the job values, and the **orchestrator's** hash of the output section equals the golden/incumbent hash ([MEASUREMENT-SERVICE.md §3](../../../experiments/x4-integrity/MEASUREMENT-SERVICE.md)).
 - **Block** — one A/B comparison in randomised ABBA or BAAB order; block statistic `d = log(T_B / T_A)` ([06 §6.1](../../architecture/06-forge.md)). ROADMAP's "ABAB interleaving" is implemented as randomised ABBA/BAAB, which is more precise and not looser (ABBA cancels linear drift within a block).
@@ -106,6 +110,8 @@ This is a DRAFT (revision 2, 2026-10-16, after two same-family, independent-cont
 
 ## 7. Analysis procedure (deterministic script, named)
 
+*(Pointer, 2026-10-23: the calibration's pinned constants, its two C07 branches and its fill-in rules → [X4-calibration §3a and §7](X4-calibration.md#7-analysis-procedure-deterministic-named).)*
+
 - **Binomial OC:** `experiments/x4-integrity/stats/x4_calibration.py --binomial-only`, exact rational arithmetic [D].
 - **e-processes:** the Rust orchestrator computes them; the Python reference in `x4_calibration.py` (`PREREG`) must reproduce the **golden wealth path** (`--golden`) **bit for bit** ([06 §5.3](../../architecture/06-forge.md) condition 2). The pinned constants:
 
@@ -139,7 +145,7 @@ The Gatekeeper (deterministic code + Owner key) computes the verdict from this f
 
 ## 8. Outcomes: pass / amber / kill / narrowing
 
-The gate and kill are **copied from ROADMAP §3.5** and made operational per §4:
+The gate and kill are **copied from ROADMAP §3.5** and made operational per §4. *(Pointer, 2026-10-23: the calibration outcomes, A/A, planted regression, end-to-end A/A, positive control and the P25 trigger → [X4-calibration §8](X4-calibration.md#8-outcomes-pass--amber--fail--incomplete-each-with-its-action).)*
 
 **Gate** — all required:
 - 100% of both hack batches are caught at or before their declared stage (IF-5); for X4, batch (a) is its 38 testable entries, and the verdict states "caught k of 38; a22, a23, a24 excluded as not testable at X4".
@@ -279,7 +285,7 @@ Owner: ______________________   Date: __________
 Signs the record frozen at commit: ________
 ```
 
-**Owner questions raised by X4 (for the signed record; none changes a ROADMAP threshold):**
+**Owner questions raised by X4 (for the signed record; none changes a ROADMAP threshold):** *(Pointer, 2026-10-23: questions 1, 3, 4, 5, 6, 8 and 9 are carried by [X4-calibration §3a, §3b and §13](X4-calibration.md#13-signature-block) (OWNER-QUEUE C05–C09, D25; DELEGATED P21, P22, P24 and P25 adopted; question 4 = C07, not delegable, P23); question 2 by OWNER-QUEUE D12 (DELEGATED P55); question 7 by C10.)*
 1. **Quiet-hour budget.** ROADMAP §10's M0 line pairs ≈ 60 h with σ_d 2% and ≈ 215 h with σ_d 4%. X4 alone exceeds it at **both** ends: the ROADMAP-comparable part of the plan (A/A, planted, end-to-end A/A, plus X3's plan figure) is 111.2 h (+85%) and 368.8 h (+72%); the full plan with pilot, long runs, A/A′ and positive control is ≈ 122–135 h and ≈ 325–403 h [D from G]. A reconstruction with n blocks per session instead of N gives 60.9 / 223.4 h [D] (COST.md §1.4: 60.3 / 221.0 h), so the likely cause is that §10 used n while §3.5 requires N = 2n [inference]. Should the §10 line be revised in a signed record before collection? Should the end-to-end A/A sessions stop at the first NI pass (saves 13.0 h / 78.1 h [D], but σ̂_d from such sessions can be biased low, so σ_d would then come only from sessions run to N), and is the end-to-end count capped at 20 regardless of σ_d? D-22 fires if the planned hours exceed the agreed windows.
 2. **Trigger grammar gap.** Fact arguments containing hyphens (`hearth.invariant_hash(INV-DET-1)`) do not parse under [06 §7.2](../../architecture/06-forge.md) as written. Should invariant ids be quoted strings, or should the grammar admit a hyphenated identifier class for known-id namespaces? ([TOMBSTONES.md §4.1](../../../experiments/x4-integrity/TOMBSTONES.md); X4 did not change the normative grammar.)
 3. **A/A rule leniency, both ways.** The ≤ 2/100 rule is *stricter* than validity requires (it fails an e-process exactly at Ville's 5% bound with probability 0.88 [D]) and *lenient* relative to the ≈ 0–0.4% false-alarm rate a sound evaluator shows in simulation (it passes half the time at a true 2.7% [D]); with sessions correlated within nights it is more lenient still (0.24 at 5% for 4 nights × 25 [D]). Confirm the design point, or tighten before data.
