@@ -2332,3 +2332,7 @@ of §12.
 | §12, Appendix D D11 (pre-freeze review) | Pre-freeze review logged; 179 unit tests; re-pinned | disclosure |
 | §4.7 accumulators (desktop re-run, 2026-10-17; pre-freeze tooling fix, §10) | A dependency-breaking idiom (XOR/SUB r,r; (V)XORPS/PD, (V)PXOR, VPXORD/Q, (V)PSUBB/W/D/Q, (V)PCMPGTB/W/D/Q, (V)PCMPEQB/W/D/Q x,x; no memory, immediate, write mask or merge masking) reads no value (`x0_loops.py` `dependency_breaking`, used by `uses_defs`); 4 unit tests (183 in all); re-pinned: `scripts/x0_loops.py`, `scripts/tests/test_loops_prefreeze.py`, `class/frozen_inputs.json` | precision (removes the 50 false P3(c) flags of the first re-run, 26 on the mock and 24 on the regression set, and the doubled count of the earlier enclosing loops; an idiom's result is a constant, so no partial result can be hidden; reviewer attention: unreviewed) |
 | §2, §4.7, §5 P1, §7, §9, §12, Appendix D D3/D11 (desktop re-run, 2026-10-17) | Results of the re-run of step 88 (first run, fix, final run), the decode comparison of the rewritten `smoke_dispatch.c`, the header-environment confirmation, the throwaway-repository test of the freeze point and the Hearth HEAD read recorded | disclosure |
+
+## Signature (interim, 2026-10-23)
+
+Signed by the Owner in chat (interim form) on 2026-10-23: see [docs/m0/sittings/2026-10-23-chat/SIGNATURES.md](../sittings/2026-10-23-chat/SIGNATURES.md) and OWNER-ANSWERS.md batch 4. To be re-signed with a signed tag at sitting 2 (2026-10-25). Appended after freeze; the body above is unchanged.

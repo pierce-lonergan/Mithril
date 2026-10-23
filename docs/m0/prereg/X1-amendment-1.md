@@ -630,3 +630,7 @@ message.
 ## Amendments
 
 None.
+
+## Signature (interim, 2026-10-23)
+
+Signed by the Owner in chat (interim form) on 2026-10-23: see [docs/m0/sittings/2026-10-23-chat/SIGNATURES.md](../sittings/2026-10-23-chat/SIGNATURES.md) and OWNER-ANSWERS.md batch 4. To be re-signed with a signed tag at sitting 2 (2026-10-25). Appended after freeze; the body above is unchanged.

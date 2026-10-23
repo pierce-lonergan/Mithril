@@ -77,3 +77,33 @@ Consequences:
   pilot night still needs its signature and Pierce's own pre-night settings.
 - The X1 smoke run needs X1-amendment-1 frozen and signed with its pinned fields (model, effort, share s, cap, K).
   It runs only with the account idle, at a time Pierce agrees.
+
+## 2026-10-23, batch 4: Pierce's written delegation and interim signature (about 08:40 PT)
+
+Pierce's message, verbatim:
+
+> Do whatever YOU need to do to make this project work. you have my full written permission to ratify any
+> conflicting statements. effort is "max/ultracode"
+
+He sent it in reply to the lead engineer's proposed sitting-1 signature block, whose only blank was the X1 effort
+level. The lead engineer reads it as follows. Each reading is recorded here so that Pierce can correct it at
+sitting 2 (Sun 2026-10-25), when he re-signs with his key:
+
+1. **Interim signature, sitting 1 (chat form).** The message adopts the proposed block by reference and fills its
+   one blank: **effort = `max`**. "ultracode" names the orchestration mode, not an effort level. The full signed
+   text and its scope are in [sittings/2026-10-23-chat/SIGNATURES.md](sittings/2026-10-23-chat/SIGNATURES.md).
+2. **Written delegation** ("full written permission to ratify any conflicting statements", "do whatever YOU need
+   to do to make this project work"). The lead engineer may resolve conflicts between records, and may settle the
+   open owner items the work needs:
+   - by adopting each item's registered recommended default where one exists;
+   - otherwise by a documented choice.
+
+   Every use is logged in [DELEGATED.md](DELEGATED.md), with options, choice, reason and reversibility.
+3. **Limits the lead engineer applies to the delegation** (so that it cannot defeat what the project's rules are
+   for):
+   - It never loosens a ROADMAP threshold. It never makes a post-data change in the favourable direction.
+   - It never overrides the coexistence rules, the safety scope (documented, vendor-supported interfaces only),
+     or a FROZEN record's append-only rule.
+   - It never invents an Owner statement.
+   - Gate verdicts are computed by `judge.py` and reported to Pierce before they are acted on.
+   - Spending money stays excluded: R1 still says no metered API.
