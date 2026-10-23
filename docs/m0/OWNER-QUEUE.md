@@ -21,6 +21,12 @@ are class B, so DELEGATED P2, P3 and P23 are recommendations only, and D0_BRIEF 
 "Answers received 2026-10-16" onward are kept as written on 10-16, with dated annotations where a later answer
 changed them.
 
+*(Status pointer, 2026-10-23, sitting2 track: the sitting-2 packet is
+[sittings/2026-10-25/PACKET.md](sittings/2026-10-25/PACKET.md) (DRAFT, reviewed once and revised 10-23; FINAL by
+Sat 10-24, night). Batch 5 (the X1 smoke-run approval, OWNER-ANSWERS) is re-signed there with X1-amendment-1. The lead engineer adopted 59 of the
+proposed rows at `0ba059e` ("ADOPTED 2026-10-23" in DELEGATED.md); this file's sentences saying "none adopted"
+predate that commit.)*
+
 **Sources read for this queue (2026-10-16):** [OWNER-ANSWERS.md](OWNER-ANSWERS.md) (commit `11210a8`,
 the verbatim log of Pierce's chat answers); [D0_BRIEF](../D0_BRIEF.md) §0–§7; [PLAN](PLAN.md) §3,
 §7, §8, §12, §13; [COST](COST.md) §5; the records [X0](prereg/X0-census.md) (Appendix A),
@@ -102,6 +108,12 @@ and for X1-amendment-1.
 
 This is the input for the packet, which is due Sat 10-24, night (R6), not the packet itself. Items are ordered
 by the date their work stops.
+
+*(Status pointer, 2026-10-23: the packet is [sittings/2026-10-25/PACKET.md](sittings/2026-10-25/PACKET.md). Its
+agenda: 1 key and re-signature (item 1 below, with batch 5); 2 the adopted rows and batch 4's readings (item 2);
+3 X0-A1's P3(c) reading (new); 4 Q17, C07, Q18 (items 3–4); 5 the X3/X4 priority class (new); 6 the X4 noise
+pilot, C29 and the pre-night settings (item 4); 7 the WSL trace files on the desktop's C: (new; the follow-up
+"desktop housekeeping"); 8 the X1 smoke run's idle window (item 7). Items 5, 6 and 8–14 are under its "Deferred".)*
 
 1. **The signing key and the re-signature (D0-9a, R7).** Make the SSH signing key (HOW-TO-SIGN steps 1–2). Then
    re-sign by tag everything chat-signed on 10-23:
@@ -190,6 +202,10 @@ by the date their work stops.
     - desktop housekeeping.
 
 ### Delegable (class C): proposed rows
+
+*(Status pointer, 2026-10-23: 59 rows adopted by the lead engineer at `0ba059e`; P2, P3 and P23 not adopted. Pierce
+reviews them at sitting 2, [packet](sittings/2026-10-25/PACKET.md) item 2. The paragraph below is as written before
+the adoption.)*
 
 Each C item except D24 (no owner action) has a row in [DELEGATED.md](DELEGATED.md) marked "PROPOSED, pending
 lead engineer". P4 covers R2's open checkpoint. Three more rows, P2, P3 and P23, sit on the B items A04, A05 and
@@ -758,4 +774,5 @@ full list, with the sources read and the three modified fixes, is in
 | 2026-10-16 | Created: answers received (R1–R3), Next 3 asks, sitting-1 agenda, 115 queue entries in six tiers (A 19, B 13, C 38, D 25, E 9, F 11 [M: counted by script]), standing gaps, follow-ups, source map | owner track (Claude; not reviewed) |
 | 2026-10-23 | Queue track (Claude; not reviewed). Carried batches 3 and 4 (R7–R10, I4) from OWNER-ANSWERS at `3a66d49`. Classified all 116 entries (A 16, B 38, C 62). Wrote the sitting-2 list (class B) and proposed rows P1–P62 in DELEGATED.md ("PROPOSED, pending lead engineer"; none adopted), with a full analysis of Q18 (P2). Marked the answered rows inline, and the 10-18 agenda and "Next 3 asks" as history. Read 10-18 "Latest sitting" dates as 10-25 | queue track (Claude, same family) |
 | 2026-10-23 | Revised after one review (Claude, same family, independent context; 13 findings, all accepted, 3 with a modified fix). A04, A05 and C07 now class B (A 16, B 41, C 59); DELEGATED P2, P3 and P23 are recommendations only; Q5 open; sitting-2 items 1–4 and 12 revised; class-B defaults excluded from the default-on-lapse convention; review log | queue track reviser (Claude, same family, independent context from the reviewer) |
+| 2026-10-23 | Status pointers only: the sitting-2 packet (`sittings/2026-10-25/PACKET.md`), the adoption of 59 rows at `0ba059e`, and where each sitting-2 list item went. No entry, class or default changed. The packet was then reviewed once (Claude, same family, independent context; 11 findings, all accepted, 3 modified; its review log) and the pointer updated | sitting2 track (Claude; the pointers themselves not reviewed) |
 | 2026-10-16 | Revised after one review (Claude, same family, independent context; 13 findings, all accepted). Batch 2 carried (R4–R6) with the option text of every answer, cited from OWNER-ANSWERS.md; earlier instructions I1–I3; A03 marked answered; A02, A07 and A17 reduced to their residuals; A04 without a default, GEN_OWNER first, GEN_CLAUDE added as a labelled loosening, two template-count rows; A05 split into PROVISIONAL and FULL; A20 added (plan terms and capacity); "Latest sitting" column in Tiers A–D against Sunday sittings; sitting-1 agenda with the records to sign if FROZEN and one estimate; follow-ups for stale D0-10 text and the WSL keepalive; review log. 116 queue entries (A 20, B 13, C 38, D 25, E 9, F 11) | owner track reviser (Claude, same family, independent context from the reviewer) |

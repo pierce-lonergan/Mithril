@@ -26,9 +26,9 @@ re-examined.
 
 ---
 
-## Proposed rows (queue track, 2026-10-23): PROPOSED, pending lead engineer
+## Rows drafted by the queue track (2026-10-23); adoption status per row
 
-**None of the rows below is adopted.** The queue track (a Claude agent) drafted them on 2026-10-23 from its
+**Status (lead engineer, 2026-10-23, 13:00 PT):** each row below now says ADOPTED or Not delegable. The lead engineer adopted the 59 delegable rows in place after the owner-advocate review, rather than copying them into the table above. The queue track (a Claude agent) drafted them on 2026-10-23 from its
 classification of every open item ([OWNER-QUEUE](OWNER-QUEUE.md#classification-of-every-open-item-2026-10-23)).
 The lead engineer adopts a row by copying it into the table above with a number and the adoption date, or
 rejects it. Until then each row is a proposal, and the item it names stays open. Reviewed once (Claude, same
