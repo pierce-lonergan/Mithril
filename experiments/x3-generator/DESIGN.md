@@ -11,6 +11,50 @@ with §1 rule 4, §10 and DR-018. Pre-registration: [docs/m0/prereg/X3-generator
 those terms precise but never loosens them. Where it proposes something ROADMAP leaves undefined, it
 says so and lists the point in §14 (Owner questions).
 
+**Status note, 2026-10-23 (x3gen track, laptop; changes no definition in this document; revised the
+same day after one independent review).** A development prototype of x3gen now exists in
+[proto/](proto/README.md). It contains:
+- the meaning, with one precondition added after the review (P6 below);
+- P1–P15, each with its own precondition check (P7 refuses every application, because lowering has
+  no unrolling);
+- lowering and the printer for the six variants;
+- the seam patch;
+- C1–C4 as a symbolic checker over a bounded shape set. Rules on the program text (C2 on every
+  statement, executed or not; taint, affine-address and carried-state rules for C1; C scoping;
+  statement and branch coverage) carry each shape's result to every block count G [inference].
+  T, r0, r1 and ldy stay bounded.
+
+Development data only, [M] on the laptop:
+- **Bit identity.** The generated kernels match Hearth's scalar, AVX2 and AVX-512 kernels on
+  3 × 38,656 cases (n up to 8192, T up to 40, ldy = rows included) with NaN, inf and subnormal
+  scales, and also under seven non-default MXCSR modes.
+- **Checker.** It accepts the six variants and rejects all 41 planted programs: the 28 of §4.5 and
+  13 added after the review (29–41).
+- **Line counts.** S = 43 schedule lines, or 50 counting 7 specificity-lint false positives
+  (`prefetch`), against H = 303 (reproduced exactly), so S/H = 0.165 [D].
+
+Review: one same-family, independent-context review on 2026-10-23, 0 blocker / 2 major / 3 minor
+findings, all accepted and fixed ([proto README, Review log](proto/README.md#review-log)).
+
+Proposed for this document (not applied: the body is outside the x3gen track's write scope):
+- §3.3, a row **P6**: "T ≤ 1 or ldy ≥ r1 − r0". Source: `hx_quant.h:49-57` leaves it implicit;
+  callers pass ldy = the row count (`model.c:448-452`, `:881`, `:888`) with r1 ≤ rows
+  (`model.c:298-300`). Role: makes the meaning and C4's "written once" well defined. Without it
+  Hearth's own AVX2 and scalar kernels disagree [M].
+- §4.5, items 29–41 of `proto/tests/planted.py`, as "more may be added" allows.
+- §4.3, C2's lint on the whole text, and the coverage, taint, affine-address, carried-state and
+  scoping rules of C1, as the implemented form of (i)–(iv) for G.
+
+Not done:
+- the T1 export;
+- transliterations of the hand kernels;
+- C1–C4 over symbolic addresses in T, r0, r1 and ldy;
+- MSVC and Linux builds;
+- any timing;
+- the meaning review of §3.5, and a review of the revised checker.
+
+[proto/README.md](proto/README.md) lists the deviations from this document.
+
 **Evidence tags.** [M] measured, with who and when. [D] derived, with the formula. [S] simulated.
 [G] judgment. [inference]. [target] a pre-registered choice. Numbers quoted from a dossier keep its
 label, for example "69.6 GB/s (measured, busy machine) [R11]". "x3 track" means the agent that wrote

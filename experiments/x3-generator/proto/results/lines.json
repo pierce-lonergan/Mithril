@@ -1,0 +1,276 @@
+{
+ "H_closure": [
+  {
+   "file": "quant.c",
+   "loc": 66,
+   "members": [
+    "HX_CANON_NAN",
+    "mm_q4_scalar",
+    "mm_q8_scalar",
+    "q_canon",
+    "q_f16"
+   ],
+   "sha256": "ccca0c16b636bec481becbc5bc85ee889e56c865a19b1196d93c8c630824ad14",
+   "tokens": 719
+  },
+  {
+   "file": "quant_avx2.c",
+   "loc": 129,
+   "members": [
+    "HX_CANON_NAN",
+    "Q4_BS",
+    "Q8_BS",
+    "TCH",
+    "canon8",
+    "ld4s",
+    "ld_u16",
+    "mm_q4_avx2",
+    "mm_q8_avx2",
+    "mm_quant",
+    "qtile8",
+    "red8"
+   ],
+   "sha256": "fd9900d4a5af784f6b94b3167259928bc13910684d8bc407e74f6afde6e0264c",
+   "tokens": 1718
+  },
+  {
+   "file": "quant_avx512.c",
+   "loc": 174,
+   "members": [
+    "HX_CANON_NAN",
+    "Q4_BS",
+    "Q8_BS",
+    "TCH",
+    "act_bcast",
+    "canon16",
+    "canon4",
+    "dot_quad",
+    "ld4s",
+    "ld_u16",
+    "mm_q4_avx512",
+    "mm_q8_avx512",
+    "mm_quant",
+    "q16_scales",
+    "q16_step",
+    "q16_unpack",
+    "qtile16",
+    "qtile4",
+    "red_quad1",
+    "red_quads",
+    "unpack_quad"
+   ],
+   "sha256": "ff1c42e07a0f9b6e81f912c7747594191d4ee53ba01b78b1aa77034c01a1f961",
+   "tokens": 2470
+  }
+ ],
+ "H_loc": 303,
+ "H_tok": 4188,
+ "I_files": {
+  "__init__.py": {
+   "black_unchanged": true,
+   "loc": 2,
+   "tokens": 13
+  },
+  "avx2.py": {
+   "black_unchanged": true,
+   "loc": 60,
+   "tokens": 684
+  },
+  "avx512.py": {
+   "black_unchanged": true,
+   "loc": 71,
+   "tokens": 812
+  },
+  "base.py": {
+   "black_unchanged": true,
+   "loc": 26,
+   "tokens": 221
+  },
+  "scalar.py": {
+   "black_unchanged": true,
+   "loc": 70,
+   "tokens": 477
+  }
+ },
+ "I_loc": 229,
+ "L_files": {
+  "__init__.py": {
+   "black_unchanged": true,
+   "loc": 0,
+   "tokens": 0
+  },
+  "check.py": {
+   "black_unchanged": true,
+   "loc": 1308,
+   "tokens": 13873
+  },
+  "emit.py": {
+   "black_unchanged": true,
+   "loc": 77,
+   "tokens": 643
+  },
+  "fmt.py": {
+   "black_unchanged": true,
+   "loc": 74,
+   "tokens": 600
+  },
+  "fp32.py": {
+   "black_unchanged": true,
+   "loc": 42,
+   "tokens": 367
+  },
+  "interp.py": {
+   "black_unchanged": true,
+   "loc": 86,
+   "tokens": 1020
+  },
+  "ir.py": {
+   "black_unchanged": true,
+   "loc": 175,
+   "tokens": 1358
+  },
+  "lower.py": {
+   "black_unchanged": true,
+   "loc": 380,
+   "tokens": 3969
+  },
+  "lp.py": {
+   "black_unchanged": true,
+   "loc": 104,
+   "tokens": 497
+  },
+  "printer.py": {
+   "black_unchanged": true,
+   "loc": 177,
+   "tokens": 1590
+  },
+  "recipes.py": {
+   "black_unchanged": true,
+   "loc": 386,
+   "tokens": 4636
+  },
+  "sched.py": {
+   "black_unchanged": true,
+   "loc": 338,
+   "tokens": 3063
+  },
+  "sem.py": {
+   "black_unchanged": true,
+   "loc": 391,
+   "tokens": 3938
+  }
+ },
+ "L_loc": 3538,
+ "M_loc": 63,
+ "M_plus_S_over_H": 0.3729,
+ "S_loc_conservative": 50,
+ "S_max_loc": 90,
+ "S_over_H": 0.165,
+ "S_sched_over_H": 0.1419,
+ "S_schedule_files": {
+  "x3gen/hearth/__init__.py": {
+   "black_unchanged": true,
+   "loc": 0,
+   "tokens": 0
+  },
+  "x3gen/hearth/schedules/__init__.py": {
+   "black_unchanged": true,
+   "loc": 0,
+   "tokens": 0
+  },
+  "x3gen/hearth/schedules/avx2.py": {
+   "black_unchanged": true,
+   "loc": 15,
+   "tokens": 154
+  },
+  "x3gen/hearth/schedules/avx512.py": {
+   "black_unchanged": true,
+   "loc": 20,
+   "tokens": 214
+  },
+  "x3gen/hearth/schedules/scalar.py": {
+   "black_unchanged": true,
+   "loc": 8,
+   "tokens": 52
+  }
+ },
+ "S_schedule_loc": 43,
+ "S_schedule_tok": 420,
+ "S_tok_over_H_tok": 0.1003,
+ "black": "26.5.1",
+ "generated_c": {
+  "x3_gen.h": {
+   "loc": 10,
+   "tokens": 209
+  },
+  "x3_q_avx2.c": {
+   "loc": 615,
+   "tokens": 7557
+  },
+  "x3_q_avx512.c": {
+   "loc": 992,
+   "tokens": 13119
+  },
+  "x3_q_scalar.c": {
+   "loc": 119,
+   "tokens": 1141
+  }
+ },
+ "isa_lint": {
+  "entries": 101,
+  "multi_call_entries": [],
+  "named_exception": "scalar.h2f_bits (x3_h2f routine)"
+ },
+ "lint_flagged": {
+  "x3gen/core/lower.py": {
+   "310": {
+    "hits": [
+     "tch"
+    ],
+    "text": "pf = n.vec.get(\"prefetch\")"
+   },
+   "315": {
+    "hits": [
+     "tch"
+    ],
+    "text": "\"_mm_prefetch_t0\","
+   }
+  },
+  "x3gen/core/sched.py": {
+   "368": {
+    "hits": [
+     "tch"
+    ],
+    "text": "def prefetch(self, buf, ahead):"
+   },
+   "370": {
+    "hits": [
+     "tch"
+    ],
+    "text": "raise PrimError(\"P11: prefetch of the weight stream only, at a positive distance\")"
+   },
+   "371": {
+    "hits": [
+     "tch"
+    ],
+    "text": "pid = self.s.log.add(\"P11.prefetch\", (buf, ahead), [\"P11: inserts _mm_prefetch only\"])"
+   },
+   "374": {
+    "hits": [
+     "tch"
+    ],
+    "text": "lp.vec = dict(lp.vec, prefetch=(ahead, pid))"
+   }
+  },
+  "x3gen/isa/avx2.py": {
+   "68": {
+    "hits": [
+     "tch"
+    ],
+    "text": "entry(\"_mm_prefetch_t0\", \"_mm_prefetch((const char *)({0}), _MM_HINT_T0)\", None, \"hint\", (\"hint\",))"
+   }
+  }
+ },
+ "lint_flagged_lines": 7,
+ "python": "3.12.10"
+}

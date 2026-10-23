@@ -1,0 +1,1013 @@
+{
+ "configs": {
+  "clang_D_flags": {
+   "commands": {
+    "bitid/rt.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang.exe --target=x86_64-pc-windows-msvc -DHEARTH_BUILD_DLL -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -nostdlibinc -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen -fno-builtin -c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\rt.c -o C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clang_D_flags\\rt.obj",
+    "bitid/x3_bitid.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang.exe --target=x86_64-pc-windows-msvc -DHEARTH_BUILD_DLL -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -nostdlibinc -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen -c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\x3_bitid.c -o C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clang_D_flags\\x3_bitid.obj",
+    "gen/x3_q_avx2.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang.exe --target=x86_64-pc-windows-msvc -DHEARTH_BUILD_DLL -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -nostdlibinc -mavx2 -mfma -mf16c -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen -c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen\\x3_q_avx2.c -o C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clang_D_flags\\x3_q_avx2.obj",
+    "gen/x3_q_avx512.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang.exe --target=x86_64-pc-windows-msvc -DHEARTH_BUILD_DLL -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -nostdlibinc -mavx512f -mavx512bw -mavx512vl -mavx512vnni -mavx2 -mfma -mf16c -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen -c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen\\x3_q_avx512.c -o C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clang_D_flags\\x3_q_avx512.obj",
+    "gen/x3_q_scalar.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang.exe --target=x86_64-pc-windows-msvc -DHEARTH_BUILD_DLL -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -nostdlibinc -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen -c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen\\x3_q_scalar.c -o C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clang_D_flags\\x3_q_scalar.obj",
+    "hearth/engine/src/hearth_scalar_ref.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang.exe --target=x86_64-pc-windows-msvc -DHEARTH_BUILD_DLL -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -nostdlibinc -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen -c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src\\hearth_scalar_ref.c -o C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clang_D_flags\\hearth_scalar_ref.obj",
+    "hearth/engine/src/quant_avx2.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang.exe --target=x86_64-pc-windows-msvc -DHEARTH_BUILD_DLL -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -nostdlibinc -mavx2 -mfma -mf16c -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen -c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src\\quant_avx2.c -o C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clang_D_flags\\quant_avx2.obj",
+    "hearth/engine/src/quant_avx512.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang.exe --target=x86_64-pc-windows-msvc -DHEARTH_BUILD_DLL -O3 -DNDEBUG -std=gnu11 -ffp-contract=off -Wall -Wextra -Wno-unused-parameter -nostdlibinc -mavx512f -mavx512bw -mavx512vl -mavx512vnni -mavx2 -mfma -mf16c -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen -c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src\\quant_avx512.c -o C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clang_D_flags\\quant_avx512.obj"
+   },
+   "corpus": {
+    "a_scale_classes": {
+     "huge": 19149,
+     "inf": 70980,
+     "nan": 25771,
+     "normal": 7511429,
+     "subnormal": 843456,
+     "zero": 607551
+    },
+    "cases": 38656,
+    "faults": [],
+    "grid": {
+     "T": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      16,
+      17,
+      23,
+      24,
+      25,
+      33,
+      40
+     ],
+     "ldy": "rows + (case mod 6)",
+     "n": [
+      64,
+      128,
+      192,
+      320,
+      4096,
+      384,
+      448,
+      8192
+     ],
+     "rows": "1-67 on the base grid; [1, 2, 3, 4, 5, 7, 8, 9, 15, 16, 17, 20, 31, 33, 47, 63, 64, 65, 67] where n is 384, 448 or 8192, or T > 16",
+     "shapes_per_dtype_and_seed": 4832
+    },
+    "mismatches": {
+     "hearth_avx2": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "hearth_avx512": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "hearth_scalar": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "x3_avx2": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "x3_avx512": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "x3_scalar": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     }
+    },
+    "mxcsr_modes": {
+     "cases": 38656,
+     "modes": {
+      "DAZ": "0x1fc0",
+      "FTZ": "0x9f80",
+      "FTZ_DAZ": "0x9fc0",
+      "RD": "0x3f80",
+      "RU": "0x5f80",
+      "RZ": "0x7f80",
+      "RZ_FTZ_DAZ": "0xffc0"
+     },
+     "pair_mismatch_words": {
+      "DAZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "FTZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "FTZ_DAZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "RD": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "RU": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "RZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "RZ_FTZ_DAZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      }
+     },
+     "vs_hearth_scalar_same_mode": {
+      "DAZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "FTZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "FTZ_DAZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "RD": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "RU": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "RZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "RZ_FTZ_DAZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      }
+     },
+     "words_changed_by_mode": {
+      "DAZ": 234442,
+      "FTZ": 142121,
+      "FTZ_DAZ": 234442,
+      "RD": 5459089,
+      "RU": 5415243,
+      "RZ": 5873585,
+      "RZ_FTZ_DAZ": 5962714
+     },
+     "words_per_mode": 12198518
+    },
+    "ref_output_classes": {
+     "inf": 1363763,
+     "nan": 3280397,
+     "normal": 6386970,
+     "subnormal": 19131,
+     "zero": 151923
+    },
+    "ref_output_hash_fnv1a64": "07b12e55b1ece83b",
+    "seconds": 175.8,
+    "seeds": [
+     20261023,
+     20261024,
+     20261025,
+     20261026
+    ],
+    "total_mismatches": 0,
+    "w_scale_classes": {
+     "edge": 934478,
+     "inf": 159813,
+     "nan": 159845,
+     "normal": 20169540,
+     "subnormal": 1635878,
+     "zero": 934542
+    }
+   },
+   "dll_sha256": "8fdcb0989302e336eca1e5bf6bb565eaccf12827536fe7ceb267cd08a2585223",
+   "mxcsr_during_run": "0x1fbb",
+   "objscan": {
+    "gen/x3_q_avx2.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 1282,
+     "mxcsr": []
+    },
+    "gen/x3_q_avx512.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 2097,
+     "mxcsr": []
+    },
+    "gen/x3_q_scalar.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 805,
+     "mxcsr": []
+    },
+    "hearth/engine/src/hearth_scalar_ref.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 1013,
+     "mxcsr": []
+    },
+    "hearth/engine/src/quant_avx2.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 4075,
+     "mxcsr": []
+    },
+    "hearth/engine/src/quant_avx512.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 3859,
+     "mxcsr": []
+    }
+   },
+   "warnings": {
+    "bitid/rt.c": [],
+    "bitid/x3_bitid.c": [],
+    "gen/x3_q_avx2.c": [],
+    "gen/x3_q_avx512.c": [],
+    "gen/x3_q_scalar.c": [],
+    "hearth/engine/src/hearth_scalar_ref.c": [],
+    "hearth/engine/src/quant_avx2.c": [],
+    "hearth/engine/src/quant_avx512.c": []
+   }
+  },
+  "clangcl_B": {
+   "commands": {
+    "bitid/rt.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /clang:-fno-builtin /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\rt.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B\\rt.obj",
+    "bitid/x3_bitid.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\x3_bitid.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B\\x3_bitid.obj",
+    "gen/x3_q_avx2.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X /arch:AVX2 -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen\\x3_q_avx2.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B\\x3_q_avx2.obj",
+    "gen/x3_q_avx512.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X /arch:AVX512 -mavx512vnni -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen\\x3_q_avx512.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B\\x3_q_avx512.obj",
+    "gen/x3_q_scalar.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen\\x3_q_scalar.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B\\x3_q_scalar.obj",
+    "hearth/engine/src/hearth_scalar_ref.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src\\hearth_scalar_ref.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B\\hearth_scalar_ref.obj",
+    "hearth/engine/src/quant_avx2.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X /arch:AVX2 -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src\\quant_avx2.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B\\quant_avx2.obj",
+    "hearth/engine/src/quant_avx512.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X /arch:AVX512 -mavx512vnni -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src\\quant_avx512.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B\\quant_avx512.obj"
+   },
+   "corpus": {
+    "a_scale_classes": {
+     "huge": 19149,
+     "inf": 70980,
+     "nan": 25771,
+     "normal": 7511429,
+     "subnormal": 843456,
+     "zero": 607551
+    },
+    "cases": 38656,
+    "faults": [],
+    "grid": {
+     "T": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      16,
+      17,
+      23,
+      24,
+      25,
+      33,
+      40
+     ],
+     "ldy": "rows + (case mod 6)",
+     "n": [
+      64,
+      128,
+      192,
+      320,
+      4096,
+      384,
+      448,
+      8192
+     ],
+     "rows": "1-67 on the base grid; [1, 2, 3, 4, 5, 7, 8, 9, 15, 16, 17, 20, 31, 33, 47, 63, 64, 65, 67] where n is 384, 448 or 8192, or T > 16",
+     "shapes_per_dtype_and_seed": 4832
+    },
+    "mismatches": {
+     "hearth_avx2": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "hearth_avx512": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "hearth_scalar": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "x3_avx2": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "x3_avx512": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "x3_scalar": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     }
+    },
+    "mxcsr_modes": {
+     "cases": 38656,
+     "modes": {
+      "DAZ": "0x1fc0",
+      "FTZ": "0x9f80",
+      "FTZ_DAZ": "0x9fc0",
+      "RD": "0x3f80",
+      "RU": "0x5f80",
+      "RZ": "0x7f80",
+      "RZ_FTZ_DAZ": "0xffc0"
+     },
+     "pair_mismatch_words": {
+      "DAZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "FTZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "FTZ_DAZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "RD": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "RU": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "RZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "RZ_FTZ_DAZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      }
+     },
+     "vs_hearth_scalar_same_mode": {
+      "DAZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "FTZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "FTZ_DAZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "RD": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "RU": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "RZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "RZ_FTZ_DAZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      }
+     },
+     "words_changed_by_mode": {
+      "DAZ": 234442,
+      "FTZ": 142121,
+      "FTZ_DAZ": 234442,
+      "RD": 5459089,
+      "RU": 5415243,
+      "RZ": 5873585,
+      "RZ_FTZ_DAZ": 5962714
+     },
+     "words_per_mode": 12198518
+    },
+    "ref_output_classes": {
+     "inf": 1363763,
+     "nan": 3280397,
+     "normal": 6386970,
+     "subnormal": 19131,
+     "zero": 151923
+    },
+    "ref_output_hash_fnv1a64": "07b12e55b1ece83b",
+    "seconds": 100.6,
+    "seeds": [
+     20261023,
+     20261024,
+     20261025,
+     20261026
+    ],
+    "total_mismatches": 0,
+    "w_scale_classes": {
+     "edge": 934478,
+     "inf": 159813,
+     "nan": 159845,
+     "normal": 20169540,
+     "subnormal": 1635878,
+     "zero": 934542
+    }
+   },
+   "dll_sha256": "126c653e45e5a2cd40625f7259da82c0ff77206d356dfa7100f9b0f0a5e5e1e3",
+   "mxcsr_during_run": "0x1fa0",
+   "objscan": {
+    "gen/x3_q_avx2.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 1307,
+     "mxcsr": []
+    },
+    "gen/x3_q_avx512.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 2121,
+     "mxcsr": []
+    },
+    "gen/x3_q_scalar.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 804,
+     "mxcsr": []
+    },
+    "hearth/engine/src/hearth_scalar_ref.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 1009,
+     "mxcsr": []
+    },
+    "hearth/engine/src/quant_avx2.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 4137,
+     "mxcsr": []
+    },
+    "hearth/engine/src/quant_avx512.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 3868,
+     "mxcsr": []
+    }
+   },
+   "warnings": {
+    "bitid/rt.c": [
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "bitid/x3_bitid.c": [
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "gen/x3_q_avx2.c": [
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "gen/x3_q_avx512.c": [
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "gen/x3_q_scalar.c": [
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "hearth/engine/src/hearth_scalar_ref.c": [
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "hearth/engine/src/quant_avx2.c": [
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "hearth/engine/src/quant_avx512.c": [
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ]
+   }
+  },
+  "clangcl_B_nocontract": {
+   "commands": {
+    "bitid/rt.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X /clang:-ffp-contract=off -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /clang:-fno-builtin /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\rt.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B_nocontract\\rt.obj",
+    "bitid/x3_bitid.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X /clang:-ffp-contract=off -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\x3_bitid.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B_nocontract\\x3_bitid.obj",
+    "gen/x3_q_avx2.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X /clang:-ffp-contract=off /arch:AVX2 -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen\\x3_q_avx2.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B_nocontract\\x3_q_avx2.obj",
+    "gen/x3_q_avx512.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X /clang:-ffp-contract=off /arch:AVX512 -mavx512vnni -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen\\x3_q_avx512.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B_nocontract\\x3_q_avx512.obj",
+    "gen/x3_q_scalar.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X /clang:-ffp-contract=off -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen\\x3_q_scalar.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B_nocontract\\x3_q_scalar.obj",
+    "hearth/engine/src/hearth_scalar_ref.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X /clang:-ffp-contract=off -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src\\hearth_scalar_ref.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B_nocontract\\hearth_scalar_ref.obj",
+    "hearth/engine/src/quant_avx2.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X /clang:-ffp-contract=off /arch:AVX2 -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src\\quant_avx2.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B_nocontract\\quant_avx2.obj",
+    "hearth/engine/src/quant_avx512.c": "C:\\Users\\Pierce Lonergan\\tools\\llvm-23.1.3\\bin\\clang-cl.exe /nologo -DHEARTH_BUILD_DLL -D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /O2 /Ob2 /DNDEBUG /std:c11 -MD /experimental:c11atomics /fp:precise /utf-8 /W3 /X /clang:-ffp-contract=off /arch:AVX512 -mavx512vnni -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\bitid\\shim -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src -IC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\gen /c C:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\hearth\\engine\\src\\quant_avx512.c /FoC:\\Users\\PIERCE~1\\AppData\\Local\\Temp\\claude\\C--Users-Pierce-Lonergan-Desktop-repos-Mithril--claude-worktrees-mystifying-khorana-167d4d\\f22d3799-400c-4b40-82ec-52fabeff91b2\\scratchpad\\x3gen-rev\\bitid\\build\\clangcl_B_nocontract\\quant_avx512.obj"
+   },
+   "corpus": {
+    "a_scale_classes": {
+     "huge": 19149,
+     "inf": 70980,
+     "nan": 25771,
+     "normal": 7511429,
+     "subnormal": 843456,
+     "zero": 607551
+    },
+    "cases": 38656,
+    "faults": [],
+    "grid": {
+     "T": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      16,
+      17,
+      23,
+      24,
+      25,
+      33,
+      40
+     ],
+     "ldy": "rows + (case mod 6)",
+     "n": [
+      64,
+      128,
+      192,
+      320,
+      4096,
+      384,
+      448,
+      8192
+     ],
+     "rows": "1-67 on the base grid; [1, 2, 3, 4, 5, 7, 8, 9, 15, 16, 17, 20, 31, 33, 47, 63, 64, 65, 67] where n is 384, 448 or 8192, or T > 16",
+     "shapes_per_dtype_and_seed": 4832
+    },
+    "mismatches": {
+     "hearth_avx2": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "hearth_avx512": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "hearth_scalar": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "x3_avx2": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "x3_avx512": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     },
+     "x3_scalar": {
+      "batched_vs_single": 0,
+      "no_write_T0_or_empty": 0,
+      "row_splits": 0,
+      "subrange_footprint": 0,
+      "whole_vs_hearth_scalar": 0
+     }
+    },
+    "mxcsr_modes": {
+     "cases": 38656,
+     "modes": {
+      "DAZ": "0x1fc0",
+      "FTZ": "0x9f80",
+      "FTZ_DAZ": "0x9fc0",
+      "RD": "0x3f80",
+      "RU": "0x5f80",
+      "RZ": "0x7f80",
+      "RZ_FTZ_DAZ": "0xffc0"
+     },
+     "pair_mismatch_words": {
+      "DAZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "FTZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "FTZ_DAZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "RD": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "RU": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "RZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      },
+      "RZ_FTZ_DAZ": {
+       "x3_avx2~hearth_avx2": 0,
+       "x3_avx512~hearth_avx512": 0,
+       "x3_scalar~hearth_scalar": 0
+      }
+     },
+     "vs_hearth_scalar_same_mode": {
+      "DAZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "FTZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "FTZ_DAZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "RD": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "RU": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "RZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      },
+      "RZ_FTZ_DAZ": {
+       "hearth_avx2": 0,
+       "hearth_avx512": 0,
+       "hearth_scalar": 0,
+       "x3_avx2": 0,
+       "x3_avx512": 0,
+       "x3_scalar": 0
+      }
+     },
+     "words_changed_by_mode": {
+      "DAZ": 234442,
+      "FTZ": 142121,
+      "FTZ_DAZ": 234442,
+      "RD": 5459089,
+      "RU": 5415243,
+      "RZ": 5873585,
+      "RZ_FTZ_DAZ": 5962714
+     },
+     "words_per_mode": 12198518
+    },
+    "ref_output_classes": {
+     "inf": 1363763,
+     "nan": 3280397,
+     "normal": 6386970,
+     "subnormal": 19131,
+     "zero": 151923
+    },
+    "ref_output_hash_fnv1a64": "07b12e55b1ece83b",
+    "seconds": 159.6,
+    "seeds": [
+     20261023,
+     20261024,
+     20261025,
+     20261026
+    ],
+    "total_mismatches": 0,
+    "w_scale_classes": {
+     "edge": 934478,
+     "inf": 159813,
+     "nan": 159845,
+     "normal": 20169540,
+     "subnormal": 1635878,
+     "zero": 934542
+    }
+   },
+   "dll_sha256": "1bafa00f85c6c1c332aea97b1ba6beb004d04d7d6470750b50b8f1727b65409e",
+   "mxcsr_during_run": "0x1fbb",
+   "objscan": {
+    "gen/x3_q_avx2.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 1307,
+     "mxcsr": []
+    },
+    "gen/x3_q_avx512.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 2121,
+     "mxcsr": []
+    },
+    "gen/x3_q_scalar.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 804,
+     "mxcsr": []
+    },
+    "hearth/engine/src/hearth_scalar_ref.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 1009,
+     "mxcsr": []
+    },
+    "hearth/engine/src/quant_avx2.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 4137,
+     "mxcsr": []
+    },
+    "hearth/engine/src/quant_avx512.c": {
+     "approx": [],
+     "fma": [],
+     "fma_count": 0,
+     "instructions": 3868,
+     "mxcsr": []
+    }
+   },
+   "warnings": {
+    "bitid/rt.c": [
+     "clang-cl: warning: overriding '-ffp-model=precise' option with '-ffp-contract=off' [-Woverriding-option]",
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "bitid/x3_bitid.c": [
+     "clang-cl: warning: overriding '-ffp-model=precise' option with '-ffp-contract=off' [-Woverriding-option]",
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "gen/x3_q_avx2.c": [
+     "clang-cl: warning: overriding '-ffp-model=precise' option with '-ffp-contract=off' [-Woverriding-option]",
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "gen/x3_q_avx512.c": [
+     "clang-cl: warning: overriding '-ffp-model=precise' option with '-ffp-contract=off' [-Woverriding-option]",
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "gen/x3_q_scalar.c": [
+     "clang-cl: warning: overriding '-ffp-model=precise' option with '-ffp-contract=off' [-Woverriding-option]",
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "hearth/engine/src/hearth_scalar_ref.c": [
+     "clang-cl: warning: overriding '-ffp-model=precise' option with '-ffp-contract=off' [-Woverriding-option]",
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "hearth/engine/src/quant_avx2.c": [
+     "clang-cl: warning: overriding '-ffp-model=precise' option with '-ffp-contract=off' [-Woverriding-option]",
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ],
+    "hearth/engine/src/quant_avx512.c": [
+     "clang-cl: warning: overriding '-ffp-model=precise' option with '-ffp-contract=off' [-Woverriding-option]",
+     "clang-cl: warning: argument unused during compilation: '/experimental:c11atomics' [-Wunused-command-line-argument]"
+    ]
+   }
+  }
+ },
+ "cpu": "AMD64 Family 25 Model 116 Stepping 1, AuthenticAMD",
+ "date": "2026-10-23",
+ "generated_equals_committed": {
+  "x3_gen.h": true,
+  "x3_q_avx2.c": true,
+  "x3_q_avx512.c": true,
+  "x3_q_scalar.c": true
+ },
+ "hearth": {
+  "blobs": {
+   "docs/NUMERICS.md": "7c558db51dd2ec39ef9e83e0a7fcb774047e1190",
+   "engine/src/hx_quant.h": "df7e75e3e14f7281e80d47b20fab67a2ab5c99cb",
+   "engine/src/quant.c": "e95496945c254335c0d25aafb374575e0db930fe",
+   "engine/src/quant_avx2.c": "a2004d22fd50c62b9bffa52b77b02870cd066986",
+   "engine/src/quant_avx512.c": "9c7586b16e589989edec35c4bf8c1eee373da886"
+  },
+  "clean": true,
+  "head": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220",
+  "staged_sha256": {
+   "engine/include/hearth.h": "f52a199a1b59adc45a7d07f6086b5d74026176fbaaa8b6ad8e3fae89cb847812",
+   "engine/src/hx_platform.h": "214749f22232cce147d795f5dd3640c5264383a67b2047406281c296b51e7fa5",
+   "engine/src/hx_quant.h": "2350cf6fd33fd56351ac252e9de68b202eaca164afbf59f9859024f1443dfa52",
+   "engine/src/quant_avx2.c": "fd9900d4a5af784f6b94b3167259928bc13910684d8bc407e74f6afde6e0264c",
+   "engine/src/quant_avx512.c": "ff1c42e07a0f9b6e81f912c7747594191d4ee53ba01b78b1aa77034c01a1f961",
+   "hearth_scalar_ref.c (extracted)": "10eb963e37578fe2b6cbb1aa5d811bc724116c52c0dd37fa4c7b9f2431e1b3eb"
+  }
+ },
+ "machine": "laptop (Ryzen 9 7940HS, Zen 4, Windows 11)",
+ "meaning_differential": {
+  "cases": 240,
+  "mismatches_vs_interpreter": {
+   "hearth_avx2": 0,
+   "hearth_avx512": 0,
+   "hearth_scalar": 0,
+   "x3_avx2": 0,
+   "x3_avx512": 0,
+   "x3_scalar": 0
+  },
+  "outputs": 2162,
+  "seed": 20261023
+ },
+ "output_map_precondition_demo": {
+  "shape": {
+   "T": 3,
+   "dtype": "q4",
+   "ldy": 4,
+   "n": 128,
+   "r0": 0,
+   "r1": 12
+  },
+  "violates": "T <= 1 or ldy >= r1 - r0",
+  "words_differing": {
+   "hearth_avx2 vs hearth_scalar": 4,
+   "hearth_avx512 vs hearth_scalar": 0,
+   "x3_avx2 vs hearth_avx2": 0,
+   "x3_avx512 vs hearth_avx512": 0,
+   "x3_scalar vs hearth_scalar": 0
+  }
+ },
+ "python": "3.12.10",
+ "toolchain": {
+  "clang": "clang version 23.1.3 (https://github.com/llvm/llvm-project 0d261d1ca552c95a8f007e061c787ac7132fbcbc)",
+  "clang_exe_sha256": "9584244d83bb095c5a2983f814692cb50e0b8d2916585516cad8f3e8596d8261"
+ },
+ "what": "X3 prototype bit-identity, development data (not gate data)",
+ "x3gen": {
+  "files": {
+   "x3_gen.h": "bd1819c8d6bdf0628ca240a0818d8b0374ab145d03c16a311d3a870fe0cb8d37",
+   "x3_q_avx2.c": "b8784256e5cf4c8e82ed7293a123cab3ca0bb478ddd9f36225546a25258f0ba2",
+   "x3_q_avx512.c": "bd3a87d94499cf79af9c779c1f563b562e318a79671062dcb52d96e602428f34",
+   "x3_q_scalar.c": "71a1086847d3549c9280aa266c7717f079205cec0c930506f83f77effbfb6baf"
+  },
+  "generator_sha256": "1ff5cc0a5c143d6ff2fb4a692dd434fbd73848b0115e8a1a06c565bb10a1e1e3",
+  "meaning_sha256": "aa7645c5ff18ba02debd2f6a56b31d9581cd49dc4dee5ff52b2e155ce0105f1d"
+ }
+}

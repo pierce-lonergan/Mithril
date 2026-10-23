@@ -1,0 +1,503 @@
+{
+ "planted": [
+  {
+   "id": 1,
+   "what": "split accumulator over g (two partial accumulators)",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: a branch tests a block-count value: IX(== (IX(% (g, 2)), 0))",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 2,
+   "what": "FMA on acc + q",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2/B2-B7: banned instruction class fma (_mm256_fmadd_ps)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 3,
+   "what": "(i2f(I) * dw) * dx",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C1: Y[t=0, r=0] is not canon(F_{t,r}(G)) in canonical order",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 4,
+   "what": "acc = q_0, no +0.0 initial value",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: acc carries state across blocks other than as an FP accumulation X = add(X, y) (or add(y, X), which C1 then accepts only under P15)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 5,
+   "what": "pairwise tree over g",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: block-count value lv held in the narrow type int",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 6,
+   "what": "dw * dx in double, then rounded",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2/B2-B7: banned instruction class double (_x3_mul_ps_via_pd)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 7,
+   "what": "accumulation in double",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2/B2-B7: banned instruction class double (_x3_add_ps_via_pd)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 8,
+   "what": "Q8 maddubs on biased u = q + 128",
+   "variant": "avx2/q8",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C3/C1 unknown at _mm256_maddubs_epi16: maddubs may saturate: [-64770, 64770]",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 9,
+   "what": "Q4 bias -7*sum instead of -8*sum",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C3/C1 unknown at _mm256_cvtepi32_ps: integer sum differs from the meaning's at [(('x', 0, 0, 0),)]",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 10,
+   "what": "horizontal FP sum across row lanes",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C1: Y[t=0, r=0] is not canon(F_{t,r}(G)) in canonical order",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 11,
+   "what": "canon omitted",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C1: Y[t=0, r=0] is not canon(F_{t,r}(G)) in canonical order",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 12,
+   "what": "g unrolled by 2 with acc + (q0 + q1)",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: prev carries state across blocks other than as an FP accumulation X = add(X, y) (or add(y, X), which C1 then accepts only under P15)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 13,
+   "what": "prefetch replaced by a load and store",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C4: a store inside block loop g",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 14,
+   "what": "llama.cpp Q4_0 nibble order (high nibble at j+16)",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C3/C1 unknown at _mm256_cvtepi32_ps: integer sum differs from the meaning's at [(('w', 0, 0, 32), ('x', 0, 0, 16)), (('w', 0, 0, 32), ('x', 0, 0, 32))]",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 15,
+   "what": "tail stores a dead lane past r1",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C4: store to Y[2] (t=0, r=2) outside the output range",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 16,
+   "what": "g split by 2, pieces interchanged, one accumulator",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: loop g has a block-count bound but is not the canonical for (g = 0; g < G; g++)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 17,
+   "what": "g reversed",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: loop g has a block-count bound but is not the canonical for (g = 0; g < G; g++)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 18,
+   "what": "remainder of a split g run before the main part",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: loop g has a block-count bound but is not the canonical for (g = 0; g < G; g++)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 19,
+   "what": "acc[t mod 4] with token blocks of 8",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    9,
+    3,
+    18,
+    20
+   ],
+   "reason": "C1: Y[t=0, r=3] is not canon(F_{t,r}(G)) in canonical order",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 20,
+   "what": "Q4 srli_epi16(v, 4) without the following & mask",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C3/C1 unknown at _mm256_maddubs_epi16: value depends on more than two input bytes",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 21,
+   "what": "Q8 sign_epi8 operands swapped",
+   "variant": "avx2/q8",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C3/C1 unknown at _mm256_maddubs_epi16: no polynomial identity for an integer operand",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 22,
+   "what": "x = -128 admitted in the declared activation range",
+   "variant": "avx2/q8",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C3/C1 unknown at _mm256_maddubs_epi16: no polynomial identity for an integer operand",
+   "P5_at_primitive_time": "rejected: P5: sign transfer needs x in [-127, 127] (P1): sign(-128) overflows",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 23,
+   "what": "canon on the T == 1 path only",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    2,
+    0,
+    2,
+    3
+   ],
+   "reason": "C1: Y[t=0, r=0] is not canon(F_{t,r}(G)) in canonical order",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 24,
+   "what": "canon applied before the final add",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: acc carries state across blocks other than as an FP accumulation X = add(X, y) (or add(y, X), which C1 then accepts only under P15)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 25,
+   "what": "acc_0 = -0.0",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C1: Y[t=0, r=0] is not canon(F_{t,r}(G)) in canonical order",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 26,
+   "what": "lane k stored to row r + lanes - 1 - k",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C1: Y[t=0, r=0] is not canon(F_{t,r}(G)) in canonical order",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 27,
+   "what": "AVX-512 quad lanes mis-assigned in the reduction",
+   "variant": "avx512/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    16,
+    17
+   ],
+   "reason": "C3/C1 unknown at _mm512_cvtepi32_ps: integer sum mixes blocks or rows: 2 weight and 1 activation blocks",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 28,
+   "what": "hoisted activation load executes when T = 0",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    2,
+    0,
+    2,
+    3
+   ],
+   "reason": "C1: input load outside a block loop",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 29,
+   "what": "FMA on acc + q, only when G >= 6",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2/B2-B7: banned instruction class fma (_mm256_fmadd_ps)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 30,
+   "what": "inside the g loop: if (G >= 6) FMA else add",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2/B2-B7: banned instruction class fma (_mm256_fmadd_ps)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 31,
+   "what": "g reversed, only when G >= 6",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: a branch tests a block-count value: IX(>= (G, 6))",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 32,
+   "what": "(i2f(I) * dw) * dx on the T > 1 path, only when T >= 18",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 coverage",
+   "reason": "C1: a For statement never runs on the shape set (unchecked code)",
+   "per_shape_execution_alone": "accepted"
+  },
+  {
+   "id": 33,
+   "what": "accumulation in double, only when r1 - r0 >= 64",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C2 static audit",
+   "reason": "C2/B2-B7: banned instruction class double (_x3_add_ps_via_pd)",
+   "per_shape_execution_alone": "accepted"
+  },
+  {
+   "id": 34,
+   "what": "canon omitted, only when n >= 4096",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: n is read other than to declare the block count",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 35,
+   "what": "AVX-512 quad lanes swapped, only when G >= 6",
+   "variant": "avx512/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: a branch tests a block-count value: IX(>= (G, 6))",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 36,
+   "what": "activation address ap + (g >= 6 ? 24 : 40) (llama order late)",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: a block-count value reaches '?:': IX(?: (IX(>= (g, 6)), 24, 40))",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 37,
+   "what": "a copy G2 = G decides: g reversed when G2 >= 6",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: a branch tests a block-count value: IX(>= (G2, 6))",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 38,
+   "what": "activation address + (G-1)(G-2)(G-3)(G-4)(G-5)*72",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: a block-count value reaches '*': IX(* (IX(* (IX(* (IX(* (IX(- (G, 1)), IX(- (G, 2)))), IX(- (G, 3)))), IX(- (G, 4)))), IX(-",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 39,
+   "what": "loop-carried counters C(g, 5) shift the high half from block 5",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C1 structure",
+   "reason": "C1: kc5 carries state across blocks other than as an FP accumulation X = add(X, y) (or add(y, X), which C1 then accepts only under P15)",
+   "per_shape_execution_alone": "accepted"
+  },
+  {
+   "id": 40,
+   "what": "G-dependent constant selects (i2f*dw)*dx when G >= 6",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "shape",
+   "shape": [
+    64,
+    1,
+    0,
+    2,
+    3
+   ],
+   "reason": "C1: a block-count value is used as data (_mm256_set1_epi32)",
+   "per_shape_execution_alone": "rejected"
+  },
+  {
+   "id": 41,
+   "what": "canon into shadowing declarations; C stores the outer value",
+   "variant": "avx2/q4",
+   "verdict": "rejected",
+   "stage": "C scoping",
+   "reason": "C1: the declaration of cv repeats or shadows a visible name",
+   "per_shape_execution_alone": "accepted"
+  }
+ ],
+ "rejected": 41,
+ "total": 41,
+ "rejected_by_stage": {
+  "C1 structure": 16,
+  "C2 static audit": 6,
+  "shape": 17,
+  "C1 coverage": 1,
+  "C scoping": 1
+ },
+ "per_shape_execution_alone_rejects": 37
+}

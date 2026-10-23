@@ -1,0 +1,331 @@
+{
+ "what": "C harness mutation adequacy (quick corpus, clangcl_B)",
+ "rows": [
+  {
+   "id": 1,
+   "what": "split accumulator over g (two partial accumulators)",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 9932,
+   "faults": 0
+  },
+  {
+   "id": 2,
+   "what": "FMA on acc + q",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 11133,
+   "faults": 0
+  },
+  {
+   "id": 3,
+   "what": "(i2f(I) * dw) * dx",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 13992,
+   "faults": 0
+  },
+  {
+   "id": 4,
+   "what": "acc = q_0, no +0.0 initial value",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 657,
+   "faults": 0
+  },
+  {
+   "id": 5,
+   "what": "pairwise tree over g",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 7127,
+   "faults": 0
+  },
+  {
+   "id": 6,
+   "what": "dw * dx in double, then rounded",
+   "variant": "avx2/q4",
+   "c_harness": "not printable (test-only entry has no single-intrinsic spelling)"
+  },
+  {
+   "id": 7,
+   "what": "accumulation in double",
+   "variant": "avx2/q4",
+   "c_harness": "not printable (test-only entry has no single-intrinsic spelling)"
+  },
+  {
+   "id": 8,
+   "what": "Q8 maddubs on biased u = q + 128",
+   "variant": "avx2/q8",
+   "c_harness": "detected",
+   "mismatching_words": 48206,
+   "faults": 0
+  },
+  {
+   "id": 9,
+   "what": "Q4 bias -7*sum instead of -8*sum",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 45628,
+   "faults": 0
+  },
+  {
+   "id": 10,
+   "what": "horizontal FP sum across row lanes",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 53691,
+   "faults": 0
+  },
+  {
+   "id": 11,
+   "what": "canon omitted",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 20103,
+   "faults": 0
+  },
+  {
+   "id": 12,
+   "what": "g unrolled by 2 with acc + (q0 + q1)",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 6329,
+   "faults": 0
+  },
+  {
+   "id": 13,
+   "what": "prefetch replaced by a load and store",
+   "variant": "avx2/q4",
+   "c_harness": "NOT detected",
+   "mismatching_words": 0,
+   "faults": 0
+  },
+  {
+   "id": 14,
+   "what": "llama.cpp Q4_0 nibble order (high nibble at j+16)",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 48248,
+   "faults": 0
+  },
+  {
+   "id": 15,
+   "what": "tail stores a dead lane past r1",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 4610,
+   "faults": 280
+  },
+  {
+   "id": 16,
+   "what": "g split by 2, pieces interchanged, one accumulator",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 9665,
+   "faults": 0
+  },
+  {
+   "id": 17,
+   "what": "g reversed",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 11018,
+   "faults": 0
+  },
+  {
+   "id": 18,
+   "what": "remainder of a split g run before the main part",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 3871,
+   "faults": 0
+  },
+  {
+   "id": 19,
+   "what": "acc[t mod 4] with token blocks of 8",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 97761,
+   "faults": 0
+  },
+  {
+   "id": 20,
+   "what": "Q4 srli_epi16(v, 4) without the following & mask",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 45999,
+   "faults": 0
+  },
+  {
+   "id": 21,
+   "what": "Q8 sign_epi8 operands swapped",
+   "variant": "avx2/q8",
+   "c_harness": "detected",
+   "mismatching_words": 47613,
+   "faults": 0
+  },
+  {
+   "id": 22,
+   "what": "x = -128 admitted in the declared activation range",
+   "variant": "avx2/q8",
+   "c_harness": "n/a (a precondition change, not a program change)"
+  },
+  {
+   "id": 23,
+   "what": "canon on the T == 1 path only",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 45028,
+   "faults": 0
+  },
+  {
+   "id": 24,
+   "what": "canon applied before the final add",
+   "variant": "avx2/q4",
+   "c_harness": "NOT detected",
+   "mismatching_words": 0,
+   "faults": 0
+  },
+  {
+   "id": 25,
+   "what": "acc_0 = -0.0",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 657,
+   "faults": 0
+  },
+  {
+   "id": 26,
+   "what": "lane k stored to row r + lanes - 1 - k",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 57113,
+   "faults": 0
+  },
+  {
+   "id": 27,
+   "what": "AVX-512 quad lanes mis-assigned in the reduction",
+   "variant": "avx512/q4",
+   "c_harness": "detected",
+   "mismatching_words": 31198,
+   "faults": 0
+  },
+  {
+   "id": 28,
+   "what": "hoisted activation load executes when T = 0",
+   "variant": "avx2/q4",
+   "c_harness": "NOT detected",
+   "mismatching_words": 0,
+   "faults": 0
+  },
+  {
+   "id": 29,
+   "what": "FMA on acc + q, only when G >= 6",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 4496,
+   "faults": 0
+  },
+  {
+   "id": 30,
+   "what": "inside the g loop: if (G >= 6) FMA else add",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 4496,
+   "faults": 0
+  },
+  {
+   "id": 31,
+   "what": "g reversed, only when G >= 6",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 6369,
+   "faults": 0
+  },
+  {
+   "id": 32,
+   "what": "(i2f(I) * dw) * dx on the T > 1 path, only when T >= 18",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 8095,
+   "faults": 0
+  },
+  {
+   "id": 33,
+   "what": "accumulation in double, only when r1 - r0 >= 64",
+   "variant": "avx2/q4",
+   "c_harness": "not printable (test-only entry has no single-intrinsic spelling)"
+  },
+  {
+   "id": 34,
+   "what": "canon omitted, only when n >= 4096",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 6182,
+   "faults": 0
+  },
+  {
+   "id": 35,
+   "what": "AVX-512 quad lanes swapped, only when G >= 6",
+   "variant": "avx512/q4",
+   "c_harness": "detected",
+   "mismatching_words": 5184,
+   "faults": 0
+  },
+  {
+   "id": 36,
+   "what": "activation address ap + (g >= 6 ? 24 : 40) (llama order late)",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 8308,
+   "faults": 0
+  },
+  {
+   "id": 37,
+   "what": "a copy G2 = G decides: g reversed when G2 >= 6",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 6369,
+   "faults": 0
+  },
+  {
+   "id": 38,
+   "what": "activation address + (G-1)(G-2)(G-3)(G-4)(G-5)*72",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 0,
+   "faults": 90
+  },
+  {
+   "id": 39,
+   "what": "loop-carried counters C(g, 5) shift the high half from block 5",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 0,
+   "faults": 90
+  },
+  {
+   "id": 40,
+   "what": "G-dependent constant selects (i2f*dw)*dx when G >= 6",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 3529,
+   "faults": 0
+  },
+  {
+   "id": 41,
+   "what": "canon into shadowing declarations; C stores the outer value",
+   "variant": "avx2/q4",
+   "c_harness": "detected",
+   "mismatching_words": 20103,
+   "faults": 0
+  }
+ ],
+ "detected": 34,
+ "not_detected": [
+  13,
+  24,
+  28
+ ]
+}

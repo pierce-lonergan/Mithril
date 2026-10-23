@@ -1,0 +1,401 @@
+{
+ "build": {
+  "config": "clangcl_B",
+  "dll_sha256": "f4857e20380ff63735052719463025a625b2c408bd4c66ffbd0fb52f39ad81d0"
+ },
+ "canon_lowerings_exhaustive": {
+  "avx2": {
+   "mismatches_over_2^32": 0,
+   "seconds": 4.3
+  },
+  "avx512": {
+   "mismatches_over_2^32": 0,
+   "seconds": 4.3
+  },
+  "avx512vl": {
+   "mismatches_over_2^32": 0,
+   "seconds": 4.6
+  },
+  "scalar": {
+   "mismatches_over_2^32": 0,
+   "seconds": 4.9
+  }
+ },
+ "date": "2026-10-23",
+ "entries": {
+  "_mm256_abs_epi8": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_add_epi16": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_add_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_add_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_and_si256": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_blendv_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_cmp_ps_unord": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_cmpgt_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_cvtepi32_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_cvtph_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_hadd_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_inserti128_si256[1]": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_madd_epi16": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_maddubs_epi16": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_mul_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_permute2x128_si256[32]": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_permute2x128_si256[49]": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_set1_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_set1_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_sign_epi8": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_srli_epi16[4]": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm256_sub_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_add_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_add_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_and_si512": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_broadcast_i32x4": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_cmp_ps_mask_unord": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_cvtepi32_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_cvtph_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_dpbusd_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_inserti64x4[1]": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_mask_mov_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_mul_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_permutexvar_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_set1_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_set1_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_shuffle_epi32[177]": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_shuffle_epi32[78]": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_shuffle_i64x2[136]": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_shuffle_i64x2[221]": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_srli_epi16[4]": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_sub_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_unpackhi_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_unpackhi_epi64": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_unpacklo_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_unpacklo_epi64": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm512_xor_si512": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm_add_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm_cmp_ps_mask_unord": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm_cvtepi32_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm_cvtph_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm_cvtsi64_si128": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm_mask_mov_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm_mul_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm_set1_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm_set1_ps": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm_set_epi64x": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  },
+  "_mm_sub_epi32": {
+   "MISMATCH": 0,
+   "declined": 0,
+   "first_bad": null,
+   "ok": 20000
+  }
+ },
+ "entries_mismatching": [],
+ "hearth": {
+  "blobs": {
+   "docs/NUMERICS.md": "7c558db51dd2ec39ef9e83e0a7fcb774047e1190",
+   "engine/src/hx_quant.h": "df7e75e3e14f7281e80d47b20fab67a2ab5c99cb",
+   "engine/src/quant.c": "e95496945c254335c0d25aafb374575e0db930fe",
+   "engine/src/quant_avx2.c": "a2004d22fd50c62b9bffa52b77b02870cd066986",
+   "engine/src/quant_avx512.c": "9c7586b16e589989edec35c4bf8c1eee373da886"
+  },
+  "clean": true,
+  "head": "b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220",
+  "staged_sha256": {
+   "engine/include/hearth.h": "f52a199a1b59adc45a7d07f6086b5d74026176fbaaa8b6ad8e3fae89cb847812",
+   "engine/src/hx_platform.h": "214749f22232cce147d795f5dd3640c5264383a67b2047406281c296b51e7fa5",
+   "engine/src/hx_quant.h": "2350cf6fd33fd56351ac252e9de68b202eaca164afbf59f9859024f1443dfa52",
+   "engine/src/quant_avx2.c": "fd9900d4a5af784f6b94b3167259928bc13910684d8bc407e74f6afde6e0264c",
+   "engine/src/quant_avx512.c": "ff1c42e07a0f9b6e81f912c7747594191d4ee53ba01b78b1aa77034c01a1f961",
+   "hearth_scalar_ref.c (extracted)": "10eb963e37578fe2b6cbb1aa5d811bc724116c52c0dd37fa4c7b9f2431e1b3eb"
+  }
+ },
+ "machine": "laptop (Ryzen 9 7940HS, Zen 4)",
+ "scalar_h2f_bits_all_65536": {
+  "vs_f16c_cvtph": 0,
+  "vs_hearth_q_f16": 0
+ },
+ "what": "isa entry validation against compiled intrinsics (development data, laptop)"
+}

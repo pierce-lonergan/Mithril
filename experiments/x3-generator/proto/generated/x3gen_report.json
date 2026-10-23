@@ -1,0 +1,1250 @@
+{
+ "generator_sha256": "1ff5cc0a5c143d6ff2fb4a692dd434fbd73848b0115e8a1a06c565bb10a1e1e3",
+ "meaning_sha256": "aa7645c5ff18ba02debd2f6a56b31d9581cd49dc4dee5ff52b2e155ce0105f1d",
+ "variants": [
+  {
+   "name": "hx_x3_mm_q8_scalar",
+   "isa": "scalar",
+   "meaning": "q_matmul_q8",
+   "schedule_sha256": "bcbb5d547d24ab460b48c4cd9b1d1d570c368b5715c4e9f30235838f3e67a3ea",
+   "primitives": [
+    {
+     "id": "P12.map_fp#1",
+     "prim": "P12.map_fp",
+     "args": [
+      "table"
+     ],
+     "facts": [
+      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under P3"
+     ]
+    },
+    {
+     "id": "P2.reorder#2",
+     "prim": "P2.reorder",
+     "args": [
+      "t",
+      "r"
+     ],
+     "facts": [
+      "P2: at most one of t, r is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P5.lower_isum#3",
+     "prim": "P5.lower_isum",
+     "args": [
+      "scalar_loop",
+      []
+     ],
+     "facts": [
+      "E1: |I| <= 64*128*127 = 1040384 < 2^24, so i2f is exact",
+      "P5: scalar int32 sum of exact products; |partial| <= 1040384"
+     ]
+    },
+    {
+     "id": "P14.load_scales#4",
+     "prim": "P14.load_scales",
+     "args": [
+      "scalar",
+      "h2f_bits"
+     ],
+     "facts": [
+      "P14: integer packing of f16 bit patterns, then exact widening"
+     ]
+    },
+    {
+     "id": "P13.canon_store#5",
+     "prim": "P13.canon_store",
+     "args": [
+      "branch"
+     ],
+     "facts": [
+      "P13: selector cmp_unord(v, v) on the stored value, replacement the canonical NaN in every lane (lifting rule, re-checked by C1)"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "hx_x3_mm_q4_scalar",
+   "isa": "scalar",
+   "meaning": "q_matmul_q4",
+   "schedule_sha256": "bcbb5d547d24ab460b48c4cd9b1d1d570c368b5715c4e9f30235838f3e67a3ea",
+   "primitives": [
+    {
+     "id": "P12.map_fp#1",
+     "prim": "P12.map_fp",
+     "args": [
+      "table"
+     ],
+     "facts": [
+      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under P3"
+     ]
+    },
+    {
+     "id": "P2.reorder#2",
+     "prim": "P2.reorder",
+     "args": [
+      "t",
+      "r"
+     ],
+     "facts": [
+      "P2: at most one of t, r is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P5.lower_isum#3",
+     "prim": "P5.lower_isum",
+     "args": [
+      "scalar_loop",
+      []
+     ],
+     "facts": [
+      "E1: |I| <= 64*8*127 = 65024 < 2^24, so i2f is exact",
+      "P5: scalar int32 sum of exact products; |partial| <= 65024"
+     ]
+    },
+    {
+     "id": "P14.load_scales#4",
+     "prim": "P14.load_scales",
+     "args": [
+      "scalar",
+      "h2f_bits"
+     ],
+     "facts": [
+      "P14: integer packing of f16 bit patterns, then exact widening"
+     ]
+    },
+    {
+     "id": "P13.canon_store#5",
+     "prim": "P13.canon_store",
+     "args": [
+      "branch"
+     ],
+     "facts": [
+      "P13: selector cmp_unord(v, v) on the stored value, replacement the canonical NaN in every lane (lifting rule, re-checked by C1)"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "hx_x3_mm_q8_avx2",
+   "isa": "avx2",
+   "meaning": "q_matmul_q8",
+   "schedule_sha256": "8b8dd4ef4b63630c5e98a1b8925e67e8e4443bde45a9cf457b8af8b5e2717fc2",
+   "primitives": [
+    {
+     "id": "P12.map_fp#1",
+     "prim": "P12.map_fp",
+     "args": [
+      "table"
+     ],
+     "facts": [
+      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under P3"
+     ]
+    },
+    {
+     "id": "P2.reorder#2",
+     "prim": "P2.reorder",
+     "args": [
+      "t",
+      "r"
+     ],
+     "facts": [
+      "P2: at most one of t, r is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P1.split#3",
+     "prim": "P1.split",
+     "args": [
+      "r",
+      8,
+      "dup_last"
+     ],
+     "facts": [
+      "P1: r = r_o + r_i is an order-preserving bijection (lexicographic)",
+      "P6: tail dup_last covers (hi - lo) mod 8 exactly once"
+     ]
+    },
+    {
+     "id": "P2.reorder#4",
+     "prim": "P2.reorder",
+     "args": [
+      "r_i",
+      "t"
+     ],
+     "facts": [
+      "P2: at most one of r_i, t is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P4.vectorize#5",
+     "prim": "P4.vectorize",
+     "args": [
+      "r_i",
+      8,
+      256,
+      "rows",
+      "mask"
+     ],
+     "facts": [
+      "P4: lane k = output r+k; the lane variable reaches only per-row leaves and the store index, so no FP op reads two lanes"
+     ]
+    },
+    {
+     "id": "P8.specialize#6",
+     "prim": "P8.specialize",
+     "args": [
+      "t",
+      [
+       "T",
+       "==",
+       1
+      ]
+     ],
+     "facts": [
+      "P8: both copies are the same program on a sub-domain"
+     ]
+    },
+    {
+     "id": "P1.split#7",
+     "prim": "P1.split",
+     "args": [
+      "t",
+      8,
+      "guard"
+     ],
+     "facts": [
+      "P1: t = t_o + t_i is an order-preserving bijection (lexicographic)",
+      "P6: tail guard covers (hi - lo) mod 8 exactly once"
+     ]
+    },
+    {
+     "id": "P2.reorder#8",
+     "prim": "P2.reorder",
+     "args": [
+      "t_i",
+      "r_i"
+     ],
+     "facts": [
+      "P2: at most one of t_i, r_i is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P3.expand#9",
+     "prim": "P3.expand",
+     "args": [
+      "acc",
+      "t_i"
+     ],
+     "facts": [
+      "P3: acc re-initialised in every iteration of t_i"
+     ]
+    },
+    {
+     "id": "P2.distribute#10",
+     "prim": "P2.distribute",
+     "args": [
+      "t_i"
+     ],
+     "facts": [
+      "P2: state private per iteration; statement order kept per chain"
+     ]
+    },
+    {
+     "id": "P2.reorder#11",
+     "prim": "P2.reorder",
+     "args": [
+      "t_i",
+      "g"
+     ],
+     "facts": [
+      "P2: at most one of t_i, g is FP-carried; no loop is reversed",
+      "P2: every accumulator in the body is private to t_i"
+     ]
+    },
+    {
+     "id": "P10.block#12",
+     "prim": "P10.block",
+     "args": [
+      "t",
+      8,
+      "r_i"
+     ],
+     "facts": [
+      "P10: composite of P1.split#7, P2.reorder#8, P3.expand#9, P2.distribute#10, P2.reorder#11"
+     ]
+    },
+    {
+     "id": "P9.hoist#13",
+     "prim": "P9.hoist",
+     "args": [
+      [
+       "W"
+      ],
+      "t_i"
+     ],
+     "facts": [
+      "P9: W-only subterms (wq, wd of the tile rows) do not mention t_i; W is read-only; the token loop runs >= 1 time whenever its block body runs (guarded split)"
+     ]
+    },
+    {
+     "id": "P5.lower_isum#14",
+     "prim": "P5.lower_isum",
+     "args": [
+      "maddubs",
+      [
+       [
+        "reduce",
+        "hadd"
+       ],
+       [
+        "signed",
+        "sign_transfer"
+       ]
+      ]
+     ],
+     "facts": [
+      "E1: |I| <= 64*128*127 = 1040384 < 2^24, so i2f is exact",
+      "P5: |w| * (x * sgn w) = w * x for w in [-128,127], x in [-127,127] (P1); re-proved by exhaustive enumeration in C3",
+      "P5: maddubs pair |.| <= 2*128*127 = 32512 <= 32767 (no saturation)",
+      "P5: halves widened to int32 before adding (2*32512 > 32767)"
+     ]
+    },
+    {
+     "id": "P14.load_scales#15",
+     "prim": "P14.load_scales",
+     "args": [
+      "gpr64",
+      "cvtph"
+     ],
+     "facts": [
+      "P14: integer packing of f16 bit patterns, then exact widening"
+     ]
+    },
+    {
+     "id": "P13.canon_store#16",
+     "prim": "P13.canon_store",
+     "args": [
+      "blendv"
+     ],
+     "facts": [
+      "P13: selector cmp_unord(v, v) on the stored value, replacement the canonical NaN in every lane (lifting rule, re-checked by C1)"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "hx_x3_mm_q4_avx2",
+   "isa": "avx2",
+   "meaning": "q_matmul_q4",
+   "schedule_sha256": "8b8dd4ef4b63630c5e98a1b8925e67e8e4443bde45a9cf457b8af8b5e2717fc2",
+   "primitives": [
+    {
+     "id": "P12.map_fp#1",
+     "prim": "P12.map_fp",
+     "args": [
+      "table"
+     ],
+     "facts": [
+      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under P3"
+     ]
+    },
+    {
+     "id": "P2.reorder#2",
+     "prim": "P2.reorder",
+     "args": [
+      "t",
+      "r"
+     ],
+     "facts": [
+      "P2: at most one of t, r is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P1.split#3",
+     "prim": "P1.split",
+     "args": [
+      "r",
+      8,
+      "dup_last"
+     ],
+     "facts": [
+      "P1: r = r_o + r_i is an order-preserving bijection (lexicographic)",
+      "P6: tail dup_last covers (hi - lo) mod 8 exactly once"
+     ]
+    },
+    {
+     "id": "P2.reorder#4",
+     "prim": "P2.reorder",
+     "args": [
+      "r_i",
+      "t"
+     ],
+     "facts": [
+      "P2: at most one of r_i, t is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P4.vectorize#5",
+     "prim": "P4.vectorize",
+     "args": [
+      "r_i",
+      8,
+      256,
+      "rows",
+      "mask"
+     ],
+     "facts": [
+      "P4: lane k = output r+k; the lane variable reaches only per-row leaves and the store index, so no FP op reads two lanes"
+     ]
+    },
+    {
+     "id": "P8.specialize#6",
+     "prim": "P8.specialize",
+     "args": [
+      "t",
+      [
+       "T",
+       "==",
+       1
+      ]
+     ],
+     "facts": [
+      "P8: both copies are the same program on a sub-domain"
+     ]
+    },
+    {
+     "id": "P1.split#7",
+     "prim": "P1.split",
+     "args": [
+      "t",
+      8,
+      "guard"
+     ],
+     "facts": [
+      "P1: t = t_o + t_i is an order-preserving bijection (lexicographic)",
+      "P6: tail guard covers (hi - lo) mod 8 exactly once"
+     ]
+    },
+    {
+     "id": "P2.reorder#8",
+     "prim": "P2.reorder",
+     "args": [
+      "t_i",
+      "r_i"
+     ],
+     "facts": [
+      "P2: at most one of t_i, r_i is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P3.expand#9",
+     "prim": "P3.expand",
+     "args": [
+      "acc",
+      "t_i"
+     ],
+     "facts": [
+      "P3: acc re-initialised in every iteration of t_i"
+     ]
+    },
+    {
+     "id": "P2.distribute#10",
+     "prim": "P2.distribute",
+     "args": [
+      "t_i"
+     ],
+     "facts": [
+      "P2: state private per iteration; statement order kept per chain"
+     ]
+    },
+    {
+     "id": "P2.reorder#11",
+     "prim": "P2.reorder",
+     "args": [
+      "t_i",
+      "g"
+     ],
+     "facts": [
+      "P2: at most one of t_i, g is FP-carried; no loop is reversed",
+      "P2: every accumulator in the body is private to t_i"
+     ]
+    },
+    {
+     "id": "P10.block#12",
+     "prim": "P10.block",
+     "args": [
+      "t",
+      8,
+      "r_i"
+     ],
+     "facts": [
+      "P10: composite of P1.split#7, P2.reorder#8, P3.expand#9, P2.distribute#10, P2.reorder#11"
+     ]
+    },
+    {
+     "id": "P9.hoist#13",
+     "prim": "P9.hoist",
+     "args": [
+      [
+       "W"
+      ],
+      "t_i"
+     ],
+     "facts": [
+      "P9: W-only subterms (wq, wd of the tile rows) do not mention t_i; W is read-only; the token loop runs >= 1 time whenever its block body runs (guarded split)"
+     ]
+    },
+    {
+     "id": "P5.lower_isum#14",
+     "prim": "P5.lower_isum",
+     "args": [
+      "maddubs",
+      [
+       [
+        "reduce",
+        "hadd"
+       ],
+       [
+        "signed",
+        "bias"
+       ]
+      ]
+     ],
+     "facts": [
+      "E1: |I| <= 64*8*127 = 65024 < 2^24, so i2f is exact",
+      "P5: maddubs pair |.| <= 2*15*127 = 3810 <= 32767 (no saturation)",
+      "P5: two halves summed in int16: |.| <= 7620 <= 32767",
+      "P5: bias identity sum(u*x) - 8*sum(x) = sum(w*x), with sum(x) = A.sum by P2"
+     ]
+    },
+    {
+     "id": "P14.load_scales#15",
+     "prim": "P14.load_scales",
+     "args": [
+      "gpr64",
+      "cvtph"
+     ],
+     "facts": [
+      "P14: integer packing of f16 bit patterns, then exact widening"
+     ]
+    },
+    {
+     "id": "P13.canon_store#16",
+     "prim": "P13.canon_store",
+     "args": [
+      "blendv"
+     ],
+     "facts": [
+      "P13: selector cmp_unord(v, v) on the stored value, replacement the canonical NaN in every lane (lifting rule, re-checked by C1)"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "hx_x3_mm_q8_avx512",
+   "isa": "avx512",
+   "meaning": "q_matmul_q8",
+   "schedule_sha256": "69972930d3ae5c830a006005b99f9bf713de90c588729fb2182d0138cb47fce9",
+   "primitives": [
+    {
+     "id": "P12.map_fp#1",
+     "prim": "P12.map_fp",
+     "args": [
+      "table"
+     ],
+     "facts": [
+      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under P3"
+     ]
+    },
+    {
+     "id": "P2.reorder#2",
+     "prim": "P2.reorder",
+     "args": [
+      "t",
+      "r"
+     ],
+     "facts": [
+      "P2: at most one of t, r is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P1.split#3",
+     "prim": "P1.split",
+     "args": [
+      "r",
+      16,
+      "cut"
+     ],
+     "facts": [
+      "P1: r = r_o + r_i is an order-preserving bijection (lexicographic)",
+      "P6: the main loop runs whole tiles; the remainder starts where it stopped and ends at the bound, so [lo, hi) is covered once, in increasing order"
+     ]
+    },
+    {
+     "id": "P2.reorder#4",
+     "prim": "P2.reorder",
+     "args": [
+      "r_i",
+      "t"
+     ],
+     "facts": [
+      "P2: at most one of r_i, t is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P4.vectorize#5",
+     "prim": "P4.vectorize",
+     "args": [
+      "r_i",
+      16,
+      512,
+      "quads",
+      "full"
+     ],
+     "facts": [
+      "P4: lane k = output r+k; the lane variable reaches only per-row leaves and the store index, so no FP op reads two lanes"
+     ]
+    },
+    {
+     "id": "P8.specialize#6",
+     "prim": "P8.specialize",
+     "args": [
+      "t",
+      [
+       "T",
+       "==",
+       1
+      ]
+     ],
+     "facts": [
+      "P8: both copies are the same program on a sub-domain"
+     ]
+    },
+    {
+     "id": "P1.split#7",
+     "prim": "P1.split",
+     "args": [
+      "t",
+      8,
+      "guard"
+     ],
+     "facts": [
+      "P1: t = t_o + t_i is an order-preserving bijection (lexicographic)",
+      "P6: tail guard covers (hi - lo) mod 8 exactly once"
+     ]
+    },
+    {
+     "id": "P2.reorder#8",
+     "prim": "P2.reorder",
+     "args": [
+      "t_i",
+      "r_i"
+     ],
+     "facts": [
+      "P2: at most one of t_i, r_i is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P3.expand#9",
+     "prim": "P3.expand",
+     "args": [
+      "acc",
+      "t_i"
+     ],
+     "facts": [
+      "P3: acc re-initialised in every iteration of t_i"
+     ]
+    },
+    {
+     "id": "P2.distribute#10",
+     "prim": "P2.distribute",
+     "args": [
+      "t_i"
+     ],
+     "facts": [
+      "P2: state private per iteration; statement order kept per chain"
+     ]
+    },
+    {
+     "id": "P2.reorder#11",
+     "prim": "P2.reorder",
+     "args": [
+      "t_i",
+      "g"
+     ],
+     "facts": [
+      "P2: at most one of t_i, g is FP-carried; no loop is reversed",
+      "P2: every accumulator in the body is private to t_i"
+     ]
+    },
+    {
+     "id": "P10.block#12",
+     "prim": "P10.block",
+     "args": [
+      "t",
+      8,
+      "r_i"
+     ],
+     "facts": [
+      "P10: composite of P1.split#7, P2.reorder#8, P3.expand#9, P2.distribute#10, P2.reorder#11"
+     ]
+    },
+    {
+     "id": "P9.hoist#13",
+     "prim": "P9.hoist",
+     "args": [
+      [
+       "W"
+      ],
+      "t_i"
+     ],
+     "facts": [
+      "P9: W-only subterms (wq, wd of the tile rows) do not mention t_i; W is read-only; the token loop runs >= 1 time whenever its block body runs (guarded split)"
+     ]
+    },
+    {
+     "id": "P1.split#14",
+     "prim": "P1.split",
+     "args": [
+      "r_t",
+      4,
+      "dup_last"
+     ],
+     "facts": [
+      "P1: r_t = r_t_o + r_t_i is an order-preserving bijection (lexicographic)",
+      "P6: tail dup_last covers (hi - lo) mod 4 exactly once"
+     ]
+    },
+    {
+     "id": "P2.reorder#15",
+     "prim": "P2.reorder",
+     "args": [
+      "r_t_i",
+      "t"
+     ],
+     "facts": [
+      "P2: at most one of r_t_i, t is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P4.vectorize#16",
+     "prim": "P4.vectorize",
+     "args": [
+      "r_t_i",
+      4,
+      128,
+      "quad",
+      "kmask"
+     ],
+     "facts": [
+      "P4: lane k = output r+k; the lane variable reaches only per-row leaves and the store index, so no FP op reads two lanes"
+     ]
+    },
+    {
+     "id": "P1.split#17",
+     "prim": "P1.split",
+     "args": [
+      "t",
+      8,
+      "guard"
+     ],
+     "facts": [
+      "P1: t = t_o + t_i is an order-preserving bijection (lexicographic)",
+      "P6: tail guard covers (hi - lo) mod 8 exactly once"
+     ]
+    },
+    {
+     "id": "P2.reorder#18",
+     "prim": "P2.reorder",
+     "args": [
+      "t_i",
+      "r_t_i"
+     ],
+     "facts": [
+      "P2: at most one of t_i, r_t_i is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P3.expand#19",
+     "prim": "P3.expand",
+     "args": [
+      "acc",
+      "t_i"
+     ],
+     "facts": [
+      "P3: acc re-initialised in every iteration of t_i"
+     ]
+    },
+    {
+     "id": "P2.distribute#20",
+     "prim": "P2.distribute",
+     "args": [
+      "t_i"
+     ],
+     "facts": [
+      "P2: state private per iteration; statement order kept per chain"
+     ]
+    },
+    {
+     "id": "P2.reorder#21",
+     "prim": "P2.reorder",
+     "args": [
+      "t_i",
+      "g"
+     ],
+     "facts": [
+      "P2: at most one of t_i, g is FP-carried; no loop is reversed",
+      "P2: every accumulator in the body is private to t_i"
+     ]
+    },
+    {
+     "id": "P10.block#22",
+     "prim": "P10.block",
+     "args": [
+      "t",
+      8,
+      "r_t_i"
+     ],
+     "facts": [
+      "P10: composite of P1.split#17, P2.reorder#18, P3.expand#19, P2.distribute#20, P2.reorder#21"
+     ]
+    },
+    {
+     "id": "P9.hoist#23",
+     "prim": "P9.hoist",
+     "args": [
+      [
+       "W"
+      ],
+      "t_i"
+     ],
+     "facts": [
+      "P9: W-only subterms (wq, wd of the tile rows) do not mention t_i; W is read-only; the token loop runs >= 1 time whenever its block body runs (guarded split)"
+     ]
+    },
+    {
+     "id": "P5.lower_isum#24",
+     "prim": "P5.lower_isum",
+     "args": [
+      "dpbusd",
+      [
+       [
+        "reduce",
+        "unpack"
+       ],
+       [
+        "signed",
+        "bias"
+       ]
+      ]
+     ],
+     "facts": [
+      "E1: |I| <= 64*128*127 = 1040384 < 2^24, so i2f is exact",
+      "P5: dpbusd lane partials |.| <= 129540 per step, total <= 2072640 < 2^31 (no wrap)",
+      "P5: bias identity sum(u*x) - 128*sum(x) = sum(w*x), with sum(x) = A.sum by P2"
+     ]
+    },
+    {
+     "id": "P5.lower_isum#25",
+     "prim": "P5.lower_isum",
+     "args": [
+      "dpbusd",
+      [
+       [
+        "reduce",
+        "permute"
+       ],
+       [
+        "signed",
+        "bias"
+       ]
+      ]
+     ],
+     "facts": [
+      "E1: |I| <= 64*128*127 = 1040384 < 2^24, so i2f is exact",
+      "P5: dpbusd lane partials |.| <= 129540 per step, total <= 2072640 < 2^31 (no wrap)",
+      "P5: bias identity sum(u*x) - 128*sum(x) = sum(w*x), with sum(x) = A.sum by P2"
+     ]
+    },
+    {
+     "id": "P14.load_scales#26",
+     "prim": "P14.load_scales",
+     "args": [
+      "gpr64",
+      "cvtph"
+     ],
+     "facts": [
+      "P14: integer packing of f16 bit patterns, then exact widening"
+     ]
+    },
+    {
+     "id": "P13.canon_store#27",
+     "prim": "P13.canon_store",
+     "args": [
+      "mask_mov"
+     ],
+     "facts": [
+      "P13: selector cmp_unord(v, v) on the stored value, replacement the canonical NaN in every lane (lifting rule, re-checked by C1)"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "hx_x3_mm_q4_avx512",
+   "isa": "avx512",
+   "meaning": "q_matmul_q4",
+   "schedule_sha256": "69972930d3ae5c830a006005b99f9bf713de90c588729fb2182d0138cb47fce9",
+   "primitives": [
+    {
+     "id": "P12.map_fp#1",
+     "prim": "P12.map_fp",
+     "args": [
+      "table"
+     ],
+     "facts": [
+      "P12: each meaning FP op maps to the isa entry whose 'ieee' field names it, lane-wise, RNE under P3"
+     ]
+    },
+    {
+     "id": "P2.reorder#2",
+     "prim": "P2.reorder",
+     "args": [
+      "t",
+      "r"
+     ],
+     "facts": [
+      "P2: at most one of t, r is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P1.split#3",
+     "prim": "P1.split",
+     "args": [
+      "r",
+      16,
+      "cut"
+     ],
+     "facts": [
+      "P1: r = r_o + r_i is an order-preserving bijection (lexicographic)",
+      "P6: the main loop runs whole tiles; the remainder starts where it stopped and ends at the bound, so [lo, hi) is covered once, in increasing order"
+     ]
+    },
+    {
+     "id": "P2.reorder#4",
+     "prim": "P2.reorder",
+     "args": [
+      "r_i",
+      "t"
+     ],
+     "facts": [
+      "P2: at most one of r_i, t is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P4.vectorize#5",
+     "prim": "P4.vectorize",
+     "args": [
+      "r_i",
+      16,
+      512,
+      "quads",
+      "full"
+     ],
+     "facts": [
+      "P4: lane k = output r+k; the lane variable reaches only per-row leaves and the store index, so no FP op reads two lanes"
+     ]
+    },
+    {
+     "id": "P8.specialize#6",
+     "prim": "P8.specialize",
+     "args": [
+      "t",
+      [
+       "T",
+       "==",
+       1
+      ]
+     ],
+     "facts": [
+      "P8: both copies are the same program on a sub-domain"
+     ]
+    },
+    {
+     "id": "P1.split#7",
+     "prim": "P1.split",
+     "args": [
+      "t",
+      8,
+      "guard"
+     ],
+     "facts": [
+      "P1: t = t_o + t_i is an order-preserving bijection (lexicographic)",
+      "P6: tail guard covers (hi - lo) mod 8 exactly once"
+     ]
+    },
+    {
+     "id": "P2.reorder#8",
+     "prim": "P2.reorder",
+     "args": [
+      "t_i",
+      "r_i"
+     ],
+     "facts": [
+      "P2: at most one of t_i, r_i is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P3.expand#9",
+     "prim": "P3.expand",
+     "args": [
+      "acc",
+      "t_i"
+     ],
+     "facts": [
+      "P3: acc re-initialised in every iteration of t_i"
+     ]
+    },
+    {
+     "id": "P2.distribute#10",
+     "prim": "P2.distribute",
+     "args": [
+      "t_i"
+     ],
+     "facts": [
+      "P2: state private per iteration; statement order kept per chain"
+     ]
+    },
+    {
+     "id": "P2.reorder#11",
+     "prim": "P2.reorder",
+     "args": [
+      "t_i",
+      "g"
+     ],
+     "facts": [
+      "P2: at most one of t_i, g is FP-carried; no loop is reversed",
+      "P2: every accumulator in the body is private to t_i"
+     ]
+    },
+    {
+     "id": "P10.block#12",
+     "prim": "P10.block",
+     "args": [
+      "t",
+      8,
+      "r_i"
+     ],
+     "facts": [
+      "P10: composite of P1.split#7, P2.reorder#8, P3.expand#9, P2.distribute#10, P2.reorder#11"
+     ]
+    },
+    {
+     "id": "P9.hoist#13",
+     "prim": "P9.hoist",
+     "args": [
+      [
+       "W"
+      ],
+      "t_i"
+     ],
+     "facts": [
+      "P9: W-only subterms (wq, wd of the tile rows) do not mention t_i; W is read-only; the token loop runs >= 1 time whenever its block body runs (guarded split)"
+     ]
+    },
+    {
+     "id": "P1.split#14",
+     "prim": "P1.split",
+     "args": [
+      "r_t",
+      4,
+      "dup_last"
+     ],
+     "facts": [
+      "P1: r_t = r_t_o + r_t_i is an order-preserving bijection (lexicographic)",
+      "P6: tail dup_last covers (hi - lo) mod 4 exactly once"
+     ]
+    },
+    {
+     "id": "P2.reorder#15",
+     "prim": "P2.reorder",
+     "args": [
+      "r_t_i",
+      "t"
+     ],
+     "facts": [
+      "P2: at most one of r_t_i, t is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P4.vectorize#16",
+     "prim": "P4.vectorize",
+     "args": [
+      "r_t_i",
+      4,
+      128,
+      "quad",
+      "kmask"
+     ],
+     "facts": [
+      "P4: lane k = output r+k; the lane variable reaches only per-row leaves and the store index, so no FP op reads two lanes"
+     ]
+    },
+    {
+     "id": "P1.split#17",
+     "prim": "P1.split",
+     "args": [
+      "t",
+      8,
+      "guard"
+     ],
+     "facts": [
+      "P1: t = t_o + t_i is an order-preserving bijection (lexicographic)",
+      "P6: tail guard covers (hi - lo) mod 8 exactly once"
+     ]
+    },
+    {
+     "id": "P2.reorder#18",
+     "prim": "P2.reorder",
+     "args": [
+      "t_i",
+      "r_t_i"
+     ],
+     "facts": [
+      "P2: at most one of t_i, r_t_i is FP-carried; no loop is reversed"
+     ]
+    },
+    {
+     "id": "P3.expand#19",
+     "prim": "P3.expand",
+     "args": [
+      "acc",
+      "t_i"
+     ],
+     "facts": [
+      "P3: acc re-initialised in every iteration of t_i"
+     ]
+    },
+    {
+     "id": "P2.distribute#20",
+     "prim": "P2.distribute",
+     "args": [
+      "t_i"
+     ],
+     "facts": [
+      "P2: state private per iteration; statement order kept per chain"
+     ]
+    },
+    {
+     "id": "P2.reorder#21",
+     "prim": "P2.reorder",
+     "args": [
+      "t_i",
+      "g"
+     ],
+     "facts": [
+      "P2: at most one of t_i, g is FP-carried; no loop is reversed",
+      "P2: every accumulator in the body is private to t_i"
+     ]
+    },
+    {
+     "id": "P10.block#22",
+     "prim": "P10.block",
+     "args": [
+      "t",
+      8,
+      "r_t_i"
+     ],
+     "facts": [
+      "P10: composite of P1.split#17, P2.reorder#18, P3.expand#19, P2.distribute#20, P2.reorder#21"
+     ]
+    },
+    {
+     "id": "P9.hoist#23",
+     "prim": "P9.hoist",
+     "args": [
+      [
+       "W"
+      ],
+      "t_i"
+     ],
+     "facts": [
+      "P9: W-only subterms (wq, wd of the tile rows) do not mention t_i; W is read-only; the token loop runs >= 1 time whenever its block body runs (guarded split)"
+     ]
+    },
+    {
+     "id": "P5.lower_isum#24",
+     "prim": "P5.lower_isum",
+     "args": [
+      "dpbusd",
+      [
+       [
+        "reduce",
+        "unpack"
+       ],
+       [
+        "signed",
+        "bias"
+       ]
+      ]
+     ],
+     "facts": [
+      "E1: |I| <= 64*8*127 = 65024 < 2^24, so i2f is exact",
+      "P5: dpbusd lane partials |.| <= 7620 per step, total <= 121920 < 2^31 (no wrap)",
+      "P5: bias identity sum(u*x) - 8*sum(x) = sum(w*x), with sum(x) = A.sum by P2"
+     ]
+    },
+    {
+     "id": "P5.lower_isum#25",
+     "prim": "P5.lower_isum",
+     "args": [
+      "dpbusd",
+      [
+       [
+        "reduce",
+        "permute"
+       ],
+       [
+        "signed",
+        "bias"
+       ]
+      ]
+     ],
+     "facts": [
+      "E1: |I| <= 64*8*127 = 65024 < 2^24, so i2f is exact",
+      "P5: dpbusd lane partials |.| <= 7620 per step, total <= 121920 < 2^31 (no wrap)",
+      "P5: bias identity sum(u*x) - 8*sum(x) = sum(w*x), with sum(x) = A.sum by P2"
+     ]
+    },
+    {
+     "id": "P14.load_scales#26",
+     "prim": "P14.load_scales",
+     "args": [
+      "gpr64",
+      "cvtph"
+     ],
+     "facts": [
+      "P14: integer packing of f16 bit patterns, then exact widening"
+     ]
+    },
+    {
+     "id": "P13.canon_store#27",
+     "prim": "P13.canon_store",
+     "args": [
+      "mask_mov"
+     ],
+     "facts": [
+      "P13: selector cmp_unord(v, v) on the stored value, replacement the canonical NaN in every lane (lifting rule, re-checked by C1)"
+     ]
+    }
+   ]
+  }
+ ],
+ "files": {
+  "x3_q_scalar.c": "71a1086847d3549c9280aa266c7717f079205cec0c930506f83f77effbfb6baf",
+  "x3_q_avx2.c": "b8784256e5cf4c8e82ed7293a123cab3ca0bb478ddd9f36225546a25258f0ba2",
+  "x3_q_avx512.c": "bd3a87d94499cf79af9c779c1f563b562e318a79671062dcb52d96e602428f34",
+  "x3_gen.h": "bd1819c8d6bdf0628ca240a0818d8b0374ab145d03c16a311d3a870fe0cb8d37"
+ }
+}

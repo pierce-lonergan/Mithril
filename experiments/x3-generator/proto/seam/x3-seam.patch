@@ -1,0 +1,99 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -45,8 +45,29 @@
+   endif()
+ endif()
+ 
++# X3 scratch only (Mithril experiments/x3-generator): dispatch generated Q4/Q8 kernels.
++option(HEARTH_X3_GEN "X3 scratch only: dispatch generated Q4/Q8 kernels" OFF)
++set(X3_GEN_DIR "" CACHE PATH "x3gen output directory")
++if(HEARTH_X3_GEN)
++  list(APPEND CORE_SOURCES ${X3_GEN_DIR}/x3_q_scalar.c)
++  if(X86)
++    list(APPEND CORE_SOURCES ${X3_GEN_DIR}/x3_q_avx2.c ${X3_GEN_DIR}/x3_q_avx512.c)
++    if(MSVC)
++      set_source_files_properties(${X3_GEN_DIR}/x3_q_avx2.c PROPERTIES COMPILE_OPTIONS "/arch:AVX2")
++      set_source_files_properties(${X3_GEN_DIR}/x3_q_avx512.c PROPERTIES COMPILE_OPTIONS "/arch:AVX512")
++    else()
++      set_source_files_properties(${X3_GEN_DIR}/x3_q_avx2.c PROPERTIES COMPILE_OPTIONS "-mavx2;-mfma;-mf16c")
++      set_source_files_properties(${X3_GEN_DIR}/x3_q_avx512.c PROPERTIES COMPILE_OPTIONS
++        "-mavx512f;-mavx512bw;-mavx512vl;-mavx512vnni;-mavx2;-mfma;-mf16c")
++    endif()
++  endif()
++endif()
+ add_library(hearth_core OBJECT ${CORE_SOURCES})
+ target_include_directories(hearth_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine/include ${SRC})
++if(HEARTH_X3_GEN)
++  target_compile_definitions(hearth_core PRIVATE HEARTH_X3_GEN)
++  target_include_directories(hearth_core PRIVATE ${X3_GEN_DIR})
++endif()
+ set_target_properties(hearth_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ target_compile_definitions(hearth_core PRIVATE HEARTH_BUILD_DLL)
+ if(MSVC)
+diff --git a/engine/src/quant.c b/engine/src/quant.c
+--- a/engine/src/quant.c
++++ b/engine/src/quant.c
+@@ -426,9 +426,17 @@
+     }
+ }
+ 
++#ifdef HEARTH_X3_GEN
++#  include "x3_gen.h"
++#  define X3_Q8 hx_x3_mm_q8_scalar
++#  define X3_Q4 hx_x3_mm_q4_scalar
++#else
++#  define X3_Q8 mm_q8_scalar
++#  define X3_Q4 mm_q4_scalar
++#endif
+ const hx_kernels hx_kernels_scalar = {
+     HEARTH_ISA_SCALAR,
+-    {mm_f32_scalar, mm_f16_scalar, mm_bf16_scalar, mm_q8_scalar, mm_q4_scalar, NULL, NULL},
++    {mm_f32_scalar, mm_f16_scalar, mm_bf16_scalar, X3_Q8, X3_Q4, NULL, NULL},
+     act_q8_scalar,
+ };
+ 
+diff --git a/engine/src/quant_avx2.c b/engine/src/quant_avx2.c
+--- a/engine/src/quant_avx2.c
++++ b/engine/src/quant_avx2.c
+@@ -338,9 +338,17 @@
+     mm_quant(1, W, n, act, T, Y, ldy, r0, r1);
+ }
+ 
++#ifdef HEARTH_X3_GEN
++#  include "x3_gen.h"
++#  define X3_Q8 hx_x3_mm_q8_avx2
++#  define X3_Q4 hx_x3_mm_q4_avx2
++#else
++#  define X3_Q8 mm_q8_avx2
++#  define X3_Q4 mm_q4_avx2
++#endif
+ static const hx_kernels k_avx2 = {
+     HEARTH_ISA_AVX2,
+-    {mm_f32_avx2, mm_f16_avx2, mm_bf16_avx2, mm_q8_avx2, mm_q4_avx2, NULL, NULL},
++    {mm_f32_avx2, mm_f16_avx2, mm_bf16_avx2, X3_Q8, X3_Q4, NULL, NULL},
+     act_q8_avx2,
+ };
+ 
+diff --git a/engine/src/quant_avx512.c b/engine/src/quant_avx512.c
+--- a/engine/src/quant_avx512.c
++++ b/engine/src/quant_avx512.c
+@@ -362,9 +362,17 @@
+     mm_quant(1, W, n, act, T, Y, ldy, r0, r1);
+ }
+ 
++#ifdef HEARTH_X3_GEN
++#  include "x3_gen.h"
++#  define X3_Q8 hx_x3_mm_q8_avx512
++#  define X3_Q4 hx_x3_mm_q4_avx512
++#else
++#  define X3_Q8 mm_q8_avx512
++#  define X3_Q4 mm_q4_avx512
++#endif
+ static const hx_kernels k_avx512 = {
+     HEARTH_ISA_AVX512,
+-    {mm_f32_avx512, mm_f16_avx512, mm_bf16_avx512, mm_q8_avx512, mm_q4_avx512, NULL, NULL},
++    {mm_f32_avx512, mm_f16_avx512, mm_bf16_avx512, X3_Q8, X3_Q4, NULL, NULL},
+     act_q8_avx512,
+ };
+ 
