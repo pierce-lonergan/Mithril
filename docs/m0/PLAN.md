@@ -3,8 +3,10 @@
 Status: living document, first version 2026-10-16, revision 2 the same day after a same-family
 review (§15), revision 3 the same day by the owner track to carry the Owner's chat answers of
 2026-10-16 and to align with [D0_BRIEF](../D0_BRIEF.md), and revision 4 the same day by the owner
-track after one review of revision 3 (Claude, same family, independent context; §14, §15). The plan
-track maintains it. Every other track updates its own rows in the [status table](#12-status-table) in the same change
+track after one review of revision 3 (Claude, same family, independent context; §14, §15). Revision 5,
+2026-10-23, by the queue track, makes consistency edits only: it carries Pierce's batches 3
+and 4 (interim chat signature, written delegation). It was revised the same day after one review of the queue
+track's files (Claude, same family, independent context; §15). The plan track maintains it. Every other track updates its own rows in the [status table](#12-status-table) in the same change
 that lands its work.
 
 **Owner answers received 2026-10-16 (chat; ratify at sitting 1, Sun 2026-10-18).** The verbatim
@@ -20,6 +22,23 @@ packet due Sat 2026-10-17, night). Status: decided by Pierce in chat; not yet AU
 including D0-9a, D0-10b's hours, D0-7a and D0_BRIEF Q17 and Q18. [D0_BRIEF §0](../D0_BRIEF.md) maps the
 answers onto the signature lines. The consolidated, ranked list of open owner questions, with sitting
 1's agenda, is [OWNER-QUEUE.md](OWNER-QUEUE.md).
+
+**Owner answers of 2026-10-23 (revision 5).** Sitting 1 did not take place. In batch 3 Pierce answered:
+- "Chat now, key on Sunday": interim chat signatures now, an SSH key and signed tags at sitting 2 (Sun 10-25);
+- "Accept all four defaults": C01, the thread cap lifts only inside the 23:00–07:00 windows; C02, timing runs
+  read the real Qwen3-30B-A3B Q4 file on the NVMe, read-only; C25, X3's parity stays provisional until X4's
+  calibration, which runs on `x3_bench`; D0-7a, measurement may run unattended inside windows, with no agents
+  running then;
+- "Terms OK; run the smoke run" (A20).
+
+In batch 4 he signed sitting 1 in chat with effort = `max`. That ratifies the answers above, SIGNS the X0
+record (frozen at `152fa33`, OQs deferred) and SIGNS X1-amendment-1 (frozen at `ac751b8`; `claude-opus-5-5`,
+effort `max`, s = 50%, cap 160, K = 6). He also gave a written delegation, logged in
+[DELEGATED.md](DELEGATED.md).
+
+Status wording from now on: ratified by his interim chat signature; under A10 the tag at sitting 2 is the
+AUTHORITY fact. OWNER-QUEUE classifies every open item and lists what only Pierce can do at sitting 2. Where
+this plan below says "sitting 1 (10-18)" or "ratify at sitting 1", read it with this paragraph.
 
 [ROADMAP](../ROADMAP.md) is authoritative for every gate, amber band, kill and cost. This plan
 schedules the work and names who waits on what. It sets no threshold. Where it makes a ROADMAP rule
@@ -139,6 +158,13 @@ Three resources bind, in this order [G]:
    week and σ_d = 4%, the planted-regression calibration finishes on the last night of W6 with no
    slack, and X3's verdict, which needs that calibration (§3.4), lands in W7 under Plan A [D, §6.3];
    at that σ_d the rule asks for more than 7 under Plan A and 5 under Plan B.
+
+*Revision 5 (2026-10-23).* Sitting 1's steps that Pierce signed in chat on 10-23 are done: the answers
+ratified, the X1 amendment record SIGNED, and the plan check (A20). The rest of sitting 1 moves to sitting 2,
+Sun 10-25: D0-9a's key, D0-10b's hours, the signed D0_BRIEF Q17 and Q18 lines (not delegable; recommendations
+QWEN3_LOCAL_PROVISIONAL and GEN_QWEN3, DELEGATED P3 and P2), and the X4-noise-pilot record if it is
+FROZEN by then. X1's next owner-independent step is the §6.2 smoke-run gate, at a time Pierce agrees, with the
+account idle (batch 3).
 
 **Critical path** [G], against Sunday sittings (10-18, 10-25, 11-01, …) and pilot nights from W1.
 At Plan B cadence, operative until D0-10b's hours are signed: sitting 1, Sun 10-18 (D0-9a; the chat
@@ -307,7 +333,11 @@ read "the non-Claude author D0_BRIEF Q17–Q18 name".
   - CC: the X1-subset rules must be frozen, and the hand derivations available, before the `mithi`
     precondition.
   - X4: the sandbox, reused for harness isolation [G].
-- **Waits on.**
+- **Waits on.** *(Revision 5: Q16 is ratified in chat and X1-amendment-1 is SIGNED (10-23). A20 is answered
+  ("Terms OK; run the smoke run"). The runner and model are accepted (OWNER-QUEUE D07). Q18 and Q17 wait for
+  Pierce's signed lines at sitting 2; neither is delegable, and the recommendations are DELEGATED P2 and P3.
+  Until he signs, Qwen3 does only S71, within R2's 5–10 desktop hours (P13). The store (Q5 = OWNER-QUEUE A06)
+  is his.)*
   - **D0_BRIEF Q16 ratified** with its amendment record, **D0_BRIEF Q18** (the template author) and
     **D0_BRIEF Q17** (the planted corpus, item reviews, the semantic guard and the kit acceptance
     corpus), all at sitting 1 (10-18); and Pierce's check of the plan's terms and capacity (OWNER-QUEUE
@@ -449,7 +479,8 @@ read "the non-Claude author D0_BRIEF Q17–Q18 name".
   [P5, ROADMAP §3.4]. X2 is optional (T1 on the generated variants).
 - **Waits on.** D0-10d (quiet windows). D0-8 (host; provisional, pending D0-8). D0-12 (the X3-parity
   record SIGNED before the first A/B session). D0-7a or the Owner's consent to unattended night runs
-  (Q1). Q17 (reference binary).
+  (Q1). Q17 (reference binary). *(Revision 5: D0-7a is answered (batch 3, 10-23), and C25 too: X3's parity
+  stays provisional until X4's calibration, which runs on `x3_bench`.)*
 - **Now (from W1).** The generator, codegen and bit-identity tests, built in desktop daytime.
 
 ### 3.5 X4: evaluator-integrity kit (ROADMAP §3.5, weeks 0–6)
@@ -522,7 +553,9 @@ read "the non-Claude author D0_BRIEF Q17–Q18 name".
 - **Waits on.**
   - D0-7a: unattended runs inside quiet windows. The noise pilot is the first unattended night (W1
     under D0-10d's chat answer), so D0-7a, or Pierce's consent under Q1, is needed by then: 10-18, or
-    10-25 at the latest for a first night from 10-25.
+    10-25 at the latest for a first night from 10-25. *(Revision 5: answered in chat 10-23, "measurement
+    may run unattended inside windows, with no agents running then"; ratified. C01 and C02 too: the cap
+    lifts only inside windows, and the real Q4 file is read on the NVMe, read-only.)*
   - D0-9: (a) the interim signature form, needed at the first weekly sitting; (b) the long-term
     hardware key is needed by X4 (ROADMAP §11), but per D0_BRIEF's current text no M0 step blocks on
     it if (a)'s signed tags are accepted for the kit hash-freeze and the calibration records.
@@ -575,11 +608,11 @@ read "the non-Claude author D0_BRIEF Q17–Q18 name".
 
   | ROADMAP "needed by" (§11) | Item | Needed by in this plan | Why |
   |---|---|---|---|
-  | W0 | **D0-10, D0-12** | W0. **a, c, d, D0-12 and its cadence answered in chat 2026-10-16; ratify at sitting 1 (Sun 10-18).** b's hours still open; d's first night in W1 | budget, families, cadence, nights; signatures |
-  | — | **D0_BRIEF Q16–Q18** (new) | sitting 1 (10-18). Q16 answered in chat (X1 rule); Q17 and Q18 open | X1 writes no sealed template until Q18 (template author) and the store are answered; Q17 also gates X2's Prover, X4's batch (b) and CC's reviewers |
+  | W0 | **D0-10, D0-12** | W0. **a, c, d, D0-12 and its cadence answered in chat 2026-10-16; ratify at sitting 1 (Sun 10-18).** b's hours still open; d's first night in W1. *Revision 5: ratified in chat 10-23 (interim); tags at sitting 2 (10-25)* | budget, families, cadence, nights; signatures |
+  | — | **D0_BRIEF Q16–Q18** (new) | sitting 1 (10-18). Q16 answered in chat (X1 rule); Q17 and Q18 open. *Revision 5: Q16 SIGNED with X1-amendment-1 (10-23); Q17 and Q18 at sitting 2; not delegable, with recommendations in DELEGATED P3 and P2* | X1 writes no sealed template until Q18 (template author) and the store are answered; Q17 also gates X2's Prover, X4's batch (b) and CC's reviewers |
   | M1 | **D0-11** | (b) M1, as ROADMAP says. Revision 2 put (b) in W0, following the brief's earlier draft; the brief now keeps it at M1 (D0_BRIEF Q1) | 05 §13; D0_BRIEF D0-11b |
-  | X4 | **D0-9** | **(a) the first weekly sitting**, needed to ratify anything; (b) X4, with no M0 step blocked if (a)'s tags are accepted for the kit freeze (D0_BRIEF D0-9) | D0_BRIEF D0-9a and D0-9b |
-  | X4 | **D0-7** | **(a) W1**, before the noise pilot's first unattended night (or Q1 consent) | the pilot runs unattended at night |
+  | X4 | **D0-9** | **(a) the first weekly sitting**, needed to ratify anything; (b) X4, with no M0 step blocked if (a)'s tags are accepted for the kit freeze (D0_BRIEF D0-9). *Revision 5: (a) at sitting 2 (10-25); until then Pierce's chat signatures are the interim method (batches 3 and 4)* | D0_BRIEF D0-9a and D0-9b |
+  | X4 | **D0-7** | **(a) W1**, before the noise pilot's first unattended night (or Q1 consent). *Revision 5: (a) answered 10-23* | the pilot runs unattended at night |
   | M4 | D0-8 | W1, for the provisional use of the desktop as host | X3 and X4 measure on it from the pilot on |
   | S0 | D0-2 | not on M0's path | S0 only (§3.9) |
   | M1's S1 | D0-3 | not on M0's path; M0 uses a stand-in for `hearth-c-ref` (§3.4, Q17) | S0 tag |
@@ -633,6 +666,11 @@ read "the non-Claude author D0_BRIEF Q17–Q18 name".
 
   The M0-verdict record may not freeze while the two "provisional, pending Q7" lines are open.
   Either Pierce answers Q7 first, or the record freezes with these lines as written.
+
+  *Revision 5 (2026-10-23), a proposal only:* X2's record defines no band for a gate missed without a kill. DELEGATED
+  P28 proposes the state `gate_missed` for it, and P8 one added line, `if X2 == gate_missed: rows += NARROW (X2:
+  failing variants stay tested)`, so that a missed X2 gate cannot drop out of the verdict. Pierce signs both in
+  the X2-gate and M0-verdict records.
 
   *Revision 3, provisional, pending D0_BRIEF Q16 and Q7.* If Pierce chooses the X1 record's option 4b
   (Q16 = OPT4_STRICT), X1 gains a state `pass_one_family`: Claude alone passed and a second frontier
@@ -876,7 +914,7 @@ CC     [note .............................................................][revi
   aggregate**, add under 500 MB of new data to C:, and put big data on D: [M, brief; aggregate
   reading G, Q2]. The sprint brief of 2026-10-16 states the aggregate reading as a rule ("8 threads
   in total across all tracks") [M, sprint brief]; whether the cap lifts inside quiet windows is still
-  Q2. This covers builds, X0 compiles, X2 fuzzing, X3 builds and correctness tests, Bochs, the
+  Q2. *(Revision 5: answered 10-23, C01: "the 8-thread cap lifts only inside 23:00–07:00 windows".)* This covers builds, X0 compiles, X2 fuzzing, X3 builds and correctness tests, Bochs, the
   reference-binary build, the X1 local-model pilot and, under D0-10c's chat answer, every other local
   Qwen3 job (template or item authoring, the planted corpus, reviews, the Prover and Adversary roles
   of D0_BRIEF Q17). Local model runs, fuzzing and builds never overlap a quiet window (DR-023, ROADMAP
@@ -1223,7 +1261,7 @@ of §0. Where it is "—", the record is frozen whole.
 
 | Record | Gates this collection | Must be FROZEN before | Rules by (A / B) | SIGNED (or Owner instruction) before | Plan A: freeze / sign | Plan B: freeze / sign | D0 |
 |---|---|---|---|---|---|---|---|
-| [X0-census](prereg/X0-census.md) | compiling Hearth objects, decoding | the first Hearth object is compiled (TOOLCHAINS.md written first) | — | instruction given 2026-10-16, confirmed by D0-12's chat answer (the only instruction route; ratify); signature before the Gatekeeper verdict | W0 / W1 | W0 / W1 | D0-12, D0-9a; X0 OQ-1 to OQ-7 before the first compile |
+| [X0-census](prereg/X0-census.md) | compiling Hearth objects, decoding | the first Hearth object is compiled (TOOLCHAINS.md written first) | — | instruction given 2026-10-16, confirmed by D0-12's chat answer (the only instruction route; ratify); signature before the Gatekeeper verdict | W0 / W1 | W0 / W1 | D0-12, D0-9a; X0 OQ-1 to OQ-7 before the first compile. *Revision 5: FROZEN at `152fa33` (10-17); SIGNED in chat 10-23 with OQ-1 to OQ-7 deferred; the tag follows at sitting 2* |
 | M0-verdict | the mapping from experiment verdicts to §4 rows | the first experiment verdict is known; not with §3.8's "pending Q7" lines open unless they stay as written | — | the same | W1 / W1 | W1 / W1 | D0-12, D0-1; Q7 |
 | X1-card-iteration | card-iteration attempts (training items only; ≤ 3 epochs; the Rust arm on the same items if approved) | the first iteration attempt | — | the same | W2 / W3 | W5 / W6 | D0_BRIEF Q16–Q18, D0-12; Q16 |
 | X1-precondition | `mithi` against hidden references, the planted corpus and CC's derivations; freezes `mithi`'s hash | the precondition run | — | the same | W3 / W3 | W8 / W9 | D0_BRIEF Q17/Q18 (corpus author), D0-12 |
@@ -1233,7 +1271,7 @@ of §0. Where it is "—", the record is frozen whole.
 | X2-mutants | the kill-rate measurement under G, G+C and T1+T2 | T1's rule list is frozen; the pool is hash-sealed first | — | the same | W3 / W3 | W7 / W7 | D0-12 |
 | X2-gate | the verdict run of the frozen T1 on the real variants and the mutants | rules: before T1 runs on the real variants. Rules: what counts as a rule; per-kernel `assumed` axiom; the fixable-table-bug test; the week reading (Q9; Plan B or B-cal) | W2 / W2 | the verdict run | W2 / W5 | W2 / W10 (W6 under B-cal) | D0_BRIEF Q17 (Prover), D0-12; Q9 |
 | X3-parity | A/B sessions | the first A/B session. It states N's and c's rules, the arms, the reference binary's hash (§3.4) and the counting rule. The counting rule is frozen before the first schedule line | counting rule W1 / W1; rest W2 / W3 | the first A/B session | W2 → fill-in W3 / W3 | W3 → fill-in W4 / W4 | D0-8 (provisional), D0-10d, D0-12; Q17 |
-| X4-noise-pilot | quiet-night noise runs, descriptive only, never pooled into a calibration. States which σ_d estimate feeds §6.3's rate rule | the first quiet night | — | the same, at a weekly sitting (no instruction route under D0-12's chat answer) | W0 / W0 (10-18), or W1 / W1 (10-25) at the latest for W1 nights | same | D0-10d (chat answer: nights from W1), **D0-7a or Q1** (unattended) |
+| X4-noise-pilot | quiet-night noise runs, descriptive only, never pooled into a calibration. States which σ_d estimate feeds §6.3's rate rule | the first quiet night | — | the same, at a weekly sitting (no instruction route under D0-12's chat answer) | W0 / W0 (10-18), or W1 / W1 (10-25) at the latest for W1 nights | same | D0-10d (chat answer: nights from W1), **D0-7a or Q1** (unattended). *Revision 5: D0-7a, C01, C02 and C25 answered 10-23. The record is still DRAFT [M, its status line, 10-23]; a chat signature counts as the interim form (batch 4)* |
 | X4-calibration | A/A, planted-regression and end-to-end A/A sessions; `mithc profile measure`. Fixes c's and N's rules, the A/A stopping rule (§3.5) and the reference binary's hash | rules: the first noise-pilot night (W1 under D0-10d's chat answer). Fill-in: N and c from the pilot by the frozen rules | W1 / W1 (revision 3: W2) | the first calibration session | W2 → fill-in W3 / W3 | W2 → fill-in W4 / W4 | D0-7a, D0-8 (provisional), D0-10d, D0-12; Q15, Q17 |
 | X4-hacks-catalogue | the gated run of the frozen kit against batch (a); each hack's declared stage. States that a gated miss is HALT-F | the catalogue engineering runs (so the hack list and stages are fixed before kit tuning) | — | the gated catalogue run, after the kit hash-freeze | W2 / W3 | W2 / W4 | D0-12 |
 | X4-hacks-blind | running the frozen kit against batch (b) | the blind run; the kit is hash-frozen before the batch is written | — | the same | W3 / W4 | W4 / W6 | D0_BRIEF Q17 (Adversary: the local Qwen3, or batch (b) is never written), D0-12 |
@@ -1445,19 +1483,19 @@ Plan B. "Gates" names the collection or step that the row unblocks.
 | ID | Deliverable | Track | Status | Due (A / B) | Gates | Evidence | As of |
 |---|---|---|---|---|---|---|---|
 | S01 | D0 brief (`docs/D0_BRIEF.md`) | D0 | draft (present [M, plan]) | W0 / W0 | every D0 signature | [D0_BRIEF](../D0_BRIEF.md) | 10-16 |
-| S02 | D0-10a–d signed (budget, cadence, families, windows) | Owner | a, c, d answered in chat 10-16 ("No metered API"; "Local Qwen3 via Hearth"; "4 pilot nights, then a rule"), and b's signing slots ("Sunday evening"); ratify at sitting 1 (10-18); b's hours blocked: Owner | W0 / W0 | cadence, nights; the families and windows are settled pending ratification | [D0_BRIEF §0](../D0_BRIEF.md) | 10-16 |
+| S02 | D0-10a–d signed (budget, cadence, families, windows) | Owner | a, c, d and b's signing slots ratified in chat 10-23 (interim); tags at sitting 2 (10-25). b's hours blocked: Owner. c's Value (the Qwen3 checkpoint): proposed operating assumption Qwen3-30B-A3B Q4 (DELEGATED P4) | W0 / W0 | cadence, nights | [D0_BRIEF §0](../D0_BRIEF.md) | 10-23 |
 | S03 | D0-11b signed (role split) | Owner | not due: M1 (D0_BRIEF Q1); revision 2 had W0 | M1 / M1 | sealed specs at M1 | — | 10-16 |
-| S04 | D0-12 signed | Owner | answered in chat 10-16 ("Batch weekly review"; X0 exception), ratify at sitting 1 | W0 / W0 | every Gatekeeper verdict; every collection except X0's | [D0_BRIEF §0](../D0_BRIEF.md) | 10-16 |
-| S05 | D0-9a signature form | Owner | blocked: Owner; the mechanics (signed tags with a PASS or HW key, or an interim chat form) are in the sitting-1 packet (packet track, 10-16 evening) | sitting 1 (10-18) / same | ratifying the chat answers, X0's signature and every later one | [HOW-TO-SIGN](sittings/2026-10-18/HOW-TO-SIGN.md) | 10-16 |
-| S06 | D0-7a (or Q1 consent) for unattended nights | Owner | blocked: Owner | W1 / W1 (10-18, or 10-25 at the latest) | noise pilot, X3 A/B, calibration | — | 10-16 |
+| S04 | D0-12 signed | Owner | ratified in chat 10-23 (interim); the tag at sitting 2 | W0 / W0 | every Gatekeeper verdict; every collection except X0's | [D0_BRIEF §0](../D0_BRIEF.md) | 10-23 |
+| S05 | D0-9a signature form | Owner | interim form chosen 10-23: chat signatures until the key exists ("Chat now, key on Sunday"); D0-9a (an SSH key) at sitting 2, Sun 10-25 | sitting 2 (10-25) | the tags that turn the chat signatures into AUTHORITY facts | [SIGNATURES](sittings/2026-10-23-chat/SIGNATURES.md) | 10-23 |
+| S06 | D0-7a (or Q1 consent) for unattended nights | Owner | done: answered in chat 10-23 ("measurement may run unattended inside windows, with no agents running then"); ratified (interim) | W1 / W1 | noise pilot, X3 A/B, calibration | [OWNER-ANSWERS](OWNER-ANSWERS.md) batch 3 | 10-23 |
 | S07 | D0-9b Owner key | Owner | blocked: Owner; per D0_BRIEF no M0 step blocks on it if D0-9a's tags are accepted for the kit freeze | X4 / X4 | ledger AUTHORITY facts (M3) | — | 10-16 |
-| S08 | Q1–Q6, Q9, Q17 answered | Owner | blocked: Owner | W0 / W0 | toolchains, store, windows, X2-gate rules, reference binary | §13 | 10-16 |
-| S09 | Weekly signing sitting's slot set (revision 2: two slots) | Owner | answered in chat 10-16: Sunday evenings, sitting 1 Sun 10-18; ratify (D0-10b Value line) | W0 / W0 | every freeze and signature (R26) | [OWNER-ANSWERS.md](OWNER-ANSWERS.md) | 10-16 |
-| S10 | Quiet windows agreed (staged: 4 pilot nights, then the rule; times; GEMS paused) | Owner | answered in chat 10-16: 23:00–07:00 PT, 4 pilot nights from W1, then a re-signed rule of 4–7 nights a week, GEMS kept out; ratify (D0-10d); the rule's form and contingency open | W0 / W0 | all quiet nights | [OWNER-ANSWERS.md](OWNER-ANSWERS.md) | 10-16 |
+| S08 | Q1–Q6, Q9, Q17 answered | Owner | Q1's unattended part, Q2's window part, and Q3 answered 10-23; Q4, Q6 and Q17 proposed for delegation (DELEGATED P5, P1, P20); Q5 and Q9 blocked: Owner (§13, revision 5) | W0 / W0 | toolchains, store, windows, X2-gate rules, reference binary | §13 | 10-23 |
+| S09 | Weekly signing sitting's slot set (revision 2: two slots) | Owner | done: Sunday evenings (10-16), ratified in chat 10-23. Sitting 1 (10-18) did not take place; sitting 2 is Sun 10-25 | W0 / W0 | every freeze and signature (R26) | [OWNER-ANSWERS.md](OWNER-ANSWERS.md) | 10-23 |
+| S10 | Quiet windows agreed (staged: 4 pilot nights, then the rule; times; GEMS paused) | Owner | answered in chat 10-16: 23:00–07:00 PT, 4 pilot nights from W1, then a re-signed rule of 4–7 nights a week, GEMS kept out; ratified in chat 10-23 (interim). The rule's form and its 25% contingency are proposed (DELEGATED P7); the post-pilot rate is Pierce's re-signature | W0 / W0 | all quiet nights | [OWNER-ANSWERS.md](OWNER-ANSWERS.md) | 10-23 |
 | S11 | Hygiene settings applied by Pierce | Owner | blocked: Owner (checklist from X4) | W1 / W1 | a valid noise pilot | — | 10-16 |
 | S12 | Second family provisioned (keys, pinned versions) | Owner | **will not happen in M0** (chat answers 10-16): no frontier family B; the local Qwen3 is the only other family. Replaced by S69 and S71 | — | — | [D0_BRIEF §0](../D0_BRIEF.md) | 10-16 |
 | S13 | Desktop job wrapper (8 tokens, window refusal, stamps) | X4 | todo | W1 / W1 | all multi-thread desktop jobs from W1 | — | 10-16 |
-| S14 | X0 record | X0 | draft; freeze kit landed in commit `6fa2931`: Appendix D items D1–D10 and D12 filled, D11 incomplete (the `census.json` assembler and twin attribution) [M, record Appendix D, read 10-16 evening]; the lead engineer freezes it before sitting 1 | freeze W0, sign W1 / same | X0 compiles; X0 verdict | [X0-census](prereg/X0-census.md) | 10-16 |
+| S14 | X0 record | X0 | frozen@`152fa33` (10-17) [M, record status line, `git log`]; signed@2026-10-23 (interim chat, OQ-1 to OQ-7 deferred; the tag at sitting 2). Census run 1's computed outcome is `tooling_failure` (V3), unsigned, until the X0-A1 fix and re-run, bounded at 11-12 (SIGNATURES; PACKET item 5). The X0 track updates S17 | freeze W0, sign W1 / same | X0 compiles; X0 verdict | [X0-census](prereg/X0-census.md) | 10-23 |
 | S15 | X0 toolchains (LLVM, XED) and TOOLCHAINS.md | X0 | doing [M, brief]; TOOLCHAINS.md absent at 11:40 PT [M, plan]; present at 14:38 PT, tools listed as working [M, owner track] | W0 / W0 | X0 compiles | [TOOLCHAINS.md](../../experiments/x0-census/TOOLCHAINS.md) | 10-16 |
 | S16 | X0 scripts | X0 | doing: `judge.py` with 56 unit tests, reworked extract and decode, regression on 24 non-Hearth objects with 0 deviations; no Hearth source compiled or decoded; `census.json` assembler not written [commit `6fa2931` message, as reported by x0prep] | W0 / W0 | — | `experiments/x0-census/scripts/` | 10-16 |
 | S17 | X0 `census.json`, REPORT.md, re-derivation | X0 | blocked: S14 freeze, S15 | W1 / W1 | X0 verdict | — | 10-16 |
@@ -1494,7 +1532,7 @@ Plan B. "Gates" names the collection or step that the row unblocks.
 | S48 | X3 report (final after planted regression) | X3 | todo | W5 / W7 | M0 verdict | — | 10-16 |
 | S49 | Measurement service v0 | X4 | doing, not usable yet (commit `93f67a8`, "inconsistent state"): the C harness and Rust orchestrator were built and unit-tested on the desktop; two reviews found 26 issues, 3 of them blockers; the C side is on protocol v2 and the orchestrator still on v1, so every orchestrated run fails closed [commit message] | W1 / W1 | every quiet-night run; the first pilot night | `experiments/x4-integrity/service/` | 10-16 |
 | S50 | Sandbox (Job Object) | X4 | doing (commit `93f67a8`): sandbox and probes in progress, same state as S49 [commit message] | W2 / W3 | hacks; X1 harness isolation | `experiments/x4-integrity/sandbox/` | 10-16 |
-| S51 | X4-noise-pilot record; pilot nights; σ_d published | X4 | blocked: S06, S11; the record split out of the X4 DRAFT and frozen (signed 10-18, or 10-25 at the latest for W1 nights) | W1 / W1 | N and c; night rate | — | 10-16 |
+| S51 | X4-noise-pilot record; pilot nights; σ_d published | X4 | blocked: S06, S11; the record split out of the X4 DRAFT and frozen (signed 10-18, or 10-25 at the latest for W1 nights). *Revision 5 (owner side only): S06 done; C01, C02 and C25 answered 10-23; the record is DRAFT [M, its status line, 10-23]; S11 still blocked: Owner* | W1 / W1 | N and c; night rate | — | 10-23 |
 | S52 | `mithc profile measure` (one quiet night) | X4 | blocked: Q2, Q3, S10 | W2 / W2 | phys/emp bounds | — | 10-16 |
 | S53 | X4-calibration rules, fill-in, sessions; time-to-pass, σ_d, throughput published | X4 | blocked: S06, S10, S04, Q15 | W2 → W3, nights W3–W6 / W2 → W4, nights W4–W10 | X3 finality; X4 verdict | — | 10-16 |
 | S54 | X4-hacks-catalogue record; dev runs; kit hash-freeze; gated run | X4 | blocked: S05 (the freeze is signed with D0-9a's key; D0_BRIEF no longer needs D0-9b for it) | W2 → W3 / W2 → W4 | blind batch; X4 verdict | — | 10-16 |
@@ -1511,11 +1549,13 @@ Plan B. "Gates" names the collection or step that the row unblocks.
 | S65 | COST.md | plan | draft (revision 4, owner track, after one same-family review) | living | stop-loss (§5) | [COST.md](COST.md) | 10-16 |
 | S66 | S0: R3 commit, ADR-0010, port base, corpus | Hearth / Owner | blocked: R3 commit, D0-2, D0-3 | not an M0 gate | M1's S1 | — | 10-16 |
 | S67 | M0 verdict signed | Owner | blocked: S14–S63, S69 | W6 / W12 | M0 outcome | — | 10-16 |
-| S68 | Owner queue (`OWNER-QUEUE.md`) | owner | draft, revised after one same-family review (2026-10-16); carries sitting 1's agenda | living | the weekly sittings' agendas | [OWNER-QUEUE.md](OWNER-QUEUE.md) | 10-16 |
-| S69 | X1 restructure chosen (D0_BRIEF Q16–Q18) and folded into the X1 record | Owner, then X1 | Q16 answered in chat 10-16; X1-amendment-1 drafted (packet track, 10-16 evening) and revised after one same-family review (11 findings across the packet's files, all accepted): F = 1, planned n 136 [S], a Claude Code runner with a signed effort level, pacing, and a sequential plan-capacity feasibility gate, because the estimate is ≈ 13–55 weekly windows [D, rough]; no recommendation on Q18. Q17, Q18 and OWNER-QUEUE A20 blocked: Owner; A20 comes before Q16's ratification and before the smoke run; the packet leaves Q17 and Q18 until after the smoke run | W0 / W0–W1 | all X1 sealed content and attempts | [X1-amendment-1](prereg/X1-amendment-1.md) | 10-16 |
-| S70 | Claude Code runner smoke run on public items (tokens and window share per attempt [M]) | X1 | todo; development, not collection. Waits for A20 (Owner) and the pinned effort level; runs on a quiet account (agent team paused) as X1-amendment-1 §6.2's sequential gate: 5 attempts, then batches of 20 up to 65, at most ≈ 10 points of one weekly window [D] | W1 / W1 | sizing X1 under the plan (R29) | [X1-amendment-1 §6.2](prereg/X1-amendment-1.md) | 10-16 |
-| S71 | Local Qwen3 serving on the desktop: checkpoint located, tok/s under 8 threads measured (daytime), tool-call support checked | X1 / Owner | blocked: D0-10c checkpoint, Q3, Q18 | W1 / W1 | every Qwen3 job; X1-local-pilot | — | 10-16 |
-| S72 | Sitting-1 packet (agenda, signing mechanics) | packet | draft (packet track, 10-16 evening), revised after one same-family review: agenda ≈ 105–135 min with the key made before Sunday and two records signed on their summaries, up to ≈ 210 min otherwise [inference]; item 6 optional; item 7's checklist now follows the X4 track's draft X4-noise-pilot §11; three freeze-hash placeholders for the lead engineer to fill by Sat 10-17 night | W0 / W0 | sitting 1 (Sun 10-18) | [PACKET](sittings/2026-10-18/PACKET.md) | 10-16 |
+| S68 | Owner queue (`OWNER-QUEUE.md`) | owner | revised 2026-10-23 by the queue track (not reviewed): batches 3 and 4 carried; all 116 entries classified (A 16, B 41, C 59, after one same-family review); sitting-2 list | living | the weekly sittings' agendas | [OWNER-QUEUE.md](OWNER-QUEUE.md) | 10-23 |
+| S69 | X1 restructure chosen (D0_BRIEF Q16–Q18) and folded into the X1 record | Owner, then X1 | *Revision 5: X1-amendment-1 frozen@`ac751b8`, signed@2026-10-23 (interim chat: `claude-opus-5-5`, effort `max`, s = 50%, cap 160, K = 6); A20 answered; Q17 and Q18 at sitting 2 (not delegable; recommendations: DELEGATED P3, P2).* Earlier status, 10-16: Q16 answered in chat 10-16; X1-amendment-1 drafted (packet track, 10-16 evening) and revised after one same-family review (11 findings across the packet's files, all accepted): F = 1, planned n 136 [S], a Claude Code runner with a signed effort level, pacing, and a sequential plan-capacity feasibility gate, because the estimate is ≈ 13–55 weekly windows [D, rough]; no recommendation on Q18. Q17, Q18 and OWNER-QUEUE A20 blocked: Owner; A20 comes before Q16's ratification and before the smoke run; the packet leaves Q17 and Q18 until after the smoke run | W0 / W0–W1 | all X1 sealed content and attempts | [X1-amendment-1](prereg/X1-amendment-1.md) | 10-16 |
+| S70 | Claude Code runner smoke run on public items (tokens and window share per attempt [M]) | X1 | *Revision 5: A20 answered and effort pinned at `max` (10-23); it waits for the runner and a time Pierce agrees, with the account idle.* todo; development, not collection. Waits for A20 (Owner) and the pinned effort level; runs on a quiet account (agent team paused) as X1-amendment-1 §6.2's sequential gate: 5 attempts, then batches of 20 up to 65, at most ≈ 10 points of one weekly window [D] | W1 / W1 | sizing X1 under the plan (R29) | [X1-amendment-1 §6.2](prereg/X1-amendment-1.md) | 10-16 |
+| S71 | Local Qwen3 serving on the desktop: checkpoint located, tok/s under 8 threads measured (daytime), tool-call support checked | X1 / Owner | *Revision 5: Q3 answered (C02, 10-23); checkpoint proposed (DELEGATED P4); until Pierce signs a weekly Qwen3 cap, all Qwen3 jobs stay within R2's 5–10 desktop hours (P13); the desktop is busy with another workflow on 10-23.* Earlier: blocked: D0-10c checkpoint, Q3, Q18 | W1 / W1 | every Qwen3 job; X1-local-pilot | — | 10-16 |
+| S72 | Sitting-1 packet (agenda, signing mechanics) | packet | draft (packet track, 10-16 evening), revised after one same-family review: agenda ≈ 105–135 min with the key made before Sunday and two records signed on their summaries, up to ≈ 210 min otherwise [inference]; item 6 optional; item 7's checklist now follows the X4 track's draft X4-noise-pilot §11; three freeze-hash placeholders for the lead engineer to fill by Sat 10-17 night. *Revision 5: marked FINAL 10-17 (`a3add8b`); sitting 1 did not take place, and its items were signed in chat 10-23 or moved to sitting 2* | W0 / W0 | sitting 1 (Sun 10-18) | [PACKET](sittings/2026-10-18/PACKET.md) | 10-23 |
+| S73 | Delegation log (`DELEGATED.md`) | lead engineer | scope and limits committed (`3a66d49`); 62 rows drafted by the queue track 10-23 and revised after one same-family review: 59 marked "PROPOSED, pending lead engineer" and 3 (P2, P3, P23) "Not delegable", recommendations only; none adopted | living | the C items of OWNER-QUEUE | [DELEGATED.md](DELEGATED.md) | 10-23 |
+| S74 | Sitting-2 packet (Sun 10-25): the key, re-signing by tag, the signed Q17 and Q18 lines, the records FROZEN by then | lead engineer / packet | todo; due Sat 10-24, night (R6). OWNER-QUEUE's sitting-2 list is its input | W1 | every AUTHORITY fact of M0 so far | [OWNER-QUEUE](OWNER-QUEUE.md#sitting-2-sun-2026-10-25-what-only-pierce-can-do-class-b) | 10-23 |
 
 **Checkpoint review.** At each checkpoint (§5.1 or §5.2), the plan track:
 - compares the status table with the checkpoint row;
@@ -1526,6 +1566,37 @@ Plan B. "Gates" names the collection or step that the row unblocks.
 ---
 
 ## 13. Owner questions
+
+**Revision 5 (2026-10-23): status of each question.** Classes follow
+[OWNER-QUEUE](OWNER-QUEUE.md#classification-of-every-open-item-2026-10-23): A answered by Pierce; B only Pierce;
+C delegable, with a proposed row in [DELEGATED.md](DELEGATED.md) (none adopted).
+- **Answered (A):**
+  - Q1: nights (R5) and the unattended part (D0-7a, batch 3);
+  - Q2: the window part, "the 8-thread cap lifts only inside 23:00–07:00 windows"; the aggregate reading
+    outside windows is the sprint rule;
+  - Q3: "the real Qwen3-30B-A3B Q4 file on the NVMe, read-only, never the USB disk";
+  - Q8: C25, provisional until X4's calibration, which runs on `x3_bench`;
+  - Q10: the Claude model `claude-opus-5-5`, effort `max`, runner accepted (batch 4);
+  - Q19, Q21: as noted at each;
+  - Q16: option (c), the 24-item calibration set, through the signed X1-amendment-1 (OWNER-QUEUE D01).
+- **Delegable (C):**
+  - Q4: P5 (Rust confirmed at user level, PATH unchanged [M, 10-23]);
+  - Q6: P1 (freeze commits between sittings);
+  - Q7: P8, with one added line for X2's `gate_missed` (P28);
+  - Q10's checkpoint: P4;
+  - Q12: P7;
+  - Q13: P15;
+  - Q15: P21, for the stopping rule (to N);
+  - Q17: P20;
+  - Q18: P13, for the interim bound (no cap exception; R2's 5–10 desktop hours until a signed cap);
+  - Q20: P26.
+- **Pierce only (B):**
+  - Q5, the store (OWNER-QUEUE A06);
+  - Q9 and Q14 ("end of week 6", OWNER-QUEUE C04);
+  - Q11 (D0-10b's hours);
+  - Q15's ROADMAP §10 part, and the microbenchmark A/A 2N horizon (+13.3 h / +48.9 h [D, X4 Q9]);
+  - Q18's weekly Qwen3 cap;
+  - Q16's review role (OWNER-QUEUE C38).
 
 None of these is decided. Each item proposes something and names the decision it rests on.
 *Revision 3:* Q10, Q19 and Q21 are answered or made moot by the chat answers of 2026-10-16 (noted at
@@ -1666,6 +1737,8 @@ designs, is consolidated, deduplicated and ranked by the date it blocks in
 | 2026-10-16 | First version: tracks, dependencies, Plan A and Plan B, machine calendar, owner hours, pre-registration schedule, review protocol, risks, plan tombstones, status table, owner questions | plan track (Claude, same-family; not yet reviewed) |
 | 2026-10-16 | Revision 2 after one same-family review of 18 findings (§15). Changes: Plan B operative until D0-10b; night ask aligned with D0_BRIEF D0-10d plus a post-pilot rate rule; A/A bound column and stopping-rule proposal; Plan B checkpoints, night calendar and Plan B-cal; σ_ta Rust arm or floor plus the sealed reserve; X0 → X2 census dependency; rules freezes before development data; explicit kit/catalogue order; job wrapper and aggregate thread cap; `mithc profile measure` in the night order; reference-binary stand-in; D0 "needed by in this plan" column; barred-X3 mapping lines; R-diff backlog schedule; R23–R28; three tombstones; rebuilt status table; Q15–Q21; adopted the track-created paths | plan reviser (Claude, same family as author; independent context) |
 | 2026-10-16 | Revision 3: carried the Owner's chat answers of 2026-10-16 (D0-10a "No metered API"; D0-10c "Local Qwen3 via Hearth"; D0-12 "Batch weekly review", X0 excepted), pending ratification. Resolved the three disagreements with D0_BRIEF that the week-0 residual risks listed, preferring the brief's latest positions: (1) the night ask is now the staged window (4 pilot-week nights, then the §6.3 rule, at most 7), not a fixed 7 from W2; (2) D0-11b is back at M1, not W0; (3) only X0 is covered by an instruction, and X2-fuzz and X4-noise-pilot need signatures at a weekly sitting. Also aligned with the brief: one weekly sitting instead of two slots; D0-9b not needed for the kit freeze. X1 marked blocked pending the restructure (D0_BRIEF Q16–Q18; X1 record). R-local review grade (D0_BRIEF Q17). `pass_one_family` mapping line (§3.8). Risks R2, R16, R17, R26 updated; R29–R31 added. Status rows S02–S12, S29–S32, S42, S54–S55, S62–S65 updated; S68–S71 added. Q1, Q10, Q16, Q18, Q19, Q21 annotated. Two tombstone survivor comments changed. Setup table refreshed (families; TOOLCHAINS.md present) | owner track (Claude; not reviewed) |
+| 2026-10-23 | Revision 5, consistency edits only, by the queue track (Claude, same family; not reviewed). Carried Pierce's batches 3 and 4 from OWNER-ANSWERS at `3a66d49`: the interim chat signature (effort `max`); X0 and X1-amendment-1 SIGNED (interim); D0-7a, C01, C02, C25 and A20 answered; the written delegation. Annotated the header, §1, §3.2, §3.4, §3.5, §3.7, §6.1, §8 and §13. Updated S02, S04–S06, S08–S10, S14, S51 (its owner-side blockers only) and S68–S72, and added S73 (the delegation log) and S74 (the sitting-2 packet). No schedule, threshold or derived figure was re-computed; the finish-week tables and checkpoints C0/B-C0 still show the 10-18 sitting, which did not take place | queue track |
+| 2026-10-23 | Revision 5, revised after one review of the queue track's files (Claude, same family, independent context; 13 findings, all accepted; §15). Consistency edits only: the Q17 and Q18 lines are not delegable (recommendations in DELEGATED P3 and P2); S71 and Qwen3 work bound to R2's 5–10 desktop hours until Pierce signs a weekly cap (P13); a proposed `gate_missed` line noted under §3.8 (P8, P28); §13's classes re-split (Q7, Q15, Q18); S68, S69, S71 and S73 updated. No schedule, threshold or derived figure was re-computed | queue track reviser |
 | 2026-10-16 | Revision 4 after one review of revision 3 (Claude, same family, independent context; 13 findings across the owner track's five files, all accepted; §15). Batch 2 of the chat answers carried, cited from OWNER-ANSWERS.md: the X1 rule (Q16 answered, template author Q18 open with no default), D0-10d (pilot nights from W1, 23:00–07:00 PT, a 4–7-night rule), Sunday sittings (10-18 first). Critical path, C0, C1, B-C0, B-C1 re-derived against Sunday sittings and W1 nights; §8's X2-fuzz, X4-noise-pilot and X4-calibration rows moved; `pass_local_family` line (§3.8); R-local provisional (§9); §9 step 5 marked superseded; provider-era R24 and C3 rewritten; dollar figures in §3.2 labelled as API-price estimates; R1, R26, R29 updated; S02, S05, S06, S09, S10, S51, S69 updated; Q1, Q4, Q6, Q16 annotated | owner track reviser (Claude, same family) |
 
 ---
@@ -1710,3 +1783,11 @@ In this plan the review led to the revision 4 changes in §14. Two came from fin
 the provider-era text (R24, C3, §9 step 5, the dollar figures of §3.2) and the re-derivation of C0,
 C1 and the critical path against Sunday sittings and W1 nights. The finish-week table of §6.3 was not
 re-derived; the plan track owns `check.py`.
+
+**Revision 5 (queue track, 2026-10-23)** was reviewed once, together with the queue track's other files:
+
+| Date | Reviewer | Family | Lens | Scope (input) | Findings by severity | Outcome |
+|---|---|---|---|---|---|---|
+| 2026-10-23 | Reviewer 1 of the queue track's revision | Claude, same family, independent context | the delegation's limits against the FROZEN records and the owner log; fair presentation of options; pre-registration of each rule (inferred from the findings) | DELEGATED's proposed rows, OWNER-QUEUE, D0_BRIEF; PLAN and COST as sources | blocker 1, major 6, minor 6 (13 in all; finding 7 also names §3.8's mapping, which DELEGATED P8 adopts) | 13 accepted (3 with a modified fix), 0 rejected. Full log in [DELEGATED](DELEGATED.md#review-log-of-the-proposed-rows) |
+
+In this plan it led to the consistency edits in §14's second revision-5 row.

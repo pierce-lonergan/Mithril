@@ -4,8 +4,11 @@ Status: living ledger, opened 2026-10-16, revision 2 the same day after a same-f
 ([PLAN §15](PLAN.md#15-review-log)), revision 3 the same day by the owner track to carry the Owner's
 chat answers, and revision 4 the same day after one review of revision 3 (Claude, same family,
 independent context; logged in [PLAN §15](PLAN.md#15-review-log) and
-[OWNER-QUEUE](OWNER-QUEUE.md#review-log)). It tracks spend, Owner hours and machine hours against ROADMAP §10's M0
-lines. The plan track maintains the format. Each track appends its own rows. Evidence tags follow
+[OWNER-QUEUE](OWNER-QUEUE.md#review-log)). Revision 5, 2026-10-23, is by the queue track (consistency edits for
+Pierce's batches 3 and 4; rows 9–12; a late W0 snapshot), revised the same day after one review of the queue
+track's files (Claude, same family, independent context; logged in [PLAN §15](PLAN.md#15-review-log) and
+[DELEGATED](DELEGATED.md#review-log-of-the-proposed-rows)). It tracks spend, Owner hours and machine
+hours against ROADMAP §10's M0 lines. The plan track maintains the format. Each track appends its own rows. Evidence tags follow
 [README](README.md#evidence-tags). [PLAN.md](PLAN.md) holds the schedule that these figures are
 compared against.
 
@@ -21,6 +24,13 @@ daytime desktop hours for Qwen3 and, if Pierce writes X1's templates himself, ow
 batch-2 X1 rule ("Claude kills; pass provisional") makes X1's Claude attempts the largest plan-usage
 line; his check of the plan's terms and capacity is OWNER-QUEUE A20.
 
+**Revision 5 (2026-10-23).** On 10-23 Pierce ratified these answers in his interim chat signature (OWNER-ANSWERS
+batch 4); under A10 the tag at sitting 2 (Sun 10-25) is the AUTHORITY fact. So **the metered budget is $0,
+ratified in chat, with the tag still to come**. His batch-3 answer to A20 was "Terms OK; run the smoke run".
+X1-amendment-1 is SIGNED (interim) with s = 50% of each weekly window, cap 160, K = 6 and effort `max`. "Extra
+usage" stays disabled (its §2.2 and §2.4 P6). Spending money stays outside the written delegation
+([DELEGATED.md](DELEGATED.md), Limits).
+
 **Contents**
 1. [Budget](#1-budget)
 2. [Counting rules](#2-counting-rules)
@@ -33,7 +43,9 @@ line; his check of the plan's terms and capacity is OWNER-QUEUE A20.
 
 ## 1. Budget
 
-None of this is approved. The amounts become a budget only when D0-10 is signed. Until then they are
+*(Revision 5: D0-10a's answer, $0 metered, is ratified in Pierce's interim chat signature of 10-23. It becomes
+an AUTHORITY fact with his tag at sitting 2. No other amount is approved.)* None of this is approved. The
+amounts become a budget only when D0-10 is signed. Until then they are
 ROADMAP's estimates. Under D0-10a's chat answer (pending ratification) no metered amount will be
 approved: the dollar figures in §1.1–§1.3 are API-price estimates only. §1.6 gives the plan-token and
 desktop-hour figures that replace them.
@@ -74,8 +86,8 @@ desktop-hour figures that replace them.
 | *Not in ROADMAP's lines:* | | | | |
 | Held-out growth if the n rule asks for n > 60: 48 attempts per extra item [D: (5 × 3 + 3 × 3) × 2] | 48 × (n − 60) | $0.024–0.096k per extra item [D] | — | [D] |
 | — for example n = 120 (the example n_max of PLAN §3.2): 5,760 held-out attempts in all | 5,760 | $2.9–11.5k in all [D] | — | [D] |
-| Proposed Rust arm on the card-iteration items (PLAN §3.2, Q16): 20 × 5 × 1 epoch × 2 families; 100 at one kill-carrying family (D0_BRIEF Q16) | 200 (100 at one family) | $0.1–0.4k [D], an API-price estimate, not a budget (D0-10a chat answer); on the plan it costs tokens | — | [D], pending PLAN Q16 and D0_BRIEF Q16 |
-| **Family B authoring and reviews (metered):** X1 sealed tasks, oracles, reference solutions and the reserve; the `mithi` planted corpus; X4's blind hack batch; the X2 lockstep Prover; the CC Prover and Adversary; R-diff reviews of SIGNED records and verdicts (PLAN §9) | — | **not estimated** [G]; filled in from the first provider export. *Revision 3: no Family B exists under the chat answers; these roles fall to the local Qwen3 (desktop hours, §1.6) or the Owner, pending D0_BRIEF Q16–Q18* | — | — |
+| Proposed Rust arm on the card-iteration items (PLAN §3.2, Q16): 20 × 5 × 1 epoch × 2 families; 100 at one kill-carrying family (D0_BRIEF Q16) | 200 (100 at one family) | $0.1–0.4k [D], an API-price estimate, not a budget (D0-10a chat answer); on the plan it costs tokens | — | [D], pending PLAN Q16 and D0_BRIEF Q16. *Revision 5: not in the signed X1-amendment-1's attempt count (§4.4), which uses option (c), a 24-item calibration set (OWNER-QUEUE D01)* |
+| **Family B authoring and reviews (metered):** X1 sealed tasks, oracles, reference solutions and the reserve; the `mithi` planted corpus; X4's blind hack batch; the X2 lockstep Prover; the CC Prover and Adversary; R-diff reviews of SIGNED records and verdicts (PLAN §9) | — | **not estimated** [G]; filled in from the first provider export. *Revision 3: no Family B exists under the chat answers; these roles fall to the local Qwen3 (desktop hours, §1.6) or the Owner, pending D0_BRIEF Q16–Q18. Revision 5: Q16 signed 10-23; Q17 and Q18 at sitting 2 (not delegable; recommendations: DELEGATED P3, P2)* | — | — |
 
 The price basis is $0.5–2 per agentic attempt with a frontier model [inference, ROADMAP §10].
 
@@ -126,6 +138,23 @@ window (4 pilot-week nights, then the rule's rate, at most 7); the 7-night row i
 maximum, not the ask.*
 
 ### 1.6 Plan tokens and desktop hours under the 2026-10-16 owner answers
+
+*Revision 5 (2026-10-23).* The chat answers are ratified (interim), and Q16 is signed with X1-amendment-1.
+D0_BRIEF Q17 and Q18 are still open, and neither is delegable: both need Pierce's signed lines. The
+recommendations, QWEN3_LOCAL_PROVISIONAL and GEN_QWEN3 (DELEGATED P3 and P2), are not adopted. Until he signs Q17
+and a weekly Qwen3 cap, all Qwen3 jobs together stay within R2's 5–10 desktop hours (P13). **The template rows below
+use two held-out kill-carrying families (F = 2) and are superseded by the signed X1-amendment-1 §5.3 (F = 1,
+≤ 1 held-out item per template, 167–201 templates):**
+- GEN_OWNER ≈ 84–302 owner h;
+- GEN_QWEN3 ≈ 54–374 daytime desktop h for X1's Qwen3 work in all;
+- GEN_CLAUDE ≈ 22–197 M plan tokens, ≈ 0.31–3.39 weekly windows.
+
+At 2–3 held-out items per template and n = 160 (§5.3): GEN_OWNER ≈ 42–171 owner h; GEN_QWEN3 ≈ 33–225 h;
+GEN_CLAUDE ≈ 11–112 M plan tokens. These are [inference and D from G]; they were re-derived by
+`scratchpad/queue/calc_queue.py` [D]. Two or three items per template are not admissible above the signed cap of
+160 (§4.3); at or below it they need the X1 record's §6.3 recompute and a §4.3 change Pierce signs. Effort `max` changes the tokens per
+attempt (X1-amendment-1 §2.1), so the per-attempt row below is unmeasured at that level until the §6.2 smoke
+run.
 
 All rows are pending ratification of the chat answers and, for X1, D0_BRIEF Q17 and Q18 (Q16 is
 answered in chat: option 4b). The X1 record's section "X1 under the 2026-10-16 owner constraints"
@@ -239,6 +268,10 @@ and Machine h are as in §2.
 | 6 | 2026-10-16 | **Build round** (this round: the owner track's integration of the chat answers, the X1 restructure section and OWNER-QUEUE.md, plus whatever other tracks run in the same round) | all | $0 (Claude Code plan) | *to be filled from the round's report* | 0 | owner track: laptop, `calc.py` and a brief-parsing check, each < 1 s [M] | — | to be filled |
 | 7 | 2026-10-16 | **Build round, report** (fills row 6; it does not add to it): 22 agents. Their work most likely landed in commits `1e5ddd6` to `6b14b35`, all made at 19:39 PT [inference: the commit times; the report itself was not seen]: `mithi` v0 and the grammar, CC round 2, the X0 freeze kit, the X2 harness and proofs, X4 service v0 work in progress, and the owner-answer integration. It contains row 6's owner track | all | $0 (Claude Code plan) | **9,871,258 subagent tokens** [M, workflow report, as relayed by the lead engineer]; excludes the orchestrating session. Plan readings, weekly all-models: **22% at 14:40 PT (21:40Z) and 39% at 19:40 PT (02:40Z, 10-17)** [M, lead engineer's usage readings] | not logged (Pierce to fill) | desktop builds and unit tests by the X0, X2 and X4 tracks, not metered (job wrapper not yet live) | M | build-round report, as relayed to the packet track |
 | 8 | 2026-10-16 | **Packet round** (this round: the sitting-1 packet and HOW-TO-SIGN, X1-amendment-1 and the F = 1 power blocks, plus whatever other tracks run in the same round) | all | $0 (Claude Code plan) | *to be filled from the round's report* | 0 | packet track, laptop: power simulation, F = 1 blocks 91.8 s and 230.8 s, reproduction re-run of blocks 1, 12 and 13 41.8 s, quick test 2.4 s [M, script output]; arithmetic and doc checks < 1 s each [M]. Packet reviser: the reviewer's simulator re-checks ≈ 20 s and ≈ 31 s, `--recompute --families 1` at 2,000 and 20,000 replicates 17 s and 121 s, the gate simulation in `calc_packet.py` a few seconds [M]. Desktop: none (thread budget 0). **Plan reading by the packet reviser, 2026-10-17T03:27Z (20:27 PT on 10-16): 5-hour 49% (resets 04:00Z), weekly all-models 43% (resets 2026-10-23T12:00Z, Fri 05:00 PT), weekly Fable 0%; extra usage disabled [M, `get_usage`]** | M / — | `get_usage`, 2026-10-17T03:27Z; tokens to be filled |
+| 9 | 2026-10-17 | **X0 freeze and census round** (late entry, written 2026-10-23 by the queue track from the commit log): X0 pre-freeze review fixes (`2191ff8`), the desktop re-run and the lead engineer's freeze rulings (`a7ca16a`), the freeze (`152fa33`, 01:16 PT), census run 1 on the desktop, the independent re-derivation and REPORT.md (`506c0bd`), results stored byte-exact (`cb7d869`), and the final sitting-1 packet (`7e187ca`, `a3add8b`) | X0, packet, lead | $0 (Claude Code plan) | *to be filled from the round's report* | 0 | desktop: census run 1, 07:10–07:19 PT [M, as reported in PACKET item 5]; the pre-freeze re-run is not metered (job wrapper not live) | M (commit times) / — | `git log`; PACKET item 5; tokens to be filled |
+| 10 | 2026-10-23 | **Owner, batches 3 and 4** (asked about 08:10 PT; answered by about 08:40 PT): three answers (interim signing, the four pilot defaults, plan terms), then the interim chat signature of sitting 1 with effort = `max` and the written delegation ([OWNER-ANSWERS](OWNER-ANSWERS.md)) | D0 | $0 | — | not logged (Pierce to fill) | — | — | OWNER-ANSWERS batches 3 and 4 |
+| 11 | 2026-10-23 | **Lead engineer, morning**: X1-amendment-1 frozen (`ac751b8`, 08:03 PT); batch 3 logged (`c88e0ab`); batch 4, SIGNATURES.md, the interim-signature sections of X0 and X1-amendment-1, and DELEGATED.md (`3a66d49`, 08:37 PT) | lead | $0 (Claude Code plan) | *to be filled* | 0 | laptop: commits only [G] | M (commit times) / — | `git log`; tokens to be filled |
+| 12 | 2026-10-23 | **Workflow round, W1, round 1** (this round; the tracks running now). Among them: the queue track (OWNER-QUEUE classification; proposed DELEGATED rows; D0_BRIEF, PLAN and COST consistency edits); the X0-A1 tooling fix (untracked `experiments/x0-census/results/tooling_fix_A1/` and `scripts/tests/test_loops_a1.py` [M, `git status`]); X4 pilot-service work (untracked `pilot.rs`, `pilotcfg.rs`, `observe.rs`, `hygiene.rs`, `sensors_win.rs`, `x4plant.c` and others [M, `git status`]); a portable LLVM 23.1.3 download in `C:\Users\Pierce Lonergan\tools\_downloads` (folder time 08:46 PT [M]) | all | $0 (Claude Code plan) | *to be filled from the round's report*. Plan readings *to be filled* (the lead engineer's `get_usage`; the queue track has no usage tool). The weekly window was due to reset at 05:00 PT today [M, reset time read 10-17 (row 8); weekly recurrence is inference] | 0 | queue track: file and `git` reads on the laptop, < 1 CPU-minute [G]; it did not use the desktop, which another workflow was using (round brief) | — | to be filled |
 
 **Note on row 2** [D]: the 5-hour window rose 5 points in 12 minutes (18:17Z to 18:29Z). At that rate
 the remaining 92 points would last ≈ 3.7 h, against a reset 4.5 h away (23:00Z). Parallel track agents
@@ -289,6 +322,15 @@ Claude, same family, independent context, logged in [X1-amendment-1 §11](prereg
   against 23.7% at 02:40Z, and 43% against 24.2% at 03:27Z [D]. §5's action: pace the tracks; extra
   usage stays disabled (D23). At 43% with 6.4 days left, 57 points remain for the rest of the week [D].
 
+**Note on rows 9–12** (queue track, 2026-10-23).
+- **Late entry.** Row 9 is late: the ledger had no row for 10-17's X0 round. It adds no figure that was not
+  already recorded in a commit or in PACKET item 5.
+- **Tokens and readings.** Rows 9, 11 and 12 need the rounds' token reports. They also need plan readings
+  from W0's end and W1's start; neither is recorded here.
+- **The X1 smoke run.** That run (X1-amendment-1 §6.2) needs a quiet account, at a time Pierce agrees
+  (batch 3). Its readings will be the first per-attempt plan figures [M] for X1.
+- **Desktop daytime hours** remain unmetered until the job wrapper (S13) is live.
+
 ---
 
 ## 4. Totals against budget
@@ -298,12 +340,12 @@ amount.
 
 | Line | Budget | To date | % of low end | % of high end | Tag |
 |---|---|---|---|---|---|
-| API $ (metered) | $16–36k [inference] as ROADMAP's estimate; **stated by Pierce: $0** (approved once D0-10a is ratified) | $0 [G] | 0% | 0% | [G] until the first provider export |
+| API $ (metered) | $16–36k [inference] as ROADMAP's estimate; **stated by Pierce: $0**, ratified in his interim chat signature of 2026-10-23; the D0-10a tag follows at sitting 2 | $0 [G] | 0% | 0% | [G] until the first provider export |
 | of which family B authoring and reviews | no Family B under the chat answers; PLAN Q19 moot | $0 [G] | — | — | [G] |
-| Claude Code plan tokens (reported totals) | not a ROADMAP line; X1's Claude attempts estimated at ≈ 0.73–2.63 B at n = 96, ≈ 0.90–3.18 B at the F = 1 planned n = 136 (§1.6) | 20,520,553 [D: rows 4 + 5 + 7]; row 8 to come | — | — | [D] |
-| Daytime desktop hours, local Qwen3 | not a ROADMAP line except the pilot; ≈ 12–378 h for X1 depending on D0_BRIEF Q18 and the template count, plus ≈ 2–38 h for the Q17 roles (§1.6) | 0 [M: no Qwen3 job run yet] | — | — | [M] |
+| Claude Code plan tokens (reported totals) | not a ROADMAP line; X1's Claude attempts estimated at ≈ 0.73–2.63 B at n = 96, ≈ 0.90–3.18 B at the F = 1 planned n = 136 (§1.6) | 20,520,553 [D: rows 4 + 5 + 7]; rows 8, 9, 11 and 12 to come | — | — | [D] |
+| Daytime desktop hours, local Qwen3 | not a ROADMAP line except the pilot; ≈ 12–378 h for X1 depending on D0_BRIEF Q18 and the template count, plus ≈ 2–38 h for the Q17 roles (§1.6). At F = 1 (X1-amendment-1 §5.3): ≈ 12–30 h without Qwen3 templates, ≈ 54–374 h with them | 0 [M: no Qwen3 job run yet; the queue track saw no Qwen3 job on 10-23] | — | — | [M] |
 | Owner hours | ~195 h [inference] | not logged | — | — | — |
-| Quiet-machine hours | ≈ 60–215 h [inference]; reconstruction 60.3–333.4 h [D] | 0 h [M: no quiet window agreed yet] | 0% | 0% | [M] |
+| Quiet-machine hours | ≈ 60–215 h [inference]; reconstruction 60.3–333.4 h [D] | 0 h [M: no quiet window has run; windows agreed in chat (R5), the X4-noise-pilot record still DRAFT on 10-23] | 0% | 0% | [M] |
 | Desktop daytime hours | X1 pilot 5–10 h [inference]; the rest unbudgeted | not metered (job wrapper due W1) | — | — | — |
 | Subscription, weekly all-models window | not a ROADMAP line | 13% at 18:45Z on day 0 [M]; 22% at 14:40 PT and 39% at 19:40 PT on 10-16 [M, lead engineer's readings]; 43% at 20:27 PT (03:27Z), resets Fri 10-23 05:00 PT [M, row 8]; COST §5's weekly signal fired [D] | — | — | [M] |
 
@@ -312,7 +354,7 @@ amount.
 ## 5. Alerts and stop-loss
 
 These are proposals [G]. The Owner sets the actual levels with D0-10. **Under D0-10a's chat answer
-(no metered API; pending ratification) the metered rows are dormant: any metered charge at all
+(no metered API; ratified in chat 2026-10-23, the tag at sitting 2) the metered rows are dormant: any metered charge at all
 stops the work that caused it and goes to Pierce, because no metered amount is approved.** The
 subscription rows become the binding ones, and X1's sizing depends on them (§1.6; PLAN R17, R29).
 
@@ -345,4 +387,22 @@ Owner hours:       by track D0 … X0 … X1 … X2 … X3 … X4 … CC …; to
 Quiet hours:       used … (voided …) of … agreed; nights …; rate in force …/week; pilot σ_d …   [M, service log]
 Daytime desktop:   … h (jobs: …; peak tokens …); of which local Qwen3 … h                     [M, job wrapper log]
 Alerts fired:      …
+```
+
+**Week W0 (2026-10-16..2026-10-22).** Written late, on 2026-10-23, by the queue track. It is assembled from
+ledger rows 1–9 only, with no new measurement. The plan track may replace it.
+
+```text
+Week W0 (2026-10-16..2026-10-22)
+API $ metered:     this week $0, to date $0 / approved $0 (D0-10a ratified in chat 10-23; tag at sitting 2)  [G: no metered key exists]
+  of which:        family-B attempts $0; family-B authoring and reviews $0 (no family B: D0-10c)           [G]
+Tokens:            Claude Code reported totals 20,520,553 (rows 4, 5, 7) [D]; rows 8 and 9 to be filled
+Plan usage:        weekly all-models 10% at 18:17Z 10-16 (first reading) → 43% at 03:27Z 10-17 (last recorded)
+                   [M]; no reading recorded for 10-17 03:27Z..10-22; 5-hour peak recorded 49% (03:27Z 10-17) [M]
+Owner hours:       not logged (Pierce to fill)
+Quiet hours:       used 0 h; no quiet window has run (the X4-noise-pilot record is DRAFT) [M]
+Daytime desktop:   not metered (job wrapper not live); X0 census run 1, 07:10-07:19 PT 10-17 [M, PACKET];
+                   local Qwen3 0 h [M]
+Alerts fired:      weekly pacing signal (§5) at every recorded reading: 22% vs 20.8%, 39% vs 23.7%,
+                   43% vs 24.2% [D, note on rows 7-8]; no metered charge
 ```
