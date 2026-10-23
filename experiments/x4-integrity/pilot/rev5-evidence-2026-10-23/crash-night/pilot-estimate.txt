@@ -1,0 +1,35 @@
+# X4 noise pilot estimator (record sections 4, 5, 7(a)); x4svc pilot-estimate, revision 5
+# DRY-RUN ACCEPTANCE TEST: dry records, not pilot data; no value below is an estimate
+grade = DRY-RUN
+data_dir = D:\mithril\x4rev4r\scratch-crash\dry
+freeze_commit = (not checked)
+config_canonical_sha256 = (not checked)
+progress_sha256 = 17ae1e34bad708ffb6dd1cc260f2af7ba45396f6be7824308d9ebb8a1f61c70e
+night dry-20261023T212455Z status=closed-after-interrupt runs=4 blocks=0 sessions=0 truncated_last_lines=0 integrity_cleared=-
+[e2e-decode]
+sessions_attempted = 1
+sessions_by_end = interrupted:1
+blocks_excluded_by_session_end = none
+blocks_counted = 0 (of which 0 hold a capped run and are left out of sigma_d and sigma_run)
+sigma_d = none (no counted block)
+sigma_d_with_cut_sessions = none (B = 0, cut sessions = 0)
+sigma_run = none (df = 0)
+incumbent_median_ln_ns = none
+t_run_ns = median none p01 none p99 none (n = 0)
+slow_outliers = none (sigma_run or the median is undefined)
+observe_runs = 0
+observe tau_clock_ns max = none fill_in_2x = none ceiling = 0.1% of delta_o
+observe kappa_post_cycles max = none fill_in_2x = none ceiling = none
+observe eps_spin_us max = none fill_in_2x = none ceiling = 50.000000
+observe eps_idle_us max = none fill_in_2x = none ceiling = 1000.000000
+observe init_max_wall_ns max = none fill_in_2x = none ceiling = none
+observe init_max_cycles max = none fill_in_2x = none ceiling = none
+observe extra_cores max = none fill_in_2x = none ceiling = none
+observe exit_grace_ns max = none fill_in_2x = none ceiling = none
+load_2s_pct p50 none p99 none (n = 0); load_gate_threshold = none
+modified_page_bytes p50 none p99 none; disk_write_bps p99 none; settle_ms p99 none
+settle_eff_mhz_run_lps p01 none p50 none
+blocks_attempted = 0 discarded = 0 (rate none) causes: none
+descriptive within_session_sd_d = none s_between = none carry_over = none s3_trend_sessions = 0
+night dry-20261023T212455Z productive_block_hours = 0.0000
+productive_block_hours median over nights with counted blocks = none

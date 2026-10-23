@@ -5,7 +5,15 @@
 #
 #   x4svc pilot-plan     --config <filled copy>            # the session order, read-only
 #   x4svc verify-hygiene --config <filled copy>            # every pre-start item, read-only
-#   x4svc pilot-night    --config <filled copy> --pilot    # a pilot night (Pierce, or the approved job wrapper)
+#   x4svc config-hash    --config <filled copy>            # the canonical SHA-256 the pre-night amendment records
+#   x4svc pilot-night    --config <filled copy> --pilot --config-sha256 <that hash>
+#                                                          # a pilot night (Pierce, or his pilot launcher task)
+#
+# Revision 5 (review round 5): PILOT holds every value the record fixes by EQUALITY (the e2e time cap
+# = max(600, 3 x t_run_plan_s), memory_gib 2 and 24, disk_write_max_bytes_s 1048576, the record path,
+# the pinned paths below, the tag name, and image lists EQUAL to the record's); the names given at
+# signing go in excluded_images_at_signing; o_rt and t_run,plan(e2e) are whole seconds. The night refuses
+# unless this file's canonical SHA-256 (without its integrity_cleared lines) equals --config-sha256.
 #
 # Revision 4: `pilot-night --pilot` refuses this file unless EVERY value the record fixes holds exactly
 # (thresholds, windows, schedule, run types and their order, workloads, outputs, environment blocks,
@@ -15,8 +23,8 @@
 # the amendment (every night's manifest.txt records the SHA-256 of the file it ran). Values marked
 # [C01]/[C02]/[signing] come from the Owner's answers (OWNER-ANSWERS batch 3, R8) or are listed at
 # signing.
-# Binaries: the pinned copies under D:\mithril-data\x4\bin, copied from the D:\mithril\x4c\bin build
-# the pre-night amendment hashes, so a later dev rebuild cannot change what a night runs.
+# Binaries: the pinned copies under D:\mithril-data\x4\bin, copied from the build the pre-night
+# amendment hashes, so a later dev rebuild cannot change what a night runs.
 grade = PILOT
 record = docs/m0/prereg/X4-noise-pilot.md
 freeze_commit = <FILL: the record's freeze commit, 40 hex>
@@ -33,9 +41,13 @@ probe_exe = D:\mithril-data\x4\bin\x4sb_probe.exe
 probe_sha256 = <FILL>
 x4svc_sha256 = <FILL>
 # record section 10: agent and build images, Mithril binaries other than this pilot's, WSL, the
-# launchers observed on the desktop [M, 2026-10-16]; the local Qwen3 server and the GEMS images Pierce
-# lists at signing [signing]. Starting or using any CPU in a session voids it.
-excluded_images = claude, node, cl, link, cargo, rustc, python, pythonw, mithi, mithc, vmmemWSL, vmmem, wsl, wslhost, OneDrive, Overwolf, CurseForge, EpicGamesLauncher, <FILL: the local Qwen3 server image>, <FILL: GEMS image names [signing]>
+# launchers observed on the desktop [M, 2026-10-16]. Starting or using any CPU in a session voids it.
+# Revision 5: exactly the record's list. The local Qwen3 server is Hearth's `hearth serve`, a Python
+# program (python/hearth/server.py at b5d3f14), so its image is python/pythonw, already listed [inference].
+excluded_images = claude, node, cl, link, cargo, rustc, python, pythonw, mithi, mithc, vmmemWSL, vmmem, wsl, wslhost, OneDrive, Overwolf, CurseForge, EpicGamesLauncher
+# [signing] record section 13: the GEMS images, and any other server image, Pierce names at signing that
+# are not in the list above (comma-separated; leave the value empty for "none beyond the record's list")
+excluded_images_at_signing = <FILL: names given at signing, or empty>
 # record section 10 (revision 4): starting voids (a remote login, an agent's or a task's shell); one
 # already running at the session start may use CPU; the driver's own children are exempt
 excluded_started_images = sshd, sshd-session, powershell, pwsh, cmd
@@ -102,8 +114,10 @@ cooldown_factor = 1
 # [pre-night amendment] o_rt: ceil(median (run wall - delta_o) of the same 3 dev runs + the 3 s of
 # gate windows + 1 s for the per-run sensor snapshot [G]), whole seconds (record section Amendments)
 overhead_s = <FILL: o_rt>
-# [pre-night amendment] `x4svc fingerprint --scratch D:\mithril-data\x4\scratch --affinity 0x4
-#   --env HEARTH_ISA=avx512 --env HEARTH_LOG=0 --env CUDA_VISIBLE_DEVICES=-1` prints its two lines
+# [pre-night amendment] made by PIERCE from his own console session (PRE-NIGHT A7, revision 5):
+#   `x4svc fingerprint --scratch D:\mithril-data\x4\scratch --affinity 0x4 --env HEARTH_ISA=avx512
+#   --env HEARTH_LOG=0 --env CUDA_VISIBLE_DEVICES=-1`, every line kept (the `# key=value` lines let the
+#   driver name a field that differs)
 pins = D:\mithril-data\x4\pins\mb-q4-avx512.txt
 
 [run_type e2e-decode]
@@ -139,7 +153,7 @@ init_max_ms = 120000
 init_max_cycles = derive
 extra_cores_milli = 250
 exit_grace_ms = 5000
-# record section 3: max(600, 3 x t_run_plan_s)
+# record section 3: exactly max(600, 3 x t_run_plan_s) (revision 5: any other value is refused)
 time_cap_s = <FILL: max(600, 3 x t_run_plan_s)>
 sessions = 3
 blocks = 12

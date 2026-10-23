@@ -1,0 +1,9 @@
+DEV RUN (not pilot data): run type mb-q4-avx512 workload mb_q4_avx512 param 262144 affinity 0x10000000 threads 1 env 688fe38fe3b21a2ebf5356e13f0e9e0b63fdf3e0981a2b0a6d233c5715e91a1f
+run delta_o_ns 1487746200 delta_h_ns Some(1487743900) run_wall_s 2.345 peak_process_memory 3219456 (job limit 2 GiB) exit_code Some(0)
+golden 55b9c367f122fd9a14530ac5bc6e1a872314317cd46f10ff5acf96c042c0a036 (pinned)
+cycle rate 4297391333 Hz; harness allowances spin 429739 / idle 4297391 cycles
+observe {"delta_o_ns":1487746200,"delta_h_ns":1487743900,"abs_diff_ns":2300,"tau_ceiling_ns":1487746,"tau_margin":0.001546,"post_stop_cycles":540684150,"kappa_post_ceiling":2000000000,"kappa_post_margin":0.270342,"teardown_cycles":4287100,"teardown_wall_ns":1019800,"exit_grace_ns":5000000000,"exit_grace_margin":0.000204,"post_t1_spin_max_cycles":0,"spin_ceiling_cycles":429739,"spin_margin":0.000000,"eps_spin_observed_cycles":0,"eps_spin_observed_us":0.000000,"post_t1_idle_max_cycles":40420,"idle_ceiling_cycles":4297391,"idle_margin":0.009406,"eps_idle_observed_us":9.405706,"init_wall_ns":712580900,"init_wall_ceiling_ns":2000000000,"init_wall_margin":0.356290,"init_cycles":2792993620,"init_cycles_ceiling":8600000000,"init_cycles_margin":0.324767,"window_cores":0.999699,"extra_cores":-0.000301,"extra_cores_ceiling":0.250,"extra_cores_margin":-0.001205}
+census tid  30060 flags 0x009 post_t1_cycles  180089160 mxcsr 0x1fa0 prio 0 affinity 0x10000000 create_ft 134372637497929713
+census tid  50528 flags 0x001 post_t1_cycles      40420 mxcsr 0x1f80 prio 0 affinity 0x10000000 create_ft 134372637498108081
+census tid  60972 flags 0x001 post_t1_cycles      14620 mxcsr 0x1f80 prio 0 affinity 0x10000000 create_ft 134372637498135009
+verdict: Accept

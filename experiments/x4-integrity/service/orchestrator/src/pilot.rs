@@ -7,7 +7,7 @@
 //! - **PILOT** (`pilot-night --pilot`): refuses unless the configuration is the record's (pilotcfg:
 //!   every fixed value, the freeze commit, the signature tag's name and the rule's seed), every
 //!   pre-start item holds (night refusal), and the clock is inside the quiet window. Records go to
-//!   `data_dir`, stamped `PILOT`. Nobody but Pierce (or the job wrapper he approves) starts it, and
+//!   `data_dir`, stamped `PILOT`. Nobody but Pierce (or the pilot launcher task he registers) starts it, and
 //!   only under the signed record. `--max-sessions` and `--plants` are refused with it (main.rs).
 //! - **DRY-RUN** (`pilot-night --dry-run`): runs a whole night's schedule on a virtual Pacific clock
 //!   (each run advances it by its planned t_run, its planned cool-down and the real time the checks,
@@ -904,7 +904,47 @@ fn profile_check(cfg: &PilotConfig, rt: &RunType) -> Result<String, String> {
     let scratch_run = format!("{}\\run", cfg.scratch.trim_end_matches('\\'));
     let env = runenv::build(&std::env::var("SystemRoot").unwrap_or_else(|_| "C:\\Windows".into()), &scratch_run, &rt.env)?;
     let fp = crate::profile_win::read_fingerprint(rt.affinity, rt.priority_class, &env.sha256_hex);
-    crate::profile::verify_for_collection(&spec, &crate::profile_win::WinState, &fp).map(|vp| vp.hash().to_string())
+    let text = std::fs::read_to_string(pf).unwrap_or_default();
+    crate::profile::verify_for_collection(&spec, &crate::profile_win::WinState, &fp).map(|vp| vp.hash().to_string()).map_err(|e| {
+        // revision 5: name the fields that differ when the pins file keeps the `# key=value` lines
+        let d = pins_field_diff(&text, &fp.canonical());
+        if d.is_empty() {
+            e
+        } else {
+            format!("{} (fields differing from the pins file: {})", e, d.join("; "))
+        }
+    })
+}
+
+/// The canonical fingerprint fields that differ between the `# key=value` comment lines of a pins
+/// file (as `x4svc fingerprint` prints them) and a live canonical fingerprint (revision 5; review
+/// round 5: a session that reads a field differently, e.g. without elevation, is then named).
+pub fn pins_field_diff(pins_text: &str, live_canonical: &str) -> Vec<String> {
+    let parse = |t: &str, comment: bool| -> Vec<(String, String)> {
+        t.lines()
+            .filter_map(|l| {
+                let l = l.trim();
+                let l = if comment { l.strip_prefix('#')?.trim() } else { l };
+                let (k, v) = l.split_once('=')?;
+                let k = k.trim();
+                if k.contains(' ') || !k.contains('.') {
+                    return None;
+                }
+                Some((k.to_string(), v.trim().to_string()))
+            })
+            .collect()
+    };
+    let pinned = parse(pins_text, true);
+    let live = parse(live_canonical, false);
+    let mut out = Vec::new();
+    for (k, v) in &live {
+        if let Some((_, pv)) = pinned.iter().find(|(pk, _)| pk == k) {
+            if pv != v {
+                out.push(format!("{}: pinned {:?}, now {:?}", k, pv, v));
+            }
+        }
+    }
+    out
 }
 
 fn run_session_for(ctx: &Ctx, cfg: &PilotConfig, rt: &RunType, id: &str, seed: u64, horizon: usize, golden: [u64; 4]) -> Result<SessionResult, String> {
@@ -1125,8 +1165,16 @@ pub fn prestart_items(cfg: &PilotConfig, sensors: &Sensors, strict: bool) -> Vec
     let (q, w, m) = sensors.disk_sample(cfg.disk_window_ms);
     v.push(item("sensor: disk queue, write rate, modified page list (PDH)", q.is_some() && w.is_some(), format!("queue {:?}, write {:?} B/s, modified {:?} B", q, w, m)));
     let procs = sw::processes();
-    let unread: Vec<String> = procs.iter().filter(|p| p.cycles.is_none() && (hygiene::image_in(&p.image, &cfg.bg_images) || hygiene::image_in(&p.image, &cfg.excluded_images))).map(|p| p.image.clone()).collect();
-    v.push(item("sensor: process CPU (listed images readable)", !procs.is_empty() && unread.is_empty(), format!("{} processes; unreadable listed images {:?}", procs.len(), unread)));
+    // revision 5: a listed process this driver cannot open is read through PDH (sensors_win); it is
+    // unreadable only if neither source reads it
+    let listed = |p: &&ProcSample| hygiene::image_in(&p.image, &cfg.bg_images) || hygiene::image_in(&p.image, &cfg.excluded_images);
+    let unread: Vec<String> = procs.iter().filter(listed).filter(|p| !p.cpu_readable()).map(|p| p.image.clone()).collect();
+    let via_pdh: Vec<String> = procs.iter().filter(listed).filter(|p| p.cycles.is_none() && p.cpu_100ns.is_some()).map(|p| p.image.clone()).collect();
+    v.push(item(
+        "sensor: process CPU (listed images readable)",
+        !procs.is_empty() && unread.is_empty(),
+        format!("{} processes; unreadable listed images {:?}; read through PDH (not openable from this session) {:?}", procs.len(), unread, via_pdh),
+    ));
     let (tick, console) = sw::last_input();
     v.push(item("sensor: interactive input (driver in the console session)", tick.is_some() && console == Some(true), format!("tick {:?}, in console session {:?}", tick, console)));
     let s = sw::wts_sessions();
@@ -1178,6 +1226,193 @@ pub struct NightOpts {
     pub plants: bool,
     pub max_sessions: Option<usize>,
     pub plant_exe: Option<String>,
+    /// Revision 5: the canonical configuration SHA-256 the pre-night amendment records
+    /// (`--config-sha256`; required with `--pilot`); the night refuses on any other.
+    pub config_sha256: Option<String>,
+}
+
+// ------------------------------------------------------------------- open nights (revision 5)
+
+/// The directory that holds a grade's nights: `data_dir` (PILOT: `night-<date>`) or `<scratch>\dry`
+/// (DRY-RUN: `dry-<stamp>`).
+pub fn nights_root(cfg: &PilotConfig) -> String {
+    if cfg.grade == Grade::Pilot {
+        cfg.data_dir.trim_end_matches('\\').to_string()
+    } else {
+        format!("{}\\dry", cfg.scratch.trim_end_matches('\\'))
+    }
+}
+/// The progress file a night directory uses: the pilot's one in `data_dir`, or a dry night's own.
+pub fn progress_path_of(cfg: &PilotConfig, night_dir: &str) -> String {
+    if cfg.grade == Grade::Pilot {
+        format!("{}\\progress.txt", cfg.data_dir.trim_end_matches('\\'))
+    } else {
+        format!("{}\\progress.txt", night_dir.trim_end_matches('\\'))
+    }
+}
+/// The night label of a night directory (`night-2026-10-25` -> `2026-10-25`; a dry one keeps its name).
+pub fn night_label_of(dir_name: &str) -> String {
+    dir_name.strip_prefix("night-").unwrap_or(dir_name).to_string()
+}
+pub fn manifest_status(text: &str) -> Option<String> {
+    text.lines().find_map(|l| l.strip_prefix("status=").map(|s| s.trim().to_string()))
+}
+pub const CLOSURE_MANIFEST: &str = "manifest-closed-after-interrupt.txt";
+pub const RECORD_FILES: [&str; 6] = ["voids.log", "runs.jsonl", "blocks.jsonl", "sessions.jsonl", "sensors.jsonl", "plants.jsonl"];
+
+/// `sha256[progress.txt]=<hex> bytes=<n> (<path>)`: progress.txt only grows, so a later reader checks
+/// the hash of its first n bytes (revision 5: a whole-file hash of an earlier night could never match).
+fn progress_line(progress_path: &str) -> String {
+    match std::fs::read(progress_path) {
+        Ok(b) => format!("sha256[progress.txt]={} bytes={} ({})", sha256::hex(&sha256::digest(&b)), b.len(), progress_path),
+        Err(e) => format!("sha256[progress.txt]=unreadable: {} ({})", e, progress_path),
+    }
+}
+
+/// Close every night under `nights_root` whose manifest says `status=open` or that has no manifest
+/// (the driver crashed, the machine restarted or lost power mid-night): write
+/// `manifest-closed-after-interrupt.txt` beside it with the current SHA-256 of every record file and
+/// of progress.txt's prefix, and the sessions that night started without an end line (record section
+/// 7, revision 5). The open manifest stays as it was; its hash is recorded. `skip` is tonight's own
+/// directory. Returns the closed directories.
+pub fn close_open_nights(cfg: &PilotConfig, cfg_path: &str, skip: Option<&str>, by: &str) -> Result<Vec<String>, String> {
+    let root = nights_root(cfg);
+    let prefix = if cfg.grade == Grade::Pilot { "night-" } else { "dry-" };
+    let mut dirs: Vec<String> = match std::fs::read_dir(&root) {
+        Ok(rd) => rd.filter_map(|e| e.ok()).filter(|e| e.path().is_dir()).map(|e| e.file_name().to_string_lossy().to_string()).filter(|n| n.starts_with(prefix)).collect(),
+        Err(_) => return Ok(Vec::new()),
+    };
+    dirs.sort();
+    let mut closed = Vec::new();
+    for name in dirs {
+        let dir = format!("{}\\{}", root, name);
+        if skip.map_or(false, |s| s.eq_ignore_ascii_case(&dir)) || std::path::Path::new(&format!("{}\\{}", dir, CLOSURE_MANIFEST)).exists() {
+            continue;
+        }
+        let mpath = format!("{}\\manifest.txt", dir);
+        let open_text = std::fs::read_to_string(&mpath).ok();
+        if let Some(t) = &open_text {
+            if manifest_status(t).as_deref() != Some("open") {
+                continue;
+            }
+        }
+        let label = night_label_of(&name);
+        let progress_path = progress_path_of(cfg, &dir);
+        let prog = parse_progress(&std::fs::read_to_string(&progress_path).unwrap_or_default());
+        let started_here: Vec<String> = std::fs::read_to_string(&progress_path)
+            .unwrap_or_default()
+            .lines()
+            .filter_map(|l| {
+                let f: Vec<&str> = l.split_whitespace().collect();
+                if f.len() >= 4 && f[1] == "started" && f[3] == label {
+                    Some(f[0].to_string())
+                } else {
+                    None
+                }
+            })
+            .collect();
+        let interrupted: Vec<String> = started_here.into_iter().filter(|s| !prog.ended.iter().any(|(e, _)| e == s)).collect();
+        let mut lines = vec![
+            format!("grade={}", cfg.grade.label()),
+            "status=closed-after-interrupt".to_string(),
+            format!("note=closed by {} (this night's manifest was open or missing: a crash, a restart or a power loss)", by),
+            format!("night={}", label),
+            match &open_text {
+                Some(t) => format!("open_manifest_sha256={}", sha256::hex(&sha256::digest(t.as_bytes()))),
+                None => "open_manifest_sha256=none (no manifest.txt was written)".to_string(),
+            },
+        ];
+        // the open manifest's identity lines, else tonight's configuration's (the same canonical hash)
+        let keep = ["record=", "freeze_commit=", "signed_tag=", "seed=", "config=", "config_canonical_sha256=", "integrity_cleared=", "cycle_rate_hz=", "harness[", "pins[", "x4svc="];
+        match &open_text {
+            Some(t) => lines.extend(t.lines().filter(|l| keep.iter().any(|k| l.starts_with(k))).map(|l| l.to_string())),
+            None => {
+                let text = std::fs::read_to_string(cfg_path).unwrap_or_default();
+                lines.push(format!("record={}", cfg.record));
+                lines.push(format!("freeze_commit={}", cfg.freeze_commit.clone().unwrap_or_else(|| "none".into())));
+                lines.push(format!("seed={}", cfg.seed_hex));
+                lines.push(format!("config={} sha256={} (the closing driver's)", cfg_path, file_sha256(cfg_path).unwrap_or_default()));
+                lines.push(format!("config_canonical_sha256={}", pilotcfg::config_canonical_sha256(&text)));
+            }
+        }
+        lines.push(format!("written_utc={:.3}", utc_now()));
+        for f in RECORD_FILES {
+            let p = format!("{}\\{}", dir, f);
+            lines.push(format!("sha256[{}]={}", f, file_sha256(&p).unwrap_or_else(|e| e)));
+        }
+        lines.push(progress_line(&progress_path));
+        lines.push(format!("interrupted={}", interrupted.join(",")));
+        std::fs::write(format!("{}\\{}", dir, CLOSURE_MANIFEST), lines.join("\n") + "\n").map_err(|e| format!("{}: {}", dir, e))?;
+        closed.push(dir);
+    }
+    Ok(closed)
+}
+
+/// Append `<id> interrupted <grade> <label>` for every session started without an end line.
+fn mark_interrupted(progress_path: &str, grade: Grade, label: &str) -> Result<Vec<String>, String> {
+    let progress = parse_progress(&std::fs::read_to_string(progress_path).unwrap_or_default());
+    let mut v = Vec::new();
+    for s in progress.interrupted() {
+        append_synced(progress_path, &format!("{} interrupted {} {}", s, grade.label(), label))?;
+        v.push(s);
+    }
+    Ok(v)
+}
+
+/// `x4svc pilot-close`: close the open nights of a configuration's root (for the last night, which
+/// no later night closes) and mark their unfinished sessions `interrupted`. Refuses while another
+/// x4svc runs (a night in progress has an open manifest by design) and, for PILOT, inside the window.
+pub fn pilot_close(cfg: &PilotConfig, cfg_path: &str, config_sha256: Option<&str>) -> i32 {
+    let text = std::fs::read_to_string(cfg_path).unwrap_or_default();
+    let canon = pilotcfg::config_canonical_sha256(&text);
+    if let Some(want) = config_sha256 {
+        if !want.eq_ignore_ascii_case(&canon) {
+            eprintln!("pilot-close: configuration canonical SHA-256 {} is not {}; refusing", canon, want);
+            return 1;
+        }
+    } else if cfg.grade == Grade::Pilot {
+        eprintln!("pilot-close: --config-sha256 is required for a PILOT configuration");
+        return 1;
+    }
+    let me = sw::own_pid();
+    let others: Vec<String> = sw::processes_where(|i| i.starts_with("x4svc")).into_iter().filter(|p| p.pid != me).map(|p| format!("{}({})", p.image, p.pid)).collect();
+    if !others.is_empty() {
+        eprintln!("pilot-close: another x4svc is running {:?} (a night in progress keeps its manifest open); refusing", others);
+        return 1;
+    }
+    if cfg.grade == Grade::Pilot && pilotcfg::night_window(cfg, utc_now() as i64).is_some() {
+        eprintln!("pilot-close: inside the quiet window; refusing (run it after 07:00 PT)");
+        return 1;
+    }
+    let by = format!("x4svc pilot-close at {}", pilotcfg::pt_string(utc_now() as i64));
+    match close_open_nights(cfg, cfg_path, None, &by) {
+        Ok(v) => {
+            for d in &v {
+                println!("closed {} ({})", d, CLOSURE_MANIFEST);
+                let p = progress_path_of(cfg, d);
+                let label = night_label_of(d.rsplit('\\').next().unwrap_or(d));
+                match mark_interrupted(&p, cfg.grade, &label) {
+                    Ok(s) => {
+                        for x in s {
+                            println!("  session {} marked interrupted", x);
+                        }
+                    }
+                    Err(e) => {
+                        eprintln!("pilot-close: {}", e);
+                        return 3;
+                    }
+                }
+            }
+            if v.is_empty() {
+                println!("no open night under {}", nights_root(cfg));
+            }
+            0
+        }
+        Err(e) => {
+            eprintln!("pilot-close: {}", e);
+            3
+        }
+    }
 }
 
 /// progress.txt (record section 6): `<id> started <grade> <night> seed=<hex> harness=<sha>
@@ -1235,6 +1470,19 @@ pub fn run_night(cfg: &PilotConfig, cfg_path: &str, opts: &NightOpts) -> i32 {
         return 1;
     }
     let cfg_sha = file_sha256(cfg_path).unwrap_or_default();
+    let cfg_canon = pilotcfg::config_canonical_sha256(&std::fs::read_to_string(cfg_path).unwrap_or_default());
+    // revision 5 (review round 5): the configuration must be the pre-night amendment's, by its
+    // canonical SHA-256 given on the command line (the integrity_cleared lines aside)
+    if cfg.grade == Grade::Pilot && opts.config_sha256.is_none() {
+        eprintln!("pilot-night: --config-sha256 <the pre-night amendment's canonical configuration SHA-256> is required with --pilot; refusing");
+        return 1;
+    }
+    if let Some(want) = &opts.config_sha256 {
+        if !want.eq_ignore_ascii_case(&cfg_canon) {
+            eprintln!("pilot-night: the configuration's canonical SHA-256 is {} but --config-sha256 says {}; refusing (only a dated amendment changes the configuration)", cfg_canon, want);
+            return 1;
+        }
+    }
     let real_now = utc_now();
     // the window: real (PILOT) or a virtual night starting at the next window start (DRY-RUN)
     let (night_label, window, clock) = if opts.dry {
@@ -1366,6 +1614,20 @@ pub fn run_night(cfg: &PilotConfig, cfg_path: &str, opts: &NightOpts) -> i32 {
         write_manifest(&ctx, cfg, cfg_path, &cfg_sha, &progress_path, "refused", &refused.join("; "));
         return 1;
     }
+    // revision 5: an earlier night left open (a crash, a restart, a power loss) is closed first, with
+    // the current hashes in its own closure manifest (record section 7), so the estimator can read it
+    match close_open_nights(cfg, cfg_path, Some(dir.as_str()), &format!("the driver of night {}", night_label)) {
+        Ok(v) => {
+            for d in v {
+                println!("  closed the open night {} ({})", d, CLOSURE_MANIFEST);
+                ctx.void_line("NIGHT-CLOSED", "-", &format!("{} was open: closed with {}", d, CLOSURE_MANIFEST));
+            }
+        }
+        Err(e) => {
+            eprintln!("closing open nights: {}", e);
+            return 3;
+        }
+    }
     // sessions started on an earlier night and never ended (a crash, a restart, a power loss): a
     // hygiene void, written as `interrupted`, never re-run (section 6)
     for s in progress.interrupted() {
@@ -1376,6 +1638,8 @@ pub fn run_night(cfg: &PilotConfig, cfg_path: &str, opts: &NightOpts) -> i32 {
         }
         ctx.void_line("VOID-LOGGED", &s, "reason=interrupted (started on an earlier night, no end line)");
     }
+    // revision 5: an open manifest from the start, so a night that dies in its first session leaves one
+    write_manifest(&ctx, cfg, cfg_path, &cfg_sha, &progress_path, "open", "");
 
     // ---- goldens: pinned, or learned by one dry run per run type (DRY-RUN only)
     let mut goldens: Vec<[u64; 4]> = Vec::new();
@@ -1435,6 +1699,9 @@ pub fn run_night(cfg: &PilotConfig, cfg_path: &str, opts: &NightOpts) -> i32 {
             Ok(r) => r,
             Err(e) => {
                 eprintln!("session {}: {}", s.id, e);
+                // revision 5: a setup error is its own end, never counted (record section 4)
+                let _ = append_synced(&progress_path, &format!("{} error {} {}", s.id, ctx.grade.label(), night_label));
+                ctx.void_line("SESSION-ERROR", &s.id, &e);
                 code = 3;
                 break;
             }
@@ -1489,6 +1756,8 @@ fn write_manifest(ctx: &Ctx, cfg: &PilotConfig, cfg_path: &str, cfg_sha: &str, p
         format!("signed_tag={} (name only: the driver does not verify the signature; record section 10)", cfg.signed_tag.clone().unwrap_or_else(|| "none".into())),
         format!("seed={}", cfg.seed_hex),
         format!("config={} sha256={}", cfg_path, cfg_sha),
+        format!("config_canonical_sha256={}", pilotcfg::config_canonical_sha256(&std::fs::read_to_string(cfg_path).unwrap_or_default())),
+        format!("integrity_cleared={}", cfg.integrity_cleared.iter().map(|(s, c)| format!("{}@{}", s, c)).collect::<Vec<_>>().join(",")),
         format!("cycle_rate_hz={}", ctx.rate),
         format!("process_poll_ms={}", POLL_MS),
         format!(
@@ -1502,17 +1771,21 @@ fn write_manifest(ctx: &Ctx, cfg: &PilotConfig, cfg_path: &str, cfg_sha: &str, p
     ];
     for rt in &cfg.run_types {
         lines.push(format!("harness[{}]={} sha256={}", rt.id, rt.harness, file_sha256(&rt.harness).unwrap_or_else(|e| e)));
+        // revision 5: the pins files are not in the configuration's hash; each night records theirs
+        if let Some(p) = &rt.pins {
+            lines.push(format!("pins[{}]={} sha256={}", rt.id, p, file_sha256(p).unwrap_or_else(|e| e)));
+        }
     }
     if let Ok(me) = std::env::current_exe() {
         lines.push(format!("x4svc={} sha256={}", me.display(), file_sha256(&me.display().to_string()).unwrap_or_else(|e| e)));
     }
     // the void log first, then every record file and progress.txt (section 10: hashed before any
     // estimator runs; rewritten after every session, so a killed driver leaves a manifest too)
-    for f in ["voids.log", "runs.jsonl", "blocks.jsonl", "sessions.jsonl", "sensors.jsonl", "plants.jsonl"] {
+    for f in RECORD_FILES {
         let p = format!("{}\\{}", dir, f);
         lines.push(format!("sha256[{}]={}", f, file_sha256(&p).unwrap_or_else(|e| e)));
     }
-    lines.push(format!("sha256[progress.txt]={} ({})", file_sha256(progress_path).unwrap_or_else(|e| e), progress_path));
+    lines.push(progress_line(progress_path));
     let _ = std::fs::write(format!("{}\\manifest.txt", dir), lines.join("\n") + "\n");
 }
 
@@ -1678,5 +1951,52 @@ mod tests {
         assert_eq!(p.interrupted(), vec!["e2e-decode-01".to_string()]);
         assert_eq!(p.integrity_stops(), vec!["mb-q4-avx512-07".to_string()]);
         assert_eq!(p.pins[1], ("e2e-decode-01".to_string(), "abc".to_string(), "h2".to_string(), "x1".to_string()));
+        // revision 5: a setup error is an end line, so the session is not "interrupted"
+        let q = parse_progress("mb-q4-avx512-05 started PILOT 2026-10-25 seed=abc harness=h1 x4svc=x1\nmb-q4-avx512-05 error PILOT 2026-10-25\n");
+        assert!(q.interrupted().is_empty());
+    }
+
+    #[test]
+    fn the_pins_field_diff_names_what_changed() {
+        let pins = "# bios.version=1.G0 2024-12-19\n# cpu.model=AMD Ryzen 9 9950X 16-Core Processor\n# unavailable (explicit in the hash): cpu.fclk\n# env-block sha256 f3\n# pins-file lines:\npower.scheme_guid=381b4222-f694-41f0-9685-ff5bb260df2e\nfingerprint.sha256=e7\n";
+        let live = "bios.version=unavailable\ncpu.model=AMD Ryzen 9 9950X 16-Core Processor\n";
+        assert_eq!(pins_field_diff(pins, live), vec!["bios.version: pinned \"1.G0 2024-12-19\", now \"unavailable\"".to_string()]);
+        assert!(pins_field_diff("power.scheme_guid=x\nfingerprint.sha256=y\n", live).is_empty()); // no comment lines: no diff
+    }
+
+    #[test]
+    fn an_open_night_is_closed_with_its_current_hashes() {
+        let mut cfg = crate::pilotcfg::parse(crate::pilotcfg::tests::DRY).unwrap();
+        let root = std::env::temp_dir().join(format!("x4close-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        cfg.scratch = root.display().to_string();
+        let dry = format!("{}\\dry", cfg.scratch);
+        let a = format!("{}\\dry-A", dry);
+        let b = format!("{}\\dry-B", dry);
+        for d in [&a, &b] {
+            std::fs::create_dir_all(d).unwrap();
+            for f in RECORD_FILES {
+                std::fs::write(format!("{}\\{}", d, f), "").unwrap();
+            }
+        }
+        std::fs::write(format!("{}\\manifest.txt", a), "grade=DRY-RUN\nstatus=open\nseed=1\n").unwrap();
+        std::fs::write(format!("{}\\runs.jsonl", a), "{\"grade\":\"DRY-RUN\",\"seq\":1}\n{\"gra").unwrap();
+        std::fs::write(format!("{}\\progress.txt", a), "s1 started DRY-RUN dry-A seed=1 harness=h x4svc=x\ns0 started DRY-RUN dry-A seed=1 harness=h x4svc=x\ns0 completed DRY-RUN dry-A\n").unwrap();
+        std::fs::write(format!("{}\\manifest.txt", b), "grade=DRY-RUN\nstatus=closed\n").unwrap();
+        let closed = close_open_nights(&cfg, "none.cfg", None, "test").unwrap();
+        assert_eq!(closed, vec![a.clone()]);
+        let m = std::fs::read_to_string(format!("{}\\{}", a, CLOSURE_MANIFEST)).unwrap();
+        assert!(m.contains("status=closed-after-interrupt") && m.contains("interrupted=s1") && m.contains("seed=1"), "{m}");
+        let runs = std::fs::read(format!("{}\\runs.jsonl", a)).unwrap();
+        assert!(m.contains(&format!("sha256[runs.jsonl]={}", sha256::hex(&sha256::digest(&runs)))), "{m}");
+        assert!(m.contains("bytes="), "{m}");
+        // closed once only; a closed night is left alone
+        assert!(close_open_nights(&cfg, "none.cfg", None, "test").unwrap().is_empty());
+        assert!(!std::path::Path::new(&format!("{}\\{}", b, CLOSURE_MANIFEST)).exists());
+        assert_eq!(mark_interrupted(&format!("{}\\progress.txt", a), Grade::DryRun, "dry-A").unwrap(), vec!["s1".to_string()]);
+        assert!(mark_interrupted(&format!("{}\\progress.txt", a), Grade::DryRun, "dry-A").unwrap().is_empty());
+        assert_eq!(manifest_status("grade=X\nstatus=open\n").as_deref(), Some("open"));
+        assert_eq!(night_label_of("night-2026-10-25"), "2026-10-25");
+        let _ = std::fs::remove_dir_all(&root);
     }
 }

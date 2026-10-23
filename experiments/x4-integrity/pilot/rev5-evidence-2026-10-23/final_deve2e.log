@@ -1,0 +1,10 @@
+DEV RUN (not pilot data): run type e2e-mem workload e2e_decode param 8 affinity 0x18000000 threads 2 env cd11249d77379dc7e4199b353b446daaef70c48e827dad3a07d8c7a8628aa9c0
+run delta_o_ns 2702301700 delta_h_ns Some(2702280500) run_wall_s 3.592 peak_process_memory 10389274624 (job limit 24 GiB) exit_code Some(0)
+golden 86653fe54db5f08cd62905f71e654bfaf905d7851f1b3069df9f943f1de40f35 (learned from a first pass)
+cycle rate 4296015333 Hz; harness allowances spin 429601 / idle 4296015 cycles
+observe {"delta_o_ns":2702301700,"delta_h_ns":2702280500,"abs_diff_ns":21200,"tau_ceiling_ns":2702301,"tau_margin":0.007845,"post_stop_cycles":589405730,"kappa_post_ceiling":2000000000,"kappa_post_margin":0.294703,"teardown_cycles":1213190390,"teardown_wall_ns":282734900,"exit_grace_ns":5000000000,"exit_grace_margin":0.056547,"post_t1_spin_max_cycles":26230,"spin_ceiling_cycles":429601,"spin_margin":0.061057,"eps_spin_observed_cycles":0,"eps_spin_observed_us":0.000000,"post_t1_idle_max_cycles":70520,"idle_ceiling_cycles":4296015,"idle_margin":0.016415,"eps_idle_observed_us":16.415211,"init_wall_ns":463902600,"init_wall_ceiling_ns":120000000000,"init_wall_margin":0.003866,"init_cycles":1173012910,"init_cycles_ceiling":1031043679920,"init_cycles_margin":0.001138,"window_cores":0.947046,"extra_cores":-1.052954,"extra_cores_ceiling":0.250,"extra_cores_margin":-4.211815}
+census tid  10340 flags 0x009 post_t1_cycles  197280990 mxcsr 0x1fa0 prio 0 affinity 0x18000000 create_ft 134372637565844276
+census tid  26728 flags 0x001 post_t1_cycles      70520 mxcsr 0x1f80 prio 0 affinity 0x18000000 create_ft 134372637565966173
+census tid  38900 flags 0x001 post_t1_cycles      24940 mxcsr 0x1f80 prio 0 affinity 0x18000000 create_ft 134372637565967487
+census tid  55680 flags 0x202 post_t1_cycles      26230 mxcsr 0x1f80 prio 0 affinity 0x18000000 create_ft 134372637570311686
+verdict: Accept

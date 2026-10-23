@@ -1,0 +1,20 @@
+# bios.version=1.G0 2024-12-19
+# board.product=Micro-Star International Co., Ltd. MAG X670E TOMAHAWK WIFI (MS-7E12)
+# cpu.fclk=unavailable
+# cpu.logical_processors=32
+# cpu.microcode=2340400b
+# cpu.model=AMD Ryzen 9 9950X 16-Core Processor
+# cpu.pbo_curve_optimizer=unavailable
+# disk.models_firmware=Samsung SSD 990 PRO 2TB/5B2QJXD7/NVMe,WD My Passport 260D/2007/USB
+# env.block_sha256=d4d7ef3f2110958eca6671e75e7e705c8d80f5c671d5d9bad51d3df2ff7f9a6f
+# job.affinity_mask=0x10000000
+# job.priority_class=0x20
+# mem.configured_speed_mts=6000,6000
+# mem.modules=CMH64GX5M2M6000Z30/34359738368,CMH64GX5M2M6000Z30/34359738368
+# os.build=26200.9711
+# power.scheme_guid=381b4222-f694-41f0-9685-ff5bb260df2e
+# unavailable (explicit in the hash): cpu.pbo_curve_optimizer, cpu.fclk
+# env-block sha256 d4d7ef3f2110958eca6671e75e7e705c8d80f5c671d5d9bad51d3df2ff7f9a6f
+# pins-file lines:
+power.scheme_guid=381b4222-f694-41f0-9685-ff5bb260df2e
+fingerprint.sha256=e02fdb2b1f0ae8e2db6a6703c07b5b354dcbafff6ec7683a23fee964b26c44ca

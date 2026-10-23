@@ -10,8 +10,12 @@
 //! per-run values), `pilotcfg` (the night configuration, schedule and Pacific-time rules) and
 //! `hygiene` (the three-tier, sensor-only void rules) are pure and unit-tested; `sensors_win` (the
 //! read-only sensors) and `pilot` (the night driver and the dry run) are Windows adapters.
+//!
+//! Revision 5 (review round 5, 2026-10-23): `estimate` is the record's section 7 estimator command
+//! (`x4svc pilot-estimate`), pure and unit-tested.
 
 pub mod eprocess;
+pub mod estimate;
 pub mod hygiene;
 pub mod observe;
 pub mod pilotcfg;

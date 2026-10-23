@@ -1,0 +1,230 @@
+=== build 17:15:30
+
+Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64
+cmake version 4.4.3
+ninja 1.12.1
+rustc 1.91.1 (ed61e7d7e 2025-11-07)
+configure rc=0
+build rc=0
+platform_win rc=0
+harness-objs rc=0
+x4harness_hearth rc=0
+x4harness_hearth_q0 rc=0
+x4harness rc=0
+x4sb_probe rc=0
+x4plant rc=0
+test eprocess::tests::theta_above_one_is_refused - should panic ... ok
+test profile::tests::balanced_plan_is_refused_with_commands ... ok
+test pilotcfg::tests::the_filled_template_is_the_record_and_every_loosening_is_refused ... ok
+test selftest::tests::job_only_is_degraded_for_trusted_and_refused_for_untrusted ... ok
+test result: ok. 94 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+cargo-test rc=0
+cargo-build rc=0
+build_pilot exit=0
+=== binaries 17:15:46
+3c82628c62b2a5412d6ac8185b7bffddefe9e86ec547ae3d98a6fa68a8d3243f  x4harness.exe
+6d65c5b5d6e8d4b51f40718746954b8a22bb5caed1e3734d01d661964470dab1  x4harness_hearth.exe
+dadd9ab45a9843c7f50ac40f066a4724b9afbec7e8ba015e7972d92b35bff06d  x4harness_hearth_q0.exe
+d5a5c7cc34170bbb8b830a5fab1a5aa2a5909ab5cfdc6b1d8dfa170c0d155177  x4plant.exe
+f1a5b271cb4db0746ffb83994255a3857651ad7d776478308534754ffc671e8c  x4sb_probe.exe
+b290899f94c7999a35323c8390510a8f2a1bea6fe046958f9e49ae7fa5bf1e0d  x4svc.exe
+=== refusals of the build script (modified copies) 17:15:46
+---- cl
+REFUSED: cl is not 19.44.99999 for x64 
+Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64
+---- cmake
+Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64
+cmake version 4.4.3
+REFUSED: CMake is not 4.4.2 
+---- ninja
+Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64
+cmake version 4.4.3
+ninja 1.12.1
+REFUSED: Ninja is not 1.12.0 
+=== dev-run mb (2^18 calls, LP 28) 17:15:49
+run delta_o_ns 1487746200 delta_h_ns Some(1487743900) run_wall_s 2.345 peak_process_memory 
+3219456 (job limit 2 GiB) exit_code Some(0)
+golden 55b9c367f122fd9a14530ac5bc6e1a872314317cd46f10ff5acf96c042c0a036 (pinned)
+verdict: Accept
+=== dev-run e2e N=8, 8 GiB cache, 24 GiB limit (LPs 27-28) 17:15:52
+run delta_o_ns 2702301700 delta_h_ns Some(2702280500) run_wall_s 3.592 peak_process_memory 
+10389274624 (job limit 24 GiB) exit_code Some(0)
+golden 86653fe54db5f08cd62905f71e654bfaf905d7851f1b3069df9f943f1de40f35 (learned from a first 
+pass)
+verdict: Accept
+=== record-window dry night 17:16:00
+   3 blocks, 0 discards, end completed 
+   6 blocks, 0 discards, end completed 
+night over at 2026-10-23 23:11:02 PDT: 2 sessions run tonight; 0 unrun: []
+exit=0
+=== record-window dry night analysis 17:19:02
+night dir: D:\mithril\x4rev4r\scratch-record\dry\dry-20261023T211600Z
+
+status=closed
+config_canonical_sha256=57643d4cb9f67951e34ed0500096acefa938625de4b1d90ca93f3f3c78592eb4
+integrity_cleared=
+sha256[progress.txt]=e08bfc086f663a9653393dc8be1aabb0acd6543f41bef31fda403510bd07210f bytes=544 
+(D:\mithril\x4rev4r\scratch-record\dry\dry-20261023T211600Z\progress.txt)
+--- runs by run type and verdict
+e2e-decode, TimeCapped: 12
+mb-q4-avx512, Accept: 24
+--- failures named on any run
+--- accepted microbenchmark runs: delta_o (s), tau margin (bracket judged at 0.1% of delta_o)
+n 24; delta_o 1.246..1.269 s; max tau_margin 0.022507
+--- capped end-to-end stand-in runs: run_wall_s
+n 12; run wall 2.007..2.009 s
+--- gates at the record's windows
+gates 36; start state reached 36; settle_ms max 1001 mean 1,000; disk_write_bps max 650,914; gates with a dropped LP 0; load_total_pct max 3.25
+--- sessions
+e2e-decode-01 end=completed blocks=3 discards=0 planned_s=216.0 actual_s=217.9
+mb-q4-avx512-01 end=completed blocks=6 discards=0 planned_s=480.0 actual_s=445.0
+--- pilot-estimate --dry-test
+# X4 noise pilot estimator (record sections 4, 5, 7(a)); x4svc pilot-estimate, revision 5
+# DRY-RUN ACCEPTANCE TEST: dry records, not pilot data; no value below is an estimate
+grade = DRY-RUN
+=== restricted token: readability and fingerprint 17:19:02
+x4svc (revision 5) b290899f94c7999a35323c8390510a8f2a1bea6fe046958f9e49ae7fa5bf1e0d
+x4svc (revision 4, for comparison) 
+68125f5e173d87df4fbe09c565e0964de311b0d6a34607182fd28641772b02f9
+done marker: True
+  [ ok ] [mb-q4-avx512] verify-profile --collection --pins MET -- 
+  [FAIL] [e2e-decode] verify-profile --collection --pins MET -- no pins file
+  [ ok ] sensor: process CPU (listed images readable) -- 362 processes; unreadable listed images 
+  [FAIL] [mb-q4-avx512] verify-profile --collection --pins MET -- fingerprint hash 
+  [FAIL] [e2e-decode] verify-profile --collection --pins MET -- no pins file
+  [ ok ] sensor: process CPU (listed images readable) -- 363 processes; unreadable listed images 
+  [FAIL] [mb-q4-avx512] verify-profile --collection --pins MET -- fingerprint hash 
+  [FAIL] [e2e-decode] verify-profile --collection --pins MET -- no pins file
+  [FAIL] sensor: process CPU (listed images readable) -- 363 processes; unreadable listed images 
+=== restricted token: dry session, revision 4 then revision 5 17:20:58
+=== old binary
+  [note] sensor: process CPU (listed images readable) -- 362 processes; unreadable listed images 
+   0 blocks, 2 discards, end hygiene_void 3 discarded blocks (last: background activity over the 
+--- voids.log DISCARD lines (dry-20261023T212059Z)
+DRY-RUN 20261024T060233Z 2026-10-23 23:02:33 PDT [DISCARD] session=e2e-decode-01 background 
+activity over the block: msmpeng CPU unreadable, mpdefendercoreservice CPU unreadable, 
+searchindexer CPU unreadable, searchprotocolhost CPU unreadable
+DRY-RUN 20261024T060305Z 2026-10-23 23:03:05 PDT [DISCARD] session=e2e-decode-01 background 
+activity over the block: msmpeng CPU unreadable, mpdefendercoreservice CPU unreadable, 
+searchindexer CPU unreadable, searchprotocolhost CPU unreadable
+DRY-RUN 20261024T060337Z 2026-10-23 23:03:37 PDT [DISCARD] session=e2e-decode-01 background 
+activity over the block: msmpeng CPU unreadable, mpdefendercoreservice CPU unreadable, 
+searchindexer CPU unreadable
+DRY-RUN 20261024T060337Z 2026-10-23 23:03:37 PDT [VOID-LOGGED] session=e2e-decode-01 reason=3 
+discarded blocks (last: background activity over the block: msmpeng CPU unreadable, 
+mpdefendercoreservice CPU unreadable, searchindexer CPU unreadable) 
+wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+=== new binary
+  [ ok ] sensor: process CPU (listed images readable) -- 362 processes; unreadable listed images 
+   3 blocks, 0 discards, end completed 
+--- voids.log DISCARD lines (dry-20261023T212215Z)
+=== restricted token: background rule on PDH readings 17:23:34
+done marker: True after 80 s
+x4svc b290899f94c7999a35323c8390510a8f2a1bea6fe046958f9e49ae7fa5bf1e0d
+
+  [ ok ] sensor: process CPU (listed images readable) -- 361 processes; unreadable listed images 
+[]; read through PDH (not openable from this session) ["mpdefendercoreservice", "msmpeng", 
+"searchindexer"]
+  [note] sensor: interactive input (driver in the console session) -- tick Some(0), in console 
+session Some(false)
+  [ ok ] sensor: session list (WTS) -- Some([(1, "Console", 0)])
+-- session e2e-decode-01 (e2e-decode) at 2026-10-23 23:00:00 PDT
+   0 blocks, 2 discards, end hygiene_void 3 discarded blocks (last: background activity over the 
+block: msmpeng 1.221% of one core over the planned block)
+start rule: the next unrun session mb-q4-avx512-01 needs 480 s; 2026-10-23 23:03:38 PDT + that > 
+last end 2026-10-24 06:45:00 PDT
+DRY-RUN 20261024T060233Z 2026-10-23 23:02:33 PDT [DISCARD] session=e2e-decode-01 background activity over the block: msmpeng 0.879% of one core over the planned block, searchindexer 0.049% of one core over the planned block
+DRY-RUN 20261024T060305Z 2026-10-23 23:03:05 PDT [DISCARD] session=e2e-decode-01 background activity over the block: msmpeng 1.123% of one core over the planned block, searchindexer 0.049% of one core over the planned block
+DRY-RUN 20261024T060338Z 2026-10-23 23:03:38 PDT [DISCARD] session=e2e-decode-01 background activity over the block: msmpeng 1.221% of one core over the planned block
+DRY-RUN 20261024T060338Z 2026-10-23 23:03:38 PDT [VOID-LOGGED] session=e2e-decode-01 reason=3 discarded blocks (last: background activity over the block: msmpeng 1.221% of one core over the planned block) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+
+
+=== configuration binding and crash path 17:24:54
+=== 1. PILOT variants: pilot-plan on each (read-only); v00 and w* must parse, every v01..v25 must 
+be refused
+v00_filled                   rc=0 grade PILOT; seed 2ac97bc5867a9d82 (rule from freeze commit 
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: 2ac97bc5867a9d82)
+v01_e2e_timecap_huge         rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): [e2e-decode] time_cap_s = 100000 (record: max(600, 3 x t_run_plan_s) = 600)
+v02_mb_memory_1gib           rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): [mb-q4-avx512] memory_gib = 1 (record: 2)
+v03_e2e_memory_1gib          rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): [e2e-decode] memory_gib = 1 (record: 24)
+v04_disk_write_1             rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): disk_write_max_bytes_s = 1 (record: 1048576)
+v05_extra_excluded           rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): excluded_images has entries the record does not list ["explorer", "svchost"] 
+(names given a
+v06_extra_bg                 rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): bg_images has entries the record does not list ["svchost"] (names given at 
+signing go in ex
+v07_record_other             rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): record = "docs/m0/prereg/SOMETHING-ELSE.md" (record: 
+docs/m0/prereg/X4-noise-pilot.md)
+v08_mb_overhead_huge         rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): [mb-q4-avx512] overhead_s = 1000 (record: a whole number of seconds in [4, 
+15], by the sect
+v09_e2e_trunplan_huge        rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): [e2e-decode] t_run_plan_s = 5000 (record: a whole number of seconds in [1, 
+600], by the sec
+v11_e2e_other_harness        rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): [e2e-decode] harness = "D:\\mithril-data\\x4\\bin\\other.exe" (record: 
+D:\mithril-data\x4\b
+v13_load_max_41              rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): load_max_pct = 41 (record: 40)
+v14_signed_tag_any           rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): signed_tag = Some("x") (record section 13: prereg-sign-x4-noise-pilot)
+v15_excluded_cpu_max         rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): excluded_cpu_max_ms = 5 (record: 0)
+v20_no_signing_key           rc=2 PILOT needs excluded_images_at_signing (the GEMS images and any 
+server image named at signing, record section 13; may be empty)
+v21_overhead_fraction        rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): [mb-q4-avx512] overhead_s = 5.5 (record: a whole number of seconds in [4, 15], 
+by the secti
+v22_pins_elsewhere           rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): [e2e-decode] pins = Some("D:\\mithril\\pins.txt") (record: 
+D:\mithril-data\x4\pins\e2e-deco
+v23_probe_elsewhere          rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): probe_exe = "D:\\mithril\\probe.exe" (record: 
+D:\mithril-data\x4\bin\x4sb_probe.exe)
+v24_e2e_other_harness_sha    rc=2 PILOT differs from the record's fixed values (a change is a 
+record amendment): the two run types pin different harness_sha256 (record: one binary, 
+x4harness_hearth.exe)
+v25_placeholder_left         rc=2 line 50: excluded_images_at_signing is still a template 
+placeholder (<FILL: x>)
+w01_integrity_cleared        rc=0 grade PILOT; seed 2ac97bc5867a9d82 (rule from freeze commit 
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: 2ac97bc5867a9d82)
+w02_signing_empty            rc=0 grade PILOT; seed 2ac97bc5867a9d82 (rule from freeze commit 
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: 2ac97bc5867a9d82)
+canonical_sha256 2da8c33cb9397a701edefcf922d4dedc3cba686e87cb5df3b0d82cf2b41c683f
+canonical_sha256 2da8c33cb9397a701edefcf922d4dedc3cba686e87cb5df3b0d82cf2b41c683f
+SHA-256> is required with --pilot; refusing
+    + CategoryInfo          : NotSpecified: (pilot-night: --...pilot; refusing:String) [], Remote 
+rc=1
+0000000000000000000000000000000000000000000000000000000000000000; refusing (only a dated 
+rc=1
+x4svc.exe : pilot-night: outside the quiet window (2026-10-23 14:24:55 PDT); refusing
+    + CategoryInfo          : NotSpecified: (pilot-night: ou... PDT); refusing:String) [], Remote 
+rc=1
+D:\mithril-data exists after these: False
+=== 4. crash path: a dry night (dry-crash.cfg) killed 30 s in
+killed pid 55040; x4svc/x4harness left: 0
+--- the killed night's manifest status and progress
+status=open
+x4svc.exe : pilot-estimate: REFUSED: night dry-20261023T212455Z is open (a crash or a running 
+rc=1
+  session e2e-decode-01 marked interrupted
+rc=0
+status=closed-after-interrupt
+interrupted=e2e-decode-01
+e2e-decode-01 interrupted DRY-RUN dry-20261023T212455Z
+rc=0
+night dry-20261023T212455Z status=closed-after-interrupt runs=4 blocks=0 sessions=0 
+sessions_by_end = interrupted:1
+rc=0
+x4svc.exe : pilot-estimate: REFUSED: night dry-20261023T212455Z: voids.log does not match its 
+rc=1
+=== end 17:25:29
+
+

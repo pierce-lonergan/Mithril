@@ -1,0 +1,19 @@
+== X4 noise-pilot pre-start items, read-only (DRY-RUN configuration, judged by the PILOT rules; nothing is run or changed)
+  [FAIL] x4svc binary sha256 equals the pin -- D:\mithril\x4rev4r\bin\x4svc.exe sha256 b290899f94c7999a35323c8390510a8f2a1bea6fe046958f9e49ae7fa5bf1e0d (pinned None)
+  [FAIL] probe exe sha256 equals the pin -- D:\mithril\x4rev4r\bin\x4sb_probe.exe sha256 f1a5b271cb4db0746ffb83994255a3857651ad7d776478308534754ffc671e8c (pinned None)
+  [FAIL] [mb-q4-avx512] harness sha256 equals the pin -- D:\mithril\x4rev4r\bin\x4harness_hearth.exe 6d65c5b5d6e8d4b51f40718746954b8a22bb5caed1e3734d01d661964470dab1 (pinned None)
+  [ ok ] [mb-q4-avx512] verify-profile --collection --pins MET -- e02fdb2b1f0ae8e2db6a6703c07b5b354dcbafff6ec7683a23fee964b26c44ca
+  [FAIL] [e2e-decode] harness sha256 equals the pin -- D:\mithril\x4rev4r\bin\x4harness_hearth.exe 6d65c5b5d6e8d4b51f40718746954b8a22bb5caed1e3734d01d661964470dab1 (pinned None)
+  [FAIL] [e2e-decode] verify-profile --collection --pins MET -- no pins file
+  [FAIL] placement equals the record's topology rule (x4svc topology) -- mb 0x10000000 (rule 0x4), e2e 0x10000000 (rule 0xbfffffff), orchestrator LP 26 (rule LP 30)
+  [ ok ] sensor: CPU load (GetSystemTimes; PDH per LP, every LP) -- read 1: machine Some(1.18)% (PDH _Total Some(1.86)%) over 2000 ms, 32 of 32 LPs (0 clamped from PDH_CALC_NEGATIVE_VALUE; dropped []), eff clock on 32 LPs, 0 thermal zones
+  [ ok ] sensor: disk queue, write rate, modified page list (PDH) -- queue Some(0.0), write Some(49144.67744306099) B/s, modified Some(25858048.0) B
+  [ ok ] sensor: process CPU (listed images readable) -- 362 processes; unreadable listed images []; read through PDH (not openable from this session) []
+  [FAIL] sensor: interactive input (driver in the console session) -- tick Some(0), in console session Some(false)
+  [ ok ] sensor: session list (WTS) -- Some([(0, "Services", 4), (1, "Console", 0)])
+  [ ok ] sensor: GPU utilisation (nvidia-smi query) -- Ok(0.0)
+  [ ok ] sensor: NVMe temperature of C: (storage query) -- Ok(37.0)
+  [ ok ] sensor: active power scheme -- Some("381b4222-f694-41f0-9685-ff5bb260df2e")
+  [ ok ] driver at NORMAL_PRIORITY_CLASS and MEMORY_PRIORITY_NORMAL -- priority class Some("0x20"), memory priority Some(5), elevated Some(true), integrity RID Some("0x3000")
+  [advisory] no excluded process running at the start (advisory: one that stays idle does not void) -- ["overwolf(28944)", "onedrive(25472)", "curseforge(40200)", "curseforge(38760)", "curseforge(640)", "curseforge(33352)", "curseforge(35660)", "curseforge(35648)", "curseforge(27804)", "python(16060)", "python(44764)", "python(31892)", "epicgameslauncher(28132)", "claude(50140)", "claude(64248)", "claude(43864)", "claude(25624)", "claude(26168)", "claude(50556)", "claude(12636)", "claude(45660)", "claude(46508)", "claude(64088)", "claude(41664)", "claude(52464)", "python(59000)", "python(56804)"]
+7 of 16 required items fail

@@ -1,0 +1,104 @@
+x4svc (revision 5) b290899f94c7999a35323c8390510a8f2a1bea6fe046958f9e49ae7fa5bf1e0d
+x4svc (revision 4, for comparison) 68125f5e173d87df4fbe09c565e0964de311b0d6a34607182fd28641772b02f9
+--- pins file (elevated)
+# bios.version=1.G0 2024-12-19
+# board.product=Micro-Star International Co., Ltd. MAG X670E TOMAHAWK WIFI (MS-7E12)
+# cpu.fclk=unavailable
+# cpu.logical_processors=32
+# cpu.microcode=2340400b
+# cpu.model=AMD Ryzen 9 9950X 16-Core Processor
+# cpu.pbo_curve_optimizer=unavailable
+# disk.models_firmware=Samsung SSD 990 PRO 2TB/5B2QJXD7/NVMe,WD My Passport 260D/2007/USB
+# env.block_sha256=d4d7ef3f2110958eca6671e75e7e705c8d80f5c671d5d9bad51d3df2ff7f9a6f
+# job.affinity_mask=0x10000000
+# job.priority_class=0x20
+# mem.configured_speed_mts=6000,6000
+# mem.modules=CMH64GX5M2M6000Z30/34359738368,CMH64GX5M2M6000Z30/34359738368
+# os.build=26200.9711
+# power.scheme_guid=381b4222-f694-41f0-9685-ff5bb260df2e
+# unavailable (explicit in the hash): cpu.pbo_curve_optimizer, cpu.fclk
+# env-block sha256 d4d7ef3f2110958eca6671e75e7e705c8d80f5c671d5d9bad51d3df2ff7f9a6f
+# pins-file lines:
+power.scheme_guid=381b4222-f694-41f0-9685-ff5bb260df2e
+fingerprint.sha256=e02fdb2b1f0ae8e2db6a6703c07b5b354dcbafff6ec7683a23fee964b26c44ca
+done marker: True
+--- restricted token groups (Administrators line)
+
+NT AUTHORITY\Local account and member of Administrators group Well-known group S-1-5-114          
+                          Mandatory group, Enabled by default, Enabled group
+BUILTIN\Administrators                                        Alias            S-1-5-32-544       
+                          Group used for deny only                          
+Mandatory Label\High Mandatory Level                          Label            S-1-16-12288       
+                                                                            
+--- hyg_high_r5
+  [ ok ] [mb-q4-avx512] verify-profile --collection --pins MET -- 
+e02fdb2b1f0ae8e2db6a6703c07b5b354dcbafff6ec7683a23fee964b26c44ca
+  [FAIL] [e2e-decode] verify-profile --collection --pins MET -- no pins file
+  [ ok ] sensor: process CPU (listed images readable) -- 362 processes; unreadable listed images 
+[]; read through PDH (not openable from this session) []
+  [FAIL] sensor: interactive input (driver in the console session) -- tick Some(0), in console 
+session Some(false)
+  [ ok ] driver at NORMAL_PRIORITY_CLASS and MEMORY_PRIORITY_NORMAL -- priority class 
+Some("0x20"), memory priority Some(5), elevated Some(true), integrity RID Some("0x3000")
+7 of 16 required items fail
+--- hyg_low_r5
+  [FAIL] [mb-q4-avx512] verify-profile --collection --pins MET -- fingerprint hash 
+6a58b25700d9151e72ec04e1ed6c5342d50d81452a6243eca87fd19d96132c5d != pinned 
+e02fdb2b1f0ae8e2db6a6703c07b5b354dcbafff6ec7683a23fee964b26c44ca (fields differing from the pins 
+file: bios.version: pinned "1.G0 2024-12-19", now "unavailable"; board.product: pinned 
+"Micro-Star International Co., Ltd. MAG X670E TOMAHAWK WIFI (MS-7E12)", now "unavailable"; 
+cpu.logical_processors: pinned "32", now "unavailable"; cpu.model: pinned "AMD Ryzen 9 9950X 
+16-Core Processor", now "unavailable"; disk.models_firmware: pinned "Samsung SSD 990 PRO 
+2TB/5B2QJXD7/NVMe,WD My Passport 260D/2007/USB", now "unavailable"; mem.configured_speed_mts: 
+pinned "6000,6000", now "unavailable"; mem.modules: pinned 
+"CMH64GX5M2M6000Z30/34359738368,CMH64GX5M2M6000Z30/34359738368", now "unavailable")
+  [FAIL] [e2e-decode] verify-profile --collection --pins MET -- no pins file
+  [ ok ] sensor: process CPU (listed images readable) -- 363 processes; unreadable listed images 
+[]; read through PDH (not openable from this session) ["mpdefendercoreservice", "msmpeng", 
+"searchindexer", "python", "python", "python", "python", "python", "searchprotocolhost"]
+  [FAIL] sensor: interactive input (driver in the console session) -- tick Some(0), in console 
+session Some(false)
+  [ ok ] driver at NORMAL_PRIORITY_CLASS and MEMORY_PRIORITY_NORMAL -- priority class 
+Some("0x20"), memory priority Some(5), elevated Some(true), integrity RID Some("0x3000")
+8 of 16 required items fail
+--- hyg_low_r4
+  [FAIL] [mb-q4-avx512] verify-profile --collection --pins MET -- fingerprint hash 
+6a58b25700d9151e72ec04e1ed6c5342d50d81452a6243eca87fd19d96132c5d != pinned 
+e02fdb2b1f0ae8e2db6a6703c07b5b354dcbafff6ec7683a23fee964b26c44ca
+  [FAIL] [e2e-decode] verify-profile --collection --pins MET -- no pins file
+  [FAIL] sensor: process CPU (listed images readable) -- 363 processes; unreadable listed images 
+["mpdefendercoreservice", "msmpeng", "searchindexer", "python", "python", "python", "python", 
+"python", "searchprotocolhost"]
+  [FAIL] sensor: interactive input (driver in the console session) -- tick Some(0), in console 
+session Some(false)
+  [ ok ] driver at NORMAL_PRIORITY_CLASS and MEMORY_PRIORITY_NORMAL -- priority class 
+Some("0x20"), memory priority Some(5), elevated Some(true), integrity RID Some("0x3000")
+9 of 16 required items fail
+--- fingerprint under the restricted token (revision 5)
+# bios.version=unavailable
+# board.product=unavailable
+# cpu.fclk=unavailable
+# cpu.logical_processors=unavailable
+# cpu.microcode=2340400b
+# cpu.model=unavailable
+# cpu.pbo_curve_optimizer=unavailable
+# disk.models_firmware=unavailable
+# env.block_sha256=d4d7ef3f2110958eca6671e75e7e705c8d80f5c671d5d9bad51d3df2ff7f9a6f
+# job.affinity_mask=0x10000000
+# job.priority_class=0x20
+# mem.configured_speed_mts=unavailable
+# mem.modules=unavailable
+# os.build=26200.9711
+# power.scheme_guid=381b4222-f694-41f0-9685-ff5bb260df2e
+# unavailable (explicit in the hash): cpu.model, cpu.logical_processors, bios.version, board.product, mem.configured_speed_mts, mem.modules, disk.models_firmware, cpu.pbo_curve_optimizer, cpu.fclk
+# env-block sha256 d4d7ef3f2110958eca6671e75e7e705c8d80f5c671d5d9bad51d3df2ff7f9a6f
+# pins-file lines:
+power.scheme_guid=381b4222-f694-41f0-9685-ff5bb260df2e
+fingerprint.sha256=6a58b25700d9151e72ec04e1ed6c5342d50d81452a6243eca87fd19d96132c5d
+--- read-only power settings (for PRE-NIGHT A1): standby on AC of High performance and of the active plan
+    Current AC Power Setting Index: 0x00000000
+    Current DC Power Setting Index: 0x00000000
+    Current AC Power Setting Index: 0x00000000
+    Current DC Power Setting Index: 0x00000258
+
+

@@ -8,8 +8,10 @@ sensors, the Hearth workload set, the night driver and its dry run; see
 [Noise-pilot readiness](#noise-pilot-readiness-x4-pilot-track-2026-10-23)); the same day that work had
 its review round (two reviewers, 37 findings, all accepted, several with a modified fix) and was
 revised as **revision 4** (see [Review round 4](#review-round-4-2026-10-23-37-findings-revision-4));
-revision 4 itself is **not yet reviewed**, and no pilot session, A/A, planted-regression or HACK-SUITE
-run was made.
+revision 4 had its own review round the same day (one reviewer, 13 findings, all accepted; 2 with a
+part not adopted, 1 with a part left to the lead engineer) and was revised as **revision 5** (see [Review round 5](#review-round-5-2026-10-23-13-findings-revision-5));
+revision 5 is **not yet reviewed**, and no pilot session, A/A, planted-regression or HACK-SUITE run was
+made.
 **Date:** 2026-10-16/17. Author/reviser: X4 track (Claude, same-family, independent context).
 Evidence tags: **[M]** measured here, **[D]** derived, **[G]** judgment, **[target]** a pre-registered
 threshold, **[inference]**.
@@ -193,6 +195,9 @@ session, A/A, planted-regression or HACK-SUITE catalogue run. This work is **unr
   this track's budget; the pilot's 24 threads on 31 LPs, N = 2,048 and its golden were not run.
   Revision 4 makes its t_run,plan, time cap and the per-run overhead o_rt mechanical pre-night values
   (record § Amendments); they, K, the goldens, the pins and the binary hashes are not filled here.
+  *Revision 5:* one attended run at the pilot placement inside a window before night 1 (PRE-NIGHT A9);
+  at dev size with the 8 GiB cache the peak process memory was 9.68 GiB of the 24 GiB limit [M, Review
+  round 5].
 - **Some sensors are shown firing only on injected readings** (input, RDP, Defender, scheme): they
   cannot be planted for real without touching the console or security software. The GPU rule fired on
   real readings in revision 4's superseded dry runs (13-99%, GEMS in daytime) [M]. The load gate was shown
@@ -200,17 +205,17 @@ session, A/A, planted-regression or HACK-SUITE catalogue run. This work is **unr
   budget). No ACPI thermal-zone counter exists here, so the package temperature of MEASUREMENT §4.1 is
   unavailable [M].
 - **Readability at Medium integrity is unverified**: every sensor reading so far ran in an elevated
-  SSH session [M]; Pierce's once-only check (PRE-NIGHT A6) settles it.
+  SSH session [M]; Pierce's once-only check (PRE-NIGHT A6) settles it. *Revision 5:* under a restricted
+  token the background images could not be opened; the sensor now reads them through PDH and every
+  listed image reads [M, Review round 5]; Pierce's own session (A8) is still the check that counts.
 - **The pre-START wall ceiling** (review R1-11) is an Owner decision before freeze; the service judges
   it (the stricter reading).
 - **The driver checks a signature's shape, not the signature**: a PILOT configuration must name the
   freeze commit, the tag and the rule's seed, but `x4svc` does not run `git verify-tag` (there is no
   checkout of this repository on the desktop [M]); the authority is Pierce's launch under the signed
   record (record §10, and every manifest says so).
-- **No estimator CLI**: the record's §4 estimators exist as `stats.rs` functions; the command that
-  reads the night directories is specified in record §7 (manifest grade, status, freeze commit and
-  configuration hash; every manifest hash re-checked; any non-PILOT line refuses the input) but is not
-  written.
+- ~~**No estimator CLI**~~ *Revision 5:* written, `x4svc pilot-estimate` (`src/estimate.rs`, unit-tested,
+  and run on a dry night's records in its `--dry-test` mode; Review round 5).
 - **The record's X3/X4 priority-class conflict** is a recommendation (record §3), not a decision.
 - **F0 line budget:** the platform-independent core is ≈ 1,707 lines (`proto` 593, `stats` 305,
   `eprocess` 245, `session` 214, `scheduler` 136, `quantity` 93, `sha256` 88, `runenv` 33), plus the
@@ -352,6 +357,109 @@ if the child has not exited (`no_exit_after_report`, out of process), and the te
 recorded; §4, the machine load is read from `GetSystemTimes`, the start state is settled before the
 2-s load is read, and the cool-down comes before the checks; §4/§5.3, background CPU is judged over
 the planned block time; §7.3, the self-test's job gets the run type's affinity limit.
+
+## Review round 5 (2026-10-23): 13 findings, revision 5
+
+One reviewer (Claude, same family, independent context) reviewed revision 4 with desktop checks of its
+own (a rebuild, dry nights at the record's windows, PILOT-configuration variants, and readings under a
+restricted token: `runas /trustlevel:0x20000`, Administrators deny-only, which approximates Pierce's
+non-elevated token; its label still reads High). The reviser (Claude, same family, independent context
+from the reviewer) checked each finding against the code and re-measured each desktop claim on its own
+build in `D:\mithril\x4rev4r` (3 threads: LPs 26-28; `CUDA_VISIBLE_DEVICES=-1`; TEMP/TMP on D:; no WSL;
+no setting changed). **All 13 accepted; F8 and F12 with a part not adopted, F1 with a part left to the lead engineer.** The record's disposition is in its
+§12; this table is the service side.
+
+| # | Sev | Finding | Verified | Disposition |
+|---|---|---|---|---|
+| F1 | blocker | The record cannot freeze: no X4-calibration record; C07 not delegable; the §7 estimator unwritten | yes (no such file; DELEGATED P23; IMPLEMENTATION "Not done") | **Fixed, part.** `x4svc pilot-estimate` written (`src/estimate.rs`: a dependency-free JSON reader, the §7 input checks, the §4 counted set and estimators, the §7(a) 2x fill-in with ceiling flags, the load threshold, envelopes, discard causes, block-hours; 4 unit tests) and run on a dry night (`--dry-test`). The freeze chain is stated in the record. *Not done here:* splitting X4-calibration out of the X4-integrity DRAFT and freezing it after Pierce's C07 (outside this track's files; not delegable) |
+| F2 | blocker | Non-elevated, the background images are unreadable: PILOT refuses, every block would be discarded | **yes, reproduced** on the revision-4 binary under the restricted token: `unreadable listed images ["mpdefendercoreservice","msmpeng","searchindexer"]`, and a dry session voided after 3 discards "msmpeng CPU unreadable, ..." [M] | **Fixed, option (a).** `sensors_win::processes_where` reads any listed process it cannot open through the documented PDH `\Process(*)` raw counters (`% Processor Time` = kernel + user time in 100 ns, `ID Process`, `Elapsed Time` = creation FILETIME; both equal to the elevated `GetProcessTimes` values [M, `pdhtest.ps1`]); PDH repeats duplicate instance names without `#n` [M: five `python` under one name], so the three arrays are paired by position with the names checked; `hygiene::cpu_cycles_since` converts the tick-based time at the calibrated rate for the background rule and treats any increase as CPU use for an excluded image. Under the restricted token every listed image now reads and the same dry session completes with 0 discards [M, below]. Option (b), an elevated driver, is not needed |
+| F3 | major | Pins made elevated over SSH; the driver reads the fingerprint in Pierce's session | yes [M: under the restricted token every CIM field reads `unavailable`, hash `6a58b257…` vs `e02fdb2b…` elevated] | **Fixed.** PRE-NIGHT reordered: Pierce makes the pins in the launch context (A7), keeping every `# key=value` line; `pilot::pins_field_diff` names each differing field in the collection failure [M, below] |
+| F4 | major | The B13 job wrapper does not exist; A6 called the task "the B13 wrapper" | yes (grep) | **Fixed, second option.** Record §9/§10 rely on the started-only, excluded and Mithril-image voids; the task is the "pilot launcher" (PRE-NIGHT A6, `pilot.rs`, `verify-now.cfg`) |
+| F5 | major | A PILOT configuration that differs from the record still parses | **yes, reproduced** for each of the reviewer's variants | **Fixed.** `pilot_rules` by equality: e2e `time_cap_s` = max(600, 3·t_run,plan); `memory_gib` 2 / 24 (now record §3); `disk_write_max_bytes_s` = 1048576; image lists equal to the record's (signing names in `excluded_images_at_signing`, required in PILOT, may be empty); record path; data, scratch, probe, harness and pins paths; the tag name; one harness hash for both run types; o_rt and t_run,plan(e2e) whole seconds within [4, 15] s and [1, 600] s [G]; a `<FILL` placeholder never parses. The rest (K, o_rt, t_run,plan values, hashes, goldens) is bound by the **canonical configuration SHA-256** (`pilotcfg::config_canonical_sha256`, the file without its `integrity_cleared` lines; `x4svc config-hash`): `pilot-night --pilot` requires `--config-sha256` and refuses on a mismatch before it creates anything; the estimator requires it too. Each night's manifest also records the pins files' SHA-256 (the pins are not in the configuration's hash). Unit tests: 21 more single-value mutations (77 in all) and the committed template filled is the record |
+| F6 | major | A crash leaves the manifest `open` with stale hashes; §7 then rejects the night | yes (code) | **Fixed.** The manifest is written `open` before the first session; the next night's driver, or `x4svc pilot-close` (refused inside the window or while another x4svc runs), writes `manifest-closed-after-interrupt.txt` with the current hashes, the open manifest's hash and the sessions started without an end line, then marks them `interrupted`; progress.txt is hashed by prefix (`bytes=`), since it only grows; the estimator accepts a cut-short last line only in such a night. Shown on a dry night killed 30 s in [M, below] |
+| F7 | major | Partial blocks of integrity_stop / error sessions counted; integrity_cleared changes the config hash | yes (code) | **Fixed, modified.** Counted set = sessions ending `completed` (the estimator reports the excluded ends); a set-up error is written `error`; the canonical hash leaves out `integrity_cleared` lines, so no "clearing amendment hash" is needed |
+| F8 | major | Open Owner choices outside §13; Plan A/B could be chosen after σ̂ | yes | **Fixed, part.** Record §13 lists C07, R1-11, the priority class, Plan A/B (named at signing; blank = B), the 24/7 plan, GEMS names, the Qwen3 server image, C: space, the Defender exclusion and non-elevation. *Not adopted:* "fill the Qwen3 image from Pierce's list": no such list exists; Hearth's server is Python at b5d3f14 (`python/hearth/server.py`, `hearth serve`), so `python`/`pythonw`, already excluded [inference]; the template's FILL became `excluded_images_at_signing` |
+| F9 | major | e2e at its pilot placement first runs on night 1 | yes | **Fixed.** PRE-NIGHT A9: one attended `dev-run --config pilot.cfg --run-type e2e-decode` inside a window before night 1; `dev-run` now prints Δ_o, Δ_h, run wall, peak process memory and exit code; its values go into the pre-night amendment; a ceiling exceeded, a golden mismatch or a peak above 75% of the limit is a design revisit |
+| F10 | minor | D0-7a still read as unanswered | yes | **Fixed** (record §3a, §10) |
+| F11 | minor | The build script prints but does not check cl/CMake/Ninja; LF endings; A1 lacks `/setactive` and a standby check | yes (the root `.gitattributes` already checks `*.bat` out as CRLF; the working copy was LF) | **Fixed.** `build_pilot.bat [ROOT]` refuses on each mismatch (shown on modified copies [M]); CRLF in the working tree; A1 adds `powercfg /setactive` (24/7) and `powercfg /qh <GUID> SUB_SLEEP STANDBYIDLE` (reads 0 on AC on Balanced and High performance [M, read-only]) |
+| F12 | minor | The dry night never ran the record's windows, a bracket-eligible run or the capped path | yes | **Fixed, part.** `pilot/dry-record.cfg`: record windows and start state, a 1.25-s bracket-eligible stand-in and a 2-s-capped stand-in [M, below]; the driver's own D: writes are in the start-state sample (record §10). *Not adopted:* real plants for input, RDP, Defender, GPU and the power scheme (they would touch the console or security software) |
+| F13 | major | The owner actions with exact commands | yes | **Fixed.** PRE-NIGHT.md rewritten in the new order (0 decide, A1–A5, L1, A6–A9, L2, B) |
+
+### Verified on the revision-5 build [M, desktop DESKTOP-8RS9J1J, 2026-10-23, `D:\mithril\x4rev4r`, LPs 26-28]
+
+Every line below ran, in one sequence (17:15–17:25 desktop time = 14:15–14:25 PT), on exactly these
+binaries of one `build_pilot.bat D:\mithril\x4rev4r` run (dev build, not pins): `x4svc.exe`
+`b290899f94c7999a35323c8390510a8f2a1bea6fe046958f9e49ae7fa5bf1e0d`, `x4harness_hearth.exe`
+`6d65c5b5d6e8d4b51f40718746954b8a22bb5caed1e3734d01d661964470dab1`, `x4sb_probe.exe`
+`f1a5b271cb4db0746ffb83994255a3857651ad7d776478308534754ffc671e8c` (all six in
+[`pilot/rev5-evidence-2026-10-23/SHA256-binaries.txt`](pilot/rev5-evidence-2026-10-23/SHA256-binaries.txt));
+the raw outputs are in [`pilot/rev5-evidence-2026-10-23/`](pilot/rev5-evidence-2026-10-23/) (`final.txt`
+is the sequence's own log). After that run only comments changed in `pilot.rs` (one line, same line
+count), `dry-record.cfg`'s header and the docs; a cargo rebuild of the final sources passes the same 94
++ 4 tests and gives `x4svc.exe` `0873c5d836f6c4859a9d78632ec327d3f5909593858e5497dca128443fabf540`
+(a relink; that the linker's time stamp alone makes the difference is [inference]; the pre-night amendment pins
+the copy that will run). It is the `x4svc.exe` now in `D:\mithril\x4rev4r\bin`.
+- **Build:** the script's checks passed (`cl` 19.44.35229 for x64, CMake 4.4.3, Ninja 1.12.1, rustc
+  1.91.1, Hearth b5d3f14 clean); every step rc 0; **94 unit + 4 golden/differential tests pass** (85
+  before; new: the estimator's 4, the canonical hash, the committed template filled = the record, the PDH
+  fallback rules, the pins field diff, the night closure). The mutation table holds 76 single-value
+  changes (21 new), each refused. **Refusals:** copies of the script with one expected version changed
+  each print `REFUSED: cl is not 19.44.99999 for x64`, `REFUSED: CMake is not 4.4.2`, `REFUSED: Ninja is
+  not 1.12.0` and stop before step [1].
+- **Dev runs** (`dev-run`, new summary line): `mb_q4_avx512`, 2¹⁸ calls on LP 28: Δ_h 1.487744 s, run wall
+  2.345 s, peak process memory 3.2 MB, Accept, golden `55b9c367…a036`; `e2e_decode`, N = 8, 1 + 1 threads,
+  **8 GiB cache, 24 GiB limit**: Δ_o 2.70 s, **peak process memory 10,389,274,624 B (9.68 GiB, 40% of the
+  limit)**, Accept, golden `86653fe54db5f08cd62905f71e654bfaf905d7851f1b3069df9f943f1de40f35` (as the
+  revision-3 builder's `86653fe5…0f35`).
+- **Record-window dry night** (`pilot/dry-record.cfg`, elevated, `--max-sessions 2`): 36 gates at 2 s /
+  1 s / 60 s, **start state reached 36 of 36** (settle ≤ 1,001 ms, disk writes ≤ 650,914 B/s against the
+  1,048,576 limit, no dropped LP, machine load ≤ 3.25%); **24 microbenchmark stand-in runs Accept with the
+  bracket judged** (Δ_o 1.246–1.269 s, max τ margin 0.0225); **12 end-to-end stand-in runs TimeCapped** at
+  2.007–2.009 s with the cool-down between them; both sessions completed, 0 discards. `pilot-estimate
+  --dry-test` read the night: σ̂_d, B, σ̂_U, σ̂_run, the median, t_run, the R replay, every observe maximum
+  with its 2x fill-in, the load threshold, the envelopes and the block-hours (`dry-record-night/`), and
+  printed "DRY-RUN ACCEPTANCE TEST ... not pilot data"; asked for PILOT on the same directory it refuses.
+- **Restricted token (F2, F3)**, `runas /trustlevel:0x20000`: `verify-hygiene --as-pilot`, revision 4:
+  `[FAIL] process CPU ... unreadable listed images ["mpdefendercoreservice","msmpeng","searchindexer",
+  "python" x5,"searchprotocolhost"]`; revision 5: `[ ok ] ... unreadable listed images []; read through PDH
+  [the same nine]`; elevated: none needs PDH. The same pins file made elevated (every line kept) gives
+  `fingerprint hash 6a58b257… != pinned e02fdb2b… (fields differing from the pins file: bios.version:
+  pinned "1.G0 2024-12-19", now "unavailable"; board.product ...; cpu.logical_processors ...; cpu.model
+  ...; disk.models_firmware ...; mem.configured_speed_mts ...; mem.modules ...)` (CIM through a
+  restricted token; Pierce's real session may read them, which is why A7 makes the pins there).
+- **Restricted token, one dry session each** (`dry-record.cfg`'s first session): **revision 4: hygiene void
+  after 3 discards** ("background activity over the block: msmpeng CPU unreadable, mpdefendercoreservice CPU
+  unreadable, searchindexer CPU unreadable[, searchprotocolhost CPU unreadable]"); **revision 5: 3 blocks,
+  0 discards, completed**. With the background threshold set to 0.000001% of one core, revision 5 discards
+  on real PDH readings: "msmpeng 0.879% ..., searchindexer 0.049% of one core over the planned block",
+  then 1.123% and 1.221% [M, daytime], so the rule uses the reading. The orchestrator's own CPU per
+  end-to-end stand-in block (the 250-ms poller included): 3.06% of one core elevated, 5.61% under the
+  restricted token, where every poll also collects the PDH process counters (on its reserved LP).
+- **Configuration binding (F5, F7):** `pilot-plan` on 22 variants of the filled committed template: the
+  filled file, one with an `integrity_cleared` line and one with an empty signing list parse; **all 19
+  others are refused**, including each of the reviewer's accepted ones (time cap 100000, memory 1 GiB for
+  either run type, disk-write 1, extra excluded or background images, another record path, o_rt 1000,
+  t_run,plan 5000 with cap 15000, another e2e harness, any tag name) and the new rules (no signing key,
+  o_rt 5.5, pins or probe elsewhere, two harness hashes, a placeholder left). `config-hash`: the file and
+  its copy with an `integrity_cleared` line have different file hashes and the same canonical hash
+  `2da8c33c…683f`. `pilot-night --pilot` without `--config-sha256`, and with a wrong one, refuse before
+  making anything; with the right one it proceeds to the window check and refuses outside the window;
+  `D:\mithril-data` still does not exist.
+- **Crash path (F6):** a dry night (`dry-crash.cfg`, a copy of `dry-record.cfg` with its own scratch)
+  killed 30 s in: its manifest reads `status=open` (written before the first session); `pilot-estimate`
+  refuses ("is open ... run `x4svc pilot-close`"); `pilot-close` writes
+  `manifest-closed-after-interrupt.txt` (`interrupted=e2e-decode-01`, the open manifest's hash, progress
+  by prefix) and appends `e2e-decode-01 interrupted`; a second `pilot-close` finds nothing open; the
+  estimator then reads the night (`sessions_by_end = interrupted:1`, no block counted); one byte appended
+  to `voids.log` afterwards makes it refuse ("voids.log does not match its manifest SHA-256").
+- **Not shown here:** the restricted token is not Pierce's Medium token (its label reads High), so A8 in
+  his session remains required; the PILOT path end to end (no signed record; refused outside a window);
+  a cut-short last record line on a real crash (unit-tested only: the kill landed between writes); the
+  e2e run type at its pilot placement (A9).
+- **Residual (not fixed):** the night start does not refuse while another `x4svc` runs (a driver hung
+  past 07:00 into the next evening would have its open manifest closed by the new night; `pilot-close`
+  does refuse in that case) [G: rare]; `--dry-test` reads one dry night run without plants (plant sessions
+  write no progress lines).
 
 ## Trust classes (new; review finding R1-5/R2-10, the lane distinction)
 
@@ -640,3 +748,10 @@ signalled handle in the child; the probe now also requires the inherit flag) [M]
   `dry_quiesce_wake` probe in `hearth_workloads.c`; the dev-only build `x4harness_hearth_q0.exe`
   (never pinned); `pilot/VERIFY-2026-10-23-rev4.txt` and `pilot/dry-run-2026-10-23/rev4/`. The
   revision-3 binaries are kept in `D:\mithril\x4c\bin-r3\`.
+- Revision 5 (2026-10-23, review round 5): `service/orchestrator/src/estimate.rs` (new, pure: the
+  section 7 estimator, `x4svc pilot-estimate`); changes to `pilotcfg`, `hygiene`, `sensors_win`, `pilot`,
+  `main`, `lib`; `service/tools/build_pilot.bat` (`[ROOT]`, version refusals, CRLF); `pilot/dry-record.cfg`
+  (new), `pilot/pilot.cfg.template`, `pilot/PRE-NIGHT.md` (rewritten in the new order),
+  `pilot/verify-now.cfg` (a comment); `pilot/rev5-evidence-2026-10-23/` (the raw outputs). The reviser's
+  desktop build lives in `D:\mithril\x4rev4r` (sources in `src\`, binaries in `bin\`, jobs and logs in
+  `jobs\`, the evidence folder `evidence\`).

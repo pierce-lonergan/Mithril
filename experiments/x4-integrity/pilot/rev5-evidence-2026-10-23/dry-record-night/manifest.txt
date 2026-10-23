@@ -1,0 +1,25 @@
+grade=DRY-RUN
+status=closed
+note=
+night=dry-20261023T211600Z
+record=docs/m0/prereg/X4-noise-pilot.md (DRAFT)
+freeze_commit=none
+signed_tag=none (name only: the driver does not verify the signature; record section 10)
+seed=6a314c1f9fc1d48b
+config=D:\mithril\x4rev4r\src\pilot\dry-record.cfg sha256=57643d4cb9f67951e34ed0500096acefa938625de4b1d90ca93f3f3c78592eb4
+config_canonical_sha256=57643d4cb9f67951e34ed0500096acefa938625de4b1d90ca93f3f3c78592eb4
+integrity_cleared=
+cycle_rate_hz=4295972333
+process_poll_ms=250
+driver_priority_class=0x20 memory_priority=5 elevated=true integrity_rid=0x3000
+written_utc=1792790342.032
+harness[mb-q4-avx512]=D:\mithril\x4rev4r\bin\x4harness_hearth.exe sha256=6d65c5b5d6e8d4b51f40718746954b8a22bb5caed1e3734d01d661964470dab1
+harness[e2e-decode]=D:\mithril\x4rev4r\bin\x4harness_hearth.exe sha256=6d65c5b5d6e8d4b51f40718746954b8a22bb5caed1e3734d01d661964470dab1
+x4svc=D:\mithril\x4rev4r\bin\x4svc.exe sha256=b290899f94c7999a35323c8390510a8f2a1bea6fe046958f9e49ae7fa5bf1e0d
+sha256[voids.log]=a301fe8743312adeaf3c79594a96e082ae277b63b984bd470608eca52e0fee3d
+sha256[runs.jsonl]=25a54d346e58a492e90a6ee42e821cbbdb5a98121ae1dc0d3978f3a082c7f8dc
+sha256[blocks.jsonl]=a64a350b582cb53f776b4248859091c361fa749e5cb9285076ca33a6f2b00069
+sha256[sessions.jsonl]=49a00c69435c0f2d794599ab5ef5cff893334a11ce77f00e75391b1c8a48a759
+sha256[sensors.jsonl]=28f215dc34ab8f9a12d291f866800b993066418e23a50be341e5896ffc1cdb7b
+sha256[plants.jsonl]=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+sha256[progress.txt]=e08bfc086f663a9653393dc8be1aabb0acd6543f41bef31fda403510bd07210f bytes=544 (D:\mithril\x4rev4r\scratch-record\dry\dry-20261023T211600Z\progress.txt)

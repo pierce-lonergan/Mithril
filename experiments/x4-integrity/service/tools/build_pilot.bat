@@ -1,10 +1,13 @@
 @echo off
-rem X4 noise-pilot build (X4 pilot track, 2026-10-23; revision 4 the same day): the binaries a pilot
-rem night runs, built on the desktop with MSVC and cargo at no more than 3 parallel jobs, every
-rem artefact under D:\mithril\x4c.
+rem X4 noise-pilot build (X4 pilot track, 2026-10-23; revisions 4 and 5 the same day): the binaries a
+rem pilot night runs, built on the desktop with MSVC and cargo at no more than 3 parallel jobs, every
+rem artefact under ROOT (the first argument; default D:\mithril\x4c).
 rem
-rem   0. refuses unless the Hearth clone is b5d3f14 with a clean tree and rustc is 1.91.1 (record
-rem      section 2); prints the toolchain versions.
+rem   build_pilot.bat [ROOT]     sources in ROOT\src\{service,sandbox,pilot}; outputs in ROOT\{obj,bin,...}
+rem
+rem   0. refuses unless the Hearth clone is b5d3f14 with a clean tree and (revision 5, review round 5)
+rem      cl is 19.44.35229 for x64, CMake 4.4.3, Ninja 1.12.1 and rustc 1.91.1 (record section 2).
+rem      This file keeps CRLF line endings (.gitattributes: *.bat text eol=crlf).
 rem   1. hearth-c-ref: a clean out-of-tree CMake Release build of Hearth b5d3f14 (Ninja, -j 3) into an
 rem      EMPTY %HB% (revision 4: the build is part of this script, not a prerequisite); the nine
 rem      engine objects are hashed into the log. Eight of them are linked unchanged.
@@ -17,18 +20,22 @@ rem      x4harness_hearth_q0.exe, the same with x4h.c built /DX4H_QUIESCE_IGNORE
 rem      race the wake accounting closes (dry_quiesce_wake).
 rem   4. the dev harness x4harness.exe, x4sb_probe.exe and the dry-run plant x4plant.exe (/MT).
 rem   5. x4svc.exe: cargo test (3 jobs, 3 test threads) and cargo build, release.
-rem Sources: D:\mithril\x4c\src\{service,sandbox} (a copy of experiments/x4-integrity/).
+rem Sources: ROOT\src\{service,sandbox,pilot} (a copy of experiments/x4-integrity/; the unit tests read
+rem pilot\pilot.cfg.template).
 setlocal
+set "R=%~1"
+if "%R%"=="" set "R=D:\mithril\x4c"
 set CUDA_VISIBLE_DEVICES=-1
-set TEMP=D:\mithril\x4c\tmp
-set TMP=D:\mithril\x4c\tmp
+if not exist %R%\tmp mkdir %R%\tmp
+set TEMP=%R%\tmp
+set TMP=%R%\tmp
 call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat" >nul
 set H=D:\mithril\src\hearth
-set HB=D:\mithril\x4c\hearth-build
-set S=D:\mithril\x4c\src\service
-set P=D:\mithril\x4c\src\sandbox\probes
-set O=D:\mithril\x4c\obj
-set B=D:\mithril\x4c\bin
+set HB=%R%\hearth-build
+set S=%R%\src\service
+set P=%R%\src\sandbox\probes
+set O=%R%\obj
+set B=%R%\bin
 set CMAKE="C:\Program Files\CMake\bin\cmake.exe"
 set "NINJA=C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe"
 set "TC=C:\Users\Pierce Lonergan\.rustup\toolchains\stable-x86_64-pc-windows-msvc\bin"
@@ -45,9 +52,18 @@ set DIRTY=
 for /f "delims=" %%l in ('git -C %H% --no-optional-locks status --porcelain') do set DIRTY=1
 if defined DIRTY (echo REFUSED: the Hearth clone has local changes & exit /b 1)
 echo hearth tree clean
-cl 2>&1 | findstr /i version
-%CMAKE% --version | findstr /i version
-"%NINJA%" --version
+set CLV=
+for /f "delims=" %%v in ('cl 2^>^&1 ^| findstr /c:"Version 19.44.35229 for x64"') do set "CLV=%%v"
+if not defined CLV (echo REFUSED: cl is not 19.44.35229 for x64 & cl 2>&1 | findstr /i version & exit /b 1)
+echo %CLV%
+set CMV=
+for /f "tokens=3" %%v in ('%CMAKE% --version ^| findstr /b cmake') do set "CMV=%%v"
+echo cmake version %CMV%
+if not "%CMV%"=="4.4.3" (echo REFUSED: CMake is not 4.4.3 & exit /b 1)
+set NJV=
+for /f "delims=" %%v in ('"%NINJA%" --version') do set "NJV=%%v"
+echo ninja %NJV%
+if not "%NJV%"=="1.12.1" (echo REFUSED: Ninja is not 1.12.1 & exit /b 1)
 set RV=
 for /f "delims=" %%v in ('"%RUSTC%" -V') do set "RV=%%v"
 echo %RV%
@@ -82,8 +98,8 @@ echo x4sb_probe rc=%ERRORLEVEL%
 cl /nologo /O2 /W4 /std:c11 /MT /DWIN32 /D_WINDOWS %S%\tools\x4plant.c /Fe:%B%\x4plant.exe /Fo:%O%\dev\
 echo x4plant rc=%ERRORLEVEL%
 echo ==== [5] x4svc (cargo 1.91.1 msvc by absolute path, 3 jobs)
-set CARGO_HOME=D:\mithril\x4c\cargo-home
-set CARGO_TARGET_DIR=D:\mithril\x4c\cargo-target
+set CARGO_HOME=%R%\cargo-home
+set CARGO_TARGET_DIR=%R%\cargo-target
 cd /d %S%\orchestrator
 "%TC%\cargo.exe" test -j 3 --release -- --test-threads=3 2>&1
 echo cargo-test rc=%ERRORLEVEL%
@@ -91,5 +107,5 @@ echo cargo-test rc=%ERRORLEVEL%
 echo cargo-build rc=%ERRORLEVEL%
 copy /y %CARGO_TARGET_DIR%\release\x4svc.exe %B%\x4svc.exe >nul
 echo ==== sha256
-powershell -NoProfile -Command "Get-ChildItem D:\mithril\x4c\bin\*.exe | ForEach-Object { '{0}  {1}  {2}' -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Length, $_.Name }"
+powershell -NoProfile -Command "Get-ChildItem %B%\*.exe | ForEach-Object { '{0}  {1}  {2}' -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Length, $_.Name }"
 endlocal

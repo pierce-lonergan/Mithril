@@ -1,0 +1,25 @@
+grade=DRY-RUN
+status=closed-after-interrupt
+note=closed by x4svc pilot-close at 2026-10-23 14:25:28 PDT (this night's manifest was open or missing: a crash, a restart or a power loss)
+night=dry-20261023T212455Z
+open_manifest_sha256=5c2e6e35e8551cb4c3503e08b0fc1a8d041a952a9466edae13ec78ebbcd261b8
+record=docs/m0/prereg/X4-noise-pilot.md (DRAFT)
+freeze_commit=none
+signed_tag=none (name only: the driver does not verify the signature; record section 10)
+seed=6a314c1f9fc1d48b
+config=D:\mithril\x4rev4r\jobs\dry-crash.cfg sha256=08d7c85877b5298bfe8e36c13e39c6e289661887f411058d639c30758d1e0a4a
+config_canonical_sha256=08d7c85877b5298bfe8e36c13e39c6e289661887f411058d639c30758d1e0a4a
+integrity_cleared=
+cycle_rate_hz=4296388000
+harness[mb-q4-avx512]=D:\mithril\x4rev4r\bin\x4harness_hearth.exe sha256=6d65c5b5d6e8d4b51f40718746954b8a22bb5caed1e3734d01d661964470dab1
+harness[e2e-decode]=D:\mithril\x4rev4r\bin\x4harness_hearth.exe sha256=6d65c5b5d6e8d4b51f40718746954b8a22bb5caed1e3734d01d661964470dab1
+x4svc=D:\mithril\x4rev4r\bin\x4svc.exe sha256=b290899f94c7999a35323c8390510a8f2a1bea6fe046958f9e49ae7fa5bf1e0d
+written_utc=1792790728.772
+sha256[voids.log]=755096aeeeaaf942d574f2666e4be5c67e7329c30e6afeca8a5ca04139c65734
+sha256[runs.jsonl]=1a00e00cb04ef2dbdeeb330077ef00d9dba3491e9367ac7d1264a7e1201341a1
+sha256[blocks.jsonl]=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+sha256[sessions.jsonl]=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+sha256[sensors.jsonl]=cccd7c60e94f22cde8d879290554b98a46a863ef486025183c6d8ff5cd3ed3e4
+sha256[plants.jsonl]=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+sha256[progress.txt]=76cca7977959b1a6bb2a03fc69f75aebbb92b5d0e094859f62e3734807501541 bytes=217 (D:\mithril\x4rev4r\scratch-crash\dry\dry-20261023T212455Z\progress.txt)
+interrupted=e2e-decode-01

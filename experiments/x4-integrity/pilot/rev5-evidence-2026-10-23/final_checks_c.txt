@@ -1,0 +1,132 @@
+x4svc b290899f94c7999a35323c8390510a8f2a1bea6fe046958f9e49ae7fa5bf1e0d
+=== 1. PILOT variants: pilot-plan on each (read-only); v00 and w* must parse, every v01..v25 must be refused
+v00_filled                   rc=0 grade PILOT; seed 2ac97bc5867a9d82 (rule from freeze commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: 2ac97bc5867a9d82)
+v01_e2e_timecap_huge         rc=2 PILOT differs from the record's fixed values (a change is a record amendment): [e2e-decode] time_cap_s = 100000 (record: max(600, 3 x t_run_plan_s) = 600)
+v02_mb_memory_1gib           rc=2 PILOT differs from the record's fixed values (a change is a record amendment): [mb-q4-avx512] memory_gib = 1 (record: 2)
+v03_e2e_memory_1gib          rc=2 PILOT differs from the record's fixed values (a change is a record amendment): [e2e-decode] memory_gib = 1 (record: 24)
+v04_disk_write_1             rc=2 PILOT differs from the record's fixed values (a change is a record amendment): disk_write_max_bytes_s = 1 (record: 1048576)
+v05_extra_excluded           rc=2 PILOT differs from the record's fixed values (a change is a record amendment): excluded_images has entries the record does not list ["explorer", "svchost"] (names given a
+v06_extra_bg                 rc=2 PILOT differs from the record's fixed values (a change is a record amendment): bg_images has entries the record does not list ["svchost"] (names given at signing go in ex
+v07_record_other             rc=2 PILOT differs from the record's fixed values (a change is a record amendment): record = "docs/m0/prereg/SOMETHING-ELSE.md" (record: docs/m0/prereg/X4-noise-pilot.md)
+v08_mb_overhead_huge         rc=2 PILOT differs from the record's fixed values (a change is a record amendment): [mb-q4-avx512] overhead_s = 1000 (record: a whole number of seconds in [4, 15], by the sect
+v09_e2e_trunplan_huge        rc=2 PILOT differs from the record's fixed values (a change is a record amendment): [e2e-decode] t_run_plan_s = 5000 (record: a whole number of seconds in [1, 600], by the sec
+v11_e2e_other_harness        rc=2 PILOT differs from the record's fixed values (a change is a record amendment): [e2e-decode] harness = "D:\\mithril-data\\x4\\bin\\other.exe" (record: D:\mithril-data\x4\b
+v13_load_max_41              rc=2 PILOT differs from the record's fixed values (a change is a record amendment): load_max_pct = 41 (record: 40)
+v14_signed_tag_any           rc=2 PILOT differs from the record's fixed values (a change is a record amendment): signed_tag = Some("x") (record section 13: prereg-sign-x4-noise-pilot)
+v15_excluded_cpu_max         rc=2 PILOT differs from the record's fixed values (a change is a record amendment): excluded_cpu_max_ms = 5 (record: 0)
+v20_no_signing_key           rc=2 PILOT needs excluded_images_at_signing (the GEMS images and any server image named at signing, record section 13; may be empty)
+v21_overhead_fraction        rc=2 PILOT differs from the record's fixed values (a change is a record amendment): [mb-q4-avx512] overhead_s = 5.5 (record: a whole number of seconds in [4, 15], by the secti
+v22_pins_elsewhere           rc=2 PILOT differs from the record's fixed values (a change is a record amendment): [e2e-decode] pins = Some("D:\\mithril\\pins.txt") (record: D:\mithril-data\x4\pins\e2e-deco
+v23_probe_elsewhere          rc=2 PILOT differs from the record's fixed values (a change is a record amendment): probe_exe = "D:\\mithril\\probe.exe" (record: D:\mithril-data\x4\bin\x4sb_probe.exe)
+v24_e2e_other_harness_sha    rc=2 PILOT differs from the record's fixed values (a change is a record amendment): the two run types pin different harness_sha256 (record: one binary, x4harness_hearth.exe)
+v25_placeholder_left         rc=2 line 50: excluded_images_at_signing is still a template placeholder (<FILL: x>)
+w01_integrity_cleared        rc=0 grade PILOT; seed 2ac97bc5867a9d82 (rule from freeze commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: 2ac97bc5867a9d82)
+w02_signing_empty            rc=0 grade PILOT; seed 2ac97bc5867a9d82 (rule from freeze commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: 2ac97bc5867a9d82)
+=== 2. canonical hash: v00 and w01 (one integrity_cleared line more) must agree
+grade PILOT
+file_sha256 2da8c33cb9397a701edefcf922d4dedc3cba686e87cb5df3b0d82cf2b41c683f
+canonical_sha256 2da8c33cb9397a701edefcf922d4dedc3cba686e87cb5df3b0d82cf2b41c683f
+integrity_cleared []
+grade PILOT
+file_sha256 665896b1d0316c9107c594136587415b8d83a65dbacfb0c8944d2a6b826e5a9d
+canonical_sha256 2da8c33cb9397a701edefcf922d4dedc3cba686e87cb5df3b0d82cf2b41c683f
+integrity_cleared [("mb-q4-avx512-01", "dddddddddddddddddddddddddddddddddddddddd")]
+=== 3. pilot-night --pilot: without --config-sha256, with a wrong one, with the right one (then: outside the window)
+powershell : x4svc.exe : pilot-night: --config-sha256 <the pre-night amendment's canonical 
+configuration 
+At D:\mithril\x4rev4r\jobs\final.ps1:18 char:47
++ ... ash path' { powershell -NoProfile -ExecutionPolicy Bypass -File "$J\c ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (x4svc.exe : pil... configuration :String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+SHA-256> is required with --pilot; refusing
+At D:\mithril\x4rev4r\jobs\checks_c.ps1:22 char:1
++ & $X pilot-night --config "$R\variants\v00_filled.cfg" --pilot 2>&1 | ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (pilot-night: --...pilot; refusing:String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+rc=1
+x4svc.exe : pilot-night: the configuration's canonical SHA-256 is 
+2da8c33cb9397a701edefcf922d4dedc3cba686e87cb5df3b0d82cf2b41c683f but --config-sha256 says 
+0000000000000000000000000000000000000000000000000000000000000000; refusing (only a dated 
+amendment changes the configuration)
+At D:\mithril\x4rev4r\jobs\checks_c.ps1:23 char:1
++ & $X pilot-night --config "$R\variants\v00_filled.cfg" --pilot --conf ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (pilot-night: th... configuration):String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+rc=1
+x4svc.exe : pilot-night: outside the quiet window (2026-10-23 14:24:55 PDT); refusing
+At D:\mithril\x4rev4r\jobs\checks_c.ps1:24 char:1
++ & $X pilot-night --config "$R\variants\v00_filled.cfg" --pilot --conf ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (pilot-night: ou... PDT); refusing:String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+rc=1
+D:\mithril-data exists after these: False
+=== 4. crash path: a dry night (dry-crash.cfg) killed 30 s in
+killed pid 55040; x4svc/x4harness left: 0
+--- the killed night's manifest status and progress
+
+status=open
+sha256[progress.txt]=unreadable: The system cannot find the file specified. (os error 2) 
+(D:\mithril\x4rev4r\scratch-crash\dry\dry-20261023T212455Z\progress.txt)
+e2e-decode-01 started DRY-RUN dry-20261023T212455Z seed=6a314c1f9fc1d48b harness=6d65c5b5d6e8d4b51f40718746954b8a22bb5caed1e3734d01d661964470dab1 x4svc=b290899f94c7999a35323c8390510a8f2a1bea6fe046958f9e49ae7fa5bf1e0d
+--- pilot-estimate before closing (must refuse: open)
+x4svc.exe : pilot-estimate: REFUSED: night dry-20261023T212455Z is open (a crash or a running 
+night): start the next night or run `x4svc pilot-close`, then estimate
+At D:\mithril\x4rev4r\jobs\checks_c.ps1:39 char:1
++ & $X pilot-estimate --data-dir "$R\scratch-crash\dry" --dry-test 2>&1 ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (pilot-estimate:..., then estimate:String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+rc=1
+--- pilot-close
+closed D:\mithril\x4rev4r\scratch-crash\dry\dry-20261023T212455Z (manifest-closed-after-interrupt.txt)
+  session e2e-decode-01 marked interrupted
+rc=0
+status=closed-after-interrupt
+note=closed by x4svc pilot-close at 2026-10-23 14:25:28 PDT (this night's manifest was open or 
+missing: a crash, a restart or a power loss)
+open_manifest_sha256=5c2e6e35e8551cb4c3503e08b0fc1a8d041a952a9466edae13ec78ebbcd261b8
+sha256[runs.jsonl]=1a00e00cb04ef2dbdeeb330077ef00d9dba3491e9367ac7d1264a7e1201341a1
+sha256[progress.txt]=76cca7977959b1a6bb2a03fc69f75aebbb92b5d0e094859f62e3734807501541 bytes=217 
+(D:\mithril\x4rev4r\scratch-crash\dry\dry-20261023T212455Z\progress.txt)
+interrupted=e2e-decode-01
+e2e-decode-01 started DRY-RUN dry-20261023T212455Z seed=6a314c1f9fc1d48b harness=6d65c5b5d6e8d4b51f40718746954b8a22bb5caed1e3734d01d661964470dab1 x4svc=b290899f94c7999a35323c8390510a8f2a1bea6fe046958f9e49ae7fa5bf1e0d
+e2e-decode-01 interrupted DRY-RUN dry-20261023T212455Z
+--- pilot-close again (nothing left open)
+no open night under D:\mithril\x4rev4r\scratch-crash\dry
+rc=0
+--- pilot-estimate after closing
+night dry-20261023T212455Z status=closed-after-interrupt runs=4 blocks=0 sessions=0 
+truncated_last_lines=0 integrity_cleared=-
+[e2e-decode]
+sessions_by_end = interrupted:1
+blocks_excluded_by_session_end = none
+blocks_counted = 0 (of which 0 hold a capped run and are left out of sigma_d and sigma_run)
+night dry-20261023T212455Z productive_block_hours = 0.0000
+rc=0
+--- a record file changed after closing: the estimator must refuse
+x4svc.exe : pilot-estimate: REFUSED: night dry-20261023T212455Z: voids.log does not match its 
+manifest SHA-256 (changed after the manifest)
+At D:\mithril\x4rev4r\jobs\checks_c.ps1:51 char:1
++ & $X pilot-estimate --data-dir "$R\scratch-crash\dry" --dry-test 2>&1 ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (pilot-estimate:...r the manifest):String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+rc=1
+
+

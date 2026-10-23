@@ -20,6 +20,14 @@
 //! The only process-local change is `pin_own_process` (SetProcessAffinityMask on this orchestrator,
 //! the "reserved LP" of 06 section 6.7); it is not a system setting.
 //!
+//! Revision 5 (review round 5, 2026-10-23): a non-elevated process (Pierce's console session, where
+//! the driver runs) cannot open Defender, the indexer or other SYSTEM services for query [M: a
+//! restricted token read "unreadable listed images [mpdefendercoreservice, msmpeng, searchindexer]"];
+//! for such a process the snapshot reads the documented PDH `\Process(*)` counters instead, which a
+//! non-elevated user can read [M, 2026-10-23, the same restricted token]: `% Processor Time` (raw: the
+//! process's kernel + user time in 100 ns), `ID Process` and `Elapsed Time` (raw: the creation time as a
+//! FILETIME, equal to GetProcessTimes' [M]). Matched by pid and image name.
+//!
 //! Revision 4 (review 2026-10-23): PDH reports an idle LP's `% Processor Time` with the status
 //! PDH_CALC_NEGATIVE_VALUE (idle time over the interval exceeded the time base by clock-tick
 //! quantisation) [M: 26-32 of 32 LPs per read]; such an instance is kept as 0.0 and counted, never
@@ -44,6 +52,22 @@ struct PdhFmtValue {
 struct PdhFmtItem {
     name: *mut u16,
     value: PdhFmtValue,
+}
+/// PDH_RAW_COUNTER (pdh.h): status, FILETIME time stamp, first and second raw values, multi count.
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct PdhRawCounter {
+    status: u32,
+    ts_low: u32,
+    ts_high: u32,
+    first: i64,
+    second: i64,
+    multi: u32,
+}
+#[repr(C)]
+struct PdhRawItem {
+    name: *mut u16,
+    raw: PdhRawCounter,
 }
 #[repr(C)]
 struct ProcessEntry32W {
@@ -105,6 +129,7 @@ extern "system" {
     fn PdhCollectQueryData(q: isize) -> u32;
     fn PdhGetFormattedCounterArrayW(c: isize, fmt: u32, size: *mut u32, count: *mut u32, items: *mut PdhFmtItem) -> u32;
     fn PdhGetFormattedCounterValue(c: isize, fmt: u32, typ: *mut u32, v: *mut PdhFmtValue) -> u32;
+    fn PdhGetRawCounterArrayW(c: isize, size: *mut u32, count: *mut u32, items: *mut PdhRawItem) -> u32;
     fn PdhCloseQuery(q: isize) -> u32;
 }
 #[link(name = "kernel32")]
@@ -231,6 +256,31 @@ impl Pdh {
     pub fn array(&self, path: &str) -> Option<Vec<(String, f64)>> {
         self.array_clamped(path, false).map(|x| x.0)
     }
+    /// A wildcard counter's raw first values as (instance name, status ok, value), every instance in
+    /// PDH's order (revision 5: the process counters, read after a single collect). Duplicate instance
+    /// names come back repeated, without their `#n` suffix [M, 2026-10-23: five `python` processes
+    /// under one name], so callers pair counters of one object by position, not by name.
+    pub fn raw_array(&self, path: &str) -> Option<Vec<(String, bool, i64)>> {
+        let c = self.handle(path)?;
+        unsafe {
+            let (mut size, mut count) = (0u32, 0u32);
+            let rc = PdhGetRawCounterArrayW(c, &mut size, &mut count, std::ptr::null_mut());
+            if rc != PDH_MORE_DATA || size == 0 {
+                return None;
+            }
+            let mut buf: Vec<u64> = vec![0; (size as usize + 7) / 8 + 1];
+            let items = buf.as_mut_ptr() as *mut PdhRawItem;
+            if PdhGetRawCounterArrayW(c, &mut size, &mut count, items) != 0 {
+                return None;
+            }
+            let mut v = Vec::with_capacity(count as usize);
+            for i in 0..count as usize {
+                let it = &*items.add(i);
+                v.push((from_wide(it.name), it.raw.status == 0 || it.raw.status == PDH_CSTATUS_NEW_DATA, it.raw.first));
+            }
+            Some(v)
+        }
+    }
     pub fn value(&self, path: &str) -> Option<f64> {
         let c = self.handle(path)?;
         let mut t = 0u32;
@@ -256,6 +306,58 @@ pub const C_THERMAL: &str = "\\Thermal Zone Information(*)\\Temperature";
 pub const C_DISK_QUEUE: &str = "\\PhysicalDisk(*)\\Current Disk Queue Length";
 pub const C_DISK_WRITE: &str = "\\PhysicalDisk(*)\\Disk Write Bytes/sec";
 pub const C_MODIFIED: &str = "\\Memory\\Modified Page List Bytes";
+pub const C_PROC_CPU: &str = "\\Process(*)\\% Processor Time";
+pub const C_PROC_PID: &str = "\\Process(*)\\ID Process";
+pub const C_PROC_ELAPSED: &str = "\\Process(*)\\Elapsed Time";
+
+thread_local! {
+    /// One PDH process query per thread (the main thread and the 250-ms poller each keep their own).
+    static PROC_PDH: std::cell::RefCell<Option<Pdh>> = std::cell::RefCell::new(None);
+}
+
+/// Every process PDH reports: (pid, image as `norm_image`, kernel + user time in 100 ns, creation
+/// FILETIME). Revision 5: the reading for processes this one cannot open. Empty if PDH fails.
+pub fn pdh_process_times() -> Vec<(u32, String, u64, Option<u64>)> {
+    PROC_PDH.with(|cell| {
+        let mut q = cell.borrow_mut();
+        if q.is_none() {
+            *q = Pdh::open(&[C_PROC_CPU, C_PROC_PID, C_PROC_ELAPSED]).ok();
+        }
+        let p = match q.as_ref() {
+            Some(p) => p,
+            None => return Vec::new(),
+        };
+        if !p.collect() {
+            return Vec::new();
+        }
+        let cpu = p.raw_array(C_PROC_CPU).unwrap_or_default();
+        let pid = p.raw_array(C_PROC_PID).unwrap_or_default();
+        let el = p.raw_array(C_PROC_ELAPSED).unwrap_or_default();
+        // one collect, one object: the three arrays list the same instances in the same order; pair
+        // them by position and require the names to agree (duplicate names repeat, see raw_array)
+        if pid.len() != cpu.len() {
+            return Vec::new();
+        }
+        let mut v = Vec::new();
+        for (i, (inst, ok, t)) in cpu.into_iter().enumerate() {
+            if !ok || inst == "_Total" || inst == "Idle" || pid[i].0 != inst || !pid[i].1 {
+                continue;
+            }
+            let id = match pid[i].2 {
+                x if x > 0 => x as u32,
+                _ => continue,
+            };
+            let created = el.get(i).filter(|e| e.0 == inst && e.1 && e.2 > 0).map(|e| e.2 as u64);
+            // duplicate image names are "svchost#1", "svchost#2", ...
+            let base = match inst.rfind('#') {
+                Some(i) if i + 1 < inst.len() && inst[i + 1..].chars().all(|c| c.is_ascii_digit()) => &inst[..i],
+                _ => inst.as_str(),
+            };
+            v.push((id, norm_image(base), t.max(0) as u64, created));
+        }
+        v
+    })
+}
 
 /// A load sample over a window: machine-wide % (the `_Total` instance), per-LP %, the effective clock
 /// of each LP in MHz (Processor Frequency x % Processor Performance / 100) and ACPI thermal zones (K).
@@ -390,8 +492,26 @@ pub fn processes() -> Vec<ProcSample> {
 }
 
 /// A process snapshot; cycles and creation time are queried only for images `want` accepts (the
-/// others are omitted), which keeps the 250-ms poller cheap.
+/// others are omitted), which keeps the 250-ms poller cheap. Revision 5: a listed process that cannot
+/// be opened gets its PDH time and creation time (`pdh_process_times`, one collect per snapshot, only
+/// when some listed process could not be opened).
 pub fn processes_where(want: impl Fn(&str) -> bool) -> Vec<ProcSample> {
+    let mut v = processes_toolhelp(want);
+    if v.iter().any(|p| p.cycles.is_none() && p.pid != 0) {
+        let t = pdh_process_times();
+        for s in v.iter_mut().filter(|p| p.cycles.is_none() && p.pid != 0) {
+            if let Some((_, _, cpu, created)) = t.iter().find(|(pid, img, _, _)| *pid == s.pid && *img == s.image) {
+                s.cpu_100ns = Some(*cpu);
+                if s.created.is_none() {
+                    s.created = *created;
+                }
+            }
+        }
+    }
+    v
+}
+
+fn processes_toolhelp(want: impl Fn(&str) -> bool) -> Vec<ProcSample> {
     let mut v = Vec::new();
     unsafe {
         let snap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -422,7 +542,7 @@ pub fn processes_where(want: impl Fn(&str) -> bool) -> Vec<ProcSample> {
                 } else {
                     cycles = Some(0);
                 }
-                v.push(ProcSample { pid: e.pid, image, cycles, parent: e.parent, created });
+                v.push(ProcSample { pid: e.pid, image, cycles, parent: e.parent, created, cpu_100ns: None });
             }
             ok = Process32NextW(snap, &mut e);
         }

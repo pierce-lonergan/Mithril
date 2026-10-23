@@ -1,0 +1,12 @@
+---- cl
+REFUSED: cl is not 19.44.99999 for x64 
+Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64
+---- cmake
+Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64
+cmake version 4.4.3
+REFUSED: CMake is not 4.4.2 
+---- ninja
+Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64
+cmake version 4.4.3
+ninja 1.12.1
+REFUSED: Ninja is not 1.12.0 

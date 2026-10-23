@@ -1,0 +1,43 @@
+done marker: True after 155 s
+=== old binary
+
+  [note] sensor: process CPU (listed images readable) -- 362 processes; unreadable listed images 
+["mpdefendercoreservice", "msmpeng", "searchindexer", "searchprotocolhost"]
+  [note] sensor: interactive input (driver in the console session) -- tick Some(0), in console 
+session Some(false)
+  [ ok ] sensor: session list (WTS) -- Some([(1, "Console", 0)])
+  [ ok ] driver at NORMAL_PRIORITY_CLASS and MEMORY_PRIORITY_NORMAL -- priority class 
+Some("0x20"), memory priority Some(5), elevated Some(true), integrity RID Some("0x3000")
+-- session e2e-decode-01 (e2e-decode) at 2026-10-23 23:00:00 PDT
+   0 blocks, 2 discards, end hygiene_void 3 discarded blocks (last: background activity over the 
+block: msmpeng CPU unreadable, mpdefendercoreservice CPU unreadable, searchindexer CPU unreadable)
+night over at 2026-10-23 23:03:37 PDT: 1 sessions run tonight; 1 unrun: ["mb-q4-avx512-01"]
+start rule: the next unrun session mb-q4-avx512-01 needs 480 s; 2026-10-23 23:03:37 PDT + that > 
+last end 2026-10-24 06:45:00 PDT
+--- voids.log DISCARD lines (dry-20261023T212059Z)
+DRY-RUN 20261024T060233Z 2026-10-23 23:02:33 PDT [DISCARD] session=e2e-decode-01 background activity over the block: msmpeng CPU unreadable, mpdefendercoreservice CPU unreadable, searchindexer CPU unreadable, searchprotocolhost CPU unreadable
+DRY-RUN 20261024T060305Z 2026-10-23 23:03:05 PDT [DISCARD] session=e2e-decode-01 background activity over the block: msmpeng CPU unreadable, mpdefendercoreservice CPU unreadable, searchindexer CPU unreadable, searchprotocolhost CPU unreadable
+DRY-RUN 20261024T060337Z 2026-10-23 23:03:37 PDT [DISCARD] session=e2e-decode-01 background activity over the block: msmpeng CPU unreadable, mpdefendercoreservice CPU unreadable, searchindexer CPU unreadable
+DRY-RUN 20261024T060337Z 2026-10-23 23:03:37 PDT [VOID-LOGGED] session=e2e-decode-01 reason=3 discarded blocks (last: background activity over the block: msmpeng CPU unreadable, mpdefendercoreservice CPU unreadable, searchindexer CPU unreadable) wealth_after_decision(sup,ni,kill)=(1.0000,1.0000,1.0000)
+--- block_cpu bg lines
+background activity over the block: msmpeng CPU unreadable, mpdefendercoreservice CPU unreadable, searchindexer CPU unreadable, searchprotocolhost CPU unreadable
+background activity over the block: msmpeng CPU unreadable, mpdefendercoreservice CPU unreadable, searchindexer CPU unreadable, searchprotocolhost CPU unreadable
+background activity over the block: msmpeng CPU unreadable, mpdefendercoreservice CPU unreadable, searchindexer CPU unreadable
+=== new binary
+  [ ok ] sensor: process CPU (listed images readable) -- 362 processes; unreadable listed images 
+[]; read through PDH (not openable from this session) ["mpdefendercoreservice", "msmpeng", 
+"searchindexer"]
+  [note] sensor: interactive input (driver in the console session) -- tick Some(0), in console 
+session Some(false)
+  [ ok ] sensor: session list (WTS) -- Some([(1, "Console", 0)])
+  [ ok ] driver at NORMAL_PRIORITY_CLASS and MEMORY_PRIORITY_NORMAL -- priority class 
+Some("0x20"), memory priority Some(5), elevated Some(true), integrity RID Some("0x3000")
+-- session e2e-decode-01 (e2e-decode) at 2026-10-23 23:00:00 PDT
+   3 blocks, 0 discards, end completed 
+night over at 2026-10-23 23:03:38 PDT: 1 sessions run tonight; 1 unrun: ["mb-q4-avx512-01"]
+start rule: the next unrun session mb-q4-avx512-01 needs 480 s; 2026-10-23 23:03:38 PDT + that > 
+last end 2026-10-24 06:45:00 PDT
+--- voids.log DISCARD lines (dry-20261023T212215Z)
+--- block_cpu bg lines
+
+

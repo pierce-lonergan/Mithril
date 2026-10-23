@@ -1,0 +1,105 @@
+night dir: D:\mithril\x4rev4r\scratch-record\dry\dry-20261023T211600Z
+
+status=closed
+config_canonical_sha256=57643d4cb9f67951e34ed0500096acefa938625de4b1d90ca93f3f3c78592eb4
+integrity_cleared=
+sha256[progress.txt]=e08bfc086f663a9653393dc8be1aabb0acd6543f41bef31fda403510bd07210f bytes=544 
+(D:\mithril\x4rev4r\scratch-record\dry\dry-20261023T211600Z\progress.txt)
+--- runs by run type and verdict
+e2e-decode, TimeCapped: 12
+mb-q4-avx512, Accept: 24
+--- failures named on any run
+--- accepted microbenchmark runs: delta_o (s), tau margin (bracket judged at 0.1% of delta_o)
+n 24; delta_o 1.246..1.269 s; max tau_margin 0.022507
+--- capped end-to-end stand-in runs: run_wall_s
+n 12; run wall 2.007..2.009 s
+--- gates at the record's windows
+gates 36; start state reached 36; settle_ms max 1001 mean 1,000; disk_write_bps max 650,914; gates with a dropped LP 0; load_total_pct max 3.25
+--- sessions
+e2e-decode-01 end=completed blocks=3 discards=0 planned_s=216.0 actual_s=217.9
+mb-q4-avx512-01 end=completed blocks=6 discards=0 planned_s=480.0 actual_s=445.0
+--- pilot-estimate --dry-test
+# X4 noise pilot estimator (record sections 4, 5, 7(a)); x4svc pilot-estimate, revision 5
+# DRY-RUN ACCEPTANCE TEST: dry records, not pilot data; no value below is an estimate
+grade = DRY-RUN
+data_dir = D:\mithril\x4rev4r\scratch-record\dry
+freeze_commit = (not checked)
+config_canonical_sha256 = (not checked)
+progress_sha256 = e08bfc086f663a9653393dc8be1aabb0acd6543f41bef31fda403510bd07210f
+night dry-20261023T211600Z status=closed runs=36 blocks=9 sessions=2 truncated_last_lines=0 integrity_cleared=-
+[mb-q4-avx512]
+sessions_attempted = 1
+sessions_by_end = completed:1
+blocks_excluded_by_session_end = none
+blocks_counted = 6 (of which 0 hold a capped run and are left out of sigma_d and sigma_run)
+sigma_d = 0.004385
+B = 6
+sigma_U = 0.007235
+sigma_d_with_cut_sessions = 0.004385 (B = 6, cut sessions = 0)
+sigma_run = 0.003456 (df = 22)
+incumbent_median_ln_ns = 20.945940
+t_run_ns = median 1249414000.000000 p01 1245907800.000000 p99 1269230400.000000 (n = 24)
+slow_outliers = 1 of 24 runs (rate 0.041667)
+p0 = 0.182892
+observe_runs = 24
+observe tau_clock_ns max = 28100.000000 fill_in_2x = 1000000.000000 ceiling = 0.1% of delta_o
+observe kappa_post_cycles max = 751608180.000000 fill_in_2x = 1503216360.000000 ceiling = 2000000000.000000
+observe eps_spin_us max = 0.000000 fill_in_2x = 0.000000 ceiling = 50.000000
+observe eps_idle_us max = 11.310594 fill_in_2x = 22.621188 ceiling = 1000.000000
+observe init_max_wall_ns max = 287713300.000000 fill_in_2x = 575426600.000000 ceiling = 2000000000.000000
+observe init_max_cycles max = 986620810.000000 fill_in_2x = 1973241620.000000 ceiling = 8600000000.000000
+observe extra_cores max = 0.000138 fill_in_2x = 0.050000 ceiling = 0.250000
+observe exit_grace_ns max = 1108400.000000 fill_in_2x = 2216800.000000 ceiling = 5000000000.000000
+load_2s_pct p50 0.771100 p99 2.965500 (n = 24); load_gate_threshold = 4.965500
+modified_page_bytes p50 27697152.000000 p99 39088128.000000; disk_write_bps p99 650913.873400; settle_ms p99 1001.000000
+settle_eff_mhz_run_lps p01 3811.064500 p50 3811.064500
+blocks_attempted = 6 discarded = 0 (rate 0.000000) causes: none
+descriptive within_session_sd_d = 0.004247 s_between = none carry_over = none s3_trend_sessions = 0
+[e2e-decode]
+sessions_attempted = 1
+sessions_by_end = completed:1
+blocks_excluded_by_session_end = none
+blocks_counted = 3 (of which 3 hold a capped run and are left out of sigma_d and sigma_run)
+sigma_d = none (no counted block)
+sigma_d_with_cut_sessions = none (B = 0, cut sessions = 0)
+sigma_run = none (df = 0)
+incumbent_median_ln_ns = none
+t_run_ns = median none p01 none p99 none (n = 0)
+slow_outliers = none (sigma_run or the median is undefined)
+observe_runs = 12
+observe tau_clock_ns max = none fill_in_2x = none ceiling = 0.1% of delta_o
+observe kappa_post_cycles max = none fill_in_2x = none ceiling = 2000000000.000000
+observe eps_spin_us max = none fill_in_2x = none ceiling = 50.000000
+observe eps_idle_us max = none fill_in_2x = none ceiling = 1000.000000
+observe init_max_wall_ns max = 281947600.000000 fill_in_2x = 563895200.000000 ceiling = 120000000000.000000
+observe init_max_cycles max = 964372610.000000 fill_in_2x = 1928745220.000000 ceiling = 515516679960.000000
+observe extra_cores max = none fill_in_2x = none ceiling = 0.250000
+observe exit_grace_ns max = none fill_in_2x = none ceiling = 5000000000.000000
+load_2s_pct p50 0.605900 p99 3.246300 (n = 12); load_gate_threshold = 5.246300
+modified_page_bytes p50 27971584.000000 p99 42557440.000000; disk_write_bps p99 519917.639500; settle_ms p99 1000.000000
+settle_eff_mhz_run_lps p01 3692.968700 p50 3692.968700
+blocks_attempted = 3 discarded = 0 (rate 0.000000) causes: none
+descriptive within_session_sd_d = none s_between = none carry_over = none s3_trend_sessions = 0
+night dry-20261023T211600Z productive_block_hours = 0.0483
+productive_block_hours median over nights with counted blocks = 0.048259
+rc=0
+--- pilot-estimate without --dry-test on dry records (must refuse)
+powershell : x4svc.exe : pilot-estimate: REFUSED: no night-* night under 
+D:\mithril\x4rev4r\scratch-record\dry
+At D:\mithril\x4rev4r\jobs\final.ps1:14 char:43
++ ... analysis' { powershell -NoProfile -ExecutionPolicy Bypass -File "$J\a ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (x4svc.exe : pil...atch-record\dry:String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+At D:\mithril\x4rev4r\jobs\an_dryrec.ps1:35 char:1
++ & $X pilot-estimate --data-dir $root --freeze-commit aaaaaaaaaaaaaaaa ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (pilot-estimate:...atch-record\dry:String) [], Remote 
+   Exception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+rc=1
+
+

@@ -1,0 +1,2 @@
+elevated: 3 blocks; orchestrator CPU 3.06% of one core on average, 3.08% max (wall 20.3 s per block)
+restricted: 3 blocks; orchestrator CPU 5.61% of one core on average, 5.69% max (wall 20.3 s per block)

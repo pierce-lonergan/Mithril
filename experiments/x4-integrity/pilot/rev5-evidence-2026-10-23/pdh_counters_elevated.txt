@@ -1,0 +1,10 @@
+whoami: desktop-8rs9j1j\pierce lonergan
+\\desktop-8rs9j1j\process(msmpeng)\% processor time raw=269712187500 sec=134372615769371116 cooked=0 status=0
+\\desktop-8rs9j1j\process(msmpeng)\id process raw=5656 sec=0 cooked=5656 status=0
+\\desktop-8rs9j1j\process(msmpeng)\elapsed time raw=134365409568551275 sec=134372615769371116 cooked=720620.0819841 status=0
+\\desktop-8rs9j1j\process(searchindexer)\% processor time raw=73745000000 sec=134372615769371116 cooked=0 status=0
+\\desktop-8rs9j1j\process(searchindexer)\id process raw=19204 sec=0 cooked=19204 status=0
+\\desktop-8rs9j1j\process(mpdefendercoreservice)\% processor time raw=232031250 sec=134372615769371116 cooked=0 status=0
+MsMpEng pid=5656 TotalProcessorTime=07:29:31.2187500 StartTime=134365409568551275
+SearchIndexer pid=19204 TotalProcessorTime=02:02:54.5000000 StartTime=134365409871148198
+MpDefenderCoreService pid=5648 TotalProcessorTime=00:00:23.2031250 StartTime=134365409568545929

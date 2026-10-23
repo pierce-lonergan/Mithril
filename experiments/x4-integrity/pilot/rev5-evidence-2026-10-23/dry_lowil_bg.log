@@ -1,0 +1,25 @@
+== X4 noise-pilot night [DRY-RUN] dry-20261023T212334Z -> D:\mithril\x4rev4r\scratch-lowil-bg\dry\dry-20261023T212334Z
+window 2026-10-23 23:00:00 PDT .. last end 2026-10-24 06:45:00 PDT .. end 2026-10-24 07:00:00 PDT (virtual clock)
+orchestrator pinned to LP 26; cycle rate 4296517000 Hz; process poller every 250 ms
+  [ ok ] x4svc binary sha256 equals the pin -- D:\mithril\x4rev4r\bin\x4svc.exe sha256 b290899f94c7999a35323c8390510a8f2a1bea6fe046958f9e49ae7fa5bf1e0d (pinned None)
+  [ ok ] probe exe sha256 equals the pin -- D:\mithril\x4rev4r\bin\x4sb_probe.exe sha256 f1a5b271cb4db0746ffb83994255a3857651ad7d776478308534754ffc671e8c (pinned None)
+  [ ok ] [mb-q4-avx512] harness sha256 equals the pin -- D:\mithril\x4rev4r\bin\x4harness_hearth.exe 6d65c5b5d6e8d4b51f40718746954b8a22bb5caed1e3734d01d661964470dab1 (pinned None)
+  [ ok ] [e2e-decode] harness sha256 equals the pin -- D:\mithril\x4rev4r\bin\x4harness_hearth.exe 6d65c5b5d6e8d4b51f40718746954b8a22bb5caed1e3734d01d661964470dab1 (pinned None)
+  [ ok ] placement equals the record's topology rule (x4svc topology) -- mb 0x10000000 (rule 0x4), e2e 0x10000000 (rule 0xbfffffff), orchestrator LP 26 (rule LP 30)
+  [ ok ] sensor: CPU load (GetSystemTimes; PDH per LP, every LP) -- read 1: machine Some(0.77)% (PDH _Total Some(0.0)%) over 2000 ms, 32 of 32 LPs (0 clamped from PDH_CALC_NEGATIVE_VALUE; dropped []), eff clock on 32 LPs, 0 thermal zones
+  [ ok ] sensor: disk queue, write rate, modified page list (PDH) -- queue Some(0.0), write Some(24562.53236350509) B/s, modified Some(147374080.0) B
+  [ ok ] sensor: process CPU (listed images readable) -- 361 processes; unreadable listed images []; read through PDH (not openable from this session) ["mpdefendercoreservice", "msmpeng", "searchindexer"]
+  [note] sensor: interactive input (driver in the console session) -- tick Some(0), in console session Some(false)
+  [ ok ] sensor: session list (WTS) -- Some([(1, "Console", 0)])
+  [ ok ] sensor: GPU utilisation (nvidia-smi query) -- Ok(0.0)
+  [ ok ] sensor: NVMe temperature of C: (storage query) -- Ok(37.0)
+  [ ok ] sensor: active power scheme -- Some("381b4222-f694-41f0-9685-ff5bb260df2e")
+  [ ok ] driver at NORMAL_PRIORITY_CLASS and MEMORY_PRIORITY_NORMAL -- priority class Some("0x20"), memory priority Some(5), elevated Some(true), integrity RID Some("0x3000")
+  [ ok ] no excluded process running at the start (advisory: one that stays idle does not void) -- []
+  [ ok ] selftest mode is degraded-job-only -- Ok("degraded-job-only")
+  [ ok ] no uncleared integrity stop in progress.txt (cleared only by a dated amendment: integrity_cleared) -- []
+  [ ok ] progress.txt sessions ran with tonight's seed and binaries (a pinned-hash change is a restart in a new data_dir) -- []
+-- session e2e-decode-01 (e2e-decode) at 2026-10-23 23:00:00 PDT
+   0 blocks, 2 discards, end hygiene_void 3 discarded blocks (last: background activity over the block: msmpeng 1.221% of one core over the planned block)
+night over at 2026-10-23 23:03:38 PDT: 1 sessions run tonight; 1 unrun: ["mb-q4-avx512-01"]
+start rule: the next unrun session mb-q4-avx512-01 needs 480 s; 2026-10-23 23:03:38 PDT + that > last end 2026-10-24 06:45:00 PDT

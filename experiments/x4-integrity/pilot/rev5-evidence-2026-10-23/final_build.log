@@ -1,0 +1,188 @@
+==== [0] source and toolchain
+hearth HEAD b5d3f14a801d43bcb3b3c4ccf4efeca9d328e220
+hearth tree clean
+Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64
+cmake version 4.4.3
+ninja 1.12.1
+rustc 1.91.1 (ed61e7d7e 2025-11-07)
+cargo 1.91.1 (ea2d97820 2025-10-10)
+==== [1] hearth-c-ref: clean CMake Release build into an empty D:\mithril\x4rev4r\hearth-build
+configure rc=0
+build rc=0
+7dfc9c81ce94e9f125387dae90193f3ee23e279728343d1a18f2822cb91a9bdd  api.c.obj
+19ee1b4b14f7a0acd9857e19f7416b7eca76e7c9e9f5c237b53754fb708c20bf  model.c.obj
+3f8727e791e475c43adb5730fb8e2d2536ee3b2006a60c142f13926fc5068be4  modelfile.c.obj
+e2eab9685a93065631654597a95be4ed76da0291c18cc7e977e95caa5134187f  platform_win.c.obj
+779f555fe0fba258e2371a5ad682756c873195b4147a6a2a598e38b0218e37f8  pool.c.obj
+9c9ea5e7bd650f5ae5f2a270a8849f027c96122c5e2bbac17651fa9991052a87  quant.c.obj
+49800c9085665e5ebbf1a6b48930d6a93202d9a6061aa5cd1dd3ac8bbb52ac75  quant_avx2.c.obj
+e489d347763f38ab2975c70221794ae5f47eb29f1c40b1793aed241f60a641e8  quant_avx512.c.obj
+f386a22b98e109bd032c1ef1834eb848636c1d54c1d3e293e4622774458c8c1a  store.c.obj
+==== [2] platform_win.c with the thread/condvar renames (CMake hearth_core flags)
+platform_win.c
+platform_win rc=0
+==== [3] harness, shim, Hearth workload set, probes (/MD)
+x4h.c
+hearth_x4_shim.c
+hearth_workloads.c
+x4sb_probes.c
+harness-objs rc=0
+   Creating library D:\mithril\x4rev4r\bin\x4harness_hearth.lib and object D:\mithril\x4rev4r\bin\x4harness_hearth.exp
+x4harness_hearth rc=0
+==== [3b] DEV ONLY (never pinned): x4harness_hearth_q0.exe, quiesce without the wake accounting
+x4h.c
+   Creating library D:\mithril\x4rev4r\bin\x4harness_hearth_q0.lib and object D:\mithril\x4rev4r\bin\x4harness_hearth_q0.exp
+x4harness_hearth_q0 rc=0
+==== [4] dev harness, outside probe, dry-run plant (/MT)
+x4h.c
+dev_workloads.c
+x4sb_probes.c
+x4harness rc=0
+x4sb_probe_main.c
+x4sb_probes.c
+Generating Code...
+x4sb_probe rc=0
+x4plant.c
+x4plant rc=0
+==== [5] x4svc (cargo 1.91.1 msvc by absolute path, 3 jobs)
+   Compiling x4svc v0.1.0 (D:\mithril\x4rev4r\src\service\orchestrator)
+    Finished `release` profile [optimized] target(s) in 8.39s
+     Running unittests src\lib.rs (D:\mithril\x4rev4r\cargo-target\release\deps\x4svc-ebcbfdb6864c9ade.exe)
+
+running 94 tests
+test eprocess::tests::capped_run_is_a_slow_outlier ... ok
+test eprocess::tests::clips_match_reference_at_sigma_0_02 ... ok
+test eprocess::tests::first_block_uses_the_pilot_median_not_zero ... ok
+test eprocess::tests::hand_computed_superiority_first_block ... ok
+test eprocess::tests::insort_matches_bisect_insort_right ... ok
+test eprocess::tests::margins_are_the_pinned_hex_constants ... ok
+test eprocess::tests::median_even_and_odd ... ok
+test eprocess::tests::non_finite_blocks_are_rejected_not_scored_best_case ... ok
+test eprocess::tests::outlier_block_halves_superiority_wealth ... ok
+test eprocess::tests::threshold_floor_and_alpha ... ok
+test eprocess::tests::theta_above_one_is_refused - should panic ... ok
+test estimate::tests::json_subset ... ok
+test estimate::tests::the_counted_set_and_sigma_d ... ok
+test hygiene::tests::a_quiet_session_is_not_voided ... ok
+test hygiene::tests::an_unopenable_process_is_read_through_pdh_time ... ok
+test hygiene::tests::background_cpu_over_the_block_discards ... ok
+test hygiene::tests::each_session_trigger_fires_alone ... ok
+test hygiene::tests::start_state_and_gate_reading ... ok
+test hygiene::tests::the_poller_union_keeps_exited_processes ... ok
+test hygiene::tests::the_run_core_rule ... ok
+test hygiene::tests::unreadable_sensors_fail_closed_only_in_a_pilot ... ok
+test observe::tests::ceilings_map_to_observe_tolerances_and_harness_cycles ... ok
+test observe::tests::observe_values_from_the_bracket ... ok
+test observe::tests::post_t1_maxima_split_by_class ... ok
+test estimate::tests::a_night_closed_after_an_interruption ... ok
+test pilot::tests::progress_lines_started_ended_interrupted_and_pins ... ok
+test pilot::tests::the_pins_field_diff_names_what_changed ... ok
+test pilotcfg::tests::dry_config_parses_and_schedules_23_sessions ... ok
+test pilotcfg::tests::night_window_bounds ... ok
+test pilotcfg::tests::pacific_time_rules ... ok
+test pilotcfg::tests::strictness_grade_and_path_guards ... ok
+test pilotcfg::tests::the_canonical_configuration_hash_ignores_only_integrity_cleared ... ok
+test pilotcfg::tests::the_committed_template_filled_is_the_record ... ok
+test estimate::tests::every_refusal ... ok
+test profile::tests::balanced_plan_is_refused_with_commands ... ok
+test profile::tests::collection_refuses_unpinned_guid_and_hash ... ok
+test profile::tests::defender_exclusion_is_advisory ... ok
+test profile::tests::fingerprint_canonical_form_is_sorted_and_explicit ... ok
+test profile::tests::pins_file_is_strict ... ok
+test proto::tests::a_child_still_running_after_its_report_grace_fails_out_of_process ... ok
+test proto::tests::clean_run_accepts ... ok
+test proto::tests::each_check_fires_alone ... ok
+test proto::tests::every_cycle_is_charged_to_a_bounded_window ... ok
+test proto::tests::framer_holds_split_frames ... ok
+test proto::tests::layout_and_counts_match_x4proto_h ... ok
+test proto::tests::observe_mode_judges_the_bracket_at_its_ceiling ... ok
+test proto::tests::poison_helpers ... ok
+test proto::tests::post_stop_bound_is_judged_until_report ... ok
+test proto::tests::short_runs_are_ineligible_not_accepted ... ok
+test proto::tests::strict_order_accepts_only_the_exact_sequence ... ok
+test proto::tests::tau_clock_never_exceeds_the_cap ... ok
+test proto::tests::watchdog_before_stop_is_time_capped_after_stop_is_integrity ... ok
+test quantity::tests::measured_and_simulated_never_add_without_a_named_conversion ... ok
+test quantity::tests::measured_fingerprint_truncates_in_format ... ok
+test quantity::tests::measured_from_different_profiles_do_not_mix ... ok
+test pilotcfg::tests::the_filled_template_is_the_record_and_every_loosening_is_refused ... ok
+test quantity::tests::unit_symbol_in_format ... ok
+test runenv::tests::block_is_sorted_terminated_and_stable ... ok
+test pilot::tests::an_open_night_is_closed_with_its_current_hashes ... ok
+test scheduler::tests::blocks_planned_matches_reference ... ok
+test scheduler::tests::gate_threshold_caps_at_40 ... ok
+test scheduler::tests::orders_are_abba_and_baab ... ok
+test scheduler::tests::order_draw_is_deterministic_and_balanced ... ok
+test scheduler::tests::profile_mismatch_voids_immediately ... ok
+test scheduler::tests::three_discards_void_the_session ... ok
+test selftest::tests::empty_or_partial_probe_set_refuses_both ... ok
+test selftest::tests::fully_isolated_runs_both ... ok
+test selftest::tests::job_core_failure_and_broken_control_refuse_both ... ok
+test selftest::tests::job_only_is_degraded_for_trusted_and_refused_for_untrusted ... ok
+test selftest::tests::sealed_reachable_inside_refuses_both ... ok
+test session::tests::a_gate_drop_mid_block_discards_the_block ... ok
+test session::tests::a_session_void_from_the_sensors_ends_the_session ... ok
+test session::tests::a_large_true_improvement_crosses_superiority ... ok
+test session::tests::blocks_follow_the_seed_and_wealth_matches_direct_updates ... ok
+test session::tests::discards_log_wealth_and_the_third_voids ... ok
+test session::tests::integrity_failure_stops_the_session ... ok
+test session::tests::post_block_discards_count_toward_the_void_limit ... ok
+test session::tests::the_cooldown_precedes_the_checks_and_the_gate_directly_precedes_the_run ... ok
+test session::tests::time_capped_run_scores_its_block_as_an_outlier ... ok
+test sha256::tests::hex_roundtrip_in_report_shape ... ok
+test stats::tests::binomial_oc_matches_reference ... ok
+test stats::tests::carry_over_contrast_detects_a_planted_carry ... ok
+test stats::tests::chi2_median_near_df ... ok
+test stats::tests::chi2_quantile_holds_at_pilot_block_counts ... ok
+test stats::tests::clopper_pearson_upper_bounds_zero_count ... ok
+test stats::tests::discard_asymmetry_symmetric_is_high_p ... ok
+test stats::tests::mann_kendall_detects_monotone_increase ... ok
+test stats::tests::nearest_rank_quantile ... ok
+test stats::tests::normal_inv_cdf_z995 ... ok
+test stats::tests::pilot_estimators ... ok
+test stats::tests::pooled_mean_rejects_large_shift ... ok
+test stats::tests::s1_flags_shifted_sentinels ... ok
+test stats::tests::s4_band_is_max_of_3sbetween_and_1pct ... ok
+test sha256::tests::fips_vectors ... ok
+
+test result: ok. 94 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running unittests src\main.rs (D:\mithril\x4rev4r\cargo-target\release\deps\x4svc-719c449f89a99f17.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\golden_diff.rs (D:\mithril\x4rev4r\cargo-target\release\deps\golden_diff-d176c4f8f607b2d9.exe)
+
+running 4 tests
+test agrapa_prior_state_matches_reference_first_bet ... ok
+test golden_wealth_path_is_bit_exact ... ok
+test extra_sequences_are_bit_exact ... ok
+test stats_match_reference ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\golden_fixture.rs (D:\mithril\x4rev4r\cargo-target\release\deps\golden_fixture-c5f0db0d7f0a6659.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests x4svc
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo-test rc=0
+    Finished `release` profile [optimized] target(s) in 0.00s
+cargo-build rc=0
+==== sha256
+3c82628c62b2a5412d6ac8185b7bffddefe9e86ec547ae3d98a6fa68a8d3243f  177664  x4harness.exe
+6d65c5b5d6e8d4b51f40718746954b8a22bb5caed1e3734d01d661964470dab1  220672  x4harness_hearth.exe
+dadd9ab45a9843c7f50ac40f066a4724b9afbec7e8ba015e7972d92b35bff06d  220672  x4harness_hearth_q0.exe
+d5a5c7cc34170bbb8b830a5fab1a5aa2a5909ab5cfdc6b1d8dfa170c0d155177  110080  x4plant.exe
+f1a5b271cb4db0746ffb83994255a3857651ad7d776478308534754ffc671e8c  168960  x4sb_probe.exe
+b290899f94c7999a35323c8390510a8f2a1bea6fe046958f9e49ae7fa5bf1e0d  1524224  x4svc.exe
+build_pilot exit=0

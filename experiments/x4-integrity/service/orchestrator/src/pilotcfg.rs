@@ -28,6 +28,14 @@
 //!   + o_rt) + setup, is no later than `last_end_pt` (06:45); the driver takes the first unrun session
 //!   in seed order that fits. `o_rt` (`overhead_s`) is the per-run overhead outside the timed run
 //!   (gate windows, launch, init, teardown), a pre-night-amendment value (revision 4).
+//! - Revision 5 (review 2026-10-23, round 5): `pilot_rules` holds every fixed value by *equality*
+//!   (the e2e time cap = max(600, 3 x t_run,plan), the job memory limits, the disk-write limit, the
+//!   record path, the pinned paths, and the image lists equal to the record's; the GEMS and Qwen3
+//!   server names given at signing go in their own key, `excluded_images_at_signing`). The mechanical
+//!   pre-night values that no rule can recompute (K, o_rt, t_run,plan(e2e), hashes, goldens) are bound
+//!   by the **canonical configuration SHA-256** (`config_canonical_sha256`: the file without its
+//!   `integrity_cleared` lines), which the pre-night amendment records and `pilot-night --pilot
+//!   --config-sha256` and the estimator require.
 
 use crate::sha256;
 use crate::scheduler::SplitMix64;
@@ -132,6 +140,45 @@ pub mod record {
     ];
     /// C02's answer (OWNER-ANSWERS batch 3, R8).
     pub const MODEL_PATH: &str = "C:\\Users\\pierce lonergan\\hearth-data\\qwen3-30b-a3b-q4.hearth";
+    /// Section 3 (revision 5): the record's path, the pinned binaries' and pins files' locations, the
+    /// data and scratch directories, and the job memory limits per run type [G].
+    pub const RECORD: &str = "docs/m0/prereg/X4-noise-pilot.md";
+    pub const DATA_DIR: &str = "D:\\mithril-data\\x4\\pilot";
+    pub const SCRATCH: &str = "D:\\mithril-data\\x4\\scratch";
+    pub const HARNESS: &str = "D:\\mithril-data\\x4\\bin\\x4harness_hearth.exe";
+    pub const PROBE: &str = "D:\\mithril-data\\x4\\bin\\x4sb_probe.exe";
+    pub const PINS_DIR: &str = "D:\\mithril-data\\x4\\pins\\";
+    pub const SIGNED_TAG: &str = "prereg-sign-x4-noise-pilot";
+    pub const DISK_WRITE_MAX_BYTES_S: f64 = 1_048_576.0;
+    pub const MEMORY_GIB_MB: u64 = 2;
+    pub const MEMORY_GIB_E2E: u64 = 24;
+    /// Plausibility bounds on the two mechanical schedule values (revision 5) [G]: o_rt above 15 s,
+    /// or t_run,plan(e2e) above 600 s (36 end-to-end blocks would need over 36 h), is a design revisit
+    /// before data, never a configuration value.
+    pub const OVERHEAD_MAX_S: f64 = 15.0;
+    pub const E2E_T_RUN_PLAN_MAX_S: f64 = 600.0;
+}
+
+/// The canonical configuration SHA-256 (revision 5): SHA-256 of the file's lines, each without a
+/// trailing CR, joined by LF with a final LF, after removing every line whose key is
+/// `integrity_cleared`. A dated clearing amendment adds only such a line, so the hash the pre-night
+/// amendment records stays valid across it (record section 7); every other change is a new hash.
+pub fn config_canonical_sha256(text: &str) -> String {
+    let mut s = String::with_capacity(text.len());
+    for raw in text.split('\n') {
+        let l = raw.strip_suffix('\r').unwrap_or(raw);
+        let key = l.split('=').next().unwrap_or("").trim();
+        if l.contains('=') && key == "integrity_cleared" {
+            continue;
+        }
+        s.push_str(l);
+        s.push('\n');
+    }
+    // a file ending in LF yields one empty last piece: drop the extra LF it added
+    if text.ends_with('\n') && s.ends_with("\n\n") {
+        s.pop();
+    }
+    sha256::hex(&sha256::digest(s.as_bytes()))
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -143,7 +190,14 @@ pub struct PilotConfig {
     pub seed_hex: String,
     pub data_dir: String,
     pub scratch: String,
+    /// Every excluded image the sensors use: `excluded_images` (in PILOT exactly the record's list)
+    /// plus `excluded_images_at_signing` (revision 5).
     pub excluded_images: Vec<String>,
+    /// The `excluded_images` key as written (PILOT: equal to `record::EXCLUDED`).
+    pub excluded_images_listed: Vec<String>,
+    /// Images named at signing (record section 13: GEMS images, the local Qwen3 server's image if not
+    /// already listed); PILOT needs the key, which may be empty.
+    pub excluded_images_at_signing: Option<Vec<String>>,
     /// Images whose *start* voids a session (revision 4: sshd, shells); see `record::STARTED`.
     pub excluded_started_images: Vec<String>,
     pub bg_images: Vec<String>,
@@ -301,6 +355,10 @@ pub fn parse(text: &str) -> Result<PilotConfig, String> {
         }
         let (k, v) = line.split_once('=').ok_or_else(|| format!("line {}: no '='", ln))?;
         let (k, v) = (k.trim().to_string(), v.trim().to_string());
+        // revision 5: a template placeholder never parses as a value (a list would take it as names)
+        if v.contains("<FILL") {
+            return Err(format!("line {}: {} is still a template placeholder ({})", ln, k, v));
+        }
         match rts.last_mut() {
             Some(r) => r.1.push((k, v, ln)),
             None => g.push((k, v, ln)),
@@ -320,6 +378,7 @@ pub fn parse(text: &str) -> Result<PilotConfig, String> {
         "load_max_pct", "core_load_max_pct", "bg_cpu_max_pct_of_core", "gpu_util_max_pct", "nvme_temp_max_c", "nvme_volume", "disk_write_max_bytes_s",
         "disk_queue_max", "settle_timeout_s", "load_window_ms", "disk_window_ms", "excluded_cpu_max_ms", "window_start_pt", "window_end_pt", "last_end_pt",
         "orchestrator_lp", "session_setup_s", "probe_exe", "x4svc_sha256", "probe_sha256", "plant_affinity", "integrity_cleared",
+        "excluded_images_at_signing",
     ];
     const RT: &[&str] = &[
         "harness", "harness_sha256", "workload", "param", "out_bytes", "affinity", "threads", "priority", "memory_gib", "env", "golden",
@@ -387,6 +446,17 @@ pub fn parse(text: &str) -> Result<PilotConfig, String> {
         }
         integrity_cleared.push((sid.trim().to_string(), commit.trim().to_ascii_lowercase()));
     }
+    let excluded_images_listed = list(&req(&g, "excluded_images")?);
+    let excluded_images_at_signing = take(&g, "excluded_images_at_signing")?.map(|v| list(&v));
+    if grade == Grade::Pilot && excluded_images_at_signing.is_none() {
+        return Err("PILOT needs excluded_images_at_signing (the GEMS images and any server image named at signing, record section 13; may be empty)".into());
+    }
+    let mut excluded_images = excluded_images_listed.clone();
+    for e in excluded_images_at_signing.iter().flatten() {
+        if !crate::hygiene::image_in(e, &excluded_images) {
+            excluded_images.push(e.clone());
+        }
+    }
     let mut cfg = PilotConfig {
         grade,
         record: take(&g, "record")?.unwrap_or_default(),
@@ -395,7 +465,9 @@ pub fn parse(text: &str) -> Result<PilotConfig, String> {
         seed_hex,
         data_dir: take(&g, "data_dir")?.unwrap_or_default(),
         scratch,
-        excluded_images: list(&req(&g, "excluded_images")?),
+        excluded_images,
+        excluded_images_listed,
+        excluded_images_at_signing,
         excluded_started_images: list(&take(&g, "excluded_started_images")?.unwrap_or_default()),
         bg_images: list(&req(&g, "bg_images")?),
         core_load_max_pct: f("core_load_max_pct", record::CORE_LOAD_MAX_PCT)?,
@@ -559,6 +631,13 @@ fn path_under(p: &str, prefixes: &[&str], min_levels: usize) -> bool {
 fn contains_all(have: &[String], want: &[&str]) -> Vec<String> {
     want.iter().filter(|w| !have.iter().any(|h| crate::hygiene::norm_image(h) == crate::hygiene::norm_image(w))).map(|w| w.to_string()).collect()
 }
+/// Entries of `have` that are not in `want` (normalised image names).
+fn extras(have: &[String], want: &[&str]) -> Vec<String> {
+    have.iter().filter(|h| !want.iter().any(|w| crate::hygiene::norm_image(h) == crate::hygiene::norm_image(w))).cloned().collect()
+}
+fn same_path(a: &str, b: &str) -> bool {
+    a.trim().replace('/', "\\").eq_ignore_ascii_case(b)
+}
 
 /// Every value X4-noise-pilot fixes, checked for a PILOT configuration (revision 4; review
 /// 2026-10-23: the parser had held only the sensor windows, the start state and the priority). An
@@ -583,14 +662,51 @@ pub fn pilot_rules(c: &PilotConfig) -> Vec<String> {
     eq("window_end_pt", c.window_end_pt_min as f64, (7 * 60) as f64);
     eq("last_end_pt", c.last_end_pt_min as f64, (6 * 60 + 45) as f64);
     eq("plant_affinity", c.plant_affinity as f64, 0.0);
+    eq("disk_write_max_bytes_s", c.disk_write_max_bytes_s, record::DISK_WRITE_MAX_BYTES_S);
+    eq("disk_queue_max", c.disk_queue_max, 0.0);
     if c.nvme_volume != 'C' {
         v.push(format!("nvme_volume = {} (record: C, the model's 990 PRO)", c.nvme_volume));
     }
-    for (name, have, want) in [("excluded_images", &c.excluded_images, record::EXCLUDED), ("excluded_started_images", &c.excluded_started_images, record::STARTED), ("bg_images", &c.bg_images, record::BG)] {
+    // revision 5: the lists EQUAL the record's (an extra background image adds discards, an extra
+    // excluded one voids; neither is the record's); the names given at signing have their own key
+    for (name, have, want) in [("excluded_images", &c.excluded_images_listed, record::EXCLUDED), ("excluded_started_images", &c.excluded_started_images, record::STARTED), ("bg_images", &c.bg_images, record::BG)] {
         let miss = contains_all(have, want);
         if !miss.is_empty() {
             v.push(format!("{} lacks the record's {:?}", name, miss));
         }
+        let extra = extras(have, want);
+        if !extra.is_empty() {
+            v.push(format!("{} has entries the record does not list {:?} (names given at signing go in excluded_images_at_signing)", name, extra));
+        }
+    }
+    if c.record.trim() != record::RECORD {
+        v.push(format!("record = {:?} (record: {})", c.record, record::RECORD));
+    }
+    if c.signed_tag.as_deref().map(str::trim) != Some(record::SIGNED_TAG) {
+        v.push(format!("signed_tag = {:?} (record section 13: {})", c.signed_tag, record::SIGNED_TAG));
+    }
+    for (name, have, want) in [("data_dir", c.data_dir.as_str(), record::DATA_DIR), ("scratch", c.scratch.as_str(), record::SCRATCH), ("probe_exe", c.probe_exe.as_deref().unwrap_or(""), record::PROBE)] {
+        if !same_path(have, want) {
+            v.push(format!("{} = {:?} (record: {})", name, have, want));
+        }
+    }
+    for rt in &c.run_types {
+        if !same_path(&rt.harness, record::HARNESS) {
+            v.push(format!("[{}] harness = {:?} (record: {})", rt.id, rt.harness, record::HARNESS));
+        }
+        let want_pins = format!("{}{}.txt", record::PINS_DIR, rt.id);
+        if !same_path(rt.pins.as_deref().unwrap_or(""), &want_pins) {
+            v.push(format!("[{}] pins = {:?} (record: {})", rt.id, rt.pins, want_pins));
+        }
+        // o_rt is ceil(...) whole seconds and at least the 3 s of gate windows + 1 s of snapshot; above
+        // 15 s (three times the 5 s the dev runs indicate [G]) it is a design revisit, not a value
+        // (a larger o_rt widens the planned-block background budget, record section 9)
+        if rt.overhead_s.fract() != 0.0 || rt.overhead_s < 4.0 || rt.overhead_s > record::OVERHEAD_MAX_S {
+            v.push(format!("[{}] overhead_s = {} (record: a whole number of seconds in [4, {}], by the section Amendments rule)", rt.id, rt.overhead_s, record::OVERHEAD_MAX_S));
+        }
+    }
+    if c.run_types.len() == 2 && c.run_types[0].harness_sha256 != c.run_types[1].harness_sha256 {
+        v.push("the two run types pin different harness_sha256 (record: one binary, x4harness_hearth.exe)".into());
     }
     let ids: Vec<&str> = c.run_types.iter().map(|r| r.id.as_str()).collect();
     if ids != ["mb-q4-avx512", "e2e-decode"] {
@@ -617,9 +733,6 @@ pub fn pilot_rules(c: &PilotConfig) -> Vec<String> {
         chk("extra_cores_milli", rt.extra_cores_milli as f64, 250.0);
         chk("exit_grace_ms", rt.exit_grace_ms as f64, 5000.0);
         chk("priority (0x20 = normal)", rt.priority_class as f64, 0x20 as f64);
-        if rt.overhead_s < 3.0 {
-            v.push(format!("[{}] overhead_s = {} (at least the 2-s load and 1-s disk windows)", rt.id, rt.overhead_s));
-        }
     };
     let mb = &c.run_types[0];
     common(mb, &mut v);
@@ -641,6 +754,7 @@ pub fn pilot_rules(c: &PilotConfig) -> Vec<String> {
     chk(&mut v, mb, "blocks", mb.blocks as f64, 24.0);
     chk(&mut v, mb, "t_run_plan_s", mb.t_run_plan_s, 10.0);
     chk(&mut v, mb, "cooldown_factor", mb.cooldown_factor, 1.0);
+    chk(&mut v, mb, "memory_gib", mb.memory_gib as f64, record::MEMORY_GIB_MB as f64);
     if mb.param == 0 {
         v.push("[mb-q4-avx512] param (K) must be the pre-night amendment's K".into());
     }
@@ -661,8 +775,15 @@ pub fn pilot_rules(c: &PilotConfig) -> Vec<String> {
     chk(&mut v, e, "sessions", e.sessions as f64, 3.0);
     chk(&mut v, e, "blocks", e.blocks as f64, 12.0);
     chk(&mut v, e, "cooldown_factor", e.cooldown_factor, 1.5);
-    if (e.time_cap_s as f64) < (600.0f64).max(3.0 * e.t_run_plan_s) {
-        v.push(format!("[e2e-decode] time_cap_s = {} (record: max(600, 3 x t_run_plan_s) = {})", e.time_cap_s, (600.0f64).max(3.0 * e.t_run_plan_s)));
+    chk(&mut v, e, "memory_gib", e.memory_gib as f64, record::MEMORY_GIB_E2E as f64);
+    // revision 5: t_run,plan(e2e) is ceil(...) whole seconds; the cap EQUALS max(600, 3 x t_run,plan)
+    // (a larger cap would let a slow run pass as a measured one instead of a capped outlier)
+    if e.t_run_plan_s.fract() != 0.0 || e.t_run_plan_s < 1.0 || e.t_run_plan_s > record::E2E_T_RUN_PLAN_MAX_S {
+        v.push(format!("[e2e-decode] t_run_plan_s = {} (record: a whole number of seconds in [1, {}], by the section Amendments rule; above it the pilot cannot fit its nights and is a design revisit)", e.t_run_plan_s, record::E2E_T_RUN_PLAN_MAX_S));
+    }
+    let cap = (600.0f64).max(3.0 * e.t_run_plan_s);
+    if (e.time_cap_s as f64 - cap).abs() > 1e-9 {
+        v.push(format!("[e2e-decode] time_cap_s = {} (record: max(600, 3 x t_run_plan_s) = {})", e.time_cap_s, cap));
     }
     let want_env: [(&str, &str); 7] = [
         ("HEARTH_ISA", "avx512"),
@@ -843,7 +964,8 @@ scratch = D:\\mithril-data\\x4\\scratch
 probe_exe = D:\\mithril-data\\x4\\bin\\x4sb_probe.exe
 probe_sha256 = {h}
 x4svc_sha256 = {h}
-excluded_images = {ex}, qwen3-server, gems-worker
+excluded_images = {ex}
+excluded_images_at_signing = gems-worker
 excluded_started_images = {st}
 bg_images = {bg}
 load_max_pct = 40
@@ -1057,6 +1179,27 @@ pins = D:\\mithril-data\\x4\\pins\\e2e-decode.txt
             ("workload = e2e_decode", "workload = mb_q4_avx512"),
             ("data_dir = D:\\mithril-data\\x4\\pilot", "data_dir = D:\\mithril\\x4c\\pilot"),
             ("scratch = D:\\mithril-data\\x4\\scratch", "scratch = D:\\mithril\\x4c\\scratch"),
+            // revision 5 (review round 5): each was accepted before
+            ("time_cap_s = 600", "time_cap_s = 100000"),
+            ("memory_gib = 2", "memory_gib = 1"),
+            ("memory_gib = 24", "memory_gib = 1"),
+            ("memory_gib = 24", "memory_gib = 60"),
+            ("disk_write_max_bytes_s = 1048576", "disk_write_max_bytes_s = 1"),
+            ("excluded_images = claude", "excluded_images = explorer, claude"),
+            ("bg_images = MsMpEng", "bg_images = svchost, MsMpEng"),
+            ("excluded_started_images = sshd", "excluded_started_images = explorer, sshd"),
+            ("excluded_images_at_signing = gems-worker\n", ""),
+            ("record = docs/m0/prereg/X4-noise-pilot.md", "record = docs/m0/prereg/SOMETHING-ELSE.md"),
+            ("signed_tag = prereg-sign-x4-noise-pilot", "signed_tag = x"),
+            ("probe_exe = D:\\mithril-data\\x4\\bin\\x4sb_probe.exe", "probe_exe = D:\\mithril-data\\x4\\bin\\other.exe"),
+            ("harness = D:\\mithril-data\\x4\\bin\\x4harness_hearth.exe\nharness_sha256 = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\nworkload = e2e", "harness = D:\\mithril-data\\x4\\bin\\other.exe\nharness_sha256 = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\nworkload = e2e"),
+            ("harness_sha256 = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\nworkload = e2e", "harness_sha256 = cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\nworkload = e2e"),
+            ("pins = D:\\mithril-data\\x4\\pins\\e2e-decode.txt", "pins = D:\\mithril-data\\x4\\pins\\other.txt"),
+            ("overhead_s = 5", "overhead_s = 5.5"),
+            ("overhead_s = 6", "overhead_s = 3"),
+            ("t_run_plan_s = 120", "t_run_plan_s = 120.5"),
+            ("overhead_s = 5", "overhead_s = 1000"),
+            ("overhead_s = 6", "overhead_s = 16"),
         ];
         for (from, to) in muts {
             assert!(p.contains(from), "fixture lacks {from:?}");
@@ -1068,10 +1211,76 @@ pins = D:\\mithril-data\\x4\\pins\\e2e-decode.txt
         let j = p.find("[run_type e2e-decode]").unwrap();
         let swapped = format!("{}{}\n{}", &p[..i], &p[j..], &p[i..j]);
         assert!(parse(&swapped).is_err());
-        // the e2e time cap follows a longer t_run,plan: max(600, 3 x plan)
+        // the e2e time cap follows a longer t_run,plan: max(600, 3 x plan), exactly
         let long = p.replacen("t_run_plan_s = 120", "t_run_plan_s = 250", 1);
         assert!(parse(&long).is_err());
         assert!(parse(&long.replacen("time_cap_s = 600", "time_cap_s = 750", 1)).is_ok());
+        assert!(parse(&long.replacen("time_cap_s = 600", "time_cap_s = 751", 1)).is_err());
+        // t_run,plan(e2e) above 600 s is a design revisit (the reviewer's 5000 s with a 15000 s cap)
+        let huge = p.replacen("t_run_plan_s = 120", "t_run_plan_s = 5000", 1).replacen("time_cap_s = 600", "time_cap_s = 15000", 1);
+        assert!(parse(&huge).unwrap_err().contains("t_run_plan_s = 5000"));
+        let edge = p.replacen("t_run_plan_s = 120", "t_run_plan_s = 600", 1).replacen("time_cap_s = 600", "time_cap_s = 1800", 1);
+        assert!(parse(&edge).is_ok());
+        // names given at signing extend the sensors' list without touching the record's list
+        let c2 = parse(&p.replacen("excluded_images_at_signing = gems-worker", "excluded_images_at_signing = gems-worker, gems-queue", 1)).unwrap();
+        assert!(crate::hygiene::image_in("gems-queue.exe", &c2.excluded_images) && crate::hygiene::image_in("claude", &c2.excluded_images));
+        assert!(parse(&p.replacen("excluded_images_at_signing = gems-worker", "excluded_images_at_signing =", 1)).is_ok());
+        assert!(parse(&p.replacen("excluded_images_at_signing = gems-worker", "excluded_images_at_signing = <FILL: names, or empty>", 1)).unwrap_err().contains("placeholder"));
+    }
+
+    /// The committed template (experiments/x4-integrity/pilot/pilot.cfg.template), every placeholder
+    /// filled with a dummy value of the right shape (revision 5: the template and the record agree).
+    pub(crate) fn filled_template() -> String {
+        let path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../pilot/pilot.cfg.template");
+        let t = std::fs::read_to_string(path).unwrap_or_else(|e| panic!("{path}: {e} (copy experiments/x4-integrity/pilot beside service)"));
+        let h = "b".repeat(64);
+        t.lines()
+            .map(|l| {
+                if !l.contains("<FILL") || l.trim_start().starts_with('#') {
+                    return l.to_string();
+                }
+                let k = l.split('=').next().unwrap().trim();
+                let v = match k {
+                    "freeze_commit" => FC.to_string(),
+                    "seed" => seed_from_freeze(FC),
+                    "probe_sha256" | "x4svc_sha256" | "harness_sha256" | "golden" => h.clone(),
+                    "excluded_images_at_signing" => "gems-worker".to_string(),
+                    "param" => "1761170".to_string(),
+                    "overhead_s" => "5".to_string(),
+                    "time_cap_s" => "600".to_string(),
+                    "t_run_plan_s" => "150".to_string(),
+                    other => panic!("unexpected placeholder key {other}"),
+                };
+                format!("{} = {}", k, v)
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
+
+    #[test]
+    fn the_committed_template_filled_is_the_record() {
+        let t = filled_template();
+        let c = parse(&t).unwrap_or_else(|e| panic!("{e}"));
+        assert!(pilot_rules(&c).is_empty());
+        assert_eq!(c.excluded_images_at_signing.as_deref(), Some(&["gems-worker".to_string()][..]));
+        // the unfilled template never parses
+        let raw = std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../pilot/pilot.cfg.template")).unwrap();
+        assert!(parse(&raw).is_err());
+    }
+
+    #[test]
+    fn the_canonical_configuration_hash_ignores_only_integrity_cleared() {
+        let p = filled_pilot();
+        let h = config_canonical_sha256(&p);
+        let cleared = p.replacen("session_setup_s = 120", &format!("session_setup_s = 120\nintegrity_cleared = mb-q4-avx512-03@{}", "e".repeat(40)), 1);
+        assert_eq!(config_canonical_sha256(&cleared), h);
+        // CRLF and LF copies of one file hash alike; any other change does not
+        assert_eq!(config_canonical_sha256(&p.replace('\n', "\r\n")), h);
+        assert_ne!(config_canonical_sha256(&p.replacen("overhead_s = 5", "overhead_s = 6", 1)), h);
+        assert_ne!(config_canonical_sha256(&p.replacen("session_setup_s = 120", "session_setup_s = 120\n# integrity_cleared = x", 1)), h);
+        assert_ne!(config_canonical_sha256(&format!("{}\nseed = 0", p)), h);
+        assert_eq!(config_canonical_sha256("a = 1\nb = 2\n"), config_canonical_sha256("a = 1\nb = 2"));
+        assert_eq!(config_canonical_sha256("a = 1\nb = 2\n"), sha256::hex(&sha256::digest(b"a = 1\nb = 2\n")));
     }
 
     #[test]

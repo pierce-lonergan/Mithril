@@ -39,6 +39,11 @@ pub struct ProcSample {
     pub parent: u32,
     /// Creation time (GetProcessTimes, 100 ns FILETIME), to tell a reused pid from the same process.
     pub created: Option<u64>,
+    /// Revision 5 (review round 5): the process's kernel + user time in 100 ns from the PDH
+    /// `\Process(*)\% Processor Time` raw value, read only when the process cannot be opened (a
+    /// non-elevated driver cannot open Defender, the indexer or other SYSTEM services [M]); its
+    /// creation time then comes from `\Process(*)\Elapsed Time`. Tick-based (15.6 ms quanta).
+    pub cpu_100ns: Option<u64>,
 }
 
 impl ProcSample {
@@ -46,6 +51,32 @@ impl ProcSample {
     pub fn same(&self, o: &ProcSample) -> bool {
         self.pid == o.pid && self.image == o.image && (self.created.is_none() || o.created.is_none() || self.created == o.created)
     }
+    /// Whether any CPU reading exists (cycles, or the PDH time of an unopenable process).
+    pub fn cpu_readable(&self) -> bool {
+        self.cycles.is_some() || self.cpu_100ns.is_some()
+    }
+}
+
+/// CPU a process used since `then` (the same process earlier, or None if it was not there), in
+/// cycles at `rate_hz`: from the cycle counts when the process could be opened, else from the PDH time
+/// (100 ns) converted at the calibrated rate. None = unreadable now, or readable only by the other
+/// source then (fail closed: the caller counts it as unknown).
+pub fn cpu_cycles_since(now: &ProcSample, then: Option<&ProcSample>, rate_hz: u64) -> Option<u64> {
+    if let Some(c) = now.cycles {
+        return match then {
+            None => Some(c),
+            Some(t) => match t.cycles {
+                Some(tc) => Some(c.saturating_sub(tc)),
+                None => None,
+            },
+        };
+    }
+    let t100 = now.cpu_100ns?;
+    let d = match then {
+        None => t100,
+        Some(t) => t100.saturating_sub(t.cpu_100ns?),
+    };
+    Some((d as u128 * rate_hz as u128 / 10_000_000u128) as u64)
 }
 
 /// Merge a newer reading into a union of every process seen: update the cycles of a process already
@@ -56,6 +87,9 @@ pub fn merge_seen(seen: &mut Vec<ProcSample>, now: &[ProcSample]) {
             Some(s) => {
                 if let Some(c) = p.cycles {
                     s.cycles = Some(s.cycles.map_or(c, |o| o.max(c)));
+                }
+                if let Some(c) = p.cpu_100ns {
+                    s.cpu_100ns = Some(s.cpu_100ns.map_or(c, |o| o.max(c)));
                 }
                 if s.created.is_none() {
                     s.created = p.created;
@@ -103,13 +137,13 @@ fn cyc_to_pct_core(cycles: u64, wall_ns: u64, rate_hz: u64) -> f64 {
 /// CPU cycles each listed image used over a block: `before` = the processes alive at the block start,
 /// `seen` = every process seen during the block (the poller's union, exited ones included, with their
 /// last cycle count). A process absent at the start contributes all its cycles; one that could not
-/// be queried counts as unknown.
-pub fn image_cycles(before: &[ProcSample], seen: &[ProcSample], image: &str) -> Option<u64> {
+/// be queried counts as unknown. Revision 5: a process that cannot be opened is charged its PDH time
+/// at the calibrated rate (`cpu_cycles_since`).
+pub fn image_cycles(before: &[ProcSample], seen: &[ProcSample], image: &str, rate_hz: u64) -> Option<u64> {
     let mut total = 0u64;
     for a in seen.iter().filter(|p| norm_image(&p.image) == norm_image(image)) {
-        let now = a.cycles?;
-        let then = before.iter().find(|b| b.same(a)).and_then(|b| b.cycles).unwrap_or(0);
-        total = total.saturating_add(now.saturating_sub(then));
+        let then = before.iter().find(|b| b.same(a));
+        total = total.saturating_add(cpu_cycles_since(a, then, rate_hz)?);
     }
     Some(total)
 }
@@ -121,7 +155,7 @@ pub fn image_cycles(before: &[ProcSample], seen: &[ProcSample], image: &str) -> 
 pub fn bg_discard(cfg: &PilotConfig, before: &[ProcSample], seen: &[ProcSample], planned_block_ns: u64, rate_hz: u64) -> Option<String> {
     let mut hits = Vec::new();
     for img in &cfg.bg_images {
-        match image_cycles(before, seen, img) {
+        match image_cycles(before, seen, img, rate_hz) {
             Some(c) => {
                 let pct = cyc_to_pct_core(c, planned_block_ns, rate_hz);
                 if pct > cfg.bg_cpu_max_pct_of_core {
@@ -212,11 +246,16 @@ pub fn session_void(cfg: &PilotConfig, base: &SessionSense, now: &SessionSense, 
     for p in now.procs.iter().filter(|p| image_in(&p.image, &cfg.excluded_images) && !own(p)) {
         match base.procs.iter().find(|b| b.same(p)) {
             None => why.push(format!("excluded process started: {} (pid {})", p.image, p.pid)),
-            Some(b) => match (b.cycles, p.cycles) {
-                (Some(x), Some(y)) if y.saturating_sub(x) > thr_cycles => {
+            Some(b) => match (b.cycles, p.cycles, b.cpu_100ns, p.cpu_100ns) {
+                (Some(x), Some(y), _, _) if y.saturating_sub(x) > thr_cycles => {
                     why.push(format!("excluded process used CPU: {} (pid {}, {} cycles)", p.image, p.pid, y - x))
                 }
-                (Some(_), Some(_)) => {}
+                (Some(_), Some(_), _, _) => {}
+                // revision 5: a process the driver cannot open is read through PDH (100 ns, tick-based)
+                (None, None, Some(x), Some(y)) if (y.saturating_sub(x) as f64) > cfg.excluded_cpu_max_ms * 1e4 => {
+                    why.push(format!("excluded process used CPU: {} (pid {}, {} x 100 ns, PDH)", p.image, p.pid, y - x))
+                }
+                (None, None, Some(_), Some(_)) => {}
                 _ if strict => why.push(format!("excluded process {} (pid {}) unreadable", p.image, p.pid)),
                 _ => {}
             },
@@ -320,7 +359,7 @@ mod tests {
         // revision 4: started-only images (DRY lists sshd) void on start, not on CPU use
         assert!(fire(&|n| n.procs.push(p(42, "sshd", 0))).contains("excluded process started: sshd"));
         // the driver's own children (parent = an own pid) are exempt: its harness, its helpers
-        let own_child = |img: &str| ProcSample { pid: 43, image: img.into(), cycles: Some(9), parent: 30, created: None };
+        let own_child = |img: &str| ProcSample { pid: 43, image: img.into(), cycles: Some(9), parent: 30, created: None, cpu_100ns: None };
         for img in ["x4harness_hearth", "sshd", "node"] {
             assert_eq!(fire(&|n| n.procs.push(own_child(img))), "", "{img}");
         }
@@ -345,7 +384,7 @@ mod tests {
         let mut b = base();
         b.procs[0].created = Some(1);
         let mut n = b.clone();
-        n.procs[0] = ProcSample { pid: 10, image: "claude".into(), cycles: Some(5), parent: 0, created: Some(2) };
+        n.procs[0] = ProcSample { pid: 10, image: "claude".into(), cycles: Some(5), parent: 0, created: Some(2), cpu_100ns: None };
         assert!(session_void(&c, &b, &n, &[30], 4_000_000_000, true).unwrap().contains("excluded process started: claude"));
     }
 
@@ -406,6 +445,44 @@ mod tests {
         // unreadable counts as a discard
         let unread = vec![ProcSample { pid: 20, image: "msmpeng".into(), cycles: None, ..Default::default() }];
         assert!(bg_discard(&c, &before, &unread, 40_000_000_000, 4_000_000_000).unwrap().contains("unreadable"));
+    }
+
+    #[test]
+    fn an_unopenable_process_is_read_through_pdh_time() {
+        // revision 5 (review round 5): a non-elevated driver cannot open MsMpEng; its PDH time counts
+        let c = parse(DRY).unwrap();
+        let t = |pid: u32, image: &str, t100: u64| ProcSample { pid, image: image.into(), cycles: None, cpu_100ns: Some(t100), ..Default::default() };
+        let before = vec![t(20, "msmpeng", 1_000_000), p(21, "searchindexer", 0)];
+        // 40-s planned block: 1% of one core = 0.4 s = 4e6 x 100 ns
+        let quiet = vec![t(20, "msmpeng", 1_000_000 + 3_000_000), p(21, "searchindexer", 0)];
+        assert_eq!(bg_discard(&c, &before, &quiet, 40_000_000_000, 4_000_000_000), None);
+        let busy = vec![t(20, "msmpeng", 1_000_000 + 5_000_000), p(21, "searchindexer", 0)];
+        assert!(bg_discard(&c, &before, &busy, 40_000_000_000, 4_000_000_000).unwrap().contains("msmpeng 1.250%"));
+        // a TiWorker that cannot be opened, started and exited during the block, is charged in full
+        let mut during = before.clone();
+        merge_seen(&mut during, &[t(22, "TiWorker", 9_000_000)]);
+        assert!(bg_discard(&c, &before, &during, 40_000_000_000, 4_000_000_000).unwrap().contains("tiworker"));
+        // a reading by neither source stays unreadable (a discard)
+        let none = vec![ProcSample { pid: 20, image: "msmpeng".into(), ..Default::default() }];
+        assert!(bg_discard(&c, &before, &none, 40_000_000_000, 4_000_000_000).unwrap().contains("unreadable"));
+        assert!(t(1, "x", 1).cpu_readable() && !ProcSample::default().cpu_readable());
+        assert_eq!(cpu_cycles_since(&t(1, "x", 30), Some(&t(1, "x", 10)), 4_000_000_000), Some(8_000));
+        assert_eq!(cpu_cycles_since(&t(1, "x", 30), Some(&p(1, "x", 10)), 4_000_000_000), None);
+        // an excluded process read through PDH voids on any increase, and is quiet without one
+        let mut b = base();
+        b.procs.push(t(60, "wslhost", 500));
+        let mut n = b.clone();
+        assert_eq!(session_void(&pilot_cfg_with(&c, "wslhost"), &b, &n, &[30], 4_000_000_000, false), None);
+        n.procs[3].cpu_100ns = Some(501);
+        assert!(session_void(&pilot_cfg_with(&c, "wslhost"), &b, &n, &[30], 4_000_000_000, false).unwrap().contains("excluded process used CPU: wslhost"));
+        n.procs[3].cpu_100ns = None;
+        assert!(session_void(&pilot_cfg_with(&c, "wslhost"), &b, &n, &[30], 4_000_000_000, false).unwrap().contains("wslhost (pid 60) unreadable"));
+    }
+    fn pilot_cfg_with(c: &PilotConfig, extra: &str) -> PilotConfig {
+        let mut x = c.clone();
+        x.grade = Grade::Pilot;
+        x.excluded_images.push(extra.to_string());
+        x
     }
 
     #[test]

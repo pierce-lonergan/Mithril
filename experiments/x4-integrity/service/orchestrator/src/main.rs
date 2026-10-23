@@ -15,8 +15,20 @@
 //!   dev-run --config FILE --run-type ID [--param N] [--dev-self-golden]
 //!                                             one short dev run of a run type in observe mode
 //!   pilot-night --config FILE --dry-run [--plants] [--max-sessions N] [--plant-exe EXE]
-//!   pilot-night --config FILE --pilot         a real pilot night (only under the signed record;
+//!   pilot-night --config FILE --pilot --config-sha256 HEX
+//!                                             a real pilot night (only under the signed record;
 //!                                             refuses --max-sessions, --plants and --plant-exe)
+//!
+//! Revision 5 (review round 5, 2026-10-23):
+//!   config-hash --config FILE                 the file's SHA-256 and its canonical SHA-256 (without
+//!                                             its integrity_cleared lines): the pre-night amendment
+//!                                             records the canonical one, `--config-sha256` repeats it
+//!   pilot-close --config FILE [--config-sha256 HEX]
+//!                                             close nights left open by a crash (outside a window,
+//!                                             with no other x4svc running); marks their sessions
+//!   pilot-estimate --data-dir DIR (--freeze-commit H --config-sha256 HEX | --dry-test) [--out FILE]
+//!                                             the record's section 4/5 estimators and 7(a) fill-in,
+//!                                             read-only; refuses an input that fails section 7
 //!
 //! `--scratch` is required wherever a run environment is built (review round 3): the run's fixed
 //! scratch path (`<DIR>\run`) is the child's TEMP/TMP and enters the environment-block hash, and it
@@ -39,9 +51,12 @@ fn main() {
         "pilot-plan" => cmd_pilot_plan(&args),
         "dev-run" => cmd_dev_run(&args),
         "pilot-night" => cmd_pilot_night(&args),
+        "config-hash" => cmd_config_hash(&args),
+        "pilot-close" => cmd_pilot_close(&args),
+        "pilot-estimate" => cmd_pilot_estimate(&args),
         _ => {
             eprintln!(
-                "x4svc <verify-profile|fingerprint|run|selftest|demo-eprocess|topology|verify-hygiene|pilot-plan|dev-run|pilot-night>\n  \
+                "x4svc <verify-profile|fingerprint|run|selftest|demo-eprocess|topology|verify-hygiene|pilot-plan|dev-run|pilot-night|config-hash|pilot-close|pilot-estimate>\n  \
                  verify-profile [--data-dir PATH] [--collection --pins FILE --scratch DIR [--affinity MASK] [--env K=V]...]\n  \
                  fingerprint --scratch DIR [--affinity MASK] [--env K=V]...\n  \
                  run --harness EXE --workload NAME --scratch DIR [--out-bytes N] [--affinity MASK] [--threads N] [--param N] [--env K=V]... [--dev-canary] (--golden 64HEX | --dev-self-golden)\n  \
@@ -720,11 +735,23 @@ fn cmd_dev_run(args: &[String]) -> i32 {
         eprintln!("dev-run: {}", e);
         return 3;
     }
+    let t_wall = std::time::Instant::now();
     let out = run_once(&mk(golden));
+    let wall = t_wall.elapsed().as_secs_f64();
     let _ = std::fs::remove_dir_all(&scratch);
     match out {
         Ok(o) => {
             println!("DEV RUN (not pilot data): run type {} workload {} param {} affinity {:#x} threads {} env {}", rt.id, rt.workload, param, rt.affinity, rt.threads, env.sha256_hex);
+            // revision 5: the values the pre-night amendment's rules use (o_rt from run wall - delta_o)
+            println!(
+                "run delta_o_ns {} delta_h_ns {:?} run_wall_s {:.3} peak_process_memory {} (job limit {} GiB) exit_code {:?}",
+                o.delta_o_ns,
+                o.observed.report.as_ref().and_then(|r| r.delta_h_ns()),
+                wall,
+                o.observed.peak_process_memory,
+                rt.memory_gib,
+                o.observed.exit_code
+            );
             println!("golden {} ({})", x4svc::sha256::hex_u64x4(&golden), if dev_self { "learned from a first pass" } else { "pinned" });
             println!("cycle rate {} Hz; harness allowances spin {} / idle {} cycles", rate, spin, idle);
             println!("observe {}", observe(&o.observed).json(&c, rate));
@@ -791,6 +818,7 @@ fn cmd_pilot_night(args: &[String]) -> i32 {
         plants: flag(args, "--plants"),
         max_sessions: arg(args, "--max-sessions").and_then(|s| s.parse().ok()),
         plant_exe: arg(args, "--plant-exe").map(|s| s.to_string()),
+        config_sha256: arg(args, "--config-sha256").map(|s| s.to_ascii_lowercase()),
     };
     x4svc::pilot::run_night(&cfg, &path, &opts)
 }
@@ -798,4 +826,71 @@ fn cmd_pilot_night(args: &[String]) -> i32 {
 fn cmd_pilot_night(_args: &[String]) -> i32 {
     eprintln!("pilot-night is Windows-only");
     2
+}
+
+/// The configuration's file SHA-256 and canonical SHA-256 (revision 5). It parses the file first, so
+/// a configuration the record refuses gets no hash to pin.
+fn cmd_config_hash(args: &[String]) -> i32 {
+    let (cfg, path) = match load_cfg(args) {
+        Ok(c) => c,
+        Err(e) => {
+            eprintln!("config-hash: {}", e);
+            return 2;
+        }
+    };
+    let text = std::fs::read_to_string(&path).unwrap_or_default();
+    println!("grade {}", cfg.grade.label());
+    println!("file_sha256 {}", x4svc::sha256::hex(&x4svc::sha256::digest(&std::fs::read(&path).unwrap_or_default())));
+    println!("canonical_sha256 {}", x4svc::pilotcfg::config_canonical_sha256(&text));
+    println!("integrity_cleared {:?}", cfg.integrity_cleared);
+    0
+}
+
+#[cfg(windows)]
+fn cmd_pilot_close(args: &[String]) -> i32 {
+    let (cfg, path) = match load_cfg(args) {
+        Ok(c) => c,
+        Err(e) => {
+            eprintln!("pilot-close: {}", e);
+            return 2;
+        }
+    };
+    x4svc::pilot::pilot_close(&cfg, &path, arg(args, "--config-sha256"))
+}
+#[cfg(not(windows))]
+fn cmd_pilot_close(_args: &[String]) -> i32 {
+    eprintln!("pilot-close is Windows-only");
+    2
+}
+
+fn cmd_pilot_estimate(args: &[String]) -> i32 {
+    let dry = flag(args, "--dry-test");
+    let opts = x4svc::estimate::EstimateOpts {
+        data_dir: match arg(args, "--data-dir") {
+            Some(d) => d.to_string(),
+            None => {
+                eprintln!("pilot-estimate: --data-dir DIR is required");
+                return 2;
+            }
+        },
+        grade: if dry { "DRY-RUN".into() } else { "PILOT".into() },
+        freeze_commit: arg(args, "--freeze-commit").map(|s| s.to_ascii_lowercase()),
+        config_sha256: arg(args, "--config-sha256").map(|s| s.to_ascii_lowercase()),
+    };
+    match x4svc::estimate::estimate(&opts) {
+        Ok(rep) => {
+            print!("{}", rep);
+            if let Some(out) = arg(args, "--out") {
+                if let Err(e) = std::fs::write(out, &rep) {
+                    eprintln!("pilot-estimate: {}: {}", out, e);
+                    return 3;
+                }
+            }
+            0
+        }
+        Err(e) => {
+            eprintln!("pilot-estimate: REFUSED: {}", e);
+            1
+        }
+    }
 }
