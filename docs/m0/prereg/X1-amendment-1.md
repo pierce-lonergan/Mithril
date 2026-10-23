@@ -1,10 +1,10 @@
 # X1-amendment-1: Claude alone carries X1's kill; a pass is provisional
 
-Status: **DRAFT.** No data may be collected under it. Drafted 2026-10-16 (evening) by the packet track (a
-Claude agent) and revised the same night after one review (Claude, same family, independent context;
-§11). The lead engineer may freeze it, and Pierce signs the frozen text at a weekly sitting (sitting 1
-is Sun 2026-10-18; if it is not FROZEN in that packet, or he defers it, sitting 2 is Sun 2026-10-25).
-No X1 data exist, so nothing here is post-data.
+Status: **FROZEN** (2026-10-23, by the lead engineer; the freeze point is the commit that first carries this
+line). Not yet SIGNED. Pierce signs it in chat (interim, OWNER-ANSWERS batch 3) and re-signs with a signed tag at
+sitting 2 (Sun 2026-10-25). His values for the §10 fields go in his signature message, not in this body. Drafted
+2026-10-16 by the packet track and revised after one review (Claude, same family, independent context; §11). No
+X1 data exist, so nothing here is post-data. From here only appended amendments may change it.
 
 **What it amends.** It changes how ROADMAP §1 rule 5 ("at least two model families") and §3.2
 ("Participants. At least two frontier families … They carry the kill") apply to **X1 at M0 only**. It
