@@ -1,11 +1,14 @@
 # Sitting 2: Sunday 2026-10-25, evening
 
-Status: **DRAFT packet** (sitting2 track, a Claude agent, Fri 2026-10-23 PT; reviewed once and revised the same
-day, [review log](#review-log) at the end). The lead engineer fills the facts marked **[Sat]** and marks the packet
-FINAL on Sat 10-24, night (R6). Sources: your verbatim answers ([OWNER-ANSWERS](../../OWNER-ANSWERS.md),
-batches 1–5), [DELEGATED](../../DELEGATED.md), [OWNER-QUEUE](../../OWNER-QUEUE.md) (sitting-2 list),
-[HOW-TO-SIGN](../2026-10-18/HOW-TO-SIGN.md),
-[SIGNATURES (interim)](../2026-10-23-chat/SIGNATURES.md). Agents never create or see a key, never tick a box or
+Status: **FINAL** (lead engineer, Sat 2026-10-24). Drafted by the sitting2 track (a Claude agent) on Fri 10-23,
+reviewed once and revised the same day. On Sat 10-24 the facts marked **[Sat]** were filled from the sources and
+`git log` (origin/main `85542cd`), items 6a and 8a were added, the C05 cost was corrected, and item 4's C07 figures
+were updated to the X4-calibration record; then an owner-advocate check (Claude, independent context) corrected
+eight points in place ([review log](#review-log) at the end). Sources: your verbatim answers
+([OWNER-ANSWERS](../../OWNER-ANSWERS.md), batches 1–5), [DELEGATED](../../DELEGATED.md),
+[OWNER-QUEUE](../../OWNER-QUEUE.md) (sitting-2 list), [HOW-TO-SIGN](../2026-10-18/HOW-TO-SIGN.md),
+[SIGNATURES (interim)](../2026-10-23-chat/SIGNATURES.md), the X0-A1 material, the X2, X4-noise-pilot and
+X4-calibration records, SMOKE.md and the X1 isolation README. Agents never create or see a key, never tick a box or
 fill a Value, and never write a tag message. The lines below are forms for you to copy and fill.
 
 ---
@@ -21,23 +24,27 @@ hold every commit to `main` until your push (HOW-TO-SIGN step 3).
 |---|---|---|---|---|
 | 1 | Re-sign everything signed in chat on 10-23 | Re-sign as answered; PASS key | `d0-sign-1` tag; two record tags | 15–20 (+15–60 if the key is made at the sitting) |
 | 2 | The 59 rows adopted under your delegation; may batch 4 settle a D0 line? | Accept all (the team's own rows: disclosed); glance at the 11 flagged; the D0-line question is yours, no recommendation | signed commit message | 10–15 |
-| 3 | X0-A1: which P3(c) reading governs X0's verdict | **No recommendation** (see why); X0-A1 is signable only as appended, by commit and hash | X0 record tag | 5–10 |
+| 3 | X0-A1: which P3(c) reading governs X0's verdict | **No recommendation** (see why). X0-A1 is **not appended** to the X0 record, so the answer can only be FROZEN, AMENDED-after-append or DEFER | X0 record tag | 5–10 |
 | 4 | Q17, C07 (and Q18, optional) | Q17 PROVISIONAL; C07 confirm both; Q18 defer | `d0-sign-1`; commit message | 10–15 (+10–15 for Q18) |
 | 5 | X3/X4 priority class | NORMAL in both | commit message | 2–3 |
-| 6 | X4 noise pilot: record (if FROZEN), C29, your pre-night settings | Sign if FROZEN, else allow a mid-week tag. C29: **no recommendation** (lapse = ALL) | X4 tag or commit message | 5 (+15 to sign the record) |
+| 6 | X4 noise pilot: the record (**not FROZEN**), C29, your pre-night settings | Allow a mid-week tag. C29: **no recommendation** (lapse = ALL) | commit message | 5 |
+| 6a | X4's quiet hours: 525–746 h at σ_d 4% against ROADMAP §10's ≈ 215 h, so D-22 (a second measurement machine) is likely to fire | Information. **No recommendation** on what to do about it; on a blank the registered course applies | commit message (optional) | 5–8 |
 | 7 | WSL trace files on the desktop's C: | (a) `guiApplications=false`, then delete (best done before Sunday) | commit message | 5 |
 | 8 | An idle window for the X1 smoke run | a 2 h block this week, outside 23:00–07:00 PT | commit message or chat | 3–5 |
+| 8a | Your OK for the X1 isolation layer's brief per-user AppContainer profiles (isolation README gap 3) | OK (disclosure: the team built the layer) | commit message | 2–4 |
 | — | Close: commit, tags, verify, push | | | 15–20 |
 
-**Time** [D, sums of the [inference] rows, `scratchpad/sitting2/calc_sitting2.py`]: with the key made
-beforehand, Q18 deferred and the X4 record not yet FROZEN, **80–108 minutes**, reading this page included
-(10). Key made at the sitting: 95–168. Q18 decided tonight: +10–15. X4 record signed tonight: +15. To stay
-near 90 minutes, make the key before Sunday and leave Q18 for the sitting after the smoke-run gate (item 4).
+**Time** [D, sums of the [inference] rows, recomputed 2026-10-24]: with the key made beforehand and Q18
+deferred, **87–120 minutes, so about 90–120**, reading this page included (10). Key made at the sitting:
+102–180. Q18 decided tonight: +10–15. The X4 noise-pilot record cannot be signed tonight (it is not FROZEN, item
+6), so no time is planned for it. To stay near 90–120 minutes, make the key before Sunday and leave Q18 for the
+sitting after the smoke-run gate (item 4).
 
-**What waits on you today** (state at origin/main `94adcf3`, 2026-10-23): agents start no WSL until you decide
-item 7, so X0's re-run of configurations C and D cannot start, and its week-3 bound is 2026-11-12 [M, X0
-`verdict.json`]; the X4 noise pilot cannot freeze before C07 (item 4), and C29 freezes as ALL unless you answer
-(item 6); the X1 smoke run waits for your idle window (item 8).
+**What waits on you today** (state at origin/main `85542cd`, read Sat 2026-10-24): agents start no WSL until you
+decide item 7, so X0's re-run of configurations C and D cannot start, and its week-3 bound is 2026-11-12 [M, X0
+`verdict.json`]; the X4-calibration record cannot freeze before C07 (item 4), the X4 noise pilot cannot freeze
+before it, and C29 freezes as ALL unless you answer (item 6); the X1 smoke run waits for your idle window (item
+8); the X2 record is freeze-ready except for your scope reading O1 (Deferred).
 
 ---
 
@@ -92,10 +99,11 @@ freeze: 152fa33cc24225d78806bc028a1985fffbd3148b
 sitting: 2 (2026-10-25)
 OQ-1..OQ-7: deferred
 T_forms: min(|B_iform|, 105) as registered
-P3(c) reading for X0's verdict: <FROZEN | X0-A1 as appended at <commit>, X0-A1.1 SHA-256 <…>>
+P3(c) reading for X0's verdict: <FROZEN | X0-A1 once appended unchanged, X0-A1.1 SHA-256 49e0b344c989440200f63b1a39ca650367c93a34f61272af5ed98b63f800c11f; if not appended before the re-run's verdict: <FROZEN | DEFER>>
 ```
 
-The P3(c) line is item 3's answer: omit it if you defer; the commit and hash come from the [Sat] facts in item 3.
+The P3(c) line is item 3's answer: omit it if you defer. X0-A1 is not appended, so no appending commit can be
+named tonight; the hash is the [Sat] fact in item 3.
 
 ```text
 PREREG-SIGN 1
@@ -137,7 +145,7 @@ leave those lines for you. Q17, Q18 and C07 stay yours whatever you answer.
 | Process and tooling | P1, P5, P6, P13, P15, P18, P19, P20 | freezes between sittings; portable LLVM and C compiler, user-level, on the laptop; queue order (its Q13 line is yours to tick, item 1, optional); Qwen3 work within R2's 5–10 desktop hours until you sign a weekly cap (no D0 line: its line is item 4's optional Qwen3 cap); weekly owner-hour totals; X1 sandboxes on the laptop; job wrapper; the `hearth-c-ref` stand-in from clean `b5d3f14` |
 | M0 verdict | P8 | PLAN §3.8 as written, plus one line for a missed X2 gate (P28) |
 | X1 | P17, P46–P54 | two planted-corpus halves; hole report; obfuscation scope; `topk`; R-CABW/R-JOINT bind; trigger parameters; SE rule not adopted; 90% two-sided intervals; canary UUID published; T-ROUTE pilot |
-| X2 | P9, P10, P14, P28–P34, P62 | MXCSR flags count; second-oracle fallback pre-registered; SDM-only table; gate-miss action; false accepts kill as written; F16/BF16 secondary; mutant and rule counting; certify under MXCSR = 0x1F80 |
+| X2 | P9, P10, P14, P28–P34, P62 | MXCSR flags count; second-oracle fallback pre-registered; SDM-only table; gate-miss action; false accepts kill as written; F16/BF16 secondary; mutant and rule counting; a QF_BV proof counts only with an agreeing route; certify under MXCSR = 0x1F80 |
 | X3 | P11, P12, P35–P43 | H = 303; x3gen; scalar confirmatory; bands; 1/20 kill level; log(1.03); clang-cl flags; 7-day tuning window; WSL2 Clang bit-identity; α carried; centred clamps |
 | X4 | P21, P22, P24–P26, P55 | A/A to N (2N is your option, Deferred); ≤ 2/100 confirmed; e-process across two N-sessions; revision rule; gated run after hash-freeze; quoted IDs |
 | Core calculus and `mithi` | P16, P44, P45, P56–P61 | typing-only forms; C-ALLOC; "abandon" renamed; prelude; out-of-scope snippets; counterexamples; policy-trap fallback; `debug_assert!`; certificate obligations |
@@ -147,7 +155,7 @@ leave those lines for you. Q17, Q18 and C07 stay yours whatever you answer.
 **The eleven rows worth a look** (the adopted option was not the strictest available, no default was
 registered, or the row was adopted with data already known):
 - **P8** (M0-verdict composition): adopted with X0's census-run-1 previews (ambers (a) and (b)) already known,
-  the one adoption made in a post-data context. Its mapping reads only X0's week-6 narrowing, so the previews
+  one of two adoptions made with data already present (the other is P11, below, a strict default). Its mapping reads only X0's week-6 narrowing, so the previews
   cannot shape it [inference, DELEGATED P8]. It carries P28's added line (next).
 - **P28** (the X2 record has no default here): a missed X2 gate becomes the state `gate_missed`; its variants stay
   `tested`, with no extension; the M0 verdict shows it as a NARROW row (P8's added line). You also sign it in the
@@ -168,6 +176,10 @@ registered, or the row was adopted with data already known):
 - **P57**: the six derived snippets outside X1's scope count as agreement on `E-OUT-OF-SCOPE-<KW>`; having
   `mithi` type them is stricter.
 - **P58**: the review's counterexamples N-11 to N-39 stay supplementary, not gate items; "yes" is stricter.
+
+Borderline by the same test, not counted above: **P62** (X2 may certify `b5d3f14` under the stated precondition
+MXCSR = 0x1F80 before D0-5b lands; the registered default; "require D0-5b first" is the more restrictive
+option, and each certificate claims no more than its precondition) [DELEGATED P62; OWNER-QUEUE D20].
 
 The D0-line rows (P4, P7, P27) are not repeated here: you fill those lines yourself in item 1. P4's checkpoint
 had no registered default either; it is the sitting-1 packet's suggested Value, the file you named in R8.
@@ -202,17 +214,20 @@ Q4, quant_avx512.c:316 and :352, both builds, each 32 lanes against a bound of 0
 `unscreened`, with their frozen counts beside them. Every other P1–P5 value is unchanged [M, README §4.6].
 - **Facts on one side:** it removes flags, the direction favourable to Pass; it was defined after census run 1
   and its report, which had already called these flags a probable over-count (REPORT §10); it over-approximates
-  escape (a stack pointer in any argument register at any call makes the whole frame escape); its r2 revision
-  is not yet independently reviewed (a review runs this round) [M, README §1, §5].
+  escape (a stack pointer in any argument register at any call makes the whole frame escape); rev1 and r2 were
+  each reviewed on 10-23 (rev1: two reviewers, 18 findings; r2: one reviewer, 7 findings; all accepted, 3 of
+  rev1's in part; the reviewers Claude, same family), but r3, which followed the second review, is not independently reviewed [M,
+  AMENDMENT-X0-A1 review log and "Residual"].
 - **Facts on the other:** the frozen text itself says "non-escaping", which the frozen script did not test; each
   removed flag sits on an accumulator array whose address is taken and stored to memory (cause (a)) [M, README
-  §4.7]; the rev1 script was final before the fix track read run 1's outputs, and every later (r2) change moves
-  away from Pass [M, README §1–§2]; and `judge.py` computes the whole verdict under both readings
+  §4.7]; the rev1 script was final before the fix track read run 1's outputs, every r2 change is neutral or moves
+  away from Pass, and r3 changes no loop output [M, AMENDMENT-X0-A1 "Order of work"]; and `judge.py` computes the
+  whole verdict under both readings
   (`both_ways`), so both are computed (which one it shows first: "Coupled", below).
 - **What it changes in the verdict** (preview from census run 1, not a verdict; V3 still fails until the re-run
-  and a fresh re-derivation) [D, X0 REPORT §2]: Amber (b) holds under either reading, through B-cmake's
-  P3(a1). The reading decides whether C is also listed under Amber (b), and whether C's four loops enter the
-  flag-defect report (REPORT §14: if real, that would be a compiler report against GCC 13.3, not a Hearth one).
+  and a fresh re-derivation) [D, X0 REPORT §2.3; AMENDMENT-X0-A1 "Verdicts both ways"]: Amber (b) holds under
+  either reading, through B-cmake's P3(a1). The reading decides whether C is also listed under Amber (b), and
+  whether C's four loops enter the flag-defect report (REPORT §14.3: if real, that would be a compiler report against GCC 13.3, not a Hearth one).
 - **Coupled:** what the fresh re-deriver receives (README §6). Under X0-A1 it needs the data-free rule text
   X0-A1.1 to reproduce the governing reading; under FROZEN it gets the freeze text only and reads
   "non-escaping" itself. Either way V3 can disagree on these loops [inference]. The lead engineer sets the brief
@@ -223,20 +238,25 @@ Q4, quant_avx512.c:316 and :352, both builds, each 32 lanes against a bound of 0
   written; that is a reporting change to `judge.py`, re-pinned and reviewed like any other.
 - **Whose call:** DELEGATED's limits exclude a post-data change in the favourable direction, so only you can
   adopt X0-A1 as governing.
-- **What can be signed.** X0's tag goes on `152fa33`, which does not contain X0-A1's text. X0-A1 is "prepared
-  (not yet appended)" at `c069600` [M, its commit subject], the review of its r2 runs this round and is not yet
-  logged, and its scripts are still changing [M, uncommitted changes to `judge.py`, `x0_census.py` and
-  `compare_x0.py` in the worktree, 10-23 afternoon]. So signing "X0-A1" would sign a name, not a
-  fixed text: the line names the commit that appends it and the SHA-256 of part X0-A1.1 (the data-free rule).
-  **If X0-A1 is not appended, with its review logged, by Sunday, only FROZEN or DEFER can be signed tonight.**
-  [Sat: X0-A1 appended to the record at commit ____ with its r2 review logged, X0-A1.1 SHA-256 ____; or still
-  prepared at `c069600`.]
+- **What can be signed.** X0's tag goes on `152fa33`, which does not contain X0-A1's text. **[Sat, filled
+  10-24] X0-A1 is not appended to the X0 record** [M: `docs/m0/prereg/X0-census.md` at `85542cd` does not
+  mention X0-A1]. It stands at r3, committed at `bd4f064` ("amendment text ready, not appended" [M, commit
+  subject]): the draft text is `experiments/x0-census/results/tooling_fix_A1/AMENDMENT-X0-A1.md` ("Appended by
+  the lead engineer on <date>" still blank), with its r2 review logged in its review log, and r3 itself not
+  reviewed. Part X0-A1.1, the data-free rule, is the separate file `experiments/x0-census/X0-A1.1-RULE.md`,
+  SHA-256 `49e0b344c989440200f63b1a39ca650367c93a34f61272af5ed98b63f800c11f` [M, re-hashed 2026-10-24; the same
+  value as quoted in the amendment]. Since no appending commit exists, **item 3 can only be answered FROZEN,
+  AMENDED-after-append, or DEFER.** A plain "X0-A1" would still sign a name, not a fixed text; AMENDED-after-append
+  binds the rule by its hash instead.
 
 **Options.**
 - **FROZEN**: the reading frozen at `152fa33` governs and becomes `judge.py`'s top-level outcome; X0-A1's
   reading is reported beside it.
-- **X0-A1** (only as appended, by commit and hash): the amended reading governs; the frozen reading is reported
-  beside it.
+- **AMENDED-after-append**: you adopt X0-A1's reading now, to govern only once the lead engineer appends the
+  amendment to the record with part X0-A1.1 byte-identical to the hash above; the frozen reading is reported
+  beside it. If the text changes before it is appended (for example after a review of r3), the hash no longer
+  matches and your line does not apply, so the item comes back to you. Your line also says which reading
+  applies if the amendment is not appended before the re-run's verdict is written (FROZEN or DEFER).
 - **DEFER**: X0's verdict is reported both ways, side by side, and not acted on until you answer. Answering after
   the re-run's verdict is known would mean choosing between two known outcomes.
 
@@ -244,8 +264,9 @@ Q4, quant_avx512.c:316 and :352, both builds, each 32 lanes against a bound of 0
 recommendation from the team is the framing the rules guard against. Answer before the re-run's verdict exists,
 so that the choice cannot follow the outcome.
 
-**Line** (X0 tag message, item 1): `P3(c) reading for X0's verdict: FROZEN`, or `…: X0-A1 as appended at
-<commit>, X0-A1.1 SHA-256 <…>` (the [Sat] values above); omit the line to defer.
+**Line** (X0 tag message, item 1): `P3(c) reading for X0's verdict: FROZEN`, or `…: X0-A1 once appended
+unchanged, X0-A1.1 SHA-256 49e0b344c989440200f63b1a39ca650367c93a34f61272af5ed98b63f800c11f; if not appended
+before the re-run's verdict: <FROZEN | DEFER>`; omit the line to defer.
 
 ---
 
@@ -278,21 +299,34 @@ h/week; daytime = <outside windows | 07:00-23:00>`.
 
 ### C07: 06 §6.2, the gate scorer and the tail check
 
-**Summary.** Two points, from X4's simulations [S]. (a) Under 06 §6.2's literal block clip, a true 20%
-improvement never reaches e = 20 within 400 blocks; X4 proposes the run-level **R** scorer as the single gate
-scorer. (b) The mandatory tail check, as written, barely bites: the credit a rare-stall candidate can earn falls
-only from 0.130 to 0.110; pooled with screening runs at a one-sided 5% level (stricter than 06's 1%) it falls to
-0.017, at a parity cost of ≤ 0.007. (a) makes superiority reachable, a loosening for superiority claims; (b)
-tightens. No ROADMAP threshold moves (e ≥ 20; ≤ 2/100). The X4-calibration rules, and so the first pilot night,
-wait for this answer.
+**Summary.** Two separable points; the numbers are the X4-calibration record's §3a (DRAFT revision 2, `8cd45f6`)
+[S, its `c07_branches.py` and the reference's tables; σ_d 2% unless stated]. Its freeze gate requires that you
+answer from a packet quoting them (condition 1).
+- **(a) The gate scorer.** Under 06 §6.2's literal block clip (L06), a true 20% improvement never reaches e = 20
+  within 400 blocks (share 0.000 at σ_d 1%, 2%, 4%), and a 5% improvement needs a median of 155 blocks against 10
+  under the run-level **R** scorer. Both scorers keep A/A false alarms far inside ≤ 2/100 (≤ 0.0015 each within
+  N = 2n). R spends parity power under outlier runs: the share passing within N at true parity, at outlier-run
+  rates 0, 1, 2, 5, 10%, is 0.952, 0.816, 0.658, 0.345, 0.053 under R against 0.950, 0.876, 0.813, 0.576, 0.331
+  under L06.
+- **(b) The tail check.** The credit a rare-stall candidate earns (15% of runs 30% slow) is 0.127 (R) / 0.144
+  (L06) unchecked; 0.078 / 0.096 under 06's literal check (T-06, one-sided 1%); 0.011 / 0.010 under the pooled
+  check (T-pooled, one-sided 5%). With 10% of runs 50% slow: T-06 0.221 / 0.213, T-pooled 0.073 / 0.055. Cost at
+  parity with no outliers: 0.942–0.980 credited under T-pooled, 0.943–0.968 under T-06, against 0.947–0.980
+  uncredited.
+- **Direction.** Neither point moves one way only: R makes superiority reachable (a loosening for superiority
+  claims) and spends parity power under outliers; L06 keeps superiority nearly unreachable for large true
+  effects; T-pooled leaves less rare-stall credit than T-06. No ROADMAP threshold moves in any branch (e ≥ 20;
+  ≤ 2/100). The X4-calibration record, and so the first pilot night, waits for this answer.
 
-**Options.** CONFIRM both; confirm (b) only and keep the literal clip; keep 06 §6.2 literally (the calibration
-is then re-simulated).
+**Options** (all four combinations are specified in §3a): CONFIRM both = R with T-pooled; confirm (b) only and
+keep the literal clip = L06 with T-pooled; keep 06 §6.2 literally = L06 with T-06; or R with T-06. Any branch
+other than R with T-pooled needs code before collection (§3a: the Rust L06 scorer's capped-run case, a T-06
+counter).
 
 **Recommendation.** CONFIRM both (X4's provisional default; P23).
 
-**Line** (commit message): `C07: confirm both (06 §6.2: run-level R scorer as the single gate scorer; pooled tail
-check at one-sided 5%)`, or your variant.
+**Line** (commit message): `C07: (a) gate scorer <R | L06>, (b) tail check <T-pooled one-sided 5% | T-06
+one-sided 1%>` (CONFIRM both = R and T-pooled), or your variant.
 
 ### Q18: who writes the templates of X1's sealed suite (optional tonight)
 
@@ -338,7 +372,10 @@ because the two records register different values, so the delegation's test "the
 stricter" has no single default to apply, and HIGH would need a signed change to MEASUREMENT §7.6 and to the
 X4 records before freeze. DELEGATED's scope also lets the lead engineer resolve a contradiction between records:
 if he adopts NORMAL as a DELEGATED row before Saturday night, this item moves into item 2's list and leaves the
-agenda (saves 2–3 min). [Sat: adopted as row ____, or still here.]
+agenda (saves 2–3 min). **[Sat, filled 10-24] Still here:** DELEGATED.md at `85542cd` has no priority-class
+row, and X3 DESIGN §8.2 still says `HIGH_PRIORITY_CLASS` [M]. The X4-calibration record also registers NORMAL
+(its §2 and §13, blank = NORMAL), and its freeze-gate condition 6 needs X3 to agree on the run type, priority
+class included.
 
 **Line** (commit message): `Priority class: NORMAL in X3 and X4`.
 
@@ -347,31 +384,44 @@ agenda (saves 2–3 min). [Sat: adopted as row ____, or still here.]
 ## 6. X4 noise pilot: the record, C29, and your pre-night actions
 
 **Summary.** The pilot is four quiet nights that measure the noise every later X4 constant depends on; it judges
-no gate. State on 10-23 [M]: the record is **DRAFT** (revision 4, unreviewed; a review runs this round). It can
-freeze only after the **X4-calibration record** is FROZEN, and that record does not yet exist as a file; its
-owner inputs are C07 (item 4) and C29 (below). So the record is unlikely to be FROZEN by Sunday [inference].
-[Sat: FROZEN at commit ____ with its review logged, or not.] After signing, the first night still needs your
-one-time settings (A1–A6 below) and the lead engineer's pre-night amendment (pins made after your A1, K, the
-goldens, o_rt), so it falls some days later.
+no gate. **[Sat, filled 10-24] Not FROZEN** [M]: the record is **DRAFT revision 5** (`185dc3b`, after its third
+review round, 13 findings, all accepted; a cross-reference to the new X4-calibration record added at `8cd45f6`);
+revision 5 itself is unreviewed. It can freeze only after the **X4-calibration record** is FROZEN. That record now
+exists as a DRAFT (revision 2, `8cd45f6`, unreviewed), and its freeze waits on C07 (item 4), on its other owner
+fields (C29 below, the priority class of item 5, C05's two parts and the planted horizon, item 6a; each blank
+registers the stricter or operative value), on a statistics-reference revision with all four C07 branches (the
+reference is still at the revision with one branch, SHA-256 `6ac99140…`), on a logged review, and on agreement
+with this record's §3a and §7(b) and with X3 [M, X4-calibration freeze gate and "Where it stands"]. So nothing
+can be signed tonight. After signing, the first night still needs your one-time steps (A1–A9 below, in
+PRE-NIGHT's order: A1–A5, then the lead engineer's L1, then A6–A9) and the lead engineer's pre-night amendment
+(L2: it commits your A7 pins files and A8–A9 outputs, the filled configuration and its hash, K, the goldens,
+o_rt), so it falls some days later [M, PRE-NIGHT "Revision 5" and L1–L2].
 
 **C29: what counts toward N** (ROADMAP §1 rule 4's amber limit; the noise-pilot record registers a default for
-it). **BLOCKS**: only A/B block time counts, so N holds ≈ 3n blocks; P(a truly equal kernel passes within N, σ_d
-2%) = 0.995 [S]. **ALL**: cool-downs and gaps count too (≈ 2n blocks): 0.535 [S]. BLOCKS is the registered
+it). **BLOCKS**: only A/B block time counts, so N holds ≈ 3n blocks. **ALL**: cool-downs and gaps count too (≈ 2n
+blocks). X3's gate-level P(Pass) at true parity, σ_d 2%, all 14 configurations together, is 0.995 in the first
+N under BLOCKS against 0.535 under ALL, and 1.000 under either after the full inconclusive path [S, X3 DESIGN
+§8.8 table "Gate level", §14 Q14: "The choice changes power, not any error rate"]. BLOCKS is the registered
 default (X3 DESIGN §14 Q14) and the looser reading, so it cannot register by lapse (OWNER-QUEUE conventions).
-**No recommendation**; answer either, or the records freeze with ALL. Line (commit message, or the X4 tag):
-`C29: <BLOCKS | ALL>`.
+BLOCKS also raises X4's calibration hours by ≈ 61 h at σ_d 2% and ≈ 221 h at 4% over ALL [D, X4-calibration
+§10.3 item 2; item 6a]. **No recommendation**; answer either, or the records freeze with ALL. Line (commit
+message): `C29: <BLOCKS | ALL>`.
 
-**Options for the record.** SIGN tonight (only if FROZEN with a logged review; summary level, +15 min); DEFER to
-sitting 3 (11-01), which moves the pilot to W2 or later; or allow yourself a **mid-week signed tag** once it
-freezes, a one-off exception to your weekly-batch rule (R3).
+**Options for the record.** SIGN tonight is not possible (not FROZEN, above). DEFER to sitting 3 (11-01), which
+moves the pilot to W2 or later; or allow yourself a **mid-week signed tag** once it freezes, a one-off exception
+to your weekly-batch rule (R3).
 
-**Recommendation.** If FROZEN: SIGN. If not: allow the mid-week tag [G]; the nights can then start in W1 or early
-W2. Either way, do A1–A6 this week; they need no signature.
+**Recommendation.** Allow the mid-week tag [G]; the nights can then start in W1 or early W2. Either way, A1–A5
+can be done this week; they need no signature. A6–A9 wait for the lead engineer's L1 (the pinned binaries and the
+filled configuration on D:), and A9 runs inside a window (PRE-NIGHT A6–A9).
 
 **Signature** (when you sign): a tag `prereg-sign-x4-noise-pilot` on its freeze commit, with the record's §13
-fields in your words: the C01 placement (as R8), MITHRIL-MEASURE **active 24/7 or switched nightly**, the **GEMS
-process image names** the pilot must treat as excluded, and C29 if not answered above. For the GEMS names: the
-record already excludes, whatever you write, `claude`, `node`, `python` (outright), the build tools, the local
+fields in your words (revision 5 lists them all, each with what a blank registers). Among them: the C01
+placement (as R8), MITHRIL-MEASURE **active 24/7 or switched nightly**, the **GEMS process image names** the
+pilot must treat as excluded, the weeks of the §7(b) rate rule (Plan A, W6, or Plan B, W10; blank = Plan B; see
+item 6a), the R1-11 reading (is the pre-START wall ceiling judged or only recorded; registered: judged), a
+confirmation that the local Qwen3 server runs as `python`/`pythonw` [inference, PRE-NIGHT §0], and C29 if not
+answered above. For the GEMS names: the record already excludes, whatever you write, `claude`, `node`, `python` (outright), the build tools, the local
 Qwen3 server, WSL's images and the launchers `OneDrive`, `Overwolf`, `CurseForge`, `EpicGamesLauncher`
 [M, X4-noise-pilot §10, "Session hygiene void"]. Seen running on 10-23 [M, PRE-NIGHT B1]: `claude.exe` ×12,
 `python` ×16, OneDrive, Overwolf, CurseForge ×7, EpicGamesLauncher, all already on that list. Name only GEMS
@@ -387,6 +437,7 @@ fails today, in [PRE-NIGHT.md](../../../../experiments/x4-integrity/pilot/PRE-NI
   powercfg /setacvalueindex <NEW-GUID> SUB_PROCESSOR CPMAXCORES 100
   powercfg /qh <NEW-GUID> SUB_PROCESSOR CPMINCORES | Select-String 'Current AC'   # must read 0x00000064
   powercfg /qh <NEW-GUID> SUB_PROCESSOR CPMAXCORES | Select-String 'Current AC'   # must read 0x00000064
+  powercfg /qh <NEW-GUID> SUB_SLEEP STANDBYIDLE | Select-String 'Current AC'      # must read 0x00000000
   ```
   Then, by your 24/7-or-nightly choice [PRE-NIGHT A1, B3, Morning]:
   ```powershell
@@ -406,27 +457,31 @@ fails today, in [PRE-NIGHT.md](../../../../experiments/x4-integrity/pilot/PRE-NI
 - **A4, data directory**, and optionally a Defender exclusion (a security trade-off, your call):
   ```powershell
   # not elevated:
-  New-Item -ItemType Directory -Force D:\mithril-data\x4\pilot, D:\mithril-data\x4\scratch, D:\mithril-data\x4\pins
+  New-Item -ItemType Directory -Force D:\mithril-data\x4\pilot, D:\mithril-data\x4\scratch, D:\mithril-data\x4\pins, D:\mithril-data\x4\bin
   # elevated, optional:
   Add-MpPreference -ExclusionPath 'D:\mithril-data'
   ```
 - **A5, C: free space** (advisory): 8.5% free, 158.1 GB [M, 2026-10-23 12:33 PT]; the design asks for about 20%
   [G]. Free some, or accept; say which at signing.
-- **A6, how the driver starts**: in your console session; over SSH it cannot see your input and refuses the night
+- **A6–A9, once, from your own console session, not elevated, after the lead engineer's L1** (PRE-NIGHT A6–A9).
+  **A6, how the driver starts**: in your console session; over SSH it cannot see your input and refuses the night
   [M]. Either by hand, in a PowerShell window at about 22:55 PT (it waits for 23:00 PT; needs no setup), or by a
   scheduled task registered with `-Priority 4`, which no agent has tested and which needs its own once-only
-  check through a temporary task (exact commands for both in PRE-NIGHT A6). **Once before night 1**, the
-  readability check from a normal (not elevated) PowerShell in your console session, after the lead engineer has
-  placed the pinned binaries and the configuration:
+  check through a temporary task (exact commands for both in PRE-NIGHT A6). **A7**, the two pins files, made by
+  you in the launch context with the nights' plan active (exact `x4svc fingerprint` commands in PRE-NIGHT A7).
+  **A8**, the readability check, once. **A9**, one attended end-to-end run at the pilot placement, once, inside a
+  window (23:00–07:00 PT) before the first night, after B1–B2 (not pilot data; a few minutes):
   ```powershell
-  # by hand, each pilot night:
-  D:\mithril-data\x4\bin\x4svc.exe pilot-night --config D:\mithril-data\x4\pilot.cfg --pilot
-  # once, before night 1 (not elevated):
+  # by hand, each pilot night (the canonical hash comes from the lead engineer's L2):
+  D:\mithril-data\x4\bin\x4svc.exe pilot-night --config D:\mithril-data\x4\pilot.cfg --pilot --config-sha256 <CANONICAL-HASH>
+  # A8, once, before night 1 (not elevated):
   D:\mithril-data\x4\bin\x4svc.exe verify-hygiene --config D:\mithril-data\x4\pilot.cfg --as-pilot > D:\mithril-data\x4\launch-check.txt
+  # A9, once, inside a window:
+  D:\mithril-data\x4\bin\x4svc.exe dev-run --config D:\mithril-data\x4\pilot.cfg --run-type e2e-decode > D:\mithril-data\x4\e2e-attended.txt
   ```
 - **Every pilot night by 22:50 PT** (PRE-NIGHT B): GEMS jobs stopped and the GPU queue paused; launchers closed;
   `wsl --shutdown`; if you chose nightly, `powercfg /setactive <NEW-GUID>` (A1); then leave the machine; **no SSH
-  or agent access 23:00–07:00 PT** (a new `sshd`, `powershell`, `pwsh` or `cmd` process voids the running
+  or agent access 23:00–07:00 PT** (a new `sshd`, `sshd-session`, `powershell`, `pwsh` or `cmd` process voids the running
   session).
 
 The open point "does an idle WSL keepalive count as WSL activity?" (OWNER-QUEUE sitting-2 list, item 4) is yours.
@@ -437,17 +492,73 @@ engineer's hold of 10-23 they start no WSL at all.
 
 ---
 
+## 6a. X4's quiet hours against ROADMAP §10, and D-22 (information; a decision only if you want another course)
+
+**Summary.** The X4-calibration record (DRAFT revision 2, `8cd45f6`, §6.3) re-derives X4's quiet-window hours
+with the per-run overhead and the new long-run size [D from G; X4's calibration units only, the noise pilot and
+X3 excluded]:
+
+| | σ_d 2% | σ_d 4% |
+|---|---|---|
+| C29 = ALL (L = 2n) | 154.6 h | 524.8 h |
+| C29 = BLOCKS (L = 3n) | 215.6 h | 746.2 h |
+| ROADMAP §10's M0 line (X3 and X4 together) | ≈ 60 h | ≈ 215 h |
+| Your option: microbenchmark A/A to 2L (C05) | +20.0 h (ALL), +30.0 h (BLOCKS) | +73.3 h (ALL), +110.0 h (BLOCKS) |
+| Your option: planted sessions to 2L (X3's carried wealth) | +46.7 h (ALL), +70.0 h (BLOCKS) | +170.0 h (ALL), +256.7 h (BLOCKS) |
+
+X4 alone is 2.4–3.5 times §10's line at σ_d 4% and 2.6–3.6 times at 2% [D]. §10's line is an estimate, not a
+threshold: exceeding it loosens nothing, and its revision is yours (C05) [X4-calibration §6.3].
+
+**Why D-22 is likely to fire at σ_d 4%.** D-22 is the second measurement machine; ROADMAP §10: "If a stage's
+planned hours exceed its available windows, D-22 fires." The noise pilot's §7(b) turns the pilot's σ̂ into
+nights per week, clamped to 4–7; an unclamped value above 7 is recorded as a D-22 trigger fact and X4 "waits"
+(amber, ROADMAP §3.7) [M, X4-noise-pilot §7(b)]. A week holds at most 7 nights × 8 usable hours = 56 h (§7(b)'s
+caps). At σ_d 4% the calibration alone needs 9.4–13.3 such weeks with no voids, 11.7–16.7 with §7(b)'s 25%
+contingency [D]. The first calibration night follows the four pilot nights and the post-pilot amendment (W2 or
+W3 [inference]), and the 8–9 weeks from there to the end of W10 (Plan B's horizon) hold at most 448–504 h [D], so
+the unclamped rate would exceed 7 under either plan [D]. At σ_d 2% (2.8–3.9 weeks at the cap, 3.5–4.8 with the
+contingency) it fits under Plan B, and under Plan A (W6) it comes close to the cap [D]. σ_d is not measured yet:
+ROADMAP's 2% and 4% are illustrative, and the pilot measures it. In every case no ROADMAP threshold moves, and
+the other M0 verdicts do not wait for X4 (ROADMAP §3.7: "the X4 verdict waits (amber); the other verdicts do not").
+
+**Options** (none needs an answer tonight; a blank keeps the first):
+- **Accept a longer X4 timeline** (the registered course): the pilot measures σ_d, §7(b) computes the rate, and
+  if it exceeds 7 the D-22 fact is recorded and X4's verdict waits (amber); ROADMAP §10's line stays as written
+  (C05 "leave", the X4-calibration record's blank).
+- **Plan a second measurement box** (D0-8, OWNER-QUEUE A18; hardware money; ROADMAP's recommendation "The desktop
+  first; a second box by D-22", needed by M4). A second machine is a new machine profile, so it would need its
+  own noise pilot and calibration before its nights count [inference, X4-calibration §2 pins the desktop's
+  profile].
+- **Re-scope**: revise ROADMAP §10's M0 line (C05), or change what X4 calibrates at M0. The second is a ROADMAP
+  §3.5 amendment; any cut below §3.5's 100 counted sessions per calibration or 20 end-to-end units loosens a
+  ROADMAP threshold, which only you can do.
+
+Answers elsewhere that move these hours: C29 (item 6), the two 2L options (Deferred; L registered), and Plan A or
+Plan B in the noise pilot's §13 (blank = Plan B).
+
+**Recommendation: none.** The choice is about hardware money and X4's calendar, both yours, and σ_d is unmeasured.
+
+**When.** Tonight, or when you sign the X4 records: the C05 fields and Plan A or B are fixed before any pilot data
+[X4-calibration §13; X4-noise-pilot §13]. D0-8 is needed by M4 (ROADMAP §11).
+
+**Line** (commit message, optional): `X4 quiet hours: <registered course | plan a second box (D0-8) | re-scope:
+<your words>>; ROADMAP §10 M0 line: <leave | revise: <your words>>`.
+
+---
+
 ## 7. WSL trace files on the desktop's C:
 
-**Summary.** Each WSL VM start leaves a trace of 23–105 MB [M, sizes below] in
+**Summary.** Each WSL VM start leaves a trace of 10–105 MB [M, TOOLCHAINS §9 and the sizes below] in
 `%LOCALAPPDATA%\Temp\DiagOutputDir\RdClientAutoTrace\` on the desktop's C:, written by WSLg's remote-desktop
 client, one per VM start [inference from the file times, TOOLCHAINS §9]. The recorded Mithril traces total
 **553,648,128 bytes ≈ 553.6 MB** [D: 320,339,968 on 10-16 (14 files, TOOLCHAINS §9) + 23,592,960 + 104,857,600 +
 104,857,600 on 10-23 (tooling_fix_A1 README §7)], over your rule of < 500 MB of new data on C:. At least one more
 start (x0prep step 71, 10-16) has no recorded size, so the true total may be higher. None was deleted; the folder
-also holds older traces of your own from 10-12 [M, TOOLCHAINS §10]. C: is 91.5% full [M, 10-23]. Since the lead
+also holds older traces from 10-12, before the Mithril jobs [M, TOOLCHAINS §10]. C: is 91.5% full [M, 10-23]. Since the lead
 engineer's hold of 10-23, agents start no WSL at all, so **X0's re-run of configurations C and D (WSL2) waits**,
-against the week-3 bound of 2026-11-12, and so does X3's WSL2 Clang bit-identity arm (P41).
+against the week-3 bound of 2026-11-12, and so does X3's WSL2 Clang bit-identity arm (P41). **[Sat, filled
+10-24]** No new trace size is recorded in the repository since 10-23, and no answer of yours on this item is
+logged (OWNER-ANSWERS ends at batch 5) [M, `git log` to `85542cd`].
 
 **Options.**
 - **(a) Stop the traces at the source** (you, once, on the desktop). Open `notepad "$env:USERPROFILE\.wslconfig"`
@@ -496,10 +607,11 @@ Get-ChildItem $d -Filter 'RdClientAutoTrace-WppAutoTrace-*.etl' | Where-Object L
 `C:\Users\Pierce Lonergan\x1s\s1`, and you said you would give an idle window. In it the **whole account stays
 quiet**: no Claude use by you, your GEMS session included, and every agent paused. Stage 1 is 5 attempts, up to
 about 1 h, then at least 20 min of usage readings [D from G, SMOKE §4.1]. The gate's threshold is w* = 25/288 ≈
-0.0868 points of the weekly window per attempt [D, X1-amendment-1 §6.2]. At the current estimate (13–55 weekly
-windows for X1's 3,456 attempts, i.e. ≈ 0.38–1.59 points per attempt [D from G]; effort `max` may move it, which
-is what the run measures), stage 1 alone would read about 2–8 points and end **NOT RUNNABLE** in the middle and
-upper part of that range; at its low end it may need a second batch [D]. A RUNNABLE answer needs at least 25 attempts [D]. A further batch of 20 takes up to about 3 h
+0.0868 points of the weekly window per attempt [D, X1-amendment-1 §6.2]. At the current estimate (12.7–54.8
+weekly windows for X1's 3,456 attempts, i.e. ≈ 0.37–1.58 points per attempt [D from G, X1-amendment-1 §6.1–§6.2];
+effort `max` may move it, which is what the run measures), stage 1 alone would move the reading by about
+1.8–7.9 points and end **NOT RUNNABLE** whenever the true cost is ≥ 0.4 points per attempt, i.e. over almost all
+of that range; at its low end it may need a second batch [D, X1-amendment-1 §6.2 "Properties"]. A RUNNABLE answer needs at least 25 attempts [D]. A further batch of 20 takes up to about 3 h
 plus readings; batches may run in separate idle windows (§6.2 step 5) [SMOKE §4.3]. Constraints [M, SMOKE §4.1]:
 no batch may straddle the weekly reset (Fridays 05:00 PT); the plan's pacing rule must allow the start
 (weekly ≤ days since reset / 7 × 100 + 15, 5-hour ≤ 80), which the lead engineer reads just before.
@@ -520,6 +632,37 @@ CONTINUE, the lead engineer asks you for a 4-hour block per batch (up to about 3
 
 ---
 
+## 8a. The X1 isolation layer's AppContainer profiles (your OK)
+
+**Summary.** For sealed X1 items the x1iso track built the isolation controls of X1-amendment-1 §2.3 (commit
+`7a41873`: the harness tools served over a local MCP server with no shell, a per-`check` sandbox, enforced
+budgets), self-tested on the laptop with 58/58 negative tests [M, `experiments/x1-harness/isolation/README.md`].
+The smoke run does not use them (development items only, SMOKE.md §3). Each sandbox is an AppContainer, which
+launches only with a registered profile (an unregistered SID fails with `ERROR_FILE_NOT_FOUND` [M]). So each
+sandbox registers its own profile, a per-user app-package registration in your HKCU hive plus a storage folder
+under `%LOCALAPPDATA%\Packages\x1iso.*`, and deletes both inside the call. A killed MCP server cannot delete its
+profiles; `winsandbox.stale_profiles()` finds leftovers (prefix `x1iso.`) and `delete_profile()` removes them,
+and the runner should run both after each attempt [README gap 3]. The README leaves to you whether you want that
+persistence, however brief (gap 3). Laptop only; no installer; the README states that no system or security
+setting is changed. **Disclosure:** the 10-23 self-test already registered and deleted such profiles on the
+laptop, before your OK: none was left, and the HKCU mapping count was 125 before and after [M, README "Scope and
+coexistence"].
+
+**When it is needed.** Before the suite runs again: the README asks for a re-run on any host that will run sealed
+items (gap 5), and nothing sealed can run before the smoke-run gate says RUNNABLE and the Gatekeeper store (A06)
+exists (item 4, Q18).
+
+**Options.** OK (each sandbox registers and deletes its own profile; the stale-profile sweep runs after every
+attempt); OK with a condition you name; NO: the sandbox as built cannot launch [M, gap 3], so sealed items cannot
+use this layer until another per-`check` sandbox is designed [inference].
+
+**Recommendation.** OK [G]: the registration is per-user, deleted inside each call and swept after each attempt,
+and the sandbox cannot launch without it. Disclosure: the layer and this recommendation come from the same team.
+
+**Line** (commit message): `X1 isolation: per-sandbox AppContainer profiles <OK | OK if <your condition> | NO>`.
+
+---
+
 ## Close: one commit, the tags, verify, push (HOW-TO-SIGN steps 3–6)
 
 1. In your own checkout, up to date with `origin/main`: tick `docs/D0_BRIEF.md`; commit it signed with your own
@@ -533,17 +676,21 @@ CONTINUE, the lead engineer asks you for a 4-hour block per batch (up to about 3
    C07: <item 4 line>
    C29: <item 6 line>
    Priority class: <item 5 line>
-   X4 pilot: settings I apply <A1..A6>; plan <24/7 | nightly>; GEMS images <…>; C: <accept | free>; mid-week tag <yes | no>
+   X4 pilot: settings I apply <A1..A9>; plan <24/7 | nightly>; GEMS images <…>; C: <accept | free>; mid-week tag <yes | no>
+   X4 quiet hours: <item 6a line, optional>
    WSL traces: <item 7 line>
    X1 smoke stage 1: <item 8 line>
+   X1 isolation: <item 8a line>
    ```
    Before tagging: `git show --stat HEAD` (must list `docs/D0_BRIEF.md` only), then read the full diff
    (`git show HEAD -- docs/D0_BRIEF.md`).
 2. `git tag -s d0-sign-1 -F "$HOME\d0-sign-1.txt" HEAD` (first line `D0-SIGN 1`, then `file: docs/D0_BRIEF.md`,
    then one line per item ticked: item 1's table and any optional lines you ticked (Q5, Q13, D0-7x, Q6), plus
    Q17 and Q18 if decided).
-3. The record tags on their freeze commits, after the step-5 checks: `prereg-sign-x0-census` on `152fa33…`,
-   `prereg-sign-x1-amendment-1` on `ac751b8…`, and `prereg-sign-x4-noise-pilot` if signed.
+3. The record tags on their freeze commits, after the step-5 checks: `prereg-sign-x0-census` on `152fa33…` and
+   `prereg-sign-x1-amendment-1` on `ac751b8…`. No other record is FROZEN at `85542cd` (every other file in
+   `docs/m0/prereg/` is DRAFT, X2, X4-noise-pilot and X4-calibration included, and no M0-verdict record exists
+   [M]), so there is no other record tag tonight.
 4. `git verify-tag` on each tag (the authority check: the signer's fingerprint must match your D0-9a Value);
    the Appendix B verifier is advisory.
 5. `git push origin main d0-sign-1 prereg-sign-x0-census prereg-sign-x1-amendment-1` (plus any other tag). If
@@ -557,16 +704,22 @@ signatures superseded, records item 2's outcome in DELEGATED.md, and opens the 1
 ## Deferred (not tonight)
 
 Each waits safely for a later sitting or has an interim rule [OWNER-QUEUE sitting-2 list; inference].
-- **Records, if FROZEN by Sunday** (optional, +15 min each at summary level): the **X2-fuzz** record
-  (`prereg/X2-checker.md`; fuzzing on silicon waits for it, B02, B03); the **M0-verdict** record (B01, with P8): it must be SIGNED before X0's re-run
-  verdict, so sitting 3 (11-01) at the latest.
-- **With the X4-calibration record:** C05's ROADMAP §10 quiet-hour revision and the microbenchmark 2N horizon
-  (+13.3 h at σ_d = 2%, +48.9 h at 4% [D, X4 Q9]); P21 runs A/A to N meanwhile.
+- **Records** (none is FROZEN at `85542cd` [M, Sat 10-24]): the **X2-fuzz** record (`prereg/X2-checker.md`,
+  B02, B03; fuzzing on silicon waits for it) is DRAFT, freeze-ready revision 4 at `cb442e5`; "one thing stands
+  between this text and the freeze commit": your **scope reading, its §13 O1** (three readings, ticked in its §14; the
+  record proposes the object-level reading but does not adopt it, since it narrows a ROADMAP build line).
+  Its other ticks (O4 the carve-out, O9 `gate_missed`) come with its signature. You may answer O1 tonight (not
+  timed here) or at sitting 3. The **M0-verdict** record (B01, with P8) does not exist as a file yet; it must be
+  SIGNED before X0's re-run verdict, so sitting 3 (11-01) at the latest.
+- **With the X4-calibration record:** C05's ROADMAP §10 quiet-hour revision (item 6a) and the microbenchmark A/A
+  horizon 2L (P21's "2N"), which adds **+20.0 h at σ_d 2% and +73.3 h at 4% under ALL** (+30.0 h and +110.0 h
+  under BLOCKS) [D, X4-calibration §6.3; the earlier +13.3 h / +48.9 h left out the per-run overhead, its §10.3
+  item 9]; likewise its planted-horizon option (item 6a). P21 runs A/A to N (the record's L) meanwhile.
 - **After the smoke-run gate:** Q18 (if not decided), C38 (your review role), A06 (the Gatekeeper store and a
   desktop account no Claude session can read; nothing can be sealed before it), D08 (the plan's data-use
   setting, before W5).
 - **Your hours and the desktop:** A15 (D0-10b's H, if not filled in item 1); A18 (D0-8, and Q7: does GEMS count
-  as your own use for D-22).
+  as your own use for D-22; see item 6a for why D-22 may fire).
 - **By 11-01 (sitting 3):** C04 ("end of week 6"); C20; C10; C13's line in the X2-gate record.
 - **By 11-22 or later:** D02, D11, D13, C30, D06's DECISIONS-wide convention.
 - **Later:** D0-9b, D0-7b, D0-7c (D21, D22); Q2 and the other ROADMAP observations (one ROADMAP-amendment
@@ -578,21 +731,24 @@ Each waits safely for a later sitting or has an interim rule [OWNER-QUEUE sittin
 
 ## For the lead engineer (not for the sitting)
 
-**Fill on Sat 10-24 [Sat]:** X0-A1's state (appended at which commit, with its r2 review logged, and the SHA-256
-of part X0-A1.1 as appended; if not appended, item 3's line offers FROZEN or DEFER only); the X4-noise-pilot and
-X4-calibration state; whether X2-checker or M0-verdict is FROZEN (then add their tags to the close); whether the
-priority class (item 5) was adopted as a DELEGATED row (then move it into item 2's list and drop item 5); any new
-WSL trace sizes; whether Pierce has already done item 7.
+**[Sat] facts, filled Sat 10-24** (origin/main `85542cd` [M]): X0-A1 not appended; r3 at `bd4f064`, its r2
+review logged, r3 unreviewed; X0-A1.1 SHA-256 `49e0b344…c11f` (item 3, which therefore offers FROZEN,
+AMENDED-after-append or DEFER). X4 noise pilot: DRAFT revision 5 at `185dc3b` (cross-reference at `8cd45f6`),
+unreviewed, not FROZEN. X4-calibration: DRAFT revision 2 at `8cd45f6`, unreviewed, not FROZEN. X2: DRAFT,
+freeze-ready revision 4 at `cb442e5`, waiting on O1 (Deferred). No M0-verdict record exists. Priority class not
+adopted as a DELEGATED row (item 5 stays). No new WSL trace size recorded; no answer on item 7 logged.
 
-**Today (Fri 10-23), if you agree:** send Pierce item 7 and HOW-TO-SIGN steps 1–2 in chat, so that X0's re-run
-(bound 2026-11-12) is not held two more days and the key is made before Sunday (the sitting is then about 80–108
-min instead of 95–168). At the sitting, item 7 then only records what he did. Before X0's re-run verdict is
-written, make `judge.py`'s top-level outcome match his item-3 answer (item 3, "Coupled").
+**Proposed Fri 10-23** (whether it was done is not logged in the repository by `85542cd`): send Pierce item 7
+and HOW-TO-SIGN steps 1–2 in chat, so that X0's re-run (bound 2026-11-12) is not held longer and the key is made
+before Sunday. At the sitting, item 7 then only records what he did. Before X0's re-run verdict is written, make
+`judge.py`'s top-level outcome match his item-3 answer (item 3, "Coupled"); under AMENDED-after-append, append
+X0-A1 only with X0-A1.1 byte-identical to the signed hash.
 
 **Inconsistencies found while writing (not this track's files, so not fixed here):**
-1. DELEGATED.md still says "**None of the rows below is adopted**" above a table whose 59 rows read "ADOPTED
-   2026-10-23", and its adopted-rows table is empty; D0_BRIEF §0 ("none adopted") says the same [M]. Item 2
-   cites `0ba059e`; OWNER-QUEUE now carries a dated status pointer.
+1. DELEGATED.md's status header (since `e321593`) says the 59 rows are adopted in place, but its adopted-rows
+   table is still empty and the paragraph under the header still says "Until then each row is a proposal"; D0_BRIEF
+   §0 still says "(none adopted)" [M, at `85542cd`]. Item 2 cites `0ba059e`; OWNER-QUEUE carries a dated status
+   pointer.
 2. OWNER-ANSWERS dates batch 5 "about 12:30 PT", but the commit that logs it, `6fe61e6`, is dated 11:25:30 PDT
    [M, `git log`]. Check which is right before Pierce re-signs "batch 5 as logged".
 3. The X4-noise-pilot record's §3a registers C29's default ("A/B block time only"), which OWNER-QUEUE classes B
@@ -600,6 +756,12 @@ written, make `judge.py`'s top-level outcome match his item-3 answer (item 3, "C
    the strict alternative (item 6).
 4. SMOKE.md's header still asks the lead engineer to log the deviations in DELEGATED.md; batch 5 made them
    Pierce's approval instead, so the log entry should cite batch 5.
+5. *(added 10-24)* The microbenchmark A/A 2L cost is still given as +13.3 h / +48.9 h in DELEGATED P21,
+   OWNER-QUEUE (sitting-2 list item 4 and the C05 row), PLAN, COST and X4-integrity Q9 [M, `git grep`];
+   X4-calibration §6.3 gives +20.0 h / +73.3 h under ALL (+30.0 h / +110.0 h under BLOCKS), and its §10.3 item 9
+   asks those records to cite §6.3 before Pierce answers C05. This packet now does.
+6. *(added 10-24)* DELEGATED P23 and OWNER-QUEUE's C07 row quote the older C07 figures (0.130 → 0.110 / 0.017);
+   X4-calibration §10.3 item 8 and freeze-gate condition 1 ask for §3a's numbers, which item 4 now quotes.
 
 ---
 
@@ -609,6 +771,8 @@ written, make `judge.py`'s top-level outcome match his item-3 answer (item 3, "C
 |---|---|---|---|---|---|
 | 2026-10-23 | review 1: one reviewer agent | Claude, same family | independent context | the DRAFT packet against its sources (OWNER-ANSWERS, DELEGATED, OWNER-QUEUE, HOW-TO-SIGN, tooling_fix_A1 README, PRE-NIGHT, SMOKE, X4-noise-pilot) | 11 findings (3 major, 8 minor); all accepted, 3 with a modified fix; details below |
 | 2026-10-23 | reviser (sitting2 track) | Claude, same family | independent context from the reviewer | each finding checked against the cited source before the change | packet revised; no record, row or default changed; OWNER-QUEUE status pointer updated |
+| 2026-10-24 | finalization (an updater agent for the lead engineer) | Claude, same family | not independently reviewed | [Sat] facts from the sources and `git log` at `85542cd`; items 6a (X4 quiet hours, D-22) and 8a (AppContainer profiles) added; the C05 2L cost corrected; item 4's C07 figures updated to X4-calibration §3a (its freeze-gate condition 1); item 3 restated for a non-appended X0-A1; time recomputed | packet FINAL; no record, row or default changed; no other file edited |
+| 2026-10-24 | owner-advocate check (one checker agent) | Claude, same family | independent context | the FINAL packet against its sources (OWNER-ANSWERS, DELEGATED, OWNER-QUEUE, HOW-TO-SIGN, SIGNATURES, tooling_fix_A1 README and AMENDMENT-X0-A1, X0 REPORT, X4-noise-pilot, X4-calibration, PRE-NIGHT, X2, X3 DESIGN, X1-amendment-1, SMOKE, isolation README, TOOLCHAINS, `git log` at `85542cd`); hashes re-computed (X0-A1.1, SMOKE.md) and freeze commits resolved | 8 corrections, made in place: (1) item 6 listed pre-night steps A1–A6; PRE-NIGHT has A1–A9 (A7 pins, A8 readability, A9 an attended run in a window), and A6–A9 come after the lead engineer's L1, so "do A1–A6 this week" became A1–A5; (2) item 6's by-hand launch command lacked `--config-sha256`, A4 lacked the `bin` folder, A1 lacked the standby check; (3) C29's 0.995 / 0.535 were described as one kernel's pass probability; they are X3's gate-level P(Pass) over 14 configurations in the first N, and both readings reach 1.000 after the full path (X3 DESIGN §8.8); (4) item 2 called P8 "the one" post-data adoption; P11 was also adopted with its data present; (5) item 2's X2 row omitted P34; P62 noted as borderline by the flagging test (not counted); (6) item 3's review facts omitted rev1's review; source sections made exact; (7) item 7's per-trace size 23–105 MB became 10–105 MB (TOOLCHAINS §9), and "older traces of your own" lost its unsupported "of your own"; (8) item 8's cost figures now quote X1-amendment-1 (0.37–1.58 points per attempt; 1.8–7.9 points for stage 1). No recommendation, option or time row changed; no other file edited |
 
 **Review 1, finding by finding** (each checked against the source it cites [M]):
 1. *(major)* `judge.py`'s top-level `outcomes` use X0-A1 (README §1, §5), so "neither is hidden" overstated
@@ -644,5 +808,7 @@ written, make `judge.py`'s top-level outcome match his item-3 answer (item 3, "C
     per-batch block is now 4 h (was 3.5 h).
 11. *(minor)* Close steps 1–2 dropped `git show --stat HEAD` and the optional lines. **Accepted:** both added.
 
-The time estimate is unchanged (80–108 min with the key made beforehand) [D, `calc_sitting2.py` re-run
-2026-10-23]: no item's minutes changed.
+The time estimate was unchanged by review 1 (80–108 min with the key made beforehand) [D, `calc_sitting2.py`
+re-run 2026-10-23]. At finalization (10-24) rows 6a (5–8 min) and 8a (2–4 min) were added, and item 6's "+15 to
+sign the record" was dropped because the record is not FROZEN: 87–120 min with the key made beforehand, so about
+90–120 [D, sum of the rows].
